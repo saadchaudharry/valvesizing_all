@@ -1,0 +1,143 @@
+{% block content %}
+{% include "header.html" %}
+<br><br>
+
+                        <div class="row">
+                            <div class="col-4 mt-2">
+                                <div class="cvtable shadow p-3">
+                                    <h6 class="viewdata_heading"><b>CV Table</b></h6>
+                                    <div class="row">
+                                        <div class="col-6 viewbtn">
+                                            <a href="rendertable2.html"><button type="button" class="btn btn-info btn-block item_btn">Butterfly Double Offset</button></a>
+                                        </div>
+                                        <div class="col-6">
+                                            <a href="rendertable2.html"><button type="button" class="btn btn-info btn-block item_btn">Butterfly Triple Offset</button></a>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-1">
+                                        <div class="col-6">
+                                            <a href="rendertable2.html"><button type="button" class="btn btn-info btn-block viewbtn">Globe Straight</button></a>
+                                        </div>
+                                        <div class="col-6">
+                                            <a href="rendertable2.html"><button type="button" class="btn btn-info btn-block viewbtn">Globe Angle</button></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-4 mt-2">
+                                <div class="viewdata shadow p-3">
+                                    <h6 class="viewdata_heading"><b>Accessories</b></h6>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <a href="rendertable1.html"><button type="button" class="btn btn-info btn-block viewbtn">Volume Booster</button></a>
+                                        </div>
+                                        <div class="col-6">
+                                            <a href="rendertable1.html"><button type="button" class="btn btn-info btn-block viewbtn">Switch Position</button></a>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-1">
+                                        <div class="col-6">
+                                            <a href=""><button type="button" class="btn btn-info btn-block viewbtn">Air lock Valve</button></a>
+                                        </div>
+                                        <div class="col-6">
+                                            <a href=""><button type="button" class="btn btn-info btn-block viewbtn">Solenoid Valve</button></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-4 mt-2">
+                                <div class="processdata shadow p-3">
+                                    <h6 class="viewdata_heading"><b>Process Data</b></h6>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <button type="button" class="btn btn-info btn-block viewbtn">Pressure Temperature Rating</button>
+                                        </div>
+                                        <div class="col-6">
+                                            <button type="button" class="btn btn-info btn-block viewbtn">Fluid Properties</button>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-1">
+                                        <div class="col-6">
+                                            <button type="button" class="btn btn-info btn-block viewbtn">Pipe Size-Area</button>
+                                        </div>
+                                        <div class="col-6">
+                                            <button type="button" class="btn btn-info btn-block viewbtn">Fluid Name</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mt-3">
+                            <div class="col-4">
+                                <div class="Actuator Data shadow p-3">
+                                    <h6 class="viewdata_heading"><b>Actuator Data</b></h6>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <button type="button" class="btn btn-info btn-block viewbtn">Actuator Series</button>
+                                        </div>
+                                        <div class="col-6">
+                                            <button type="button" class="btn btn-info btn-block viewbtn">Travel Stops</button>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-1">
+                                        <div class="col-6">
+                                            <button type="button" class="btn btn-info btn-block viewbtn">Actuator Size</button>
+                                        </div>
+                                        <div class="col-6">
+                                            <button type="button" class="btn btn-info btn-block viewbtn">Actuator Type</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="valve Data shadow p-3">
+                                    <h6 class="viewdata_heading"><b>Valve Data</b></h6>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <button type="button" class="btn btn-info btn-block viewbtn">Trim Designation</button>
+                                        </div>
+                                        <div class="col-6">
+                                            <button type="button" class="btn btn-info btn-block viewbtn">Soft Part Material</button>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-1">
+                                        <div class="col-6">
+                                            <button type="button" class="btn btn-info btn-block viewbtn">Packing material</button>
+                                        </div>
+                                        <div class="col-6">
+                                            <a href="{{url_for('renderData', topic=26, item_id=item.id, proj_id=item.project.id)}}">
+                                                <button type="button" class="btn btn-info btn-block viewbtn">Design Standard</button>
+                                            </a>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="Miscellaneous shadow p-3">
+                                    <h6 class="viewdata_heading"><b>Miscellaneous</b></h6>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <button type="button" class="btn btn-info btn-block viewbtn">Certification</button>
+                                        </div>
+                                        <div class="col-6">
+                                            <button type="button" class="btn btn-info btn-block viewbtn">Region Data</button>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-1">
+                                        <div class="col-6">
+                                            <button type="button" class="btn btn-info btn-block viewbtn">Paint Finish</button>
+                                        </div>
+                                        <div class="col-6">
+                                            <button type="button" class="btn btn-info btn-block viewbtn">Paint Certs</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+{% include "footer.html" %}
+{% endblock %}

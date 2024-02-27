@@ -1,0 +1,86 @@
+{% block content %}
+{% include "header.html" %}
+<br><br>
+    <form action="{{url_for('updatePreferences', proj_id=item.project.id, item_id=item.id, page=page)}}" method="post">
+        <div class="row mt-2">
+            <div class="col-3 shadow p-2" >
+                <h6 class="preference_heading"><b>Preferences</b></h6>
+                <hr>
+                <div class="row mt-2">
+                    <div class="col-6">
+                        <label>Pressure unit</label>
+                    </div>
+                    <div class="col-6">
+                        <select id="" class="form-control-sm-sm preference_select" name="pressureUnit">
+                            {% for presunit in metadata['units_dict']['pressure'] %}
+                                {% if presunit.id == item.project.pressureUnit %}
+                                <option value="{{presunit.id}}" selected>{{presunit.name}}</option>
+                                {% else %}
+                                <option value="{{presunit.id}}">{{presunit.name}}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row mt-2">
+                    <div class="col-6">
+                        <label>Flowrate unit</label>
+                    </div>
+                    <div class="col-6">
+                        <select id="" class="form-control-sm-sm preference_select"  name="flowrateUnit">
+                            {% for flowrate in metadata['units_dict']['flowrate'] %}
+                                {% if flowrate.name == item.project.flowrateUnit %}
+                                <option value="{{flowrate.id}}" selected>{{flowrate.name}}</option>
+                                {% else %}
+                                <option value="{{flowrate.id}}">{{flowrate.name}}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row mt-2">
+                    <div class="col-6">
+                        <label>Length unit</label>
+                    </div>
+                    <div class="col-6">
+                        <select id="" class="form-control-sm-sm preference_select"  name="lengthUnit">
+                            {% for length in metadata['units_dict']['length'] %}
+                                {% if length.name == item.project.lengthUnit %}
+                                <option value="{{length.id}}" selected>{{length.name}}</option>
+                                {% else %}
+                                <option value="{{length.id}}">{{length.name}}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row mt-2">
+                    <div class="col-6">
+                        <label>Temperature unit</label>
+                    </div>
+                    <div class="col-6">
+                        <select id="" class="form-control-sm-sm preference_select"  name="temperatureUnit">
+                            {% for temperature in metadata['units_dict']['temperature'] %}
+                                {% if temperature.name == item.project.temperatureUnit %}
+                                <option value="{{temperature.id}}" selected>{{temperature.name}}</option>
+                                {% else %}
+                                <option value="{{temperature.id}}">{{temperature.name}}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <button type="submit" class="btn btn-info preference_btn">Set Preference</button>
+        </div>
+    </form>
+                
+{% include "footer.html" %}
+{% endblock %}
