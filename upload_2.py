@@ -7,7 +7,7 @@ from app import cageClamp, data_upload_shaft, db, app, endConnection, endFinish,
 import csv
 
 
-
+# git test sd_projectnotes_270224
 
 
 industry_list = ['Oil & Gas - Onshore', 'Oil & Gas - Offshore', 'Refinery & Petrochemical',
