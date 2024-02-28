@@ -333,6 +333,8 @@ class itemMaster(db.Model):
     id = Column(Integer, primary_key=True)
     itemNumber = Column(Integer)
     alternate = Column(String(50))
+    standardStatus = Column(Boolean)
+    pipeDataStatus = Column(Boolean)
 
     # rel as parent
     case = relationship("caseMaster", cascade="all,delete", back_populates="item")

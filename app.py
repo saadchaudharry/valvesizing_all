@@ -71,7 +71,7 @@ Bootstrap(app)
 # app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///fcc-db-v6-0.db"
 
 # app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL1", "sqlite:///fcc-db-v10-0.db")
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:Qwer1234@localhost/ValveSizingFCC'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:FccSizing@localhost/ValveSizingFCC'
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # db = SQLAlchemy(app)
@@ -2443,6 +2443,8 @@ def Cv_gas(inletPressure, outletPressure, gamma, C, valveDia, inletDia, outletDi
         # return A
 
     else:
+        print(f"flowrate, nx_kghr_bar_K, a_, x__, sg, b_")
+        print(flowRate, N8_kghr_bar_K, a_, x__, sg, b_)
         A = flowRate / (N8_kghr_bar_K * a_ * math.sqrt((x__ * sg) / b_))
         # return A
     fk = F_Gamma_gas(gamma)
@@ -3393,7 +3395,7 @@ def gasSizing(inletPressure_form, outletPressure_form, inletPipeDia_form, outlet
               oPresUnit_form, vPresUnit_form, iPipeUnit_form, oPipeUnit_form, vSizeUnit_form, iSch,
               iPipeSchUnit_form, oSch, oPipeSchUnit_form, iTempUnit_form, xt_fl, sg_vale, sg_choice,
               open_percent, fd, travel, rated_cv_tex, fluidName, cv_table, i_pipearea_element, 
-              valve_element, port_area_, trimtype):
+              valve_element, port_area_, trimtype, flow_character):
     # Unit Conversion
     # 1. Flowrate
 
@@ -3793,8 +3795,8 @@ def gasSizing(inletPressure_form, outletPressure_form, inletPipeDia_form, outlet
     other_factors_string = f"{Cv__[1]}+{Cv__[2]}+{Cv__[3]}+{Cv__[4]}+{Cv__[5]}+{Cv__[6]}+{Cv__[7]}+{Fd_gas}+{RE_number}+{Kc}+{mac_sonic_list[0]}+{mac_sonic_list[1]}+{mac_sonic_list[2]}+{mac_sonic_list[3]}+{mac_sonic_list[4]}+{mac_sonic_list[5]}+{mac_sonic_list[6]}+{round(application_ratio, 3)}+{ratedCV}"
 
     # tex new
-    flow_character_element = db.session.query(flowCharacter).filter_by(id=v_det_element.flowCharacterId).first()
-    flow_character = getFlowCharacter(flow_character_element.name)
+    # flow_character_element = db.session.query(flowCharacter).filter_by(id=v_det_element.flowCharacter__.id).first()
+    flow_character = getFlowCharacter(flow_character)
         # new trim exit velocity
         # for port area, travel filter not implemented
 
@@ -4401,7 +4403,7 @@ def interpolate(data, x_db, y_db, vtype):
               y_db.ten]
     opening = interpolate_percent(data, x_db, vtype)
     diff = opening - (opening // 10) * 10
-    # print(f"FL list: {y_list}")
+    print(f"FL list: {y_list}")
     if x_list[0] < data < x_list[-1]:
         a = 0
         while True:
@@ -4438,7 +4440,7 @@ def interpolate_fd(data, x_db, y_db, vtype):
         a = 0
         while True:
             # print(f"Cv1, C: {Cv1[a], C}")
-            if x_list == data:
+            if x_list[a] == data:
                 return y_list[a]
             elif x_list[a] > data:
                 break
@@ -4492,6 +4494,7 @@ def selectValve(proj_id, item_id):
     metadata_ = metadata()
     item_selected = getDBElementWithId(itemMaster, item_id)
     valve_element = db.session.query(valveDetailsMaster).filter_by(item=item_selected).first()
+    flow_character = valve_element.flowCharacter__.name
     cases = db.session.query(caseMaster).filter_by(item=item_selected).all()
     trim_element = db.session.query(trimType).filter_by(id=valve_element.trimTypeId).first()
     print(f"Select Valve: Len of cases is {len(cases)}")
@@ -4643,7 +4646,7 @@ def selectValve(proj_id, item_id):
                                             last_case.outletPressure, oPresUnit, v_size, 'inch',
                                             last_case.flowrate, last_case.inletTemp, iTempUnit, select_dict.ten,
                                             last_case.inletPipeSize, iPipeUnit, last_case.outletPipeSize, oPipeUnit, xt,
-                                            rw_noise,
+                                            last_case.compressibility,
                                             last_case.molecularWeight)
                     print(f"last_cv: {final_cv}")
                     fl = interpolate(final_cv, select_dict, select_dict_fl, valve_type_)
@@ -4666,15 +4669,17 @@ def selectValve(proj_id, item_id):
                                             last_case.outletPressure, oPresUnit, v_size, 'inch',
                                             last_case.flowrate, last_case.inletTemp, iTempUnit, select_dict.ten,
                                             last_case.inletPipeSize, iPipeUnit, last_case.outletPipeSize, oPipeUnit, xt,
-                                            rw_noise,
+                                            last_case.compressibility,
                                             last_case.molecularWeight)
                     print(final_cv1)
                     o_percent = interpolate_percent(final_cv1, select_dict, valve_type_)
                     fl = interpolate(final_cv1, select_dict, select_dict_fl, valve_type_)
                     xt = interpolate(final_cv1, select_dict, select_dict_xt, valve_type_)
                     fd = interpolate_fd(final_cv1, select_dict, select_dict_fd, valve_type_)
-                    print('final fl, xt, select dict')
-                    print(fl, xt, select_dict_xt.id)
+                    # print('final fl, xt, select dict')
+                    # print(fl, xt, select_dict_xt.id)
+                    print('percentage opening data: gas')
+                    print(o_percent, final_cv1, select_dict)
 
                     seat_bore = valve_d_id.seatBore
                     travel = valve_d_id.travel
@@ -4702,6 +4707,7 @@ def selectValve(proj_id, item_id):
                     #     db.session.commit()
                     #     trimtype = trim_element.name
                     trimtype = 'Ported'
+                    # flow_character = flow_character
                     if valve_element.state.name == 'Liquid':
                         try:
                             sch_element = db.session.query(pipeArea).filter_by(schedule='std', nominalPipeSize=float(last_case.inletPipeSize)).first()
@@ -4739,7 +4745,7 @@ def selectValve(proj_id, item_id):
                         
                         result_dict = gasSizing(last_case.inletPressure, last_case.outletPressure, last_case.inletPipeSize, last_case.outletPipeSize,
                                 v_size,
-                                last_case.specificGravity, last_case.flowrate, last_case.inletTemp, final_cv1, rw_noise,
+                                last_case.specificGravity, last_case.flowrate, last_case.inletTemp, final_cv1, last_case.compressibility,
                                 last_case.vaporPressure,
                                 seat_bore, 'inch',
                                 sosPipe, densityPipe, last_case.criticalPressure, last_case.kinematicViscosity, item_selected,
@@ -4749,7 +4755,8 @@ def selectValve(proj_id, item_id):
                                 'std',
                                 iPipeSchUnit, 'std', oPipeSchUnit, iTempUnit, xt, last_case.molecularWeight,
                                 sg_choice, o_percent, fd, travel, rated_cv_tex,fluidName_, valve_d_id.cv, i_pipearea_element, 
-                                valve_element, port_area_, trimtype)
+                                valve_element, port_area_, trimtype, flow_character)
+                        db.session.commit()
                         new_case = caseMaster(flowrate=result_dict['flowrate'], inletPressure=result_dict['inletPressure'],
                         outletPressure=result_dict['outletPressure'],
                         inletTemp=result_dict['inletTemp'], specificGravity=result_dict['specificGravity'],
@@ -4768,7 +4775,8 @@ def selectValve(proj_id, item_id):
                         machNoUp=result_dict['machNoUp'], machNoDown=result_dict['machNoDown'], machNoValve=result_dict['machNoVel'],
                         sonicVelUp=result_dict['sonicVelUp'], sonicVelDown=result_dict['sonicVelDown'],
                         sonicVelValve=result_dict['sonicVelValve'], outletDensity=result_dict['outletDensity'],x_delp=result_dict['x_delp'],
-                        cv=valve_d_id.cv, iPipe=None, valveSize=v_size)
+                        cv=valve_d_id.cv, iPipe=None, valveSize=v_size, compressibility=last_case.compressibility)
+                        # new_case = caseMaster()
                         db.session.add(new_case)
                         db.session.commit()
                     # except:
