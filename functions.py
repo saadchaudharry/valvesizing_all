@@ -121,7 +121,7 @@ def convert_L_SI(val, unit_in, unit_out, density):
 
 
 def conver_P_SI(val, unit_in, unit_out, density):
-    SI = {'psia': 6894.76, 'kg/cm2': 98066.5, 'pa': 1, 'kpa': 1000, 'bar': 100000, 'mpa': 1000000,
+    SI = {'psi': 6894.76, 'kg/cm2': 98066.5, 'Pa': 1, 'kPa': 1000, 'bar': 100000, 'MPa': 1000000,
           'inh20': 0.00401865, 'mmh20': 0.10197162129, 'inhg': 0.0002953, 'mmhg': 0.00750062, 'mbar': 0.01}
     return val * SI[unit_in] / SI[unit_out]
 
@@ -165,6 +165,15 @@ def conver_FR_SI(val, unit_in, unit_out, density):
 def meta_convert_P_T_FR_L(prop, val, unit_in, unit_out, density):
     properties = {"T": convert_T_SI, "P": conver_P_SI, "FR": conver_FR_SI, "L": convert_L_SI}
     return properties[prop](val, unit_in, unit_out, density)
+
+def meta_convert_g_to_a(value, prop):
+    properties = {"bar":1.01325 , "Pa":100000, "kPa":101.284, "MPa":0.1, "psi":14.69, "kg/cm2":1.033}
+    return value + properties[prop]
+
+
+def meta_convert_a_to_g(value,prop):
+    properties = {"bar":1.01325 , "Pa":100000, "kPa":101.284, "MPa":0.1, "psi":14.69, "kg/cm2":1.033}
+    return value - properties[prop]
 
 
 def conver_FR_noise(val, unit_in):
