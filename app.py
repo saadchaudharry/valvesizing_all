@@ -707,6 +707,58 @@ def addNewItem(project, itemNumber, alternate):
 
 
 # TODO Functional Module
+# def sendOTP(username):
+#     # Generate Random INT
+#     random_decimal = random.random()
+#     random_int = round(random_decimal * 10 ** 6)
+#     otp__ = db.session.query(OTP).filter_by(username=username).all()
+#     if len(otp__) == 0:
+#         new_otp = OTP(otp=random_int, username=username, time=datetime.datetime.now())
+#         db.session.add(new_otp)
+#         db.session.commit()
+#     else:
+#         otp_1 = db.session.query(OTP).filter_by(username=username).first()
+#         otp_1.otp = random_int
+#         otp_1.time = datetime.datetime.now()
+#         db.session.commit()
+    
+#     # try:
+#     # Send email
+#     s = smtplib.SMTP('smtp.gmail.com', 587)
+#     # s.ehlo()
+#     s.starttls()
+#     # s.ehlo()
+#     sender_email = 'titofccvs@gmail.com'
+#     sender_email_password = 'lvcf senp padh csyr'
+#     # sender_email_password = 'titofccvs@2023'
+#     reciever_email = ['kartheeswaran1707v@gmail.com', username]
+#     s.login(sender_email, sender_email_password)
+#     # message = f"The OTP for resetting password is: {random_int}"
+#     message = "OTP for Reset Password is " + str(random_int)
+#     print(message)
+#     s.sendmail(sender_email, reciever_email, message)
+#     s.quit()
+#     mail_sent = True
+#     # except Exception as e:
+#     #     print(f'Mail Issue {e}')
+#     #     mail_sent = False
+#     # msg = MIMEMultipart()
+#     # msg['From'] = sender_email
+#     # msg['To'] = reciever_email
+#     # msg['Subject'] = 'OTP for Reset Password'
+#     # message = f"The OTP for resetting password is: {random_int}"
+#     # msg.attach(MIMEText(message))
+
+#     # with smtplib.SMTP('smtp-mail.outlook.com',587) as mail_server:
+#     #     # identify ourselves to smtp gmail client
+#     #     # secure our email with tls encryption
+#     #     mail_server.starttls()
+#     #     # re-identify ourselves as an encrypted connection
+#     #     # mail_server.ehlo()
+#     #     mail_server.login(sender_email, sender_email_password)
+#     #     mail_server.sendmail(sender_email, reciever_email, message)
+#     return mail_sent
+
 def sendOTP(username):
     # Generate Random INT
     random_decimal = random.random()
@@ -721,42 +773,35 @@ def sendOTP(username):
         otp_1.otp = random_int
         otp_1.time = datetime.datetime.now()
         db.session.commit()
-    
-    # try:
-    # Send email
-    s = smtplib.SMTP('smtp.gmail.com', 587)
-    # s.ehlo()
-    s.starttls()
-    # s.ehlo()
-    sender_email = 'titofccvs@gmail.com'
-    sender_email_password = 'lvcf senp padh csyr'
-    # sender_email_password = 'titofccvs@2023'
-    reciever_email = ['kartheeswaran1707v@gmail.com', username]
-    s.login(sender_email, sender_email_password)
-    # message = f"The OTP for resetting password is: {random_int}"
-    message = "OTP for Reset Password is " + str(random_int)
-    print(message)
-    s.sendmail(sender_email, reciever_email, message)
-    s.quit()
-    mail_sent = True
-    # except Exception as e:
-    #     print(f'Mail Issue {e}')
-    #     mail_sent = False
-    # msg = MIMEMultipart()
-    # msg['From'] = sender_email
-    # msg['To'] = reciever_email
-    # msg['Subject'] = 'OTP for Reset Password'
-    # message = f"The OTP for resetting password is: {random_int}"
-    # msg.attach(MIMEText(message))
+    try:
+        # Send email using Hostinger's SMTP server
+        s = smtplib.SMTP('smtp.hostinger.com', 587)
+        s.starttls()
+        sender_email = 'noreply@valvesizing.fccommune.com'  # Replace with your Hostinger email
+        sender_email_password = 'Qwer@4321'  # Replace with your Hostinger email password
+        # sender_email = 'sizinghelp@valvesizing.fccommune.com'  # Replace with your Hostinger email
+        # sender_email_password = 'Sizing@admin0'  # Replace with your Hostinger email password
+        reciever_email = ['pandi709410@gmail.com', username]
 
-    # with smtplib.SMTP('smtp-mail.outlook.com',587) as mail_server:
-    #     # identify ourselves to smtp gmail client
-    #     # secure our email with tls encryption
-    #     mail_server.starttls()
-    #     # re-identify ourselves as an encrypted connection
-    #     # mail_server.ehlo()
-    #     mail_server.login(sender_email, sender_email_password)
-    #     mail_server.sendmail(sender_email, reciever_email, message)
+        # Login to the SMTP server
+        s.login(sender_email, sender_email_password)
+
+        # Construct the email message
+        message = f"Subject: OTP for Reset Password\n\n"
+        message += f"OTP for Reset Password is {random_int}"
+        print(random_int)
+        # Send the email
+        s.sendmail(sender_email, reciever_email, message)
+        print(reciever_email)
+        # Close the connection to the SMTP server
+        s.quit()
+
+        # Set mail_sent flag to indicate successful email sending
+        mail_sent = True
+    except Exception as e:
+        print(f'Failed to send OTP email: {e}')
+        # Set mail_sent flag to indicate failure
+        mail_sent = False
     return mail_sent
 
 def getEngAddrList(all_projects):
