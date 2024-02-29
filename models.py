@@ -64,7 +64,7 @@ class departmentMaster(db.Model):
     id = Column(Integer, primary_key=True)
     name = Column(String(300))
 
-    user = relationship("userMaster", cascade="all,delete", back_populates="department")
+    user = relationship("userMaster", back_populates="department")
 
 
 class designationMaster(db.Model):
@@ -77,7 +77,7 @@ class designationMaster(db.Model):
     id = Column(Integer, primary_key=True)
     name = Column(String(300))
 
-    user = relationship("userMaster", cascade="all,delete", back_populates="designation")
+    user = relationship("userMaster", back_populates="designation")
 
 
 # data upload done

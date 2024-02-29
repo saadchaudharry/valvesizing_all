@@ -657,7 +657,7 @@ def addUserAsEng(name, designation):
 
 def newUserProjectItem(user):
 # with app.app_context():
-    fluid_state = getDBElementWithId(fluidState, 1)
+    fluid_state = fluidState.query.first()
     new_project = projectMaster(user=user,
                                 projectId=f"Q{date_today[2:4]}0000",
                                 enquiryReceivedDate=datetime.datetime.today(),
@@ -672,7 +672,7 @@ def newUserProjectItem(user):
 
 
 def newProjectItem(project):
-    fluid_state = getDBElementWithId(fluidState, 1)
+    fluid_state = fluidState.query.first()
     new_item = itemMaster(project=project, itemNumber=1, alternate='A')
     db.session.add(new_item)
     db.session.commit()
@@ -690,7 +690,7 @@ def newProjectItem(project):
 
 def addNewItem(project, itemNumber, alternate):
     # with app.app_context():
-    fluid_state = getDBElementWithId(fluidState, 1)
+    fluid_state = fluidState.query.first()
     new_item = itemMaster(project=project, itemNumber=itemNumber, alternate=alternate)
     db.session.add(new_item)
     db.session.commit()
