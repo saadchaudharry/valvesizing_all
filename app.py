@@ -17,7 +17,7 @@ from flask import abort
 from werkzeug.security import generate_password_hash, check_password_hash
 from forms import *
 import random
-from functions import FR, N1, N2, N4, N5_in, N6_lbhr_psi_lbft3, N7_60_scfh_psi_F, N8_kghr_bar_K, N9_O_m3hr_kPa_C, REv, conver_FR_noise, full_format, getFlowCharacter, getValveType, meta_convert_P_T_FR_L, project_status_list, notes_dict_reorder, purpose_list, units_dict, actuator_data_dict, valve_force_dict
+from functions import FR, N1, N2, N4, N5_in, N6_lbhr_psi_lbft3, N7_60_scfh_psi_F, N8_kghr_bar_K, N9_O_m3hr_kPa_C, REv, conver_FR_noise, full_format, getFlowCharacter, getValveType, meta_convert_P_T_FR_L, project_status_list, notes_dict_reorder, purpose_list, units_dict, actuator_data_dict, valve_force_dict,meta_convert_g_to_a,meta_convert_a_to_g
 from gas_noise_formulae import lpae_1m
 from gas_velocity_iec import getGasVelocities
 from liquid_noise_formulae import Lpe1m
@@ -1882,6 +1882,66 @@ def getKCValue(size__, t_type, pressure, v_type, fl):
             a__ = 1
 
         return round(a__, 3)
+
+
+@app.route('/unit_change')
+def unit_change():
+
+    prev_unit = request.args.get('prev_unit')
+    final_unit = request.args.get('final_unit')
+    params = request.args.get('params')
+    param_values = json.loads(request.args.get('param_values'))
+    specific_gravity = json.loads(request.args.get('specific_gravity'))
+    param_values = [float(value) if value else None for value in param_values]
+    specific_gravity = [float(value) if value else 1.0 for value in specific_gravity]
+
+
+    print(f'jshshhh {prev_unit},{final_unit},{param_values},{specific_gravity}')
+    desc_final_value = []
+    if params == 'flowrate':
+        for i in range(len(param_values)):
+            if param_values[i]:
+                print(f'ssjsj {param_values[i]}')
+                final_value = meta_convert_P_T_FR_L('FR', param_values[i], prev_unit,
+                                                        final_unit,
+                                                        specific_gravity[i] / 1000)
+
+                desc_final_value.append(final_value)
+            else:
+                desc_final_value.append(None) 
+
+    elif params == 'inpres' or params == 'outpres':
+        for i in range(len(param_values)):
+            if param_values[i]:
+
+                prev_units = prev_unit.split(' ')
+                final_units = final_unit.split(' ')
+                prev_unit, prev_unit_factor = prev_units[0] , prev_units[1]
+                final_unit, final_unit_factor = final_units[0] , final_units[1]
+                print(f'VVV {prev_units},{final_units}')
+                if prev_unit_factor == '(g)':
+                    g_to_a = meta_convert_g_to_a(param_values[i],prev_unit)
+
+                    final_value = meta_convert_P_T_FR_L('P', g_to_a, prev_unit,
+                                                  final_unit, specific_gravity[i] * 1000)
+                else:
+                    final_value = meta_convert_P_T_FR_L('P', param_values[i], prev_unit,
+                                                  final_unit, specific_gravity[i] * 1000)
+               
+
+                if final_unit_factor == '(g)':
+                    a_to_g = meta_convert_a_to_g(final_value,final_unit)
+                    desc_final_value.append(a_to_g)
+                else:
+                    desc_final_value.append(final_value)
+               
+            else:
+                desc_final_value.append(None) 
+
+
+        print(f'desc_final_value {desc_final_value}')
+
+    return json.dumps(desc_final_value)
 
 def getOutputs(flowrate_form, fl_unit_form, inletPressure_form, iPresUnit_form, outletPressure_form, oPresUnit_form,
                inletTemp_form,

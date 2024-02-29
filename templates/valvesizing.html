@@ -99,7 +99,7 @@
                                 <div class="col-4 parameters-units">
                                         <div class="row">
                                                 <div class="col-sm-8 colborder_bottom">
-                                                        <div class="row sizingtableleft_warning"><p class="sizingp"><strong>Warning</strong></p></div>
+                                                        <div class="row sizingtableleft_warning"><p class="sizingp"><strong>Warning {{item.project.flowrateUnit}}</strong></p></div>
                                                         <div class="row sizingtableleft"><p class="sizingp">Flowrate</p></div>
                                                         <div class="row sizingtableleft"><p class="sizingp">InletPressure</p></div>
                                                         <div class="row sizingtableleft"><p class="sizingp">Outlet Pressure</p></div>
@@ -115,8 +115,9 @@
                                                 <div class="col-4 colborder_bottom">
                                                         <div class="row sizingtable_header"></div>
                                                         <div class="row sizingtable">
+                                                                
                                                                 <select id="#"
-                                                                        class="sizingtable_inputs">
+                                                                        class="sizingtable_inputs sizingunits" data-desc="flowrate">
                                                                         ">
                                                                         {% for flowrate in metadata['units_dict']['flowrate'] %}
                                                                                 {% if flowrate.name == item.project.flowrateUnit %}
@@ -129,7 +130,7 @@
                                                         </div>
                                                         <div class="row sizingtable">
                                                                 <select id="#"
-                                                                        class="sizingtable_inputs">
+                                                                        class="sizingtable_inputs sizingunits" data-desc="inpres">
                                                                         {% for presunit in metadata['units_dict']['pressure'] %}
                                                                                 {% if presunit.id == item.project.pressureUnit %}
                                                                                 <option value="{{presunit.id}}" selected>{{presunit.name}}</option>
@@ -141,7 +142,7 @@
                                                         </div>
                                                         <div class="row sizingtable">
                                                                 <select id="#"
-                                                                        class="sizingtable_inputs">
+                                                                        class="sizingtable_inputs sizingunits" data-desc="outpres">
                                                                         {% for presunit in metadata['units_dict']['pressure'] %}
                                                                                 {% if presunit.id == item.project.pressureUnit %}
                                                                                 <option value="{{presunit.id}}" selected>{{presunit.name}}</option>
@@ -194,12 +195,12 @@
                                                 {% if cases[i] %}
                                                 <div class="col-2 colborder_bottom case{{i+1}}">
                                                         <div class="row sizingtable_header"></div>
-                                                        <div class="row sizingtable"><input type="text" name="flowrate" class="sizingtable_inputs" value="{{cases[i].flowrate}}"></div>
-                                                        <div class="row sizingtable"><input type="text" name="inletPressure" class="sizingtable_inputs" value="{{cases[i].inletPressure}}"></div>
-                                                        <div class="row sizingtable"><input type="text" name="outletPressure" class="sizingtable_inputs" value="{{cases[i].outletPressure}}"></div>
+                                                        <div class="row sizingtable"><input type="text" name="flowrate" class="sizingtable_inputs sizingvalue_flowrate" value="{{cases[i].flowrate}}"></div>
+                                                        <div class="row sizingtable"><input type="text" name="inletPressure" class="sizingtable_inputs sizingvalue_inpres" value="{{cases[i].inletPressure}}"></div>
+                                                        <div class="row sizingtable"><input type="text" name="outletPressure" class="sizingtable_inputs sizingvalue_outpres" value="{{cases[i].outletPressure}}"></div>
                                                         <div class="row sizingtable"><input type="text" name="inletTemp" class="sizingtable_inputs" value="{{cases[i].inletTemp}}"></div>
                                                         <div class="row sizingtable "><input type="text" name="vaporPressure" class="sizingtable_inputs" value="{{cases[i].vaporPressure}}"></div>
-                                                        <div class="row sizingtable"><input type="text" name="specificGravity" class="sizingtable_inputs" value="{{cases[i].specificGravity}}"></div>
+                                                        <div class="row sizingtable"><input type="text" name="specificGravity" class="sizingtable_inputs sizingvalue_sg" value="{{cases[i].specificGravity}}"></div>
                                                         <div class="row sizingtable"><input type="text" name="kinematicViscosity" class="sizingtable_inputs" value="{{cases[i].kinematicViscosity}}"></div>
                                                         <div class="row sizingtable"><input type="text" name="fl" class="sizingtable_inputs" value="{{cases[i].fl}}"></div>
                                                         <div class="row sizingtable"><input type="text" name="fd" class="sizingtable_inputs" value="{{cases[i].fd}}"></div>
@@ -209,12 +210,12 @@
                                                 {% else %}
                                                 <div class="col-2 colborder_bottom case{{i+1}}">
                                                         <div class="row sizingtable_header"></div>
-                                                        <div class="row sizingtable"><input type="text" name="flowrate" class="sizingtable_inputs"></div>
-                                                        <div class="row sizingtable"><input type="text" name="inletPressure" class="sizingtable_inputs"></div>
-                                                        <div class="row sizingtable"><input type="text" name="outletPressure" class="sizingtable_inputs"></div>
+                                                        <div class="row sizingtable"><input type="text" name="flowrate" class="sizingtable_inputs sizingvalue_flowrate"></div>
+                                                        <div class="row sizingtable"><input type="text" name="inletPressure" class="sizingtable_inputs sizingvalue_inpres"></div>
+                                                        <div class="row sizingtable"><input type="text" name="outletPressure" class="sizingtable_inputs sizingvalue_outpres"></div>
                                                         <div class="row sizingtable"><input type="text" name="inletTemp" class="sizingtable_inputs"></div>
                                                         <div class="row sizingtable "><input type="text" name="vaporPressure" class="sizingtable_inputs"></div>
-                                                        <div class="row sizingtable"><input type="text" name="specificGravity" class="sizingtable_inputs"></div>
+                                                        <div class="row sizingtable"><input type="text" name="specificGravity" class="sizingtable_inputs sizingvalue_sg"></div>
                                                         <div class="row sizingtable"><input type="text" name="kinematicViscosity" class="sizingtable_inputs"></div>
                                                         <div class="row sizingtable"><input type="text" name="fl" value="{{constants['fl']}}" class="sizingtable_inputs"></div>
                                                         <div class="row sizingtable"><input type="text" name="fd" class="sizingtable_inputs"></div>
@@ -695,7 +696,95 @@
                 
 
 
-                <script type="text/javascript">
+<script type="text/javascript">
+
+
+        $(document).ready(function(){
+                var prev_unit;
+                $('.sizingunits').on('focus', function(){
+                        prev_unit = $(this).val();
+                });
+
+                $('.sizingunits').on('change', function(){
+
+                        var final_unit = $(this).val();
+                        console.log(prev_unit,final_unit);
+                        var params = $(this).data('desc');
+                        var param_values = []
+                        var specificGravity = []
+
+                        $('.sizingvalue_' + params).each(function() {
+                                param_values.push(this.value);
+                        });
+                        $('.sizingvalue_sg').each(function (){
+                                specificGravity.push(this.value);
+                        })
+
+                        $.ajax({
+                                type: "GET",
+                                url: "/unit_change",
+                                data: {
+                                prev_unit: prev_unit,
+                                final_unit: final_unit,
+                                params: params,     
+                                param_values: JSON.stringify(param_values),
+                                specific_gravity: JSON.stringify(specificGravity)
+                                },
+                                success: function(response) {
+                                        ans_values = $.parseJSON(response)
+                                        console.log('ans',ans_values)
+                                        $('.sizingvalue_' + params).each(function(index) {
+                                                $(this).val(ans_values[index]);
+                                        });
+                                },
+                                error: function(xhr, status, error) {
+                                console.error("Error:", error);
+                                }
+                        });
+
+                        prev_unit = final_unit;
+                });
+        });
+
+                
+
+                        // $('.sizingunits').on('change', function() { 
+                        //       var description = $(this).data('desc');
+                        //       var unit_value = $(this).val();
+                        //       var desc_values = []
+                        //       var specificGravity = []
+                        //       var ans_values = []
+                        //       $('.sizingvalue_sg').each(function (){
+                        //         specificGravity.push(this.value);
+                        //       })
+                        //       $('.sizingvalue_' + description).each(function() {
+                        //                 desc_values.push(this.value);
+                        //         });
+                        //       console.log('ffff',specificGravity);
+                        //       $.ajax({
+                        //         type: "GET",
+                        //         url: "/unit_change",
+                        //         data: {
+                        //         desc: description,
+                        //         desc_values: JSON.stringify(desc_values),
+                        //         unit_value: unit_value,
+                        //         specific_gravity: JSON.stringify(specificGravity)
+                        //         },
+                        //         success: function(response) {
+                        //                 ans_values = $.parseJSON(response)
+                        //                 $('.sizingvalue_' + description).each(function(index) {
+                        //                         $(this).val(ans_values[index]);
+                        //                 });
+                        //         },
+                        //         error: function(xhr, status, error) {
+                        //         console.error("Error:", error);
+                        //         }
+                        // });
+                        // })
+
+
+
+
                         var copiedOuptput = {value: NaN}
                         function clearData(obj) {
                                 var class_hide = "." + obj.className;
