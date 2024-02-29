@@ -121,7 +121,7 @@ def convert_L_SI(val, unit_in, unit_out, density):
 
 
 def conver_P_SI(val, unit_in, unit_out, density):
-    SI = {'psi': 6894.76, 'kg/cm2': 98066.5, 'Pa': 1, 'kPa': 1000, 'bar': 100000, 'MPa': 1000000,
+    SI = {'psia': 6894.76, 'kg/cm2': 98066.5, 'pa': 1, 'kPa': 1000, 'bar': 100000, 'MPa': 1000000,
           'inh20': 0.00401865, 'mmh20': 0.10197162129, 'inhg': 0.0002953, 'mmhg': 0.00750062, 'mbar': 0.01}
     return val * SI[unit_in] / SI[unit_out]
 
