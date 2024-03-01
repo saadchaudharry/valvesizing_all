@@ -737,6 +737,15 @@ def addNewItemAlternate(project, itemNumber, alternate, valveElement):
         # setattr(new_valve_det, 'itemId', getattr(valveElement, 'itemId'))
     db.session.add(new_valve_det)
     db.session.commit()
+    # Cases:
+    cases_ = db.session.query(caseMaster).filter_by(item=valveElement.item).all()
+    for case__ in cases_:
+        new_case = caseMaster(item=new_item)
+        for attr in inspect(case__).attrs:
+            if attr.key not in ['id', 'itemId', 'item']:
+                setattr(new_case, attr.key, getattr(case__, attr.key))
+        db.session.add(new_case)
+        db.session.commit()
     new_actuator = actuatorMaster(item=new_item)
     db.session.add(new_actuator)
     db.session.commit()
