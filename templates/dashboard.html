@@ -226,7 +226,7 @@
                             </div>
                             <div class="col-1">
                                 <a
-                                    href="#"
+                                    href="{{url_for('copyItem', proj_id=item.project.id, item_id=item.id)}}"
                                     data-toggle="tooltip"
                                     title="Copy"
                                     data-placement="bottom"
@@ -298,6 +298,7 @@
 
                 <tbody class="table-sm" id="itemlist">
                     {% for valve_ in items %}
+                    {% if valve_.item %}
                     <tr>
                         {% if item.id == valve_.item.id %}
                         <td class="table2_ratio"><input type="radio" checked onclick="window.location='{{url_for('selectItem', item_id=valve_.item.id)}}'"></td>
@@ -346,6 +347,8 @@
                             </td>
                         {%endif%}
                     </tr>
+                    {% endif %}
+                    
                     {% endfor %}
 
 
