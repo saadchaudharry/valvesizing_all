@@ -210,16 +210,16 @@
                                                 {% else %}
                                                 <div class="col-2 colborder_bottom case{{i+1}}">
                                                         <div class="row sizingtable_header"></div>
-                                                        <div class="row sizingtable"><input type="text" name="flowrate" class="sizingtable_inputs sizingvalue_flowrate"></div>
-                                                        <div class="row sizingtable"><input type="text" name="inletPressure" class="sizingtable_inputs sizingvalue_inpres"></div>
-                                                        <div class="row sizingtable"><input type="text" name="outletPressure" class="sizingtable_inputs sizingvalue_outpres"></div>
-                                                        <div class="row sizingtable"><input type="text" name="inletTemp" class="sizingtable_inputs"></div>
-                                                        <div class="row sizingtable "><input type="text" name="vaporPressure" class="sizingtable_inputs"></div>
-                                                        <div class="row sizingtable"><input type="text" name="specificGravity" class="sizingtable_inputs sizingvalue_sg"></div>
-                                                        <div class="row sizingtable"><input type="text" name="kinematicViscosity" class="sizingtable_inputs"></div>
-                                                        <div class="row sizingtable"><input type="text" name="fl" value="{{constants['fl']}}" class="sizingtable_inputs"></div>
-                                                        <div class="row sizingtable"><input type="text" name="fd" class="sizingtable_inputs"></div>
-                                                        <div class="row sizingtable"><input type="text" name="xt" value="{{constants['xt']}}" class="sizingtable_inputs"></div>
+                                                        <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="flowrate" class="sizingtable_inputs sizingvalue_flowrate"></div>
+                                                        <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="inletPressure" class="sizingtable_inputs sizingvalue_inpres"></div>
+                                                        <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="outletPressure" class="sizingtable_inputs sizingvalue_outpres"></div>
+                                                        <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="inletTemp" class="sizingtable_inputs"></div>
+                                                        <div class="row sizingtable "><input type="text" {% if i == 0 %} required {% endif %} name="vaporPressure" class="sizingtable_inputs"></div>
+                                                        <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="specificGravity" class="sizingtable_inputs sizingvalue_sg"></div>
+                                                        <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="kinematicViscosity" class="sizingtable_inputs"></div>
+                                                        <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="fl" value="{{constants['fl']}}" class="sizingtable_inputs"></div>
+                                                        <div class="row sizingtable"><input type="text"  name="fd" class="sizingtable_inputs"></div>
+                                                        <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="xt" value="{{constants['xt']}}" class="sizingtable_inputs"></div>
                                                         <div class="row sizingtable_header"></div>
                                                 </div>
                                                 {% endif %}
@@ -412,12 +412,12 @@
                                               <label> Fluid Properties</label> 
                                         </div>
                                         <div class="col-3 form-check form-check-inline ml-3">
-                                                <input type="radio" name="fluidOption" value="Standard" class="form-control-sm-sm valvesizing_radio">
+                                                <input type="radio" name="fluidOption" value="Standard" {% if item.standardStatus %} checked="checked" {%endif%} class="form-control-sm-sm valvesizing_radio">
                                                 <label class="ml-1 mt-2">Standard</label>
                                         </div>
 
                                         <div class="col-3 form-check form-check-inline">
-                                                <input type="radio" name="fluidOption" value="Custom"
+                                                <input type="radio" name="fluidOption" value="Custom" {% if not item.standardStatus %} checked="checked" {%endif%}
                                                         class="form-control-sm-sm valvesizing_radio">
                                                 <label class="ml-1 mt-2">Custom</label>
 
@@ -428,12 +428,12 @@
                                               <label>Pipe Data</label>  
                                         </div>
                                         <div class="col-3 form-check form-check-inline ml-3">
-                                                <input type="radio" value="Standard" name="pipeData"
+                                                <input type="radio" value="Standard" name="pipeData" {% if item.pipeDataStatus %} checked="checked" {%endif%}
                                                         class="form-control-sm-sm valvesizing_radio">
                                                 <label class="ml-1 mt-2">Standard</label>
                                         </div>
                                         <div class="col-3 form-check form-check-inline">
-                                                <input type="radio" value="Custom" name="pipeData"
+                                                <input type="radio" value="Custom" name="pipeData" {% if not item.pipeDataStatus %} checked="checked" {%endif%}
                                                         class="form-control-sm-sm valvesizing_radio">
                                                 <label class="ml-1 mt-2">Custom</label>
 
@@ -449,7 +449,15 @@
                                         <div class="col-7">
                                                 <select class="form-control-sm-sm valvesizing_select" name="fluid_name" id="fluid_name">
                                                         {% for fluid in metadata['fluids']%}
+                                                        {% if cases[0] %}
+                                                                {% if cases[0].fluid.id == fluid.id %}
+                                                                <option value="{{fluid.id}}" selected>{{fluid.fluidName}}</option>
+                                                                {% else %}
                                                                 <option value="{{fluid.id}}">{{fluid.fluidName}}</option>
+                                                                {% endif %}
+                                                        {% else %}
+                                                                <option value="{{fluid.id}}">{{fluid.fluidName}}</option>
+                                                        {% endif %}
                                                         {% endfor %}
                                                         
                                                 </select>
@@ -695,8 +703,7 @@
 </form>
                 
 
-
-<script type="text/javascript">
+                <script type="text/javascript">
 
 
         $(document).ready(function(){
@@ -818,8 +825,23 @@
                         };
                 </script>
                 <script>
+                        function replaceNoneValues() {
+                                // Select all input elements
+                                var inputs = document.getElementsByTagName('input');
+                                
+                                // Loop through each input element
+                                for (var i = 0; i < inputs.length; i++) {
+                                        // Check if the value is 'None'
+                                        if (inputs[i].value === 'None') {
+                                        // If value is 'None', replace it with an empty string
+                                        //     alert(inputs[i].value)
+                                        inputs[i].value = '';
+                                        }
+                                }
+                                }
                         
                         window.onload = function () {
+                                replaceNoneValues();
                                 var fluid_dict = JSON.parse({{metadata['fluids_dict']|tojson}});
                                 var case_len = "{{total_length}}";
                                 var fluidName_ = document.getElementById("fluid_name");
@@ -878,6 +900,7 @@
                                 };
                         };
                 </script>
+                
 
 {% include "footer.html" %}
 {% endblock %}
