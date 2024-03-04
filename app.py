@@ -4651,48 +4651,69 @@ def valveSizing(proj_id, item_id):
                 
                 try:
                     for k in range(len_cases_input):
-                        sch_element = db.session.query(pipeArea).filter_by(schedule=a['iSch'][0], nominalPipeSize=float(a['inletPipeSize'][0])).first()
-                        output = getOutputs(a['flowrate'][k], a['flowrate_unit'][0], a['inletPressure'][k],
-                                            a['inpres_unit'][0],
-                                            a['outletPressure'][k], a['outpres_unit'][0],
-                                            a['inletTemp'][k], a['temp_unit'][0], a['vaporPressure'][k], 
-                                            a['vaporpres_unit'][0],
-                                            a['specificGravity'][k], a['kinematicViscosity'][k],
-                                            a['fl'][k], a['criticalPressure'][0], a['criticalpres_unit'][0], a['inletPipeSize'][0],
-                                            a['inpipe_unit'][0], a['iSch'][0],
-                                            a['outletPipeSize'][0], a['outpipe_unit'][0], a['oSch'][0], 7800,
-                                            5000, a['vSize'][0],
-                                            a['valvesize_unit'][0], a['vSize'][0], a['valvesize_unit'][0], a['ratedCV'][0],
-                                            rw_noise, item_selected, fluid_element.fluidName, valve_element, i_pipearea_element, port_area_,valvearea_element)
-                        
+                        try:
+                            sch_element = db.session.query(pipeArea).filter_by(schedule=a['iSch'][0], nominalPipeSize=float(a['inletPipeSize'][0])).first()
+                            output = getOutputs(a['flowrate'][k], a['flowrate_unit'][0], a['inletPressure'][k],
+                                                a['inpres_unit'][0],
+                                                a['outletPressure'][k], a['outpres_unit'][0],
+                                                a['inletTemp'][k], a['temp_unit'][0], a['vaporPressure'][k], 
+                                                a['vaporpres_unit'][0],
+                                                a['specificGravity'][k], a['kinematicViscosity'][k],
+                                                a['fl'][k], a['criticalPressure'][0], a['criticalpres_unit'][0], a['inletPipeSize'][0],
+                                                a['inpipe_unit'][0], a['iSch'][0],
+                                                a['outletPipeSize'][0], a['outpipe_unit'][0], a['oSch'][0], 7800,
+                                                5000, a['vSize'][0],
+                                                a['valvesize_unit'][0], a['vSize'][0], a['valvesize_unit'][0], a['ratedCV'][0],
+                                                rw_noise, item_selected, fluid_element.fluidName, valve_element, i_pipearea_element, port_area_,valvearea_element)
+                            
 
-                        new_case = caseMaster(flowrate=output['flowrate'], inletPressure=output['inletPressure'],
-                                                outletPressure=output['outletPressure'],
-                                                inletTemp=output['inletTemp'], specificGravity=output['specificGravity'],
-                                                vaporPressure=output['vaporPressure'], kinematicViscosity=output['kinematicViscosity'],
-                                                calculatedCv=output['calculatedCv'], openingPercentage=output['openingPercentage'],
-                                                valveSize=output['valveSize'], fd=output['fd'], Ff=output['Ff'],
-                                                Fp=output['Fp'], Flp=output['Flp'], ratedCv=output['ratedCv'], 
-                                                ar=output['ar'], kc=output['kc'], reNumber=output['reNumber'],
-                                                spl=output['spl'], pipeInVel=output['pipeInVel'],pipeOutVel=output['pipeOutVel'],
-                                                chokedDrop=output['chokedDrop'],
-                                                fl=output['fl'], tex=output['tex'], powerLevel=output['powerLevel'],
-                                                criticalPressure=output['criticalPressure'], inletPipeSize=output['inletPipeSize'],
-                                                outletPipeSize=output['outletPipeSize'], item=item_selected, iPipe=None
-                                                )
-                        item_selected.flowrate_unit = output['fl_unit_form']
-                        item_selected.inpres_unit = output['iPresUnit_form']
-                        item_selected.outpres_unit = output['oPresUnit_form']
-                        item_selected.intemp_unit = output['iTempUnit_form']
-                        item_selected.vaporpres_unit = output['vPresUnit_form']
-                        item_selected.valvesize_unit = output['vSizeUnit_form']
-                        item_selected.inpipe_unit = output['iPipeUnit_form']
-                        item_selected.outpipe_unit = output['oPipeUnit_form']  
-                        item_selected.criticalpres_unit = output['cPressureUnit']   
+                            new_case = caseMaster(flowrate=output['flowrate'], inletPressure=output['inletPressure'],
+                                                    outletPressure=output['outletPressure'],
+                                                    inletTemp=output['inletTemp'], specificGravity=output['specificGravity'],
+                                                    vaporPressure=output['vaporPressure'], kinematicViscosity=output['kinematicViscosity'],
+                                                    calculatedCv=output['calculatedCv'], openingPercentage=output['openingPercentage'],
+                                                    valveSize=output['valveSize'], fd=output['fd'], Ff=output['Ff'],
+                                                    Fp=output['Fp'], Flp=output['Flp'], ratedCv=output['ratedCv'], 
+                                                    ar=output['ar'], kc=output['kc'], reNumber=output['reNumber'],
+                                                    spl=output['spl'], pipeInVel=output['pipeInVel'],pipeOutVel=output['pipeOutVel'],
+                                                    chokedDrop=output['chokedDrop'],
+                                                    fl=output['fl'], tex=output['tex'], powerLevel=output['powerLevel'],
+                                                    criticalPressure=output['criticalPressure'], inletPipeSize=output['inletPipeSize'],
+                                                    outletPipeSize=output['outletPipeSize'], item=item_selected, iPipe=None
+                                                    )
+                            item_selected.flowrate_unit = output['fl_unit_form']
+                            item_selected.inpres_unit = output['iPresUnit_form']
+                            item_selected.outpres_unit = output['oPresUnit_form']
+                            item_selected.intemp_unit = output['iTempUnit_form']
+                            item_selected.vaporpres_unit = output['vPresUnit_form']
+                            item_selected.valvesize_unit = output['vSizeUnit_form']
+                            item_selected.inpipe_unit = output['iPipeUnit_form']
+                            item_selected.outpipe_unit = output['oPipeUnit_form']  
+                            item_selected.criticalpres_unit = output['cPressureUnit']   
 
-                        
-                        db.session.add(new_case)
-                        db.session.commit()
+                            
+                            db.session.add(new_case)
+                            db.session.commit()
+                        except:
+                            new_case = caseMaster(flowrate=a['flowrate'][k], inletPressure=a['inletPressure'][k], fluid=fluid_element,
+                                                    outletPressure= a['outletPressure'][k], specificGravity=a['specificGravity'][k],
+                                                    inletTemp=a['inletTemp'][k], vaporPressure=a['vaporPressure'][k],
+                                                    valveSize=a['vSize'][0], kinematicViscosity=a['kinematicViscosity'][k],
+                                                    criticalPressure=a['criticalPressure'][0], inletPipeSize=a['inletPipeSize'][0],
+                                                    outletPipeSize=a['outletPipeSize'][0], ratedCv=a['ratedCV'][0], fl=a['fl'][k], xt=a['xt'][k],
+                                                    item=item_selected, iPipe=None)
+                            item_selected.flowrate_unit = output['fl_unit_form']
+                            item_selected.inpres_unit = output['iPresUnit_form']
+                            item_selected.outpres_unit = output['oPresUnit_form']
+                            item_selected.intemp_unit = output['iTempUnit_form']
+                            item_selected.vaporpres_unit = output['vPresUnit_form']
+                            item_selected.valvesize_unit = output['vSizeUnit_form']
+                            item_selected.inpipe_unit = output['iPipeUnit_form']
+                            item_selected.outpipe_unit = output['oPipeUnit_form']  
+                            item_selected.criticalpres_unit = output['cPressureUnit']   
+ 
+                            db.session.add(new_case)
+                            db.session.commit()
                         for i in itemCases_1:
                             print('deleteing casees')
                             db.session.delete(i)
