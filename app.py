@@ -5032,7 +5032,8 @@ def selectValve(proj_id, item_id):
                 cv_values = []
                 for i in cases:
                     cv_value = i.calculatedCv
-                    cv_values.append(cv_value)
+                    if cv_value:
+                        cv_values.append(cv_value)
                 min_cv = min(cv_values)
                 max_cv = max(cv_values)
                 print(f"CV Values: {cv_values}")
