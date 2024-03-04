@@ -77,26 +77,26 @@ def notes_dict_reorder(input_dict, company, address):
 
 temperature_unit_list = [{"id": "C", "name": "°C"}, {"id": "F", "name": "°F"}, {"id": "R", "name": "R"}, {"id": "K", "name": "K"}]
 length_unit_list = [{'id': 'inch', 'name': 'inch'}, {'id': 'mm', 'name': 'mm'}]
-pressure_unit_list = [{'id': 'bar', 'name': 'bar (a)'}, {'id': 'bar', 'name': 'bar (g)'},
-                          {'id': 'kpa', 'name': 'kPa (a)'}, {'id': 'kpa', 'name': 'kPa (g)'},
-                          {'id': 'mpa', 'name': 'MPa (a)'}, {'id': 'mpa', 'name': 'MPa (g)'},
-                          {'id': 'pa', 'name': 'Pa (a)'}, {'id': 'pa', 'name': 'Pa (g)'},
-                          {'id': 'inh20', 'name': 'in H2O (a)'}, {'id': 'inh20', 'name': 'in H2O (g)'},
-                          {'id': 'inhg', 'name': 'in Hg (a)'}, {'id': 'inhg', 'name': 'in Hg (g)'},
-                          {'id': 'kg/cm2', 'name': 'kg/cm2 (a)'}, {'id': 'kg/cm2', 'name': 'kg/cm2 (g)'},
-                          {'id': 'mmh20', 'name': 'm H2O (a)'}, {'id': 'mmh20', 'name': 'm H2O (g)'},
-                          {'id': 'mbar', 'name': 'mbar (a)'}, {'id': 'mbar', 'name': 'mbar (g)'},
-                          {'id': 'mmhg', 'name': 'mm Hg (a)'}, {'id': 'mmhg', 'name': 'mm Hg (g)'},
-                          {'id': 'psia', 'name': 'psi (g)'}, {'id': 'psia', 'name': 'psi (a)'},
-                          {'id': 'atm', 'name': 'atm (g)'}, {'id': 'atm', 'name': 'atm (a)'},
-                          {'id': 'torr', 'name': 'torr (g)'}, {'id': 'torr', 'name': 'torr (a)'}]
+pressure_unit_list = [{'id': 'bar (a)', 'name': 'bar (a)'}, {'id': 'bar (g)', 'name': 'bar (g)'},
+                          {'id': 'kPa (a)', 'name': 'kPa (a)'}, {'id': 'kPa (g)', 'name': 'kPa (g)'},
+                          {'id': 'MPa (a)', 'name': 'MPa (a)'}, {'id': 'MPa (g)', 'name': 'MPa (g)'},
+                          {'id': 'pa (a)', 'name': 'Pa (a)'}, {'id': 'pa (g)', 'name': 'Pa (g)'},
+                          {'id': 'inh20 (a)', 'name': 'in H2O (a)'}, {'id': 'inh20 (g)', 'name': 'in H2O (g)'},
+                          {'id': 'inhg (a)', 'name': 'in Hg (a)'}, {'id': 'inhg (g)', 'name': 'in Hg (g)'},
+                          {'id': 'kg/cm2 (a)', 'name': 'kg/cm2 (a)'}, {'id': 'kg/cm2 (g)', 'name': 'kg/cm2 (g)'},
+                          {'id': 'mmh20 (a)', 'name': 'm H2O (a)'}, {'id': 'mmh20 (g)', 'name': 'm H2O (g)'},
+                          {'id': 'mbar (a)', 'name': 'mbar (a)'}, {'id': 'mbar (g)', 'name': 'mbar (g)'},
+                          {'id': 'mmhg (a)', 'name': 'mm Hg (a)'}, {'id': 'mmhg (g)', 'name': 'mm Hg (g)'},
+                          {'id': 'psia (a)', 'name': 'psi (a)'}, {'id': 'psia (g)', 'name': 'psi (g)'},
+                          {'id': 'atm (a)', 'name': 'atm (a)'}, {'id': 'atm (g)', 'name': 'atm (g)'},
+                          {'id': 'torr (a)', 'name': 'torr (a)'}, {'id': 'torr (g)', 'name': 'torr (g)'}]
 flowrate_unit_list = [{'id': 'm3/hr', 'name': 'm3/hr'}, {'id': 'scfh', 'name': 'scfh'},
                           {'id': 'gpm', 'name': 'gpm'},
                           {'id': 'lb/hr', 'name': 'lb/hr'}, {'id': 'kg/hr', 'name': 'kg/hr'}]
 
 del_p_unit_list = [{'id': 'bar', 'name': 'bar'},
-                          {'id': 'kpa', 'name': 'kPa'},
-                          {'id': 'mpa', 'name': 'MPa'}, 
+                          {'id': 'kPa', 'name': 'kPa'},
+                          {'id': 'MPa', 'name': 'MPa'}, 
                           {'id': 'pa', 'name': 'Pa'}, 
                           {'id': 'inh20', 'name': 'in H2O'}, 
                           {'id': 'inhg', 'name': 'in Hg'}, 
@@ -122,7 +122,7 @@ def convert_L_SI(val, unit_in, unit_out, density):
 
 def conver_P_SI(val, unit_in, unit_out, density):
     SI = {'psia': 6894.76, 'kg/cm2': 98066.5, 'pa': 1, 'kPa': 1000, 'bar': 100000, 'MPa': 1000000,
-          'inh20': 0.00401865, 'mmh20': 0.10197162129, 'inhg': 0.0002953, 'mmhg': 0.00750062, 'mbar': 0.01}
+          'inh20': 0.00401865, 'mmh20': 9.80665, 'inhg': 0.0002953, 'mmhg': 133.322, 'mbar': 0.01}
     return val * SI[unit_in] / SI[unit_out]
 
 
@@ -163,16 +163,17 @@ def conver_FR_SI(val, unit_in, unit_out, density):
 
 
 def meta_convert_P_T_FR_L(prop, val, unit_in, unit_out, density):
+    print(f'KLASDFF {prop},{val},{unit_in},{unit_out}')
     properties = {"T": convert_T_SI, "P": conver_P_SI, "FR": conver_FR_SI, "L": convert_L_SI}
     return properties[prop](val, unit_in, unit_out, density)
 
 def meta_convert_g_to_a(value, prop):
-    properties = {"bar":1.01325 , "Pa":100000, "kPa":101.284, "MPa":0.1, "psi":14.69, "kg/cm2":1.033}
+    properties = {"bar":1.01325 , "pa":100000, "kPa":101.284, "MPa":0.1, "psia":14.69, "kg/cm2":1.033,"torr":759.692,"atm":1,"mmh20":10328.092,"mmhg":759.692}
     return value + properties[prop]
 
 
 def meta_convert_a_to_g(value,prop):
-    properties = {"bar":1.01325 , "Pa":100000, "kPa":101.284, "MPa":0.1, "psi":14.69, "kg/cm2":1.033}
+    properties = {"bar":1.01325 , "pa":100000, "kPa":101.284, "MPa":0.1, "psia":14.69, "kg/cm2":1.033, "torr":759.692,"atm":1,"mmh20":10328.092,"mmhg":759.692}
     return value - properties[prop]
 
 

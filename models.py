@@ -336,6 +336,16 @@ class itemMaster(db.Model):
     standardStatus = Column(Boolean)
     pipeDataStatus = Column(Boolean)
 
+    flowrate_unit = Column(String(20))
+    inpres_unit = Column(String(20))
+    outpres_unit = Column(String(20))
+    intemp_unit = Column(String(20))
+    vaporpres_unit = Column(String(20))
+    criticalpres_unit = Column(String(20))
+    inpipe_unit = Column(String(20))
+    outpipe_unit = Column(String(20))
+    valvesize_unit = Column(String(20))
+
     # rel as parent
     case = relationship("caseMaster", cascade="all,delete", back_populates="item")
 
