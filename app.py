@@ -2579,7 +2579,7 @@ def getOutputs(flowrate_form, fl_unit_form, inletPressure_form, iPresUnit_form, 
                    criticalPressure_form, inletPipeDia_form,
                    outletPipeDia_form, iSch, oSch,
                    item_selected]
-    print(f'HHHHHHHHHHHHVVVSSS {fl_unit_form},{' '.join(iPresUnit_form)}')
+    # print(f'HHHHHHHHHHHHVVVSSS {fl_unit_form},{' '.join(iPresUnit_form)}')
     iPressureUnit = ' '.join(iPresUnit_form)
     oPressureUnit = ' '.join(oPresUnit_form)
     vPressureUnit = ' '.join(vPresUnit_form)
@@ -4639,13 +4639,13 @@ def valveSizing(proj_id, item_id):
                 .filter_by(schedule='std')\
                 .filter_by(nominalPipeSize=float(a['inletPipeSize'][0]))\
                 .first()
-        print(f'PIPEELEMENT {i_pipearea_element},{a['inpipe_unit'][0]},{a['inletPipeSize'][0]}')
+        # print(f'PIPEELEMENT {i_pipearea_element},{a['inpipe_unit'][0]},{a['inletPipeSize'][0]}')
 
         port_area_ = db.session.query(portArea).filter_by(v_size=a['vSize'][0], trim_type="contour",
                                         flow_char="equal").first()
         valvearea_element = db.session.query(valveArea).filter_by(rating=valve_element.rating.name[5:],
                                                 nominalPipeSize=a['vSize'][0]).first()
-        print(f'UNIT {a['inletPipeSize'][0]}')
+        # print(f'UNIT {a['inletPipeSize'][0]}')
         if f_state == 'Liquid':
                 len_cases_input = len(a['inletPressure'])
                 
@@ -4702,15 +4702,15 @@ def valveSizing(proj_id, item_id):
                                                     criticalPressure=a['criticalPressure'][0], inletPipeSize=a['inletPipeSize'][0],
                                                     outletPipeSize=a['outletPipeSize'][0], ratedCv=a['ratedCV'][0], fl=a['fl'][k], xt=a['xt'][k],
                                                     item=item_selected, iPipe=None)
-                            item_selected.flowrate_unit = output['fl_unit_form']
-                            item_selected.inpres_unit = output['iPresUnit_form']
-                            item_selected.outpres_unit = output['oPresUnit_form']
-                            item_selected.intemp_unit = output['iTempUnit_form']
-                            item_selected.vaporpres_unit = output['vPresUnit_form']
-                            item_selected.valvesize_unit = output['vSizeUnit_form']
-                            item_selected.inpipe_unit = output['iPipeUnit_form']
-                            item_selected.outpipe_unit = output['oPipeUnit_form']  
-                            item_selected.criticalpres_unit = output['cPressureUnit']   
+                            item_selected.flowrate_unit = a['flowrate_unit'][0]
+                            item_selected.inpres_unit = a['inpres_unit'][0]
+                            item_selected.outpres_unit = a['outpres_unit'][0]
+                            item_selected.intemp_unit = a['temp_unit'][0]
+                            item_selected.vaporpres_unit = a['vaporpres_unit'][0]
+                            item_selected.valvesize_unit = a['valvesize_unit'][0]
+                            item_selected.inpipe_unit = a['inpipe_unit'][0]
+                            item_selected.outpipe_unit = a['outpipe_unit'][0]  
+                            item_selected.criticalpres_unit = a['criticalpres_unit'][0]   
  
                             db.session.add(new_case)
                             db.session.commit()
@@ -5129,7 +5129,7 @@ def selectValve(proj_id, item_id):
                     else:
                         rw_noise = 0.5
                     # ## done adding
-                    seatDia, seatDiaUnit, sosPipe, densityPipe, rw_noise, fl_unit, iPresUnit, oPresUnit, vPresUnit, cPresUnit, iPipeUnit, oPipeUnit, vSizeUnit, iPipeSchUnit, oPipeSchUnit, iTempUnit, sg_choice = case_.seatDia, item_selected.project.lengthUnit, 5000, 7800, rw_noise, item_selected.project.flowrateUnit, item_selected.project.pressureUnit, item_selected.project.pressureUnit, item_selected.project.pressureUnit, item_selected.project.pressureUnit, item_selected.project.lengthUnit,item_selected.project.lengthUnit,item_selected.project.lengthUnit,item_selected.project.lengthUnit,item_selected.project.lengthUnit,item_selected.project.temperatureUnit, case_.mw_sg
+                    seatDia, seatDiaUnit, sosPipe, densityPipe, rw_noise, fl_unit, iPresUnit, oPresUnit, vPresUnit, cPresUnit, iPipeUnit, oPipeUnit, vSizeUnit, iPipeSchUnit, oPipeSchUnit, iTempUnit, sg_choice = case_.seatDia, item_selected.valvesize_unit, 5000, 7800, rw_noise, item_selected.flowrate_unit, item_selected.inpres_unit, item_selected.outpres_unit, item_selected.vaporpres_unit, item_selected.criticalpres_unit, item_selected.inpipe_unit,item_selected.outpipe_unit,item_selected.valvesize_unit,item_selected.valvesize_unit,item_selected.valvesize_unit,item_selected.intemp_unit, case_.mw_sg
                     select_dict = db.session.query(cvValues).filter_by(cv=cv_element, coeff='Cv').first()
                     select_dict_fl = db.session.query(cvValues).filter_by(cv=cv_element, coeff='FL').first()
                     select_dict_xt = db.session.query(cvValues).filter_by(cv=cv_element, coeff='Xt').first()

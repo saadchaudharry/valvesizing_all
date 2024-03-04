@@ -196,31 +196,31 @@
                                                 {% if cases[i] %}
                                                 <div class="col-2 colborder_bottom case{{i+1}}">
                                                         <div class="row sizingtable_header"></div>
-                                                        <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="flowrate" class="sizingtable_inputs sizingvalue_flowrate" value="{{cases[i].flowrate}}"></div>
-                                                        <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="inletPressure" class="sizingtable_inputs sizingvalue_inpres" value="{{cases[i].inletPressure}}"></div>
-                                                        <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="outletPressure" class="sizingtable_inputs sizingvalue_outpres" value="{{cases[i].outletPressure}}"></div>
-                                                        <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="inletTemp" class="sizingtable_inputs sizingvalue_temperature" value="{{cases[i].inletTemp}}"></div>
-                                                        <div class="row sizingtable "><input type="text" {% if i == 0 %} required {% endif %} name="vaporPressure" class="sizingtable_inputs sizingvalue_vaporPres" value="{{cases[i].vaporPressure}}"></div>
-                                                        <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="specificGravity" class="sizingtable_inputs sizingvalue_sg" value="{{cases[i].specificGravity}}"></div>
-                                                        <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="kinematicViscosity" class="sizingtable_inputs" value="{{cases[i].kinematicViscosity}}"></div>
-                                                        <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="fl" class="sizingtable_inputs" value="{{cases[i].fl}}"></div>
-                                                        <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="fd" class="sizingtable_inputs" value="{{cases[i].fd}}"></div>
-                                                        <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="xt" class="sizingtable_inputs" value="{{cases[i].xt}}"></div>
+                                                        <div class="row sizingtable"><input type="text" name="flowrate" class="sizingtable_inputs sizingvalue_flowrate" value="{{cases[i].flowrate}}"></div>
+                                                        <div class="row sizingtable"><input type="text" name="inletPressure" class="sizingtable_inputs sizingvalue_inpres" value="{{cases[i].inletPressure}}"></div>
+                                                        <div class="row sizingtable"><input type="text" name="outletPressure" class="sizingtable_inputs sizingvalue_outpres" value="{{cases[i].outletPressure}}"></div>
+                                                        <div class="row sizingtable"><input type="text" name="inletTemp" class="sizingtable_inputs sizingvalue_temperature" value="{{cases[i].inletTemp}}"></div>
+                                                        <div class="row sizingtable "><input type="text" name="vaporPressure" class="sizingtable_inputs sizingvalue_vaporPres" value="{{cases[i].vaporPressure}}"></div>
+                                                        <div class="row sizingtable"><input type="text" name="specificGravity" class="sizingtable_inputs sizingvalue_sg" value="{{cases[i].specificGravity}}"></div>
+                                                        <div class="row sizingtable"><input type="text" name="kinematicViscosity" class="sizingtable_inputs" value="{{cases[i].kinematicViscosity}}"></div>
+                                                        <div class="row sizingtable"><input type="text" name="fl" class="sizingtable_inputs" value="{{cases[i].fl}}"></div>
+                                                        <div class="row sizingtable"><input type="text" name="fd" class="sizingtable_inputs" value="{{cases[i].fd}}"></div>
+                                                        <div class="row sizingtable"><input type="text" name="xt" class="sizingtable_inputs" value="{{cases[i].xt}}"></div>
                                                         <div class="row sizingtable_header"></div>
                                                 </div>
                                                 {% else %}
                                                 <div class="col-2 colborder_bottom case{{i+1}}">
                                                         <div class="row sizingtable_header"></div>
-                                                        <div class="row sizingtable"><input type="text" name="flowrate" class="sizingtable_inputs sizingvalue_flowrate"></div>
-                                                        <div class="row sizingtable"><input type="text" name="inletPressure" class="sizingtable_inputs sizingvalue_inpres"></div>
-                                                        <div class="row sizingtable"><input type="text" name="outletPressure" class="sizingtable_inputs sizingvalue_outpres"></div>
-                                                        <div class="row sizingtable"><input type="text" name="inletTemp" class="sizingtable_inputs sizingvalue_temperature"></div>
-                                                        <div class="row sizingtable "><input type="text" name="vaporPressure" class="sizingtable_inputs sizingvalue_vaporPres"></div>
-                                                        <div class="row sizingtable"><input type="text" name="specificGravity" class="sizingtable_inputs sizingvalue_sg"></div>
-                                                        <div class="row sizingtable"><input type="text" name="kinematicViscosity" class="sizingtable_inputs"></div>
-                                                        <div class="row sizingtable"><input type="text" name="fl" value="{{constants['fl']}}" class="sizingtable_inputs"></div>
-                                                        <div class="row sizingtable"><input type="text" name="fd" class="sizingtable_inputs"></div>
-                                                        <div class="row sizingtable"><input type="text" name="xt" value="{{constants['xt']}}" class="sizingtable_inputs"></div>
+                                                        <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="flowrate" class="sizingtable_inputs sizingvalue_flowrate"></div>
+                                                        <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="inletPressure" class="sizingtable_inputs sizingvalue_inpres"></div>
+                                                        <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="outletPressure" class="sizingtable_inputs sizingvalue_outpres"></div>
+                                                        <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="inletTemp" class="sizingtable_inputs sizingvalue_temperature"></div>
+                                                        <div class="row sizingtable "><input type="text" {% if i == 0 %} required {% endif %} name="vaporPressure" class="sizingtable_inputs sizingvalue_vaporPres"></div>
+                                                        <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="specificGravity" class="sizingtable_inputs sizingvalue_sg"></div>
+                                                        <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="kinematicViscosity" class="sizingtable_inputs"></div>
+                                                        <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="fl" value="{{constants['fl']}}" class="sizingtable_inputs"></div>
+                                                        <div class="row sizingtable"><input type="text"  name="fd" class="sizingtable_inputs"></div>
+                                                        <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="xt" value="{{constants['xt']}}" class="sizingtable_inputs"></div>
                                                         <div class="row sizingtable_header"></div>
                                                 </div>
                                                 {% endif %}
