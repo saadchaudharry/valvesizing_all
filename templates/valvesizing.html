@@ -2,6 +2,7 @@
 {% include "header.html" %}
 <br><br>
 <form action="{{url_for('valveSizing', item_id=item.id, proj_id=item.project.id, page=page)}}" method="post">
+        
         <div class="row">
                 <div class="col-7 ml-3">
                         <div class="row column-headers">
@@ -117,46 +118,46 @@
                                                         <div class="row sizingtable">
                                                                 
                                                                 <select id="#"
-                                                                        class="sizingtable_inputs sizingunits" data-desc="flowrate">
+                                                                        class="sizingtable_inputs sizingunits" data-desc="flowrate" name="flowrate_unit">
                                                                         ">
                                                                         {% for flowrate in metadata['units_dict']['flowrate'] %}
-                                                                                {% if flowrate.name == item.project.flowrateUnit %}
+                                                                                {% if flowrate.id == item.flowrate_unit %}
                                                                                 <option value="{{flowrate.id}}" selected>{{flowrate.name}}</option>
                                                                                 {% else %}
-                                                                                <option value="{{flowrate.name}}">{{flowrate.name}}</option>
+                                                                                <option value="{{flowrate.id}}">{{flowrate.name}}</option>
                                                                                 {% endif %}
                                                                         {% endfor %}
                                                                 </select>
                                                         </div>
                                                         <div class="row sizingtable">
                                                                 <select id="#"
-                                                                        class="sizingtable_inputs sizingunits" data-desc="inpres">
+                                                                        class="sizingtable_inputs sizingunits" data-desc="inpres" name="inpres_unit">
                                                                         {% for presunit in metadata['units_dict']['pressure'] %}
-                                                                                {% if presunit.id == item.project.pressureUnit %}
+                                                                                {% if presunit.id == item.inpres_unit %}
                                                                                 <option value="{{presunit.id}}" selected>{{presunit.name}}</option>
                                                                                 {% else %}
-                                                                                <option value="{{presunit.name}}">{{presunit.name}}</option>
+                                                                                <option value="{{presunit.id}}">{{presunit.name}}</option>
                                                                                 {% endif %}
                                                                         {% endfor %}
                                                                 </select>
                                                         </div>
                                                         <div class="row sizingtable">
                                                                 <select id="#"
-                                                                        class="sizingtable_inputs sizingunits" data-desc="outpres">
+                                                                        class="sizingtable_inputs sizingunits" data-desc="outpres" name="outpres_unit">
                                                                         {% for presunit in metadata['units_dict']['pressure'] %}
-                                                                                {% if presunit.id == item.project.pressureUnit %}
+                                                                                {% if presunit.id == item.outpres_unit %}
                                                                                 <option value="{{presunit.id}}" selected>{{presunit.name}}</option>
                                                                                 {% else %}
-                                                                                <option value="{{presunit.name}}">{{presunit.name}}</option>
+                                                                                <option value="{{presunit.id}}">{{presunit.name}}</option>
                                                                                 {% endif %}
                                                                         {% endfor %}
                                                                 </select>
                                                         </div>
                                                         <div class="row sizingtable">
                                                                 <select id="#"
-                                                                        class="sizingtable_inputs">
+                                                                        class="sizingtable_inputs sizingunits" data-desc="temperature" name="temp_unit">
                                                                         {% for temperature in metadata['units_dict']['temperature'] %}
-                                                                                {% if temperature.id == item.project.temperatureUnit %}
+                                                                                {% if temperature.id == item.intemp_unit %}
                                                                                 <option value="{{temperature.id}}" selected>{{temperature.name}}</option>
                                                                                 {% else %}
                                                                                 <option value="{{temperature.id}}">{{temperature.name}}</option>
@@ -166,9 +167,9 @@
                                                         </div>
                                                         <div class="row sizingtable">
                                                                 <select id="#"
-                                                                        class="sizingtable_inputs">
+                                                                        class="sizingtable_inputs sizingunits" data-desc="vaporPres" name="vaporpres_unit">
                                                                         {% for presunit in metadata['units_dict']['pressure'] %}
-                                                                                {% if presunit.id == item.project.pressureUnit %}
+                                                                                {% if presunit.id == item.vaporpres_unit %}
                                                                                 <option value="{{presunit.id}}" selected>{{presunit.name}}</option>
                                                                                 {% else %}
                                                                                 <option value="{{presunit.id}}">{{presunit.name}}</option>
@@ -195,31 +196,31 @@
                                                 {% if cases[i] %}
                                                 <div class="col-2 colborder_bottom case{{i+1}}">
                                                         <div class="row sizingtable_header"></div>
-                                                        <div class="row sizingtable"><input type="text" name="flowrate" class="sizingtable_inputs sizingvalue_flowrate" value="{{cases[i].flowrate}}"></div>
-                                                        <div class="row sizingtable"><input type="text" name="inletPressure" class="sizingtable_inputs sizingvalue_inpres" value="{{cases[i].inletPressure}}"></div>
-                                                        <div class="row sizingtable"><input type="text" name="outletPressure" class="sizingtable_inputs sizingvalue_outpres" value="{{cases[i].outletPressure}}"></div>
-                                                        <div class="row sizingtable"><input type="text" name="inletTemp" class="sizingtable_inputs" value="{{cases[i].inletTemp}}"></div>
-                                                        <div class="row sizingtable "><input type="text" name="vaporPressure" class="sizingtable_inputs" value="{{cases[i].vaporPressure}}"></div>
-                                                        <div class="row sizingtable"><input type="text" name="specificGravity" class="sizingtable_inputs sizingvalue_sg" value="{{cases[i].specificGravity}}"></div>
-                                                        <div class="row sizingtable"><input type="text" name="kinematicViscosity" class="sizingtable_inputs" value="{{cases[i].kinematicViscosity}}"></div>
-                                                        <div class="row sizingtable"><input type="text" name="fl" class="sizingtable_inputs" value="{{cases[i].fl}}"></div>
-                                                        <div class="row sizingtable"><input type="text" name="fd" class="sizingtable_inputs" value="{{cases[i].fd}}"></div>
-                                                        <div class="row sizingtable"><input type="text" name="xt" class="sizingtable_inputs" value="{{cases[i].xt}}"></div>
+                                                        <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="flowrate" class="sizingtable_inputs sizingvalue_flowrate" value="{{cases[i].flowrate}}"></div>
+                                                        <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="inletPressure" class="sizingtable_inputs sizingvalue_inpres" value="{{cases[i].inletPressure}}"></div>
+                                                        <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="outletPressure" class="sizingtable_inputs sizingvalue_outpres" value="{{cases[i].outletPressure}}"></div>
+                                                        <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="inletTemp" class="sizingtable_inputs sizingvalue_temperature" value="{{cases[i].inletTemp}}"></div>
+                                                        <div class="row sizingtable "><input type="text" {% if i == 0 %} required {% endif %} name="vaporPressure" class="sizingtable_inputs sizingvalue_vaporPres" value="{{cases[i].vaporPressure}}"></div>
+                                                        <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="specificGravity" class="sizingtable_inputs sizingvalue_sg" value="{{cases[i].specificGravity}}"></div>
+                                                        <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="kinematicViscosity" class="sizingtable_inputs" value="{{cases[i].kinematicViscosity}}"></div>
+                                                        <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="fl" class="sizingtable_inputs" value="{{cases[i].fl}}"></div>
+                                                        <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="fd" class="sizingtable_inputs" value="{{cases[i].fd}}"></div>
+                                                        <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="xt" class="sizingtable_inputs" value="{{cases[i].xt}}"></div>
                                                         <div class="row sizingtable_header"></div>
                                                 </div>
                                                 {% else %}
                                                 <div class="col-2 colborder_bottom case{{i+1}}">
                                                         <div class="row sizingtable_header"></div>
-                                                        <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="flowrate" class="sizingtable_inputs sizingvalue_flowrate"></div>
-                                                        <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="inletPressure" class="sizingtable_inputs sizingvalue_inpres"></div>
-                                                        <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="outletPressure" class="sizingtable_inputs sizingvalue_outpres"></div>
-                                                        <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="inletTemp" class="sizingtable_inputs"></div>
-                                                        <div class="row sizingtable "><input type="text" {% if i == 0 %} required {% endif %} name="vaporPressure" class="sizingtable_inputs"></div>
-                                                        <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="specificGravity" class="sizingtable_inputs sizingvalue_sg"></div>
-                                                        <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="kinematicViscosity" class="sizingtable_inputs"></div>
-                                                        <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="fl" value="{{constants['fl']}}" class="sizingtable_inputs"></div>
-                                                        <div class="row sizingtable"><input type="text"  name="fd" class="sizingtable_inputs"></div>
-                                                        <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="xt" value="{{constants['xt']}}" class="sizingtable_inputs"></div>
+                                                        <div class="row sizingtable"><input type="text" name="flowrate" class="sizingtable_inputs sizingvalue_flowrate"></div>
+                                                        <div class="row sizingtable"><input type="text" name="inletPressure" class="sizingtable_inputs sizingvalue_inpres"></div>
+                                                        <div class="row sizingtable"><input type="text" name="outletPressure" class="sizingtable_inputs sizingvalue_outpres"></div>
+                                                        <div class="row sizingtable"><input type="text" name="inletTemp" class="sizingtable_inputs sizingvalue_temperature"></div>
+                                                        <div class="row sizingtable "><input type="text" name="vaporPressure" class="sizingtable_inputs sizingvalue_vaporPres"></div>
+                                                        <div class="row sizingtable"><input type="text" name="specificGravity" class="sizingtable_inputs sizingvalue_sg"></div>
+                                                        <div class="row sizingtable"><input type="text" name="kinematicViscosity" class="sizingtable_inputs"></div>
+                                                        <div class="row sizingtable"><input type="text" name="fl" value="{{constants['fl']}}" class="sizingtable_inputs"></div>
+                                                        <div class="row sizingtable"><input type="text" name="fd" class="sizingtable_inputs"></div>
+                                                        <div class="row sizingtable"><input type="text" name="xt" value="{{constants['xt']}}" class="sizingtable_inputs"></div>
                                                         <div class="row sizingtable_header"></div>
                                                 </div>
                                                 {% endif %}
@@ -473,14 +474,14 @@
                                                         class="form-control-sm-sm valvesizing_fluid_data valvesizing_inputbox">
                                                 {% else %}
                                                 <input type="text" name="criticalPressure" required value=""
-                                                        class="form-control-sm-sm valvesizing_fluid_data valvesizing_inputbox">
+                                                        class="form-control-sm-sm valvesizing_fluid_data valvesizing_inputbox sizingvalue_critPres">
                                                 {% endif %}
                                         </div>
                                         <div class="col-3">
                                                 <select id="#"
-                                                        class="form-control-sm-sm valvesizing_select">
+                                                        class="form-control-sm-sm valvesizing_select sizingunits" data-desc="critPres" name="criticalpres_unit">
                                                         {% for presunit in metadata['units_dict']['pressure'] %}
-                                                                {% if presunit.id == item.project.pressureUnit %}
+                                                                {% if presunit.id == item.criticalpres_unit %}
                                                                 <option value="{{presunit.id}}" selected>{{presunit.name}}</option>
                                                                 {% else %}
                                                                 <option value="{{presunit.id}}">{{presunit.name}}</option>
@@ -497,16 +498,16 @@
                                         </div>
                                         <div class="col-4">
                                                 {% if cases[0] %}
-                                                <input type="text" name="inletPipeSize" required value="{{cases[0].inletPipeSize}}" class="form-control-sm-sm valvesizing_fluid_data valvesizing_inputbox">
+                                                <input type="text" name="inletPipeSize" required value="{{cases[0].inletPipeSize}}" class="form-control-sm-sm valvesizing_fluid_data valvesizing_inputbox sizingvalue_inletlength">
                                                 {% else %}
-                                                <input type="text" name="inletPipeSize" required value="" class="form-control-sm-sm valvesizing_fluid_data valvesizing_inputbox">
+                                                <input type="text" name="inletPipeSize" required value="" class="form-control-sm-sm valvesizing_fluid_data valvesizing_inputbox sizingvalue_inletlength">
                                                 {% endif %}
                                         </div>
                                         <div class="col-3">
                                                 <select id="#"
-                                                        class="form-control-sm-sm valvesizing_select">
+                                                        class="form-control-sm-sm valvesizing_select sizingunits" data-desc="inletlength" name="inpipe_unit">
                                                         {% for length in metadata['units_dict']['length'] %}
-                                                                {% if length.name == item.project.lengthUnit %}
+                                                                {% if length.id == item.inpipe_unit %}
                                                                 <option value="{{length.id}}" selected>{{length.name}}</option>
                                                                 {% else %}
                                                                 <option value="{{length.id}}">{{length.name}}</option>
@@ -522,7 +523,7 @@
                                         <div class="col-4">
                                                 {% if cases[0] %}
                                                 <select id="#"
-                                                        class="form-control-sm-sm valvesizing_select" name="iSch">
+                                                        class="form-control-sm-sm valvesizing_select " name="iSch">
 
                                                         {% for pipe_schedule in metadata['units_dict']['pipe_schedule'] %}
                                                         {% if cases[0].iPipe.schedule == pipe_schedule %}
@@ -534,7 +535,7 @@
                                                 </select>
                                                 {% else %}
                                                 <select id="#"
-                                                        class="form-control-sm-sm valvesizing_select" name="iSch">
+                                                        class="form-control-sm-sm valvesizing_select " name="iSch" >
 
                                                         {% for pipe_schedule in metadata['units_dict']['pipe_schedule'] %}
                                                                 <option value="{{pipe_schedule.id}}">{{pipe_schedule.name}}</option>
@@ -556,19 +557,19 @@
                                                 {% if cases[0] %}
                                                 <input type="text"
                                                         name="outletPipeSize" required value="{{cases[0].outletPipeSize}}"
-                                                        class="form-control-sm-sm valvesizing_fluid_data valvesizing_inputbox">
+                                                        class="form-control-sm-sm valvesizing_fluid_data valvesizing_inputbox sizingvalue_outletlength">
                                                 {% else %}
                                                 <input type="text"
                                                         name="outletPipeSize" required value=""
-                                                        class="form-control-sm-sm valvesizing_fluid_data valvesizing_inputbox">
+                                                        class="form-control-sm-sm valvesizing_fluid_data valvesizing_inputbox sizingvalue_outletlength">
                                                 {% endif %}
                                                 
                                         </div>
                                         <div class="col-3">
                                                 <select id="#"
-                                                        class="form-control-sm-sm valvesizing_select">
+                                                        class="form-control-sm-sm valvesizing_select sizingunits" data-desc="outletlength" name="outpipe_unit">
                                                         {% for length in metadata['units_dict']['length'] %}
-                                                                {% if length.name == item.project.lengthUnit %}
+                                                                {% if length.id == item.outpipe_unit %}
                                                                 <option value="{{length.id}}" selected>{{length.name}}</option>
                                                                 {% else %}
                                                                 <option value="{{length.id}}">{{length.name}}</option>
@@ -584,7 +585,7 @@
                                         <div class="col-4">
                                                 {% if cases[0] %}
                                                 <select id="#"
-                                                        class="form-control-sm-sm valvesizing_select" name="oSch">
+                                                        class="form-control-sm-sm valvesizing_select" name="oSch" >
 
                                                         {% for pipe_schedule in metadata['units_dict']['pipe_schedule'] %}
                                                         {% if cases[0].iPipe.schedule == pipe_schedule %}
@@ -620,19 +621,19 @@
                                                 {% if cases[0] %}
                                                 <input type="text"
                                                 name="vSize" value="{{cases[-1].valveSize}}" required
-                                                class="form-control-sm-sm valvesizing_fluid_data valvesizing_inputbox">
+                                                class="form-control-sm-sm valvesizing_fluid_data valvesizing_inputbox sizingvalue_valvelength">
                                                 {% else %}
                                                 <input type="text"
                                                 name="vSize" value="" required
-                                                class="form-control-sm-sm valvesizing_fluid_data valvesizing_inputbox">
+                                                class="form-control-sm-sm valvesizing_fluid_data valvesizing_inputbox sizingvalue_valvelength">
                                                 {% endif %}
                                                 
                                         </div>
                                         <div class="col-3">
                                                 <select id="#"
-                                                        class="form-control-sm-sm valvesizing_select">
+                                                        class="form-control-sm-sm valvesizing_select sizingunits" data-desc="valvelength" name="valvesize_unit">
                                                         {% for length in metadata['units_dict']['length'] %}
-                                                                {% if length.name == item.project.lengthUnit %}
+                                                                {% if length.id == item.valvesize_unit %}
                                                                 <option value="{{length.id}}" selected>{{length.name}}</option>
                                                                 {% else %}
                                                                 <option value="{{length.id}}">{{length.name}}</option>
@@ -703,10 +704,91 @@
 </form>
                 
 
-                <script type="text/javascript">
+<script type="text/javascript">
+
+             
+
 
 
         $(document).ready(function(){
+
+                const inputs = $('.sizingtable input');
+                inputs.each(function(index) {
+                        $(this).keydown(function(event) {
+                        if (event.key === 'ArrowUp') {
+                                event.preventDefault();
+                                const prevIndex = (index === 0) ? inputs.length - 1 : index - 1;
+                                inputs.eq(prevIndex).focus();
+                        } else if (event.key === 'ArrowDown') {
+                                event.preventDefault();
+                                const nextIndex = (index === inputs.length - 1) ? 0 : index + 1;
+                                inputs.eq(nextIndex).focus();
+                        }
+                        });
+                });
+
+                
+                var outerarray = []
+                $('.colborder_bottom').each(function(index, outerElement) {
+                        
+                        var innerarray = []
+                        $(outerElement).find('.sizingtable input[type="text"]').each(function(innerIndex, inputElement) {
+                                innerarray.push($(inputElement));
+                                
+                        });
+                        if(innerarray.length >= 10){
+                        outerarray.push(innerarray)
+                        }
+                        
+                });
+
+
+
+        
+                $('.sizingtable input').focus(function() {
+                        const clickedInput = $(this)[0]; 
+                        let clickedI, clickedJ; 
+                        
+                        for (let i = 0; i < outerarray.length; i++) {
+                                for (let j = 0; j < outerarray[i].length; j++) {
+                                if (outerarray[i][j][0].isSameNode(clickedInput)) {
+                                        clickedI = i;
+                                        clickedJ = j;
+                                        
+                                        handleArrowKeys(clickedI, clickedJ);
+                                        return; 
+                                }
+                                }
+                        }
+                });
+
+                function handleArrowKeys(clickedI, clickedJ) {
+                
+                $(document).keydown(function(event) {
+                        if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+                        if (clickedI !== undefined && clickedJ !== undefined) {
+                                if (event.key === 'ArrowLeft') {
+                                const newI = clickedI === 0 ? outerarray.length - 1 : clickedI - 1;
+                                outerarray[newI][clickedJ][0].focus();
+                                
+                               
+                                } else if (event.key === 'ArrowRight') {
+                                const newI = (clickedI + 1) % outerarray.length;
+                                outerarray[newI][clickedJ][0].focus();
+                                
+                                
+                                }
+                        }
+                        }
+                });
+
+                }
+
+
+
+
+
+
                 var prev_unit;
                 $('.sizingunits').on('focus', function(){
                         prev_unit = $(this).val();
@@ -755,39 +837,6 @@
 
                 
 
-                        // $('.sizingunits').on('change', function() { 
-                        //       var description = $(this).data('desc');
-                        //       var unit_value = $(this).val();
-                        //       var desc_values = []
-                        //       var specificGravity = []
-                        //       var ans_values = []
-                        //       $('.sizingvalue_sg').each(function (){
-                        //         specificGravity.push(this.value);
-                        //       })
-                        //       $('.sizingvalue_' + description).each(function() {
-                        //                 desc_values.push(this.value);
-                        //         });
-                        //       console.log('ffff',specificGravity);
-                        //       $.ajax({
-                        //         type: "GET",
-                        //         url: "/unit_change",
-                        //         data: {
-                        //         desc: description,
-                        //         desc_values: JSON.stringify(desc_values),
-                        //         unit_value: unit_value,
-                        //         specific_gravity: JSON.stringify(specificGravity)
-                        //         },
-                        //         success: function(response) {
-                        //                 ans_values = $.parseJSON(response)
-                        //                 $('.sizingvalue_' + description).each(function(index) {
-                        //                         $(this).val(ans_values[index]);
-                        //                 });
-                        //         },
-                        //         error: function(xhr, status, error) {
-                        //         console.error("Error:", error);
-                        //         }
-                        // });
-                        // })
 
 
 

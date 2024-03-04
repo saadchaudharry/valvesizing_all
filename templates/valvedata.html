@@ -67,8 +67,8 @@
 									<label>Rating</label>
 								</div>
 								<div class="col-6">
-									<select id="" class="form-control-sm-sm valvedata_select1 style=" width: 120%;"
-										name="rating">
+									<select class="form-control-sm-sm valvedata_select1 style=" width: 120%;"
+										name="rating" id="ratingId" onchange="handleChange()">
 										{% for rating in metadata['ratings'] %}
 										{% if valve.rating.name == rating.name %}
 										<option value="{{rating.id}}" selected>{{rating.name}}</option>
@@ -84,7 +84,7 @@
 									<label>Body Material</label>
 								</div>
 								<div class="col-6">
-									<select id="" class="form-control-sm-sm valvedata_select1" name="material">
+									<select class="form-control-sm-sm valvedata_select1" name="material" id="materialId" onchange="handleChange()">
 										{% for material in metadata['bodyMaterial'] %}
 										{% if valve.material.name == material.name %}
 										<option value="{{material.id}}" selected>{{material.name}}</option>
@@ -100,16 +100,16 @@
 									<label>Shut-Off ∆P</label>
 								</div>
 								<div class="col-3">
-									<input type="number" step="0.01" class="form-control-sm-sm valvedata_selectbox"
+									<input type="number" step="0.01" class="form-control-sm-sm valvedata_selectbox sizingvalue_shutoffPres"
 										style="width: 150%;" name="shutOffDelP" value="{{valve.shutOffDelP}}">
 								</div>
 								<div class="col-3">
-									<select id="" class="form-control-sm-sm valvedata_inputbox" name="shutOffDelPUnit">
+									<select id="" class="form-control-sm-sm valvedata_inputbox sizingunits" name="shutOffDelPUnit" data-desc="shutoffPres">
 										{% for presunit in metadata['units_dict']['delPressure'] %}
 										{% if presunit == valve.shutOffDelPUnit %}
 										<option value="{{presunit.id}}" selected>{{presunit.name}}</option>
 										{% else %}
-										<option value="{{presunit.name}}">{{presunit.name}}</option>
+										<option value="{{presunit.id}}">{{presunit.name}}</option>
 										{% endif %}
 										{% endfor %}
 									</select>
@@ -120,16 +120,16 @@
 									<label>Max Pressure</label>
 								</div>
 								<div class="col-3">
-									<input type="number" step="0.01" class="form-control-sm-sm valvedata_inputbox"
-										name="maxPressure" value="{{valve.maxPressure}}">
+									<input type="number" step="0.01" class="form-control-sm-sm valvedata_inputbox sizingvalue_maxPres"
+										name="maxPressure" value="{{valve.maxPressure}}" id="maxPressure" onchange="handleChange()">
 								</div>
 								<div class="col-3">
-									<select id="" class="form-control-sm-sm valvedata_selectbox" name="maxPressureUnit">
+									<select id="maxPressureUnit" class="form-control-sm-sm valvedata_selectbox sizingunits" name="maxPressureUnit" data-desc="maxPres">
 										{% for presunit in metadata['units_dict']['pressure'] %}
 										{% if presunit == valve.maxPressureUnit %}
 										<option value="{{presunit.id}}" selected>{{presunit.name}}</option>
 										{% else %}
-										<option value="{{presunit.name}}">{{presunit.name}}</option>
+										<option value="{{presunit.id}}">{{presunit.name}}</option>
 										{% endif %}
 										{% endfor %}
 									</select>
@@ -140,16 +140,16 @@
 									<label>Max Temp</label>
 								</div>
 								<div class="col-3">
-									<input type="number" step="0.01" class="form-control-sm-sm valvedata_inputbox"
-										name="maxTemp" value="{{valve.maxTemp}}">
+									<input type="number" step="0.01" class="form-control-sm-sm valvedata_inputbox sizingvalue_maxTemp"
+										name="maxTemp" value="{{valve.maxTemp}}" id="maxTemp" onchange="handleChange()">
 								</div>
 								<div class="col-3">
-									<select id="" class="form-control-sm-sm valvedata_selectbox" name="maxTempUnit">
+									<select id="maxTempUnit" class="form-control-sm-sm valvedata_selectbox sizingunits" name="maxTempUnit" data-desc="maxTemp">
 										{% for tempunit in metadata['units_dict']['temperature'] %}
 										{% if tempunit == valve.maxTempUnit %}
 										<option value="{{tempunit.id}}" selected>{{tempunit.name}}</option>
 										{% else %}
-										<option value="{{tempunit.name}}">{{tempunit.name}}</option>
+										<option value="{{tempunit.id}}">{{tempunit.name}}</option>
 										{% endif %}
 										{% endfor %}
 									</select>
@@ -160,16 +160,16 @@
 									<label>Min Temp</label>
 								</div>
 								<div class="col-3">
-									<input type="number" step="0.01" class="form-control-sm-sm valvedata_inputbox"
-										name="minTemp" value="{{valve.minTemp}}">
+									<input type="number" step="0.01" class="form-control-sm-sm valvedata_inputbox sizingvalue_minTemp"
+										name="minTemp" id="minTemp" value="{{valve.minTemp}}" onchange="handleChange()">
 								</div>
 								<div class="col-3">
-									<select id="" class="form-control-sm-sm valvedata_selectbox" name="minTempUnit">
+									<select id="minTempUnit" class="form-control-sm-sm valvedata_selectbox sizingunits" name="minTempUnit" data-desc="minTemp">
 										{% for tempunit in metadata['units_dict']['temperature'] %}
 										{% if tempunit == valve.minTempUnit %}
 										<option value="{{tempunit.id}}" selected>{{tempunit.name}}</option>
 										{% else %}
-										<option value="{{tempunit.name}}">{{tempunit.name}}</option>
+										<option value="{{tempunit.id}}">{{tempunit.name}}</option>
 										{% endif %}
 										{% endfor %}
 									</select>
@@ -694,7 +694,7 @@
 						<div class="warnings shadow p-3">
 							<h6 class="valvedata_heading"><b>warnings</b></h6>
 							<hr>
-							<textarea name="" id="" cols="30" rows="10" style="resize: none;">{{msg}}</textarea>
+							<textarea name="" cols="30" rows="10" id="warningArea" style="resize: none;">{{msg}}</textarea>
 						</div>
 					</div>
 				</div>
@@ -742,6 +742,94 @@
 	})
 </script>
 <script>
+	function handleChange() {
+		
+	var materialValue = $('#materialId').val();
+    var ratingValue = $('#ratingId').val();
+	var maxTemp = $('#maxTemp').val();
+	var minTemp = $('#minTemp').val();
+    var maxPressure = $('#maxPressure').val();
+	var maxPressureUnit = $('#maxPressureUnit').val();
+	var maxTempUnit = $('#maxTempUnit').val();
+	var minTempUnit = $('#minTempUnit').val();
+	console.log('shshsssss',maxTemp,minTemp,maxPressure,materialValue,ratingValue);
+	console.log('ssggsg',maxPressureUnit,maxTempUnit,minTempUnit)
+	
+    $.ajax({
+        type: "GET",
+        url: "/handle_change",
+        data: {
+            ratingValue: ratingValue,
+			materialValue: materialValue,
+			maxTemp: maxTemp,
+			minTemp: minTemp,
+			maxPressure: maxPressure,
+			maxPresUnit: maxPressureUnit,
+			maxTempUnit: maxTempUnit,
+			minTempUnit: minTempUnit
+
+        },
+        success: function(data) {
+            console.log(data);
+			$('#warningArea').val(data);
+        },
+        error: function(xhr, status, error) {
+            console.error("Error:", error);
+
+        }
+    });
+}
+
+
+	$(document).ready(function () {
+		
+		var prev_unit;
+                $('.sizingunits').on('focus', function(){
+                        prev_unit = $(this).val();
+                });
+
+                $('.sizingunits').on('change', function(){
+                        
+                        var final_unit = $(this).val();
+                        console.log(prev_unit,final_unit);
+                        var params = $(this).data('desc');
+                        var param_values = []
+                    
+
+                        $('.sizingvalue_' + params).each(function() {
+                                param_values.push(this.value);
+                        });
+       
+
+                        $.ajax({
+                                type: "GET",
+                                url: "/unit_change",
+                                data: {
+                                prev_unit: prev_unit,
+                                final_unit: final_unit,
+                                params: params,     
+                                param_values: JSON.stringify(param_values),
+                                },
+                                success: function(response) {
+                                        ans_values = $.parseJSON(response)
+                                        console.log('ans',ans_values)
+                                        $('.sizingvalue_' + params).each(function(index) {
+                                                $(this).val(ans_values[index]);
+                                        });
+
+										
+										handleChange();
+                                },
+                                error: function(xhr, status, error) {
+                                console.error("Error:", error);
+                                }
+                        });
+                        
+                        prev_unit = final_unit;
+                });
+        });
+
+
 	// alert('js working')
 	window.onload = function () {
 		var notesSelect = document.getElementById("valvestyle");
