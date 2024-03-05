@@ -17,7 +17,7 @@ from flask import abort
 from werkzeug.security import generate_password_hash, check_password_hash
 from forms import *
 import random
-from functions import FR, N1, N2, N4, N5_in, N6_lbhr_psi_lbft3, N7_60_scfh_psi_F, N8_kghr_bar_K, N9_O_m3hr_kPa_C, REv, conver_FR_noise, full_format, getFlowCharacter, getValveType, meta_convert_P_T_FR_L, project_status_list, notes_dict_reorder, purpose_list, units_dict, actuator_data_dict, valve_force_dict,meta_convert_g_to_a,meta_convert_a_to_g
+from functions import FR, N1, N2, N4, N5_in, N6_lbhr_psi_lbft3, N7_60_scfh_psi_F, N8_kghr_bar_K, N9_O_m3hr_kPa_C, REv, conver_FR_noise, convert_T_SI, full_format, getBooleanFromString, getFlowCharacter, getValveType, meta_convert_P_T_FR_L, project_status_list, notes_dict_reorder, purpose_list, units_dict, actuator_data_dict, valve_force_dict,meta_convert_g_to_a,meta_convert_a_to_g
 from gas_noise_formulae import lpae_1m
 from gas_velocity_iec import getGasVelocities
 from liquid_noise_formulae import Lpe1m
@@ -58,6 +58,7 @@ def getRowsFromCsvFile(file_path):
             rows_afr.append(dict_add)
 
     return rows_afr
+
 
 ### --------------------------------- APP CONFIGURATION -----------------------------------------------------###
 
@@ -106,6 +107,7 @@ def admin_only(f):
 @login_manager.user_loader
 def load_user(user_id):
     return userMaster.query.get(int(user_id))
+
 
 
 
@@ -277,6 +279,54 @@ def valveForces(p1_, p2_, d1, d2, d3, ua, rating, material, leakageClass, trimty
 
 
 ### --------------------------------- Major Functions -----------------------------------------------------###
+
+def getModelValve(series, rating, trim_type, temperature, seal, balance, temp_unit):
+    with app.app_context():
+    # Rating factor
+        all_ratings = ratingMaster.query.all()
+        all_ratings_name = [ratings.name for ratings in all_ratings]
+        print(all_ratings_name)
+        rating_index = all_ratings_name.index(rating) + 1
+        if rating_index <= 6:
+            rating_factor = str(rating_index)
+        else:
+            rating_factor = 'X'
+        
+        # Trim Factor
+        if trim_type == 'Triple Offset':
+            trim_factor = '30'
+        elif trim_type == 'Double Offset':
+            if seal == 'soft':
+                trim_factor = '10'
+            else:
+                trim_factor = '20'
+        elif trim_type == 'Contour':
+            trim_factor = '10'
+        elif trim_type == 'Microspline':
+            trim_factor = '20'
+        elif trim_type == 'Ported':
+            if balance == 'Unbalanced':
+                trim_factor = '30'
+            else:
+                trim_factor = '40'
+        else:
+            trim_factor = 'X1'
+
+        # Temp factor
+        temp_c = convert_T_SI(temperature, temp_unit, 'C', 1000)
+        if -29 <= temp_c < 232:
+            temp_factor = '1'
+        elif 232 <= temp_c < 427:
+            temp_factor = '4'
+        elif temp_c >= 427:
+            temp_factor = '3'
+        else:
+            temp_factor = '2'
+        
+
+        model_no = str(series) + rating_factor + trim_factor + temp_factor
+        return model_no
+
 
 
 
@@ -1361,11 +1411,14 @@ def home(proj_id, item_id):
         itemMaster.itemNumber.asc()).all()
     valve_list = [db.session.query(valveDetailsMaster).filter_by(item=item_).first() for item_ in items_list]
     valve_size_list = []
-    for item_ in items_list:
-        cases_ = db.session.query(caseMaster).filter_by(item=item_).first()
+    model_list = []
+    for valve_ in valve_list:
+        cases_ = db.session.query(caseMaster).filter_by(item=valve_.item).first()
         if cases_:
             if cases_.cv:
                 valve_size = cases_.cv.valveSize
+                model_ = getModelValve(cases_.cv.series, valve_.rating.name, valve_.trimType__.name, valve_.maxTemp, valve_.seat__.name, valve_.balanceSeal__.name, valve_.item.intemp_unit)
+                model_list.append(model_)
             else:
                 valve_size = None
         else:
@@ -1377,7 +1430,7 @@ def home(proj_id, item_id):
     #         db.session.add(new_valve)
     #         db.session.commit()
     return render_template('dashboard.html', user=current_user, projects=all_projects, address=address_, eng=eng_,
-                            item=item_element, items=valve_list, sizes=valve_size_list, page='home')
+                            item=item_element, items=valve_list, sizes=valve_size_list, models=model_list, page='home')
 
 
 @app.route('/getItems/proj-<proj_id>', methods=['GET'])
@@ -6242,6 +6295,8 @@ def exportProject(item_id, proj_id):
 
 @app.route('/import-project/proj-<proj_id>/item-<item_id>', methods=['GET', 'POST'])
 def importProject(item_id, proj_id):
+    len_project = len(projectMaster.query.all())
+    quote_no = f"Q{date_today[2:4]}0000{len_project}"
     if request.method == 'POST':
         try:
             all_keys = projectMaster.__table__.columns.keys()
@@ -6279,6 +6334,7 @@ def importProject(item_id, proj_id):
                 region_ = None
 
             new_project = projectMaster(
+                projectId=quote_no,
                 projectRef=proj_list[2],
                 enquiryRef=proj_list[3],
                 enquiryReceivedDate=datetime.datetime.strptime(parse(str(proj_list[4][:10])).strftime("%Y-%m-%d"), "%Y-%m-%d"),
@@ -6307,49 +6363,60 @@ def importProject(item_id, proj_id):
                 new_item = itemMaster(
                     itemNumber=item_[1],
                     alternate=item_[2],
+                    standardStatus=getBooleanFromString(item_[3]),
+                    pipeDataStatus=getBooleanFromString(item_[4]),
+                    flowrate_unit=item_[5],
+                    inpres_unit=item_[6],
+                    outpres_unit=item_[7],
+                    intemp_unit=item_[8],
+                    vaporpres_unit=item_[9],
+                    criticalpres_unit=item_[10],
+                    inpipe_unit=item_[11],
+                    outpipe_unit=item_[12],
+                    valvesize_unit=item_[13],
                     project=new_project
                     )
                 db.session.add(new_item)
                 db.session.commit()
                 new_valve = valveDetailsMaster(
                     item=new_item,
-                    quantity=item_[5],
-                    tagNumber=item_[6],
-                    serialNumber=item_[7],
-                    shutOffDelP=float(item_[8]),
-                    maxPressure=float(item_[9]),
-                    maxTemp=float(item_[10]),
-                    minTemp=float(item_[11]),
-                    shutOffDelPUnit=item_[12],
-                    maxPressureUnit=item_[13],
-                    maxTempUnit=item_[14],
-                    minTempUnit=item_[15],
-                    bonnetExtDimension=item_[16],
-                    application=item_[17],
-                    rating=getDBElementWithName(ratingMaster, item_[19]),
-                    material=getDBElementWithName(materialMaster, item_[20]),
-                    design=getDBElementWithName(designStandard, item_[21]),
-                    style=getDBElementWithName(valveStyle, item_[22]),
-                    state=getDBElementWithName(fluidState, item_[23]),
-                    endConnection__=getDBElementWithName(endConnection, item_[24]),
-                    endFinish__=getDBElementWithName(endFinish, item_[25]),
-                    bonnetType__=getDBElementWithName(bonnetType, item_[26]),
-                    packingType__=getDBElementWithName(packingType, item_[27]),
-                    trimType__=getDBElementWithName(trimType, item_[28]),
-                    flowCharacter__=getDBElementWithName(flowCharacter, item_[29]),
-                    flowDirection__=getDBElementWithName(flowDirection, item_[30]),
-                    seatLeakageClass__=getDBElementWithName(seatLeakageClass, item_[31]),
-                    bonnet__=getDBElementWithName(bonnet, item_[32]),
+                    quantity=item_[5+11],
+                    tagNumber=item_[6+11],
+                    serialNumber=item_[7+11],
+                    shutOffDelP=float(item_[8+11]),
+                    maxPressure=float(item_[9+11]),
+                    maxTemp=float(item_[10+11]),
+                    minTemp=float(item_[11+11]),
+                    shutOffDelPUnit=item_[12+11],
+                    maxPressureUnit=item_[13+11],
+                    maxTempUnit=item_[14+11],
+                    minTempUnit=item_[15+11],
+                    bonnetExtDimension=item_[16+11],
+                    application=item_[17+11],
+                    rating=getDBElementWithName(ratingMaster, item_[19+11]),
+                    material=getDBElementWithName(materialMaster, item_[20+11]),
+                    design=getDBElementWithName(designStandard, item_[21+11]),
+                    style=getDBElementWithName(valveStyle, item_[22+11]),
+                    state=getDBElementWithName(fluidState, item_[23+11]),
+                    endConnection__=getDBElementWithName(endConnection, item_[24+11]),
+                    endFinish__=getDBElementWithName(endFinish, item_[25+11]),
+                    bonnetType__=getDBElementWithName(bonnetType, item_[26+11]),
+                    packingType__=getDBElementWithName(packingType, item_[27+11]),
+                    trimType__=getDBElementWithName(trimType, item_[28+11]),
+                    flowCharacter__=getDBElementWithName(flowCharacter, item_[29+11]),
+                    flowDirection__=getDBElementWithName(flowDirection, item_[30+11]),
+                    seatLeakageClass__=getDBElementWithName(seatLeakageClass, item_[31+11]),
+                    bonnet__=getDBElementWithName(bonnet, item_[32+11]),
                     nde1__=None,
                     nde2__=None,
-                    shaft__=getDBElementWithName(shaft, item_[35]),
-                    disc__=getDBElementWithName(disc, item_[36]),
-                    seat__=getDBElementWithName(seat, item_[37]),
-                    packing__=getDBElementWithName(packing, item_[38]),
-                    balanceSeal__=getDBElementWithName(balanceSeal, item_[39]),
-                    studNut__=getDBElementWithName(studNut, item_[40]),
-                    gasket__=getDBElementWithName(gasket, item_[41]),
-                    cage__=getDBElementWithName(cageClamp, item_[42]),
+                    shaft__=getDBElementWithName(shaft, item_[35+11]),
+                    disc__=getDBElementWithName(disc, item_[36+11]),
+                    seat__=getDBElementWithName(seat, item_[37+11]),
+                    packing__=getDBElementWithName(packing, item_[38+11]),
+                    balanceSeal__=getDBElementWithName(balanceSeal, item_[39+11]),
+                    studNut__=getDBElementWithName(studNut, item_[40+11]),
+                    gasket__=getDBElementWithName(gasket, item_[41+11]),
+                    cage__=getDBElementWithName(cageClamp, item_[42+11]),
                     )
                 db.session.add(new_valve)
 

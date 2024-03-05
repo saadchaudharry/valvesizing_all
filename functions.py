@@ -1,4 +1,8 @@
 # To get running numbers for customer master
+from flask import app
+from models import ratingMaster
+
+
 def full_format(i):
     # limit of first range is 26 letters (A-Z) times 999 numbers (001-999)
     if i < 26 * 999:
@@ -335,3 +339,13 @@ valve_table_keys = [
   'gasketId',
   'cageId'
 ]
+
+
+def getBooleanFromString(bString):
+    if bString == 'False':
+        return False
+    elif bString == 'True':
+        return True
+    else:
+        return None
+
