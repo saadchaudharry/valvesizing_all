@@ -71,7 +71,7 @@ Bootstrap(app)
 # app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///fcc-db-v6-0.db"
 
 # app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL1", "sqlite:///fcc-db-v10-0.db")
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:Qwer1234@localhost/ValveSizingFCC'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:FccSizing@localhost/ValveSizingFCC'
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # db = SQLAlchemy(app)
@@ -2214,8 +2214,10 @@ def getOutputs(flowrate_form, fl_unit_form, inletPressure_form, iPresUnit_form, 
                                                  1000))
     print(f'unitlength {iPipeUnit_form},{oPipeUnit_form},{vSizeUnit_form}')
     i_pipearea_element = i_pipearea_element
-
-    thickness_pipe = float(i_pipearea_element.thickness)
+    try:
+        thickness_pipe = float(i_pipearea_element.thickness)
+    except:
+        thickness_pipe = 1.24
     print(f"thickness: {thickness_pipe}")
     # if fl_unit_form not in ['m3/hr', 'gpm']:
     print(f'Before FL {flowrate_form},{fl_unit_form},{specificGravity}')
@@ -2400,7 +2402,7 @@ def getOutputs(flowrate_form, fl_unit_form, inletPressure_form, iPresUnit_form, 
     inletPipeDia_v = round(meta_convert_P_T_FR_L('L', inletPipeDia_form, iPipeUnit_form, 'inch',
                                                  1000))
 
-    iPipeSch_lnoise = meta_convert_P_T_FR_L('L', float(i_pipearea_element.thickness),
+    iPipeSch_lnoise = meta_convert_P_T_FR_L('L', float(thickness_pipe),
                                     'mm', 'm', 1000)
     
 
@@ -4727,7 +4729,8 @@ def valveSizing(proj_id, item_id):
                             
                             db.session.add(new_case)
                             db.session.commit()
-                        except:
+                        except Exception as e:
+                            print(e)
                             new_case = caseMaster(flowrate=a['flowrate'][k], inletPressure=a['inletPressure'][k], fluid=fluid_element,
                                                     outletPressure= a['outletPressure'][k], specificGravity=a['specificGravity'][k],
                                                     inletTemp=a['inletTemp'][k], vaporPressure=a['vaporPressure'][k],
@@ -4747,6 +4750,7 @@ def valveSizing(proj_id, item_id):
  
                             db.session.add(new_case)
                             db.session.commit()
+                        
                         for i in itemCases_1:
                             print('deleteing casees')
                             db.session.delete(i)
@@ -4758,7 +4762,7 @@ def valveSizing(proj_id, item_id):
                     flash_message = "Data Incomplete"
                     flash_category = "error"
                 except Exception as e:
-                    print(e)
+                    # print(e)
                     flash_message = f"Something Went Wrong"
                     flash_category = "error"
 
