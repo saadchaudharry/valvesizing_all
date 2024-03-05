@@ -4703,7 +4703,7 @@ def valveSizing(proj_id, item_id):
                             
 
                             new_case = caseMaster(flowrate=output['flowrate'], inletPressure=output['inletPressure'],
-                                                    outletPressure=output['outletPressure'],
+                                                    outletPressure=output['outletPressure'], fluid=fluid_element,
                                                     inletTemp=output['inletTemp'], specificGravity=output['specificGravity'],
                                                     vaporPressure=output['vaporPressure'], kinematicViscosity=output['kinematicViscosity'],
                                                     calculatedCv=output['calculatedCv'], openingPercentage=output['openingPercentage'],
