@@ -1,6 +1,6 @@
 {% block content %}
 {% include "header.html" %}
-<form action="{{url_for('valveData', item_id=item.id, proj_id=item.project.id)}}" method="post">
+<form action="{{url_for('valveData', item_id=item.id, proj_id=item.project.id)}}" method="post" id="valvedata">
 	<div class="valvedatadetails mt-4">
 		<!--# BOX  IDEN SELECTION MATERIAL-->
 		<div class="row">
@@ -694,7 +694,7 @@
 						<div class="warnings shadow p-3">
 							<h6 class="valvedata_heading"><b>warnings</b></h6>
 							<hr>
-							<textarea name="" cols="30" rows="10" id="warningArea" style="resize: none;">{{msg}}</textarea>
+							<textarea name="" cols="25" rows="10" id="warningArea" style="resize: none;">{{msg}}</textarea>
 						</div>
 					</div>
 				</div>
@@ -709,7 +709,7 @@
 				<div class="row justify-content-end">
 					<div class="col-12 fixed-bottom d-flex justify-content-end mb-3 ">
 						<div class="valvedatabtn">
-							<button type="submit" class="btn valvebutton btn-info btn-lg">Save</button>
+							<button type="submit" class="btn valvebutton btn-info btn-lg" >Save</button>
 							<!-- <button type="button" class="btn btn-info">create New Item</button> -->
 						</div>
 
@@ -728,6 +728,26 @@
 
 
 <script>
+	$('#valvedata').submit(function(event) {
+
+	var warning_msg = $('#warningArea').val();
+	console.log('yes');
+	if(warning_msg){
+		console.log('yes');
+		// $('#warningArea').style('')
+		$('#warningArea').css({
+			'border-color': 'red'
+		});
+		event.preventDefault();
+	}
+	else{
+		$('#warningArea').css({
+			'border-color': 'black'
+		});
+	}
+	// console.log('sssss',warning_msg);
+	
+	});
 	console.log('{{metadata["shaft"][0]|safe}}')
 	// var valveStyleElement = $('#valvestyle')
 	// var valveStyle = valveStyleElement.find(":selected").text();
@@ -742,6 +762,7 @@
 	})
 </script>
 <script>
+	
 	function handleChange() {
 		
 	var materialValue = $('#materialId').val();

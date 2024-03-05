@@ -71,7 +71,7 @@ Bootstrap(app)
 # app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///fcc-db-v6-0.db"
 
 # app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL1", "sqlite:///fcc-db-v10-0.db")
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:FccSizing@localhost/ValveSizingFCC'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:Qwer1234@localhost/ValveSizingFCC'
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # db = SQLAlchemy(app)
@@ -1363,6 +1363,7 @@ def home(proj_id, item_id):
     valve_size_list = []
     for item_ in items_list:
         cases_ = db.session.query(caseMaster).filter_by(item=item_).first()
+        print(f'CASES {cases_}')
         if cases_:
             if cases_.cv:
                 valve_size = cases_.cv.valveSize
@@ -1833,9 +1834,6 @@ def handle_change():
     maxPresUnit = request.args.get('maxPresUnit')
     maxTempUnit = request.args.get('maxTempUnit')
     minTempUnit = request.args.get('minTempUnit')
-
-
-
     prev_units = maxPresUnit.split(' ')
     
     prev_unit, prev_unit_factor = prev_units[0] , prev_units[1]
@@ -1854,17 +1852,12 @@ def handle_change():
                                         'C',1000)
     minTemp = meta_convert_P_T_FR_L('T', float(minTemp_b), minTempUnit,
                                         'C',1000)
-
-
-    print(f'AAA {maxPres},{maxPressure}')
-    print(f'CCC {maxTemp_b},{maxTemp}')
-    print(f'BBB {minTemp_b},{minTemp}')
     
-    material = [getDBElementWithId(materialMaster, materialId)]
-    rating = [getDBElementWithId(ratingMaster, ratingId)]
+    material = getDBElementWithId(materialMaster, materialId)
+    rating = getDBElementWithId(ratingMaster, ratingId)
     
     # print(f'MinTemperaturesspp , {material[0]}, {rating[0]}')
-    presTempRatingElement = db.session.query(pressureTempRating).filter_by(material=material[0], rating=rating[0])
+    presTempRatingElement = db.session.query(pressureTempRating).filter_by(material=material, rating=rating).all()
     print(f'PresTemprating {presTempRatingElement}')
     # print(f'presTempRatingElement {presTempRatingElement}')
     tempcnt = 0
@@ -1882,7 +1875,7 @@ def handle_change():
                 return ""
             else:
                 print(f'inside Tempcomparision Max')
-                return f'Pressure {maxPressure} bar exceeds {a_pressure} C'
+                return f'Pressure {maxPressure} bar exceeds {a_pressure} bar'
     print(f'tempcnt {tempcnt}')
     if tempcnt == 0:
         print(f'kskskkskskk {maxTemp},{minTemp}')
