@@ -1209,15 +1209,15 @@ def getUniqueValues(table_name):
 def emailOTP():
     if request.method == 'POST':
         email_ = request.form.get('email')
-        flash('Incorrect OTP1')
+        # flash('Incorrect OTP1')
         otp_ = request.form['otp']
-        flash('Incorrect OTP2')
+        # flash('Incorrect OTP2')
         print(f'otp_ {otp_}')
         otp_element = db.session.query(OTP).filter_by(username=email_).first()
-        flash('Incorrect OTP3')
+        # flash('Incorrect OTP3')
         if int(otp_element.otp) == int(otp_):
-            flash('Correct OTP')
-            print(f'correct OTP _______')
+            # flash('Correct OTP')
+            # print(f'correct OTP _______')
             session['email'] = email_
             return redirect(url_for('register'))
         else:
@@ -1365,7 +1365,10 @@ def home(proj_id, item_id):
         cases_ = db.session.query(caseMaster).filter_by(item=item_).first()
         print(f'CASES {cases_}')
         if cases_:
-            valve_size = cases_.cv.valveSize
+            if cases_.cv:
+                valve_size = cases_.cv.valveSize
+            else:
+                valve_size = None
         else:
             valve_size = None
         valve_size_list.append(valve_size)
