@@ -1834,9 +1834,6 @@ def handle_change():
     maxPresUnit = request.args.get('maxPresUnit')
     maxTempUnit = request.args.get('maxTempUnit')
     minTempUnit = request.args.get('minTempUnit')
-
-
-
     prev_units = maxPresUnit.split(' ')
     
     prev_unit, prev_unit_factor = prev_units[0] , prev_units[1]
@@ -1855,17 +1852,12 @@ def handle_change():
                                         'C',1000)
     minTemp = meta_convert_P_T_FR_L('T', float(minTemp_b), minTempUnit,
                                         'C',1000)
-
-
-    print(f'AAA {maxPres},{maxPressure}')
-    print(f'CCC {maxTemp_b},{maxTemp}')
-    print(f'BBB {minTemp_b},{minTemp}')
     
-    material = [getDBElementWithId(materialMaster, materialId)]
-    rating = [getDBElementWithId(ratingMaster, ratingId)]
+    material = getDBElementWithId(materialMaster, materialId)
+    rating = getDBElementWithId(ratingMaster, ratingId)
     
     # print(f'MinTemperaturesspp , {material[0]}, {rating[0]}')
-    presTempRatingElement = db.session.query(pressureTempRating).filter_by(material=material[0], rating=rating[0])
+    presTempRatingElement = db.session.query(pressureTempRating).filter_by(material=material, rating=rating).all()
     print(f'PresTemprating {presTempRatingElement}')
     # print(f'presTempRatingElement {presTempRatingElement}')
     tempcnt = 0
