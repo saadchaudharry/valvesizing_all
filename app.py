@@ -6138,101 +6138,104 @@ def generate_csv(item_id, proj_id, page):
 
 @app.route('/export-project/proj-<proj_id>/item-<item_id>', methods=['GET', 'POST'])
 def exportProject(item_id, proj_id):
-    project_element = getDBElementWithId(projectMaster, proj_id)
-    project_elements = db.session.query(projectMaster).filter_by(id=proj_id).all()
-    all_items = db.session.query(itemMaster).filter_by(project=project_element).all()
-    with open('my_file.csv', 'w', newline='') as csvfile:
-        # Create a CSV writer object
-        writer = csv.writer(csvfile)
-        # Add Project Elements
-        # Write data to the CSV file
-        all_keys = projectMaster.__table__.columns.keys()
-        all_keys.remove('createdById')
-        writer.writerow(all_keys)
-        for data_ in project_elements:
-            single_row_data = []
-            for key_ in all_keys:
-                if key_ != 'createdById':
-                    # print(key_, projectMaster.__table__.columns[key_].type)
-                # all_data[0][all_keys[1]]
+    try:
+        project_element = getDBElementWithId(projectMaster, proj_id)
+        project_elements = db.session.query(projectMaster).filter_by(id=proj_id).all()
+        all_items = db.session.query(itemMaster).filter_by(project=project_element).all()
+        with open('my_file.csv', 'w', newline='') as csvfile:
+            # Create a CSV writer object
+            writer = csv.writer(csvfile)
+            # Add Project Elements
+            # Write data to the CSV file
+            all_keys = projectMaster.__table__.columns.keys()
+            all_keys.remove('createdById')
+            writer.writerow(all_keys)
+            for data_ in project_elements:
+                single_row_data = []
+                for key_ in all_keys:
+                    if key_ != 'createdById':
+                        # print(key_, projectMaster.__table__.columns[key_].type)
+                    # all_data[0][all_keys[1]]
+                        abc = getattr(data_, key_)
+                        if key_ == 'IndustryId':
+                            abc_name = getDBElementWithId(industryMaster, int(abc))
+                            single_row_data.append(abc_name.name)
+                        elif key_ == 'regionID':
+                            abc_name = getDBElementWithId(regionMaster, int(abc))
+                            single_row_data.append(abc_name.name)
+                        elif key_ == 'revisionNo':
+                            single_row_data.append(1)
+                        else:
+                            single_row_data.append(abc)
+                writer.writerow(single_row_data)
+            
+            # Add items Elements
+            all_keys_item = itemMaster.__table__.columns.keys()
+            all_keys_item_valve = valveDetailsMaster.__table__.columns.keys()
+            allkeys_item = all_keys_item + all_keys_item_valve
+            print('valve item keys')
+            print(allkeys_item)
+            writer.writerow(allkeys_item)
+            for data_ in all_items:
+                single_row_data = []
+                for key_ in all_keys_item:
                     abc = getattr(data_, key_)
-                    if key_ == 'IndustryId':
-                        abc_name = getDBElementWithId(industryMaster, int(abc))
-                        single_row_data.append(abc_name.name)
-                    elif key_ == 'regionID':
-                        abc_name = getDBElementWithId(regionMaster, int(abc))
-                        single_row_data.append(abc_name.name)
-                    elif key_ == 'revisionNo':
-                        single_row_data.append(1)
+                    single_row_data.append(abc)
+
+                valve_item = db.session.query(valveDetailsMaster).filter_by(item=data_).first()
+                single_row_data_valve = []
+                for key_ in all_keys_item_valve[:15]:
+                    abc = getattr(valve_item, key_)
+                    single_row_data_valve.append(abc)
+                # writer.writerow(single_row_data_valve)
+                single_row_data_valve_name = []
+                for key_ in all_keys_item_valve[15:]:
+                    if key_ not in ['nde1', 'nde2']:
+                        table_element = valve_table_dict_two[key_]
+                        abc = getattr(valve_item, key_) # get id of the table
+                        try:
+                            query_set = getDBElementWithId(table_element, int(abc))
+                            single_row_data_valve_name.append(query_set.name)
+                            print(table_element.__tablename__, abc, query_set.name)
+                        except:
+                            single_row_data_valve_name.append('')
+                        
                     else:
-                        single_row_data.append(abc)
-            writer.writerow(single_row_data)
-        
-        # Add items Elements
-        all_keys_item = itemMaster.__table__.columns.keys()
-        all_keys_item_valve = valveDetailsMaster.__table__.columns.keys()
-        allkeys_item = all_keys_item + all_keys_item_valve
-        print('valve item keys')
-        print(allkeys_item)
-        writer.writerow(allkeys_item)
-        for data_ in all_items:
-            single_row_data = []
-            for key_ in all_keys_item:
-                abc = getattr(data_, key_)
-                single_row_data.append(abc)
-
-            valve_item = db.session.query(valveDetailsMaster).filter_by(item=data_).first()
-            single_row_data_valve = []
-            for key_ in all_keys_item_valve[:15]:
-                abc = getattr(valve_item, key_)
-                single_row_data_valve.append(abc)
-            # writer.writerow(single_row_data_valve)
-            single_row_data_valve_name = []
-            for key_ in all_keys_item_valve[15:]:
-                if key_ not in ['nde1', 'nde2']:
-                    table_element = valve_table_dict_two[key_]
-                    abc = getattr(valve_item, key_) # get id of the table
-                    try:
-                        query_set = getDBElementWithId(table_element, int(abc))
-                        single_row_data_valve_name.append(query_set.name)
-                        print(table_element.__tablename__, abc, query_set.name)
-                    except:
                         single_row_data_valve_name.append('')
-                    
-                else:
-                    single_row_data_valve_name.append('')
-            valve_data_all_list = single_row_data + single_row_data_valve + single_row_data_valve_name
-            writer.writerow(valve_data_all_list)
-        
-        # Add Case Elements
+                valve_data_all_list = single_row_data + single_row_data_valve + single_row_data_valve_name
+                writer.writerow(valve_data_all_list)
+            
+            # Add Case Elements
 
-        all_keys_cases = caseMaster.__table__.columns.keys()
-        writer.writerow(all_keys_cases)
-        for item_ in all_items:
-            cases_ = db.session.query(caseMaster).filter_by(item=item_).all()
-            all_row_data_case = []
-            for case_ in cases_:
-                single_row_data_case = []
-                for key_ in all_keys_cases:
-                    if key_ not in ['valveDiaId', 'fluidId']:
-                        abc = getattr(case_, key_)
-                        single_row_data_case.append(abc)
-                    elif key_ == 'valveDiaId':
-                        try:
-                            valve_element = getDBElementWithId(cvTable, int(key_))
-                            single_row_data_case.append(valve_element.valveSize)
-                        except:
-                            single_row_data_case.append("")
-                    elif key_ == 'fluidId':
-                        try:
-                            fluid_element = getDBElementWithId(fluidProperties, int(key_))
-                            single_row_data_case.append(fluid_element.fluidName)
-                        except:
-                            single_row_data_case.append("")               
-                writer.writerow(single_row_data_case)
-        csvfile.close()
-    path = 'my_file.csv'
-    return send_file(path, as_attachment=True, download_name=f"{projectMaster.__tablename__}.csv")
+            all_keys_cases = caseMaster.__table__.columns.keys()
+            writer.writerow(all_keys_cases)
+            for item_ in all_items:
+                cases_ = db.session.query(caseMaster).filter_by(item=item_).all()
+                all_row_data_case = []
+                for case_ in cases_:
+                    single_row_data_case = []
+                    for key_ in all_keys_cases:
+                        if key_ not in ['valveDiaId', 'fluidId']:
+                            abc = getattr(case_, key_)
+                            single_row_data_case.append(abc)
+                        elif key_ == 'valveDiaId':
+                            try:
+                                valve_element = getDBElementWithId(cvTable, int(key_))
+                                single_row_data_case.append(valve_element.valveSize)
+                            except:
+                                single_row_data_case.append("")
+                        elif key_ == 'fluidId':
+                            try:
+                                fluid_element = getDBElementWithId(fluidProperties, int(key_))
+                                single_row_data_case.append(fluid_element.fluidName)
+                            except:
+                                single_row_data_case.append("")               
+                    writer.writerow(single_row_data_case)
+            csvfile.close()
+        path = 'my_file.csv'
+        return send_file(path, as_attachment=True, download_name=f"{projectMaster.__tablename__}.csv")
+    except Exception as e:
+        return f'Something happened: {e}'
     # return f"{len(all_items)}"
     # pass
 
