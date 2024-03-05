@@ -1445,6 +1445,13 @@ def preferences(proj_id, item_id, page):
 @app.route('/updatePreferences/proj-<proj_id>/item-<item_id>/<page>', methods=['POST'])
 def updatePreferences(proj_id, item_id, page):
     with app.app_context():
+
+        item_selected = getDBElementWithId(itemMaster, item_id)
+        itemCases_1 = db.session.query(caseMaster).filter_by(item=item_selected).all()
+        for i in itemCases_1:
+            db.session.delete(i)
+            db.session.commit()
+
         item_element = getDBElementWithId(itemMaster, item_id)
         item_element.flowrate_unit = request.form['flowrateUnit']
         item_element.inpres_unit = request.form['pressureUnit']
@@ -4711,6 +4718,7 @@ def valveSizing(proj_id, item_id):
                             item_selected.inpipe_unit = a['inpipe_unit'][0]
                             item_selected.outpipe_unit = a['outpipe_unit'][0]  
                             item_selected.criticalpres_unit = a['criticalpres_unit'][0]   
+                            
  
                             db.session.add(new_case)
                             db.session.commit()

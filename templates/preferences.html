@@ -1,7 +1,7 @@
 {% block content %}
 {% include "header.html" %}
 <br><br>
-    <form action="{{url_for('updatePreferences', proj_id=item.project.id, item_id=item.id, page=page)}}" method="post">
+    <form action="{{url_for('updatePreferences', proj_id=item.project.id, item_id=item.id, page=page)}}" id="preference" method="post">
         <div class="row mt-2">
             <div class="col-3 shadow p-2" >
                 <h6 class="preference_heading"><b>Preferences</b></h6>
@@ -72,16 +72,34 @@
                                 {% endif %}
                             {% endfor %}
                         </select>
-                        </select>
+                        <!-- </select> -->
                     </div>
                 </div>
             </div>
         </div>
 
         <div class="row">
-            <button type="submit" class="btn btn-info preference_btn">Set Preference</button>
+            <button type="submit" class="btn btn-info preference_btn" onclick="preference(event)">Set Preference</button>
         </div>
     </form>
-                
+<script>
+
+    function preference(event){
+        event.preventDefault();
+        Swal.fire({
+        title: "All cases for this item will be deleted?",
+        showDenyButton: true,
+        confirmButtonText: "Delete",
+        denyButtonText: "Cancel"
+        }).then((result) => {
+        
+        if (result.isConfirmed) {               
+            $('#preference').submit();
+        } 
+        });
+
+    }
+</script>
+
 {% include "footer.html" %}
 {% endblock %}
