@@ -5,6 +5,8 @@ from sqlalchemy.orm import relationship, backref
 from dbsetup import db
 
 
+# issues check
+
 class Test(db.Model):
     __tablename__ = "Test"
     id = Column(Integer, primary_key=True)
