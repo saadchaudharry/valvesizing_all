@@ -23,21 +23,22 @@
     </div>
   
     <div class="container">
-        <div class="form-container">
+        <div class="form-container-otp">
             <h2>OTP Verification</h2>
             <br>
             <form action="{{url_for('emailOTP')}}" method="POST">
                 <div class="row">
-                    <div class="col-6">
+                    <div class="col-8">
                         <input type="text" name="email" value="{{default_email}}" id="email" placeholder="abc@test.com" required>
                     </div>
-                    <div class="col-6">
+                    <div class="col-4">
                         <button class="btnsubmit btnotp" type="button" onclick=handleChange()>Send OTP</button>
                     </div>
                 </div>
                 
                 <p id="output"></p>
                 <input type="text" name="otp" placeholder="OTP" required>
+                <br>
                 <button class="btnsubmit" type="submit" >Verify OTP</button>
                 {% with messages = get_flashed_messages() %}
                     {% if messages %}
