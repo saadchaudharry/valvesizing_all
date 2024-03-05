@@ -2075,3 +2075,19 @@ class OTP(db.Model):
     username = Column(String(100))
     otp = Column(BigInteger)
     time = Column(DateTime)
+
+
+class kcTable(db.Model):
+    __tablename__ = "kcTable"
+    __mapper_args__ = {
+        'polymorphic_identity': 'kcTable',
+        'confirm_deleted_rows': False
+    }
+    id = Column(Integer, primary_key=True)
+    valveStyle = Column(String(100))
+    minSize = Column(Integer)
+    maxSize = Column(Integer)
+    trimType = Column(String(100))
+    minDelP = Column(Integer)
+    maxDelP = Column(Integer)
+    formula = Column(Integer)

@@ -138,7 +138,7 @@
                                 {%endif%}
                                 <td class="table1_quote">{{project.projectId}}</td>
                                 {% if address[projects.index(project)] %}
-                                <td class="table1_customer">{{address[projects.index(project)].address.address}}</td>
+                                <td class="table1_customer">{{address[projects.index(project)].address.company.name}}</td>
                                 {% else %}
                                 <td class="table1_customer"></td>
                                 {% endif %}
@@ -310,7 +310,7 @@
                         <td class="table2_alt">{{valve_.item.alternate}}</td>
                         <td class="table2_tag">{{valve_.tagNumber}}</td>
                         <td class="table2_series">{{valve_.serialNumber}}</td>
-                        <td class="table2_item">{{valve_.id}}</td>
+                        <td class="table2_item">{{sizes[items.index(valve_)]}}</td>
                         <td  class="table2_model">{{valve_.id}}</td>
                         <td class="table2_type">{{valve_.style.name}}</td>
                         <td class="table2_rating">{{valve_.rating.name}}</td>

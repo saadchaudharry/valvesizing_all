@@ -724,7 +724,7 @@ def addNewItem(project, itemNumber, alternate):
 def addNewItemAlternate(project, itemNumber, alternate, valveElement):
     # with app.app_context():
     fluid_state = fluidState.query.first()
-    new_item = itemMaster(project=project, itemNumber=itemNumber, alternate=alternate)
+    new_item = itemMaster(project=project, itemNumber=itemNumber, alternate=alternate, standardStatus=valveElement.item.standardStatus, pipeDataStatus=valveElement.item.pipeDataStatus)
     db.session.add(new_item)
     db.session.commit()
     new_valve_det = valveDetailsMaster(item=new_item, state=valveElement.state)
@@ -1360,13 +1360,21 @@ def home(proj_id, item_id):
     items_list = db.session.query(itemMaster).filter_by(project=projectMaster.query.get(int(proj_id))).order_by(
         itemMaster.itemNumber.asc()).all()
     valve_list = [db.session.query(valveDetailsMaster).filter_by(item=item_).first() for item_ in items_list]
+    valve_size_list = []
+    for item_ in items_list:
+        cases_ = db.session.query(caseMaster).filter_by(item=item_).first()
+        if cases_:
+            valve_size = cases_.cv.valveSize
+        else:
+            valve_size = None
+        valve_size_list.append(valve_size)
     # for valve_ in range(len(valve_list)):
     #     if not valve_list[valve_]:
     #         new_valve = valveDetailsMaster(item=items_list[valve_], state=fluidState.query.first())
     #         db.session.add(new_valve)
     #         db.session.commit()
     return render_template('dashboard.html', user=current_user, projects=all_projects, address=address_, eng=eng_,
-                            item=item_element, items=valve_list, page='home')
+                            item=item_element, items=valve_list, sizes=valve_size_list, page='home')
 
 
 @app.route('/getItems/proj-<proj_id>', methods=['GET'])
@@ -1389,6 +1397,7 @@ def addItem(proj_id, item_id):
     all_items = db.session.query(itemMaster).filter_by(project=project_element).all()
     last_item = all_items[-1]
     itemNumberCurrent = int(last_item.itemNumber) + 1
+    print(f"last item number + 1 = {int(last_item.itemNumber) + 1}")
     addNewItem(project=project_element, itemNumber=itemNumberCurrent, alternate='A')
     return redirect(url_for('home', proj_id=proj_id, item_id=item_id))
 
@@ -1931,8 +1940,22 @@ def tex_new(calculatedCV, ratedCV, port_area, flowrate, iPres, oPres, MW, R, iTe
         return round(tex_vel, 3)
     else:
         return round(ke * 0.001422, 3)
-    
 
+
+def getKc(valveSize, trimType_, pressure, valveStyle, fl):
+    with app.app_context():
+        kc_filter = kcTable.query.filter(kcTable.valveStyle==valveStyle).filter(kcTable.trimType==trimType_).filter(kcTable.minSize <= valveSize).filter(kcTable.maxSize >= valveSize).filter(kcTable.minDelP <= pressure).filter(kcTable.maxDelP >= pressure).all()
+        if len(kc_filter) > 0:
+            kc_element = kc_filter[0]
+            formula_number = kc_element.formula
+            formula_dict = {1: 0.99, 2: 1, 3: 0.5 * fl * fl, 4: 0.85 * fl * fl, 5: fl * fl}
+            output_value = formula_dict[formula_number]
+            return output_value
+        else:
+            return None
+
+
+# print(getKc(2, 'Contour', 50, 'Globe Straight', 0.9))
 # getting kc value
 def getKCValue(size__, t_type, pressure, v_type, fl):
     with app.app_context():
@@ -2542,8 +2565,9 @@ def getOutputs(flowrate_form, fl_unit_form, inletPressure_form, iPresUnit_form, 
                                                'psia', 1000)
     dp_kc = inletPressure_psia - outletPressure_psia
 
-    print(f"kc inputs: {size_in_in}, {trimtype}, {dp_kc}, {valve_type_.lower()}, {xt_fl},")
-    Kc = getKCValue(size_in_in, trimtype, dp_kc, valve_type_.lower(), xt_fl)
+    print(f"kc inputs: {size_in_in}, {trimtype}, {dp_kc}, {valve_type_}, {xt_fl},")
+    # Kc = getKCValue(size_in_in, trimtype, dp_kc, valve_type_.lower(), xt_fl)
+    Kc = getKc(size_in_in, trimtype, dp_kc, valve_type_, xt_fl)
     print(f"kc inputs: {size_in_in}, {trimtype}, {dp_kc}, {valve_type_.lower()}, {xt_fl}, {Kc}")
 
     # get other req values - Ff, Kc, Fd, Flp, Reynolds Number
@@ -3238,7 +3262,8 @@ def getOutputsGas(flowrate_form, fl_unit_form, inletPressure_form, iPresUnit_for
     inletPressure_psia = meta_convert_P_T_FR_L('P', inletPressure_form, iPresUnit_form,
                                                'psia', 1000)
     dp_kc = inletPressure_psia - outletPressure_psia
-    Kc = getKCValue(size_in_in, trimtype, dp_kc, valve_type_.lower(), xt_fl)
+    # Kc = getKCValue(size_in_in, trimtype, dp_kc, valve_type_.lower(), xt_fl)
+    Kc = getKc(size_in_in, trimtype, dp_kc, valve_type_, xt_fl)
 
     # get other req values - Ff, Kc, Fd, Flp, Reynolds Number
     Ff_gas = 0.96
@@ -3655,14 +3680,20 @@ def liqSizing(flowrate_form, specificGravity, inletPressure_form, outletPressure
     except:
         port_area_ = None
     print(f"port area table inputs: {vSize_v}, {seatDia}, {trimtype}, {flow_character}, {travel}")
+    # if port_area_:
+    #     port_area = float(port_area_.area)
+    #     tex_ = tex_new(result, int(rated_cv_tex), port_area, flowrate_v / 3600, inletPressure_form, inletPressure_form,
+    #                    1, 8314,
+    #                    inletTemp_form, 'Liquid')
+    # else:
+    #     port_area = 1
+    #     tex_ = None
     if port_area_:
         port_area = float(port_area_.area)
-        tex_ = tex_new(result, int(rated_cv_tex), port_area, flowrate_v / 3600, inletPressure_form, inletPressure_form,
-                       1, 8314,
-                       inletTemp_form, 'Liquid')
     else:
         port_area = 1
-        tex_ = None
+    tex_ = tex_new(result, ratedCV, port_area, flowrate_v / 3600, inletPressure_form, inletPressure_form, 1, 8314,
+                   inletTemp_form, 'Liquid')
 
     # ipipeSch_v = meta_convert_P_T_FR_L('L', float(iPipeSch_form), iPipeSchUnit_form,
     #                                    'inch',
@@ -3728,7 +3759,8 @@ def liqSizing(flowrate_form, specificGravity, inletPressure_form, outletPressure
     inletPressure_psia = meta_convert_P_T_FR_L('P', inletPressure_form, iPresUnit_form[0],
                                                'psia', 1000)
     dp_kc = inletPressure_psia - outletPressure_psia
-    Kc = getKCValue(size_in_in, trimtype, dp_kc, valve_type_.lower(), xt_fl)
+    # Kc = getKCValue(size_in_in, trimtype, dp_kc, valve_type_.lower(), xt_fl)
+    Kc = getKc(size_in_in, trimtype, dp_kc, valve_type_, xt_fl)
 
     # get other req values - Ff, Kc, Fd, Flp, Reynolds Number
     Ff_liq = round(FF(service_conditions_1['vPres'], service_conditions_1['cPres']), 2)
@@ -4169,7 +4201,8 @@ def gasSizing(inletPressure_form, outletPressure_form, inletPipeDia_form, outlet
     inletPressure_psia = meta_convert_P_T_FR_L('P', inletPressure_form, iPresUnit_form,
                                                'psia', 1000)
     dp_kc = inletPressure_psia - outletPressure_psia
-    Kc = getKCValue(size_in_in, trimtype, dp_kc, valve_type_.lower(), xt_fl)
+    # Kc = getKCValue(size_in_in, trimtype, dp_kc, valve_type_.lower(), xt_fl)
+    Kc = getKc(size_in_in, trimtype, dp_kc, valve_type_, xt_fl)
 
     # get other req values - Ff, Kc, Fd, Flp, Reynolds Number#####
     Ff_gas = 0.96
@@ -4676,7 +4709,7 @@ def valveSizing(proj_id, item_id):
                                                     Fp=output['Fp'], Flp=output['Flp'], ratedCv=output['ratedCv'], 
                                                     ar=output['ar'], kc=output['kc'], reNumber=output['reNumber'],
                                                     spl=output['spl'], pipeInVel=output['pipeInVel'],pipeOutVel=output['pipeOutVel'],
-                                                    chokedDrop=output['chokedDrop'],
+                                                    chokedDrop=output['chokedDrop'], valveVel=output['valveVel'],
                                                     fl=output['fl'], tex=output['tex'], powerLevel=output['powerLevel'],
                                                     criticalPressure=output['criticalPressure'], inletPipeSize=output['inletPipeSize'],
                                                     outletPipeSize=output['outletPipeSize'], item=item_selected, iPipe=None
@@ -5249,7 +5282,7 @@ def selectValve(proj_id, item_id):
                                         valveSize=output['valveSize'], fd=output['fd'], Ff=output['Ff'],
                                         Fp=output['Fp'], Flp=output['Flp'], ratedCv=rated_cv_for_case, 
                                         ar=output['ar'], kc=output['kc'], reNumber=output['reNumber'],
-                                        spl=output['spl'], pipeInVel=output['pipeInVel'],pipeOutVel=output['pipeOutVel'],
+                                        spl=output['spl'], pipeInVel=output['pipeInVel'],pipeOutVel=output['pipeOutVel'], valveVel=output['valveVel'],
                                         chokedDrop=output['chokedDrop'],
                                         fl=output['fl'], tex=output['tex'], powerLevel=output['powerLevel'],
                                         criticalPressure=output['criticalPressure'], inletPipeSize=output['inletPipeSize'],

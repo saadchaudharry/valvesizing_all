@@ -1,0 +1,205 @@
+valveStyle,minSize,maxSize,trimType,minDelP,maxDelP,formula
+Globe Straight,1,4,Contour,0,75,2
+Globe Straight,1,4,Contour,75,100,1
+Globe Straight,1,4,Contour,100,9000,4
+Globe Straight,1,4,Contour,0,75,2
+Globe Straight,1,4,Contour,75,100,5
+Globe Straight,1,4,Contour,100,9000,4
+Globe Straight,1,4,Contour,0,75,2
+Globe Straight,1,4,Contour,75,100,5
+Globe Straight,1,4,Contour,100,9000,4
+Globe Straight,1,4,Contour,0,75,2
+Globe Straight,1,4,Contour,75,100,5
+Globe Straight,1,4,Contour,100,9000,4
+Globe Straight,1,2,Ported,0,300,2
+Globe Straight,1,2,Ported,300,9000,5
+Globe Straight,3,4,Ported,0,200,2
+Globe Straight,3,4,Ported,200,9000,5
+Globe Straight,6,12,Ported,0,100,2
+Globe Straight,6,12,Ported,100,9000,5
+Globe Straight,16,24,Ported,0,50,2
+Globe Straight,16,24,Ported,50,9000,5
+Globe Straight,1,2,Ported,0,300,2
+Globe Straight,1,2,Ported,300,9000,5
+Globe Straight,1,2,Ported,0,200,2
+Globe Straight,3,4,Ported,200,9000,5
+Globe Straight,6,12,Ported,0,100,2
+Globe Straight,6,12,Ported,100,9000,5
+Globe Straight,16,24,Ported,0,50,2
+Globe Straight,16,24,Ported,50,9000,5
+Globe Straight,1,2,Ported,0,300,2
+Globe Straight,1,2,Ported,300,9000,5
+Globe Straight,1,2,Ported,0,200,2
+Globe Straight,1,2,Ported,200,9000,5
+Globe Straight,6,12,Ported,0,100,2
+Globe Straight,6,12,Ported,100,9000,5
+Globe Straight,16,24,Ported,0,50,2
+Globe Straight,16,24,Ported,50,9000,5
+Globe Straight,1,12,Ported,0,100,2
+Globe Straight,1,12,Ported,100,9000,5
+Globe Straight,1,2,Anti-Cavitation I,0,600,2
+Globe Straight,1,2,Anti-Cavitation I,600,9000,5
+Globe Straight,1,2,Anti-Cavitation I,0,500,2
+Globe Straight,1,2,Anti-Cavitation I,500,1440,5
+Globe Straight,1,2,Anti-Cavitation I,0,400,2
+Globe Straight,1,2,Anti-Cavitation I,400,1440,5
+Globe Straight,1,2,Anti-Cavitation II,0,2160,2
+Globe Straight,3,6,Anti-Cavitation II,0,1800,2
+Globe Straight,3,6,Anti-Cavitation II,1800,9000,5
+Globe Straight,8,24,Anti-Cavitation II,0,1200,2
+Globe Straight,8,24,Anti-Cavitation II,1200,9000,5
+Globe Straight,1,24,Anti-Cavitation III,0,3000,2
+Globe Straight,1,12,Anti-Cavitation IV,0,3000,2
+Globe Straight,1,12,Anti-Cavitation IV,3000,4000,1
+Globe Straight,1,1,1CC,0,600,2
+Globe Straight,1,1,1CC,600,900,5
+Globe Straight,1,1,1CC,900,1200,4
+Globe Straight,2,3,1CC,0,600,2
+Globe Straight,2,3,1CC,600,900,5
+Globe Straight,2,3,1CC,900,1200,4
+Globe Straight,4,10,1CC,0,600,2
+Globe Straight,4,10,1CC,600,900,5
+Globe Straight,4,10,1CC,900,1200,4
+Globe Straight,12,24,1CC,0,600,2
+Globe Straight,12,24,1CC,600,900,5
+Globe Straight,12,24,1CC,900,1200,4
+Globe Straight,1,1,2CC,0,600,2
+Globe Straight,1,1,2CC,600,900,5
+Globe Straight,1,1,2CC,900,1200,4
+Globe Straight,2,3,2CC,0,600,2
+Globe Straight,2,3,2CC,600,900,5
+Globe Straight,2,3,2CC,900,1200,4
+Globe Straight,4,10,2CC,0,600,2
+Globe Straight,4,10,2CC,600,900,5
+Globe Straight,4,10,2CC,900,1200,4
+Globe Straight,12,24,2CC,0,600,2
+Globe Straight,12,24,2CC,600,900,5
+Globe Straight,12,24,2CC,900,1200,4
+Globe Straight,1,1,3CC,0,600,2
+Globe Straight,1,1,3CC,600,900,5
+Globe Straight,1,1,3CC,900,1200,4
+Globe Straight,2,3,3CC,0,600,2
+Globe Straight,2,3,3CC,600,900,5
+Globe Straight,2,3,3CC,900,1200,4
+Globe Straight,4,10,3CC,0,600,2
+Globe Straight,4,10,3CC,600,900,5
+Globe Straight,4,10,3CC,900,1200,4
+Globe Straight,12,24,3CC,0,600,2
+Globe Straight,12,24,3CC,600,900,5
+Globe Straight,12,24,3CC,900,1200,4
+Globe Straight,2,3,4CC,0,1200,2
+Globe Straight,4,10,4CC,0,1200,2
+Globe Straight,12,24,4CC,0,1200,2
+Globe Straight,1,2,Microspline,0,75,2
+Globe Straight,1,2,Microspline,75,100,5
+Globe Straight,1,2,Microspline,100,9000,4
+Globe Straight,1,2,"Microspline, ACT II",0,2160,2
+Globe Straight,1,2,"Microspline, ACT II",2160,3000,5
+Butterfly Lugged Wafer,2,4,Double Offset,0,50,2
+Butterfly Lugged Wafer,2,4,Double Offset,50,9000,3
+Butterfly Lugged Wafer,6,36,Double Offset,0,9000,3
+Butterfly Lugged Wafer,2,4,Triple Offset,0,50,2
+Butterfly Lugged Wafer,2,4,Triple Offset,50,9000,3
+Butterfly Lugged Wafer,6,36,Triple Offset,0,9000,3
+Butterfly Double Flanged,2,4,Double Offset,0,50,2
+Butterfly Double Flanged,2,4,Double Offset,50,9000,3
+Butterfly Double Flanged,6,36,Double Offset,0,9000,3
+Butterfly Double Flanged,2,4,Triple Offset,0,50,2
+Butterfly Double Flanged,2,4,Triple Offset,50,9000,3
+Butterfly Double Flanged,6,36,Triple Offset,0,9000,3
+Globe Angle,1,4,Contour,0,75,2
+Globe Angle,1,4,Contour,75,100,1
+Globe Angle,1,4,Contour,100,9000,4
+Globe Angle,1,4,Contour,0,75,2
+Globe Angle,1,4,Contour,75,100,5
+Globe Angle,1,4,Contour,100,9000,4
+Globe Angle,1,4,Contour,0,75,2
+Globe Angle,1,4,Contour,75,100,5
+Globe Angle,1,4,Contour,100,9000,4
+Globe Angle,1,4,Contour,0,75,2
+Globe Angle,1,4,Contour,75,100,5
+Globe Angle,1,4,Contour,100,9000,4
+Globe Angle,1,2,Ported,0,300,2
+Globe Angle,1,2,Ported,300,9000,5
+Globe Angle,3,4,Ported,0,200,2
+Globe Angle,3,4,Ported,200,9000,5
+Globe Angle,6,12,Ported,0,100,2
+Globe Angle,6,12,Ported,100,9000,5
+Globe Angle,16,24,Ported,0,50,2
+Globe Angle,16,24,Ported,50,9000,5
+Globe Angle,1,2,Ported,0,300,2
+Globe Angle,1,2,Ported,300,9000,5
+Globe Angle,1,2,Ported,0,200,2
+Globe Angle,3,4,Ported,200,9000,5
+Globe Angle,6,12,Ported,0,100,2
+Globe Angle,6,12,Ported,100,9000,5
+Globe Angle,16,24,Ported,0,50,2
+Globe Angle,16,24,Ported,50,9000,5
+Globe Angle,1,2,Ported,0,300,2
+Globe Angle,1,2,Ported,300,9000,5
+Globe Angle,1,2,Ported,0,200,2
+Globe Angle,1,2,Ported,200,9000,5
+Globe Angle,6,12,Ported,0,100,2
+Globe Angle,6,12,Ported,100,9000,5
+Globe Angle,16,24,Ported,0,50,2
+Globe Angle,16,24,Ported,50,9000,5
+Globe Angle,1,12,Ported,0,100,2
+Globe Angle,1,12,Ported,100,9000,5
+Globe Angle,1,2,Anti-Cavitation I,0,600,2
+Globe Angle,1,2,Anti-Cavitation I,600,9000,5
+Globe Angle,1,2,Anti-Cavitation I,0,500,2
+Globe Angle,1,2,Anti-Cavitation I,500,1440,5
+Globe Angle,1,2,Anti-Cavitation I,0,400,2
+Globe Angle,1,2,Anti-Cavitation I,400,1440,5
+Globe Angle,1,2,Anti-Cavitation II,0,2160,2
+Globe Angle,3,6,Anti-Cavitation II,0,1800,2
+Globe Angle,3,6,Anti-Cavitation II,1800,9000,5
+Globe Angle,8,24,Anti-Cavitation II,0,1200,2
+Globe Angle,8,24,Anti-Cavitation II,1200,9000,5
+Globe Angle,1,24,Anti-Cavitation III,0,3000,2
+Globe Angle,1,12,Anti-Cavitation IV,0,3000,2
+Globe Angle,1,12,Anti-Cavitation IV,3000,4000,1
+Globe Angle,1,1,1CC,0,600,2
+Globe Angle,1,1,1CC,600,900,5
+Globe Angle,1,1,1CC,900,1200,4
+Globe Angle,2,3,1CC,0,600,2
+Globe Angle,2,3,1CC,600,900,5
+Globe Angle,2,3,1CC,900,1200,4
+Globe Angle,4,10,1CC,0,600,2
+Globe Angle,4,10,1CC,600,900,5
+Globe Angle,4,10,1CC,900,1200,4
+Globe Angle,12,24,1CC,0,600,2
+Globe Angle,12,24,1CC,600,900,5
+Globe Angle,12,24,1CC,900,1200,4
+Globe Angle,1,1,2CC,0,600,2
+Globe Angle,1,1,2CC,600,900,5
+Globe Angle,1,1,2CC,900,1200,4
+Globe Angle,2,3,2CC,0,600,2
+Globe Angle,2,3,2CC,600,900,5
+Globe Angle,2,3,2CC,900,1200,4
+Globe Angle,4,10,2CC,0,600,2
+Globe Angle,4,10,2CC,600,900,5
+Globe Angle,4,10,2CC,900,1200,4
+Globe Angle,12,24,2CC,0,600,2
+Globe Angle,12,24,2CC,600,900,5
+Globe Angle,12,24,2CC,900,1200,4
+Globe Angle,1,1,3CC,0,600,2
+Globe Angle,1,1,3CC,600,900,5
+Globe Angle,1,1,3CC,900,1200,4
+Globe Angle,2,3,3CC,0,600,2
+Globe Angle,2,3,3CC,600,900,5
+Globe Angle,2,3,3CC,900,1200,4
+Globe Angle,4,10,3CC,0,600,2
+Globe Angle,4,10,3CC,600,900,5
+Globe Angle,4,10,3CC,900,1200,4
+Globe Angle,12,24,3CC,0,600,2
+Globe Angle,12,24,3CC,600,900,5
+Globe Angle,12,24,3CC,900,1200,4
+Globe Angle,2,3,4CC,0,1200,2
+Globe Angle,4,10,4CC,0,1200,2
+Globe Angle,12,24,4CC,0,1200,2
+Globe Angle,1,2,Microspline,0,75,2
+Globe Angle,1,2,Microspline,75,100,5
+Globe Angle,1,2,Microspline,100,9000,4
+Globe Angle,1,2,"Microspline, ACT II",0,2160,2
+Globe Angle,1,2,"Microspline, ACT II",2160,3000,5

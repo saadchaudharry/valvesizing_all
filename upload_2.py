@@ -6,6 +6,8 @@ from app import cageClamp, data_upload_shaft, db, app, endConnection, endFinish,
     departmentMaster, designationMaster, packing_friction_upload
 import csv
 
+from models import kcTable
+
 
 # git test sd_projectnotes_270224
 
@@ -194,6 +196,7 @@ with app.app_context():
     # add_many(getRowsFromCsvFile("csv/solenoid.csv"), solenoid)
     # pressure_temp_upload(getRowsFromCsvFile("csv/pressureTemp.csv"))
     # packing_friction_upload(getRowsFromCsvFile("csv/packing_friction.csv"))
+    # add_many(getRowsFromCsvFile("csv/kcTable.csv"), kcTable)
     pass
 
 
