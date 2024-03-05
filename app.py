@@ -5298,7 +5298,7 @@ def selectValve(proj_id, item_id):
                                         ar=output['ar'], kc=output['kc'], reNumber=output['reNumber'],
                                         spl=output['spl'], pipeInVel=output['pipeInVel'],pipeOutVel=output['pipeOutVel'], valveVel=output['valveVel'],
                                         chokedDrop=output['chokedDrop'],
-                                        fl=output['fl'], tex=output['tex'], powerLevel=output['powerLevel'],
+                                        fl=output['fl'], tex=output['tex'], powerLevel=output['powerLevel'], fluid=last_case.fluid,
                                         criticalPressure=output['criticalPressure'], inletPipeSize=output['inletPipeSize'],
                                         outletPipeSize=output['outletPipeSize'], item=item_selected, cv=cv_element, iPipe=None)
 
