@@ -1,6 +1,6 @@
 {% block content %}
 {% include "header.html" %}
-<form action="{{url_for('valveData', item_id=item.id, proj_id=item.project.id)}}" method="post">
+<form action="{{url_for('valveData', item_id=item.id, proj_id=item.project.id)}}" method="post" id="valvedata">
 	<div class="valvedatadetails mt-4">
 		<!--# BOX  IDEN SELECTION MATERIAL-->
 		<div class="row">
@@ -709,7 +709,7 @@
 				<div class="row justify-content-end">
 					<div class="col-12 fixed-bottom d-flex justify-content-end mb-3 ">
 						<div class="valvedatabtn">
-							<button type="submit" class="btn valvebutton btn-info btn-lg">Save</button>
+							<button type="submit" class="btn valvebutton btn-info btn-lg" onclick="valvesave(event)">Save</button>
 							<!-- <button type="button" class="btn btn-info">create New Item</button> -->
 						</div>
 
@@ -728,6 +728,20 @@
 
 
 <script>
+	// $('#valvedata').submit(function(event) {
+	// event.preventDefault();
+	// var warning_msg = $('#warningArea').val();
+	// if(warning_msg){
+	// 	alert('warning');
+	// 	event.preventDefault();
+	// }
+	// else{
+	// 	alert('nowarning');
+    //     $('#valvedata').submit();
+	// }
+	// console.log(warning_msg);
+	
+	// });
 	console.log('{{metadata["shaft"][0]|safe}}')
 	// var valveStyleElement = $('#valvestyle')
 	// var valveStyle = valveStyleElement.find(":selected").text();
@@ -742,6 +756,7 @@
 	})
 </script>
 <script>
+	
 	function handleChange() {
 		
 	var materialValue = $('#materialId').val();
