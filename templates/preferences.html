@@ -1,7 +1,7 @@
 {% block content %}
 {% include "header.html" %}
 <br><br>
-    <form action="{{url_for('updatePreferences', proj_id=item.project.id, item_id=item.id, page=page)}}" method="post">
+    <form action="{{url_for('updatePreferences', proj_id=item.project.id, item_id=item.id, page=page)}}" id="preference" method="post">
         <div class="row mt-2">
             <div class="col-3 shadow p-2" >
                 <h6 class="preference_heading"><b>Preferences</b></h6>
@@ -13,7 +13,7 @@
                     <div class="col-6">
                         <select id="" class="form-control-sm-sm preference_select" name="pressureUnit">
                             {% for presunit in metadata['units_dict']['pressure'] %}
-                                {% if presunit.id == item.project.pressureUnit %}
+                                {% if presunit.id == item.inpres_unit %}
                                 <option value="{{presunit.id}}" selected>{{presunit.name}}</option>
                                 {% else %}
                                 <option value="{{presunit.id}}">{{presunit.name}}</option>
@@ -30,7 +30,7 @@
                     <div class="col-6">
                         <select id="" class="form-control-sm-sm preference_select"  name="flowrateUnit">
                             {% for flowrate in metadata['units_dict']['flowrate'] %}
-                                {% if flowrate.name == item.project.flowrateUnit %}
+                                {% if flowrate.name == item.flowrate_unit %}
                                 <option value="{{flowrate.id}}" selected>{{flowrate.name}}</option>
                                 {% else %}
                                 <option value="{{flowrate.id}}">{{flowrate.name}}</option>
@@ -46,8 +46,9 @@
                     </div>
                     <div class="col-6">
                         <select id="" class="form-control-sm-sm preference_select"  name="lengthUnit">
+                            
                             {% for length in metadata['units_dict']['length'] %}
-                                {% if length.name == item.project.lengthUnit %}
+                                {% if length.name == item.inpipe_unit %}
                                 <option value="{{length.id}}" selected>{{length.name}}</option>
                                 {% else %}
                                 <option value="{{length.id}}">{{length.name}}</option>
@@ -59,28 +60,46 @@
 
                 <div class="row mt-2">
                     <div class="col-6">
-                        <label>Temperature unit</label>
+                        <label>Temperature unit</label> 
                     </div>
                     <div class="col-6">
                         <select id="" class="form-control-sm-sm preference_select"  name="temperatureUnit">
                             {% for temperature in metadata['units_dict']['temperature'] %}
-                                {% if temperature.name == item.project.temperatureUnit %}
+                                {% if temperature.name == intemp_unit %}
                                 <option value="{{temperature.id}}" selected>{{temperature.name}}</option>
                                 {% else %}
                                 <option value="{{temperature.id}}">{{temperature.name}}</option>
                                 {% endif %}
                             {% endfor %}
                         </select>
-                        </select>
+                        <!-- </select> -->
                     </div>
                 </div>
             </div>
         </div>
 
         <div class="row">
-            <button type="submit" class="btn btn-info preference_btn">Set Preference</button>
+            <button type="submit" class="btn btn-info preference_btn" onclick="preference(event)">Set Preference</button>
         </div>
     </form>
-                
+<script>
+
+    function preference(event){
+        event.preventDefault();
+        Swal.fire({
+        title: "All cases for this item will be deleted?",
+        showDenyButton: true,
+        confirmButtonText: "Delete",
+        denyButtonText: "Cancel"
+        }).then((result) => {
+        
+        if (result.isConfirmed) {               
+            $('#preference').submit();
+        } 
+        });
+
+    }
+</script>
+
 {% include "footer.html" %}
 {% endblock %}
