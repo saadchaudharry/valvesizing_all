@@ -1364,7 +1364,10 @@ def home(proj_id, item_id):
     for item_ in items_list:
         cases_ = db.session.query(caseMaster).filter_by(item=item_).first()
         if cases_:
-            valve_size = cases_.cv.valveSize
+            if cases_.cv:
+                valve_size = cases_.cv.valveSize
+            else:
+                valve_size = None
         else:
             valve_size = None
         valve_size_list.append(valve_size)
