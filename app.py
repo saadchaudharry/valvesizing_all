@@ -1785,20 +1785,20 @@ def valveData(proj_id, item_id):
         valve_element.update(update_dict, valve_element.id)
 
         # Logic for pressure Temp rating
-        minTemp_ = float(a['minTemp'][0])
-        maxTemp_ = float(a['maxTemp'][0])
-        try:
-            presTempRatingElement = db.session.query(pressureTempRating).filter_by(material=a['material'][0], rating=a['rating'][0]).first()
-            if maxTemp_ > float(presTempRatingElement.maxTemp):
-                error_message = f"Temp {maxTemp_} is higher than {presTempRatingElement.maxTemp}"
-            else:
-                error_message = ""
-        except:
-            error_message = ""
+        # minTemp_ = float(a['minTemp'][0])
+        # maxTemp_ = float(a['maxTemp'][0])
+        # try:
+        #     presTempRatingElement = db.session.query(pressureTempRating).filter_by(material=a['material'][0], rating=a['rating'][0]).first()
+        #     if maxTemp_ > float(presTempRatingElement.maxTemp):
+        #         error_message = f"Temp {maxTemp_} is higher than {presTempRatingElement.maxTemp}"
+        #     else:
+        #         error_message = ""
+        # except:
+        #     error_message = ""
         # print(f"Temp {maxTemp_} is higher than {presTempRatingElement.maxTemp}")
         flash('Data Updated Successfully')
         return render_template('valvedata.html', item=getDBElementWithId(itemMaster, int(item_id)), user=current_user,
-                           metadata=metadata_, valve=valve_element, page='valveData', msg=error_message)
+                           metadata=metadata_, valve=valve_element, page='valveData', msg='')
     return render_template('valvedata.html', item=getDBElementWithId(itemMaster, int(item_id)), user=current_user,
                            metadata=metadata_, valve=valve_element, page='valveData', msg='')
 
