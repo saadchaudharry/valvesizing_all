@@ -5151,6 +5151,8 @@ def selectValve(proj_id, item_id):
             elif request.form.get('select'):
                 cases_new = db.session.query(caseMaster).filter_by(item=item_selected).all()
                 for case_ in cases_new:
+                    print('getting cases')
+                    print(case_.id)
                     if case_.calculatedCv:
                         print('printing cases id')
                         print(case_.id)
@@ -5336,12 +5338,12 @@ def selectValve(proj_id, item_id):
                             db.session.add(new_case)
                             db.session.commit()
 
-                        for case_ in cases_new:
-                            print('deleting cases')
-                            print(case_.id)
-                            db.session.delete(case_)
-                            db.session.commit()
-                        return redirect(url_for('valveSizing', item_id=item_id, proj_id=proj_id))
+                for case_ in cases_new:
+                    print('deleting cases')
+                    print(case_.id)
+                    db.session.delete(case_)
+                    db.session.commit()
+                return redirect(url_for('valveSizing', item_id=item_id, proj_id=proj_id))
                     
         else:
             flash('Add Case to select valve')
