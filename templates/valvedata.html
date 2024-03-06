@@ -1,6 +1,6 @@
 {% block content %}
 {% include "header.html" %}
-<form action="{{url_for('valveData', item_id=item.id, proj_id=item.project.id)}}" method="post">
+<form action="{{url_for('valveData', item_id=item.id, proj_id=item.project.id)}}" method="post" id="valvedata">
 	<div class="valvedatadetails mt-4">
 		<!--# BOX  IDEN SELECTION MATERIAL-->
 		<div class="row">
@@ -709,7 +709,7 @@
 				<div class="row justify-content-end">
 					<div class="col-12 fixed-bottom d-flex justify-content-end mb-3 ">
 						<div class="valvedatabtn">
-							<button type="submit" class="btn valvebutton btn-info btn-lg">Save</button>
+							<button type="submit" class="btn valvebutton btn-info btn-lg" >Save</button>
 							<!-- <button type="button" class="btn btn-info">create New Item</button> -->
 						</div>
 
@@ -728,6 +728,22 @@
 
 
 <script>
+	$('#valvedata').submit(function(event) {
+
+	var warning_msg = $('#warningArea').val();
+	console.log('yes');
+	if(warning_msg){
+		console.log('yes');
+		// $('#warningArea').style('')
+		$('#warningArea').css({
+			'border-color': 'red'
+		});
+		event.preventDefault();
+	}
+
+	// console.log('sssss',warning_msg);
+	
+	});
 	console.log('{{metadata["shaft"][0]|safe}}')
 	// var valveStyleElement = $('#valvestyle')
 	// var valveStyle = valveStyleElement.find(":selected").text();
@@ -742,6 +758,7 @@
 	})
 </script>
 <script>
+	
 	function handleChange() {
 		
 	var materialValue = $('#materialId').val();
@@ -753,8 +770,8 @@
 	var maxTempUnit = $('#maxTempUnit').val();
 	var minTempUnit = $('#minTempUnit').val();
 	console.log('shshsssss',maxTemp,minTemp,maxPressure,materialValue,ratingValue);
-	console.log('ssggsg',maxPressureUnit,maxTempUnit,minTempUnit)
-	
+	console.log('ssggsg',maxPressureUnit,maxTempUnit,minTempUnit);
+
     $.ajax({
         type: "GET",
         url: "/handle_change",
@@ -771,11 +788,20 @@
         },
         success: function(data) {
             console.log(data);
-			$('#warningArea').val(data);
+			if(data){
+				$('#warningArea').val(data);
+			}
+			else{
+
+				$('#warningArea').val('');
+				$('#warningArea').css({
+					'border-color': '#6c757d'
+				});
+			}
+			
         },
         error: function(xhr, status, error) {
             console.error("Error:", error);
-
         }
     });
 }

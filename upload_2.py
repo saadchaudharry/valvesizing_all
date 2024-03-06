@@ -196,7 +196,7 @@ with app.app_context():
     # add_many(getRowsFromCsvFile("csv/solenoid.csv"), solenoid)
     # pressure_temp_upload(getRowsFromCsvFile("csv/pressureTemp.csv"))
     # packing_friction_upload(getRowsFromCsvFile("csv/packing_friction.csv"))
-    # add_many(getRowsFromCsvFile("csv/kcTable.csv"), kcTable)
+    add_many(getRowsFromCsvFile("csv/kcTable.csv"), kcTable)
     pass
 
 
