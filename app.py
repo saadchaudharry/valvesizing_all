@@ -6290,163 +6290,163 @@ def importProject(item_id, proj_id):
     len_project = len(projectMaster.query.all())
     quote_no = f"Q{date_today[2:4]}0000{len_project}"
     if request.method == 'POST':
+        # try:
+        all_keys = projectMaster.__table__.columns.keys()
+        # Parse data from CSV Uploaded file, filestorage component
+        b_list = request.files.get('file').stream.read().decode('latin-1').strip().split('\n')
+        part_list = []
+        b_split_list = []
+        for data_ in b_list:
+            data_split = data_.split(',')
+            b_split_list.append(data_split)
+
+        for i in b_split_list:
+            if i[0] == 'id':
+                index_id = b_split_list.index(i)
+                part_list.append(index_id)
+        proj_list = b_split_list[1]
+        item_list = b_split_list[(part_list[1]+1):(part_list[2])]
+        print(item_list)
+        cases_list = b_split_list[(part_list[2] + 1):]
+
+        # Check correct file or not:
+        if all_keys[:7] == b_split_list[0][:7]:
+            print("Headers Match")
+        else:
+            print("Headers Mismatch")
+
+        # add project
+        industry_element = industryMaster.query.filter(industryMaster.name.like(proj_list[16]))
         try:
-            all_keys = projectMaster.__table__.columns.keys()
-            # Parse data from CSV Uploaded file, filestorage component
-            b_list = request.files.get('file').stream.read().decode('latin-1').strip().split('\n')
-            part_list = []
-            b_split_list = []
-            for data_ in b_list:
-                data_split = data_.split(',')
-                b_split_list.append(data_split)
+            region_element = regionMaster.query.filter(regionMaster.name.ilike(str(proj_list[17])))
+            print(region_element[0].name)
+            region_ = region_element[0]
+        except IndexError:
+            region_element = regionMaster.query.filter(regionMaster.name.ilike(str(proj_list[17][:-2])))
+            region_ = None
 
-            for i in b_split_list:
-                if i[0] == 'id':
-                    index_id = b_split_list.index(i)
-                    part_list.append(index_id)
-            proj_list = b_split_list[1]
-            item_list = b_split_list[(part_list[1]+1):(part_list[2])]
-            print(item_list)
-            cases_list = b_split_list[(part_list[2] + 1):]
+        new_project = projectMaster(
+            projectId=quote_no,
+            projectRef=proj_list[2],
+            enquiryRef=proj_list[3],
+            enquiryReceivedDate=datetime.datetime.strptime(parse(str(proj_list[4][:10])).strftime("%Y-%m-%d"), "%Y-%m-%d"),
+            receiptDate=datetime.datetime.strptime(parse(str(proj_list[5][:10])).strftime("%Y-%m-%d"), "%Y-%m-%d"),
+            bidDueDate=datetime.datetime.strptime(parse(str(proj_list[6][:10])).strftime("%Y-%m-%d"), "%Y-%m-%d"),
+            purpose=proj_list[7],
+            custPoNo=proj_list[8],
+            workOderNo=proj_list[9],
+            revisionNo=proj_list[10],
+            status=proj_list[11],
+            pressureUnit=proj_list[12],
+            flowrateUnit=proj_list[14],
+            temperatureUnit=proj_list[14],
+            lengthUnit=proj_list[15],
+            industry=industry_element[0],
+            region=region_,
+            user=current_user
+            )
+        db.session.add(new_project)
+        db.session.commit()
 
-            # Check correct file or not:
-            if all_keys[:7] == b_split_list[0][:7]:
-                print("Headers Match")
-            else:
-                print("Headers Mismatch")
-
-            # add project
-            industry_element = industryMaster.query.filter(industryMaster.name.like(proj_list[16]))
-            try:
-                region_element = regionMaster.query.filter(regionMaster.name.ilike(str(proj_list[17])))
-                print(region_element[0].name)
-                region_ = region_element[0]
-            except IndexError:
-                region_element = regionMaster.query.filter(regionMaster.name.ilike(str(proj_list[17][:-2])))
-                region_ = None
-
-            new_project = projectMaster(
-                projectId=quote_no,
-                projectRef=proj_list[2],
-                enquiryRef=proj_list[3],
-                enquiryReceivedDate=datetime.datetime.strptime(parse(str(proj_list[4][:10])).strftime("%Y-%m-%d"), "%Y-%m-%d"),
-                receiptDate=datetime.datetime.strptime(parse(str(proj_list[5][:10])).strftime("%Y-%m-%d"), "%Y-%m-%d"),
-                bidDueDate=datetime.datetime.strptime(parse(str(proj_list[6][:10])).strftime("%Y-%m-%d"), "%Y-%m-%d"),
-                purpose=proj_list[7],
-                custPoNo=proj_list[8],
-                workOderNo=proj_list[9],
-                revisionNo=proj_list[10],
-                status=proj_list[11],
-                pressureUnit=proj_list[12],
-                flowrateUnit=proj_list[14],
-                temperatureUnit=proj_list[14],
-                lengthUnit=proj_list[15],
-                industry=industry_element[0],
-                region=region_,
-                user=current_user
+        # add items
+        all_keys_cases = caseMaster.__table__.columns.keys()
+        for item_ in item_list:
+            print('Adding item')
+            new_item = itemMaster(
+                itemNumber=item_[1],
+                alternate=item_[2],
+                standardStatus=getBooleanFromString(item_[3]),
+                pipeDataStatus=getBooleanFromString(item_[4]),
+                flowrate_unit=item_[5],
+                inpres_unit=item_[6],
+                outpres_unit=item_[7],
+                intemp_unit=item_[8],
+                vaporpres_unit=item_[9],
+                criticalpres_unit=item_[10],
+                inpipe_unit=item_[11],
+                outpipe_unit=item_[12],
+                valvesize_unit=item_[13],
+                project=new_project
                 )
-            db.session.add(new_project)
+            db.session.add(new_item)
             db.session.commit()
+            new_valve = valveDetailsMaster(
+                item=new_item,
+                quantity=float_convert(item_[5+11]),
+                tagNumber=item_[6+11],
+                serialNumber=item_[7+11],
+                shutOffDelP=float_convert(item_[8+11]),
+                maxPressure=float_convert(item_[9+11]),
+                maxTemp=float_convert(item_[10+11]),
+                minTemp=float_convert(item_[11+11]),
+                shutOffDelPUnit=item_[12+11],
+                maxPressureUnit=item_[13+11],
+                maxTempUnit=item_[14+11],
+                minTempUnit=item_[15+11],
+                bonnetExtDimension=float_convert(item_[16+11]),
+                application=item_[17+11],
+                rating=getDBElementWithName(ratingMaster, item_[19+11]),
+                material=getDBElementWithName(materialMaster, item_[20+11]),
+                design=getDBElementWithName(designStandard, item_[21+11]),
+                style=getDBElementWithName(valveStyle, item_[22+11]),
+                state=getDBElementWithName(fluidState, item_[23+11]),
+                endConnection__=getDBElementWithName(endConnection, item_[24+11]),
+                endFinish__=getDBElementWithName(endFinish, item_[25+11]),
+                bonnetType__=getDBElementWithName(bonnetType, item_[26+11]),
+                packingType__=getDBElementWithName(packingType, item_[27+11]),
+                trimType__=getDBElementWithName(trimType, item_[28+11]),
+                flowCharacter__=getDBElementWithName(flowCharacter, item_[29+11]),
+                flowDirection__=getDBElementWithName(flowDirection, item_[30+11]),
+                seatLeakageClass__=getDBElementWithName(seatLeakageClass, item_[31+11]),
+                bonnet__=getDBElementWithName(bonnet, item_[32+11]),
+                nde1__=None,
+                nde2__=None,
+                shaft__=getDBElementWithName(shaft, item_[35+11]),
+                disc__=getDBElementWithName(disc, item_[36+11]),
+                seat__=getDBElementWithName(seat, item_[37+11]),
+                packing__=getDBElementWithName(packing, item_[38+11]),
+                balanceSeal__=getDBElementWithName(balanceSeal, item_[39+11]),
+                studNut__=getDBElementWithName(studNut, item_[40+11]),
+                gasket__=getDBElementWithName(gasket, item_[41+11]),
+                cage__=getDBElementWithName(cageClamp, item_[42+11]),
+                )
+            db.session.add(new_valve)
 
-            # add items
-            all_keys_cases = caseMaster.__table__.columns.keys()
-            for item_ in item_list:
-                print('Adding item')
-                new_item = itemMaster(
-                    itemNumber=item_[1],
-                    alternate=item_[2],
-                    standardStatus=getBooleanFromString(item_[3]),
-                    pipeDataStatus=getBooleanFromString(item_[4]),
-                    flowrate_unit=item_[5],
-                    inpres_unit=item_[6],
-                    outpres_unit=item_[7],
-                    intemp_unit=item_[8],
-                    vaporpres_unit=item_[9],
-                    criticalpres_unit=item_[10],
-                    inpipe_unit=item_[11],
-                    outpipe_unit=item_[12],
-                    valvesize_unit=item_[13],
-                    project=new_project
-                    )
-                db.session.add(new_item)
-                db.session.commit()
-                new_valve = valveDetailsMaster(
-                    item=new_item,
-                    quantity=item_[5+11],
-                    tagNumber=item_[6+11],
-                    serialNumber=item_[7+11],
-                    shutOffDelP=float(item_[8+11]),
-                    maxPressure=float(item_[9+11]),
-                    maxTemp=float(item_[10+11]),
-                    minTemp=float(item_[11+11]),
-                    shutOffDelPUnit=item_[12+11],
-                    maxPressureUnit=item_[13+11],
-                    maxTempUnit=item_[14+11],
-                    minTempUnit=item_[15+11],
-                    bonnetExtDimension=item_[16+11],
-                    application=item_[17+11],
-                    rating=getDBElementWithName(ratingMaster, item_[19+11]),
-                    material=getDBElementWithName(materialMaster, item_[20+11]),
-                    design=getDBElementWithName(designStandard, item_[21+11]),
-                    style=getDBElementWithName(valveStyle, item_[22+11]),
-                    state=getDBElementWithName(fluidState, item_[23+11]),
-                    endConnection__=getDBElementWithName(endConnection, item_[24+11]),
-                    endFinish__=getDBElementWithName(endFinish, item_[25+11]),
-                    bonnetType__=getDBElementWithName(bonnetType, item_[26+11]),
-                    packingType__=getDBElementWithName(packingType, item_[27+11]),
-                    trimType__=getDBElementWithName(trimType, item_[28+11]),
-                    flowCharacter__=getDBElementWithName(flowCharacter, item_[29+11]),
-                    flowDirection__=getDBElementWithName(flowDirection, item_[30+11]),
-                    seatLeakageClass__=getDBElementWithName(seatLeakageClass, item_[31+11]),
-                    bonnet__=getDBElementWithName(bonnet, item_[32+11]),
-                    nde1__=None,
-                    nde2__=None,
-                    shaft__=getDBElementWithName(shaft, item_[35+11]),
-                    disc__=getDBElementWithName(disc, item_[36+11]),
-                    seat__=getDBElementWithName(seat, item_[37+11]),
-                    packing__=getDBElementWithName(packing, item_[38+11]),
-                    balanceSeal__=getDBElementWithName(balanceSeal, item_[39+11]),
-                    studNut__=getDBElementWithName(studNut, item_[40+11]),
-                    gasket__=getDBElementWithName(gasket, item_[41+11]),
-                    cage__=getDBElementWithName(cageClamp, item_[42+11]),
-                    )
-                db.session.add(new_valve)
-
-                new_actuator = actuatorMaster(item=new_item)
-                db.session.add(new_actuator)
-                db.session.commit()
-                new_accessories = accessoriesData(item=new_item)
-                db.session.add(new_accessories)
-                db.session.commit()
-                
-                # add cases
-                for case_ in cases_list:
-                    if int(case_[-2] ) == int(item_[0]):
-                        new_case = caseMaster(item=new_item)
-                        db.session.add(new_case)
-                        db.session.commit()
-
-                        all_cases = db.session.query(caseMaster).filter_by(item=new_item).all()
-                        case_update_dict = {}
-                        for index_ in range(len(all_keys_cases)):
-                            case_update_dict[all_keys_cases[index_]] = float_convert(case_[index_])
-
-                        case_id = case_update_dict.pop('id')
-                        iSch = case_update_dict.pop('inletPipeSchId')
-                        valveDiaId = case_update_dict.pop('valveDiaId')
-                        itemId = case_update_dict.pop('itemId')
-                        fluidId = case_update_dict.pop('fluidId')
-                        # case_update_dict['item'] = new_item
-                        case_update_dict['cv'] = getDBElementWithId(cvTable, valveDiaId)
-                        case_update_dict['fluid'] = getDBElementWithName(fluidProperties, fluidId)
-                        
-                        new_case.update(case_update_dict, all_cases[-1].id)
-               
+            new_actuator = actuatorMaster(item=new_item)
+            db.session.add(new_actuator)
+            db.session.commit()
+            new_accessories = accessoriesData(item=new_item)
+            db.session.add(new_accessories)
+            db.session.commit()
             
-            flash('Project Imported Successfully')
-        except Exception as e:
-            flash('Something Went Wrong')
-            print(f'This is what went wrong: {e}')
+            # add cases
+            for case_ in cases_list:
+                if int(case_[-2] ) == int(item_[0]):
+                    new_case = caseMaster(item=new_item)
+                    db.session.add(new_case)
+                    db.session.commit()
+
+                    all_cases = db.session.query(caseMaster).filter_by(item=new_item).all()
+                    case_update_dict = {}
+                    for index_ in range(len(all_keys_cases)):
+                        case_update_dict[all_keys_cases[index_]] = float_convert(case_[index_])
+
+                    case_id = case_update_dict.pop('id')
+                    iSch = case_update_dict.pop('inletPipeSchId')
+                    valveDiaId = case_update_dict.pop('valveDiaId')
+                    itemId = case_update_dict.pop('itemId')
+                    fluidId = case_update_dict.pop('fluidId')
+                    # case_update_dict['item'] = new_item
+                    case_update_dict['cv'] = getDBElementWithId(cvTable, valveDiaId)
+                    case_update_dict['fluid'] = getDBElementWithName(fluidProperties, fluidId)
+                    
+                    new_case.update(case_update_dict, all_cases[-1].id)
+            
+        
+        flash('Project Imported Successfully')
+        # except Exception as e:
+        #     flash('Something Went Wrong')
+        #     print(f'This is what went wrong: {e}')
         return redirect(url_for('home', item_id=item_id, proj_id=proj_id))
 
     return render_template('projectImport.html', item=getDBElementWithId(itemMaster, int(item_id)), page='importProject', user=current_user)
