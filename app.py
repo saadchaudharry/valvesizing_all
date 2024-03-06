@@ -72,7 +72,7 @@ Bootstrap(app)
 # app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///fcc-db-v6-0.db"
 
 # app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL1", "sqlite:///fcc-db-v10-0.db")
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:Qwer1234@localhost/ValveSizingFCC'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:FccSizing@localhost/ValveSizingFCC'
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # db = SQLAlchemy(app)
@@ -1413,17 +1413,24 @@ def home(proj_id, item_id):
     valve_size_list = []
     model_list = []
     for valve_ in valve_list:
-        cases_ = db.session.query(caseMaster).filter_by(item=valve_.item).first()
-        if cases_:
-            if cases_.cv:
-                valve_size = cases_.cv.valveSize
-                model_ = getModelValve(cases_.cv.series, valve_.rating.name, valve_.trimType__.name, valve_.maxTemp, valve_.seat__.name, valve_.balanceSeal__.name, valve_.item.intemp_unit)
-                model_list.append(model_)
+        try:
+            cases_ = db.session.query(caseMaster).filter_by(item=valve_.item).first()
+            if cases_:
+                if cases_.cv:
+                    valve_size = cases_.cv.valveSize
+                    model_ = getModelValve(cases_.cv.series, valve_.rating.name, valve_.trimType__.name, valve_.maxTemp, valve_.seat__.name, valve_.balanceSeal__.name, valve_.item.intemp_unit)
+                    model_list.append(model_)
+                else:
+                    valve_size = None
+                    model_list.append(None)
             else:
                 valve_size = None
-        else:
-            valve_size = None
-        valve_size_list.append(valve_size)
+                model_list.append(None)
+            valve_size_list.append(valve_size)
+        except:
+            model_list.append(None)
+            valve_size_list.append(None)
+
     # for valve_ in range(len(valve_list)):
     #     if not valve_list[valve_]:
     #         new_valve = valveDetailsMaster(item=items_list[valve_], state=fluidState.query.first())
