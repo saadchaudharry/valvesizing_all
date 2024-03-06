@@ -71,7 +71,7 @@ Bootstrap(app)
 # app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///fcc-db-v6-0.db"
 
 # app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL1", "sqlite:///fcc-db-v10-0.db")
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:FccSizing@localhost/ValveSizingFCC'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:Qwer1234@localhost/ValveSizingFCC'
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # db = SQLAlchemy(app)
