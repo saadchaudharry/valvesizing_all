@@ -1246,18 +1246,17 @@ def createcvOpening_gas(itemCase_list,fluid_types):
 
                 # data = valve_cvOpening[:10]
                 
-                cv_values = cv_graph_values
+                cv_values = []; open_cv = [10,20,30,40,50,60,70,80,90,100]
+                for i,value in enumerate(cv_graph_values):
+                    worksheet.write(38 + i, 2, value)
+                    worksheet.write(38 + i, 3, open_cv[i])
                 if cv_values:
-                    min_y_value = min(cv_graph_values)
-                    max_y_value = max(cv_graph_values)
+                    min_y_value = min(cv_values)
+                    max_y_value = max(cv_values)
                     print(f'LiquidCVGRAPH {cv_values}')
-                    opening_percentage = [10,20,30,40,50,60,70,80,90,100]
-                    worksheet.write_column('C39', cv_values)
-                    
-                    worksheet.write_column('D39', opening_percentage)
 
                     # Create a new chart object.
-                    chart = workbook.add_chart({'type': 'line'})
+                    chart = workbook.add_chart({'type': 'scatter'})
 
                     # Add a series to the chart.
                     chart.add_series({
