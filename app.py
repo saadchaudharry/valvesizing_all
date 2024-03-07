@@ -2997,7 +2997,7 @@ def getOutputsGas(flowrate_form, fl_unit_form, inletPressure_form, iPresUnit_for
         thickness_pipe = 1.24
 
     thickness_in = meta_convert_P_T_FR_L('L', thickness_pipe, 'mm', 'inch', 1000)
-
+    print(f'SGG {sg__}')
     if sg__ == 1:
         # to be converted to scfh, psi, R, in
         # 3. Pressure
@@ -4843,16 +4843,16 @@ def valveSizing(proj_id, item_id):
                 try:
                     for k in range(len_cases_input):
                         try: 
-                            output = getOutputsGas(a['flowrate'][k], item_selected.project.flowrateUnit, a['inletPressure'][k],
-                                                    item_selected.project.pressureUnit,
-                                                    a['outletPressure'][k], item_selected.project.pressureUnit,
-                                                    a['inletTemp'][k], item_selected.project.temperatureUnit, '1', 'pa',
+                            output = getOutputsGas(a['flowrate'][k], a['flowrate_unit'][0], a['inletPressure'][k],
+                                                    a['inpres_unit'][0],
+                                                    a['outletPressure'][k], a['outpres_unit'][0],
+                                                    a['inletTemp'][k], a['temp_unit'][0], '1', 'pa',
                                                     a['specificHeatRatio'][k], '1',
-                                                    a['xt'][k], a['criticalPressure'][0], item_selected.project.pressureUnit, a['inletPipeSize'][0],
-                                                    item_selected.project.lengthUnit, a['iSch'][0],
-                                                    a['outletPipeSize'][0], item_selected.project.lengthUnit, a['oSch'][0], 7800,
+                                                    a['xt'][k], a['criticalPressure'][0], a['criticalpres_unit'][0], a['inletPipeSize'][0],
+                                                    a['inpipe_unit'][0], a['iSch'][0],
+                                                    a['outletPipeSize'][0], a['outpipe_unit'][0], a['oSch'][0], 7800,
                                                     5000, a['vSize'][0],
-                                                    item_selected.project.lengthUnit, a['vSize'][0], item_selected.project.lengthUnit, a['ratedCV'][0],
+                                                    a['valvesize_unit'][0], a['vSize'][0], a['valvesize_unit'][0], a['ratedCV'][0],
                                                     rw_noise, item_selected, a['mw_sg'][0], a['compressibility'][k], a['molecularWeight'][k], 
                                                     fluid_element.fluidName, i_pipearea_element, valve_element, port_area_)
                             sch_element = db.session.query(pipeArea).filter_by(schedule=a['iSch'][0], nominalPipeSize=float(output['inletPipeSize'])).first()
@@ -5984,7 +5984,8 @@ def generate_csv_project(item_id, proj_id):
         print(f'JJSHSFORM {request.form}')
 
         if 'controlvalve' in request.form:
-            return redirect(url_for('generate_csv', item_id=item_id, proj_id=proj_id, page='generate_csv_project'))
+            print('yes')
+            return redirect(url_for('generate_csv', item_id=items_list, proj_id=proj_id, page='generate_csv_project'))
         elif 'cvplot' in request.form:
             return redirect(url_for('generate_openingcv',item_ids=items_list, proj_id=proj_id))
         
@@ -5995,10 +5996,12 @@ def generate_csv_project(item_id, proj_id):
 def generate_csv(item_id, proj_id, page):
     try:
         with app.app_context():
-            item_selected = getDBElementWithId(itemMaster, item_id)
-            project_ = item_selected.project
-
-            all_items = db.session.query(itemMaster).filter_by(project=getDBElementWithId(projectMaster, proj_id)).all()
+            # item_selected = getDBElementWithId(itemMaster, item_id)
+            # project_ = item_selected.project
+            items_ids_list = [int(x) for x in item_id.strip('[]').split(',')]
+            all_items = [getDBElementWithId(itemMaster, i) for i in items_ids_list]
+            # all_items = db.session.query(itemMaster).filter_by(project=getDBElementWithId(projectMaster, proj_id)).all()
+            
             cases__ = []
             units__ = []
             others__ = []
