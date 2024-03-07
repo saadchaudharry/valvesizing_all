@@ -694,7 +694,7 @@
 						<div class="warnings shadow p-3">
 							<h6 class="valvedata_heading"><b>warnings</b></h6>
 							<hr>
-							<textarea name="" cols="25" rows="10" id="warningArea" style="resize: none;">{{msg}}</textarea>
+							<textarea name="" cols="26" rows="10" id="warningArea" style="resize: none;">{{msg}}</textarea>
 						</div>
 					</div>
 				</div>
@@ -740,11 +740,7 @@
 		});
 		event.preventDefault();
 	}
-	else{
-		$('#warningArea').css({
-			'border-color': 'black'
-		});
-	}
+
 	// console.log('sssss',warning_msg);
 	
 	});
@@ -774,8 +770,8 @@
 	var maxTempUnit = $('#maxTempUnit').val();
 	var minTempUnit = $('#minTempUnit').val();
 	console.log('shshsssss',maxTemp,minTemp,maxPressure,materialValue,ratingValue);
-	console.log('ssggsg',maxPressureUnit,maxTempUnit,minTempUnit)
-	
+	console.log('ssggsg',maxPressureUnit,maxTempUnit,minTempUnit);
+
     $.ajax({
         type: "GET",
         url: "/handle_change",
@@ -792,11 +788,20 @@
         },
         success: function(data) {
             console.log(data);
-			$('#warningArea').val(data);
+			if(data){
+				$('#warningArea').val(data);
+			}
+			else{
+
+				$('#warningArea').val('');
+				$('#warningArea').css({
+					'border-color': '#6c757d'
+				});
+			}
+			
         },
         error: function(xhr, status, error) {
             console.error("Error:", error);
-
         }
     });
 }

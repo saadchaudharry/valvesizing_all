@@ -24,7 +24,7 @@ from liquid_noise_formulae import Lpe1m
 from sqlalchemy.sql.sqltypes import String, VARCHAR, FLOAT, INTEGER
 from jinja2 import Environment, FileSystemLoader
 import smtplib
-from specsheet import createSpecSheet,createcvOpening
+from specsheet import createSpecSheet,createcvOpening_gas,createcvOpening_liquid
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from dateutil.parser import parse
@@ -5220,6 +5220,7 @@ def selectValve(proj_id, item_id):
                         print('printing cases id')
                         print(case_.id)
                         valve_d_id = getDBElementWithId(cvValues, request.form.get('valve'))
+                        print(f'valve_id_cv {valve_d_id.id}')
                         cv_element = valve_d_id.cv
                         rated_cv_for_case = valve_d_id.ten
                         # Adding valve id in new table
@@ -5954,17 +5955,16 @@ def generate_csv_item(item_id, proj_id):
 
 @app.route('/generate_openingcv/proj-<proj_id>/item-<item_ids>',methods=['GET','POST'])
 def generate_openingcv(item_ids,proj_id):
-
-
     items_ids_list = [int(x) for x in item_ids.strip('[]').split(',')]
     items = [getDBElementWithId(itemMaster, i) for i in items_ids_list]
     print(f'generate_openingcvssss {items}')
     #valveDetails = db.session.query(valveDetailsMaster).filter_by(item=item).first()
     itemCase = [db.session.query(caseMaster).filter_by(item=item).all() for item in items]
-    
+    valve_element = [db.session.query(valveDetailsMaster).filter_by(item=item).first() for item in items]
+    fluid_types = [fluid.state.name for fluid in valve_element]
+    createcvOpening_gas(itemCase,fluid_types)
 
 
-    createcvOpening(itemCase)
     path = "specsheet1.xlsx"
     a__ = datetime.datetime.now()
     a_ = a__.strftime("%a, %d %b %Y %H-%M-%S")

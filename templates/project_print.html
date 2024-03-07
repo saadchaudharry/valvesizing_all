@@ -127,6 +127,9 @@
                         </form>
 
                         <script>
+                            // $('.project_download_btn').on('click',function(){
+                                    
+                            // })
                             $(document).ready(function() {
                                 $('#selectAll').on('click', function() {
                                    
@@ -134,6 +137,7 @@
                                 });
                                 $('#submitBtn').on('click',function(){
                                     event.preventDefault();
+                                    
                                     var selectedValues = [];
                                   
                                     $('.checkbox_item:checked').each(function() {
