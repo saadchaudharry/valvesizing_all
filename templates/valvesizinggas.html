@@ -114,44 +114,44 @@
                                                         <div class="row sizingtable_header"></div>
                                                         <div class="row sizingtable">
                                                                 <select id="#"
-                                                                        class="sizingtable_inputs">
+                                                                        class="sizingtable_inputs sizingunits" data-desc="flowrate" name="flowrate_unit">
                                                                         ">
                                                                         {% for flowrate in metadata['units_dict']['flowrate'] %}
                                                                                 {% if flowrate.name == item.project.flowrateUnit %}
                                                                                 <option value="{{flowrate.id}}" selected>{{flowrate.name}}</option>
                                                                                 {% else %}
-                                                                                <option value="{{flowrate.name}}">{{flowrate.name}}</option>
+                                                                                <option value="{{flowrate.id}}">{{flowrate.name}}</option>
                                                                                 {% endif %}
                                                                         {% endfor %}
                                                                 </select>
                                                         </div>
                                                         <div class="row sizingtable">
                                                                 <select id="#"
-                                                                        class="sizingtable_inputs">
+                                                                        class="sizingtable_inputs sizingunits" data-desc="inpres" name="inpres_unit">
                                                                         {% for presunit in metadata['units_dict']['pressure'] %}
                                                                                 {% if presunit.id == item.project.pressureUnit %}
                                                                                 <option value="{{presunit.id}}" selected>{{presunit.name}}</option>
                                                                                 {% else %}
-                                                                                <option value="{{presunit.name}}">{{presunit.name}}</option>
+                                                                                <option value="{{presunit.id}}">{{presunit.name}}</option>
                                                                                 {% endif %}
                                                                         {% endfor %}
                                                                 </select>
                                                         </div>
                                                         <div class="row sizingtable">
                                                                 <select id="#"
-                                                                        class="sizingtable_inputs">
+                                                                        class="sizingtable_inputs sizingunits" data-desc="outpres" name="outpres_unit">
                                                                         {% for presunit in metadata['units_dict']['pressure'] %}
                                                                                 {% if presunit.id == item.project.pressureUnit %}
                                                                                 <option value="{{presunit.id}}" selected>{{presunit.name}}</option>
                                                                                 {% else %}
-                                                                                <option value="{{presunit.name}}">{{presunit.name}}</option>
+                                                                                <option value="{{presunit.id}}">{{presunit.name}}</option>
                                                                                 {% endif %}
                                                                         {% endfor %}
                                                                 </select>
                                                         </div>
                                                         <div class="row sizingtable">
                                                                 <select id="#"
-                                                                        class="sizingtable_inputs">
+                                                                        class="sizingtable_inputs sizingunits" data-desc="temperature" name="temp_unit">
                                                                         {% for temperature in metadata['units_dict']['temperature'] %}
                                                                                 {% if temperature.name == item.project.temperatureUnit %}
                                                                                 <option value="{{temperature.id}}" selected>{{temperature.name}}</option>
@@ -185,10 +185,10 @@
                                                 {% if cases[i] %}
                                                 <div class="col-2 colborder_bottom case{{i+1}}">
                                                         <div class="row sizingtable_header"></div>
-                                                        <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="flowrate" class="sizingtable_inputs" value="{{cases[i].flowrate}}"></div>
-                                                        <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="inletPressure" class="sizingtable_inputs" value="{{cases[i].inletPressure}}"></div>
-                                                        <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="outletPressure" class="sizingtable_inputs" value="{{cases[i].outletPressure}}"></div>
-                                                        <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="inletTemp" class="sizingtable_inputs" value="{{cases[i].inletTemp}}"></div>
+                                                        <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="flowrate" class="sizingtable_inputs sizingvalue_flowrate" value="{{cases[i].flowrate}}"></div>
+                                                        <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="inletPressure" class="sizingtable_inputs sizingvalue_inpres" value="{{cases[i].inletPressure}}"></div>
+                                                        <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="outletPressure" class="sizingtable_inputs sizingvalue_outpres" value="{{cases[i].outletPressure}}"></div>
+                                                        <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="inletTemp" class="sizingtable_inputs sizingvalue_temperature" value="{{cases[i].inletTemp}}"></div>
                                                         <div class="row sizingtable "><input type="text" {% if i == 0 %} required {% endif %} name="specificHeatRatio" class="sizingtable_inputs" value="{{cases[i].specificHeatRatio}}"></div>
                                                         <!-- <div class="row sizingtable "><input type="text" name="specificGravity" class="sizingtable_inputs" value="{{cases[i].specificHeatRatio}}"></div> -->
                                                         <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="molecularWeight" class="sizingtable_inputs" value="{{cases[i].molecularWeight}}"></div>
@@ -558,14 +558,14 @@
                                         </div>
                                         <div class="col-4">
                                                 {% if cases[0] %}
-                                                <input type="text" name="inletPipeSize"  value="{{cases[0].inletPipeSize}}" class="form-control-sm-sm valvesizing_fluid_data valvesizing_inputbox">
+                                                <input type="text" name="inletPipeSize"  value="{{cases[0].inletPipeSize}}" class="form-control-sm-sm valvesizing_fluid_data valvesizing_inputbox sizingvalue_inletlength">
                                                 {% else %}
-                                                <input type="text" name="inletPipeSize"  value="" class="form-control-sm-sm valvesizing_fluid_data valvesizing_inputbox">
+                                                <input type="text" name="inletPipeSize"  value="" class="form-control-sm-sm valvesizing_fluid_data valvesizing_inputbox sizingvalue_inletlength">
                                                 {% endif %}
                                         </div>
                                         <div class="col-3">
                                                 <select id="#"
-                                                        class="form-control-sm-sm valvesizing_select">
+                                                        class="form-control-sm-sm valvesizing_select sizingunits" data-desc="inletlength" name="inpipe_unit">
                                                         {% for length in metadata['units_dict']['length'] %}
                                                                 {% if length.name == item.project.lengthUnit %}
                                                                 <option value="{{length.id}}" selected>{{length.name}}</option>
@@ -600,17 +600,17 @@
                                                 {% if cases[0] %}
                                                 <input type="text"
                                                         name="outletPipeSize" value="{{cases[0].outletPipeSize}}"
-                                                        class="form-control-sm-sm valvesizing_fluid_data valvesizing_inputbox">
+                                                        class="form-control-sm-sm valvesizing_fluid_data valvesizing_inputbox sizingvalue_outletlength">
                                                 {% else %}
                                                 <input type="text"
                                                         name="outletPipeSize" value=""
-                                                        class="form-control-sm-sm valvesizing_fluid_data valvesizing_inputbox">
+                                                        class="form-control-sm-sm valvesizing_fluid_data valvesizing_inputbox sizingvalue_outletlength">
                                                 {% endif %}
                                                 
                                         </div>
                                         <div class="col-3">
                                                 <select id="#"
-                                                        class="form-control-sm-sm valvesizing_select">
+                                                        class="form-control-sm-sm valvesizing_select sizingunits" data-desc="outletlength" name="outpipe_unit">
                                                         {% for length in metadata['units_dict']['length'] %}
                                                                 {% if length.name == item.project.lengthUnit %}
                                                                 <option value="{{length.id}}" selected>{{length.name}}</option>
@@ -648,17 +648,17 @@
                                                 {% if cases[0] %}
                                                 <input type="text"
                                                 name="vSize" value="{{cases[0].valveSize}}"
-                                                class="form-control-sm-sm valvesizing_fluid_data valvesizing_inputbox">
+                                                class="form-control-sm-sm valvesizing_fluid_data valvesizing_inputbox sizingvalue_valvelength">
                                                 {% else %}
                                                 <input type="text"
                                                 name="vSize" value=""
-                                                class="form-control-sm-sm valvesizing_fluid_data valvesizing_inputbox">
+                                                class="form-control-sm-sm valvesizing_fluid_data valvesizing_inputbox sizingvalue_valvelength">
                                                 {% endif %}
                                                 
                                         </div>
                                         <div class="col-3">
                                                 <select id="#"
-                                                        class="form-control-sm-sm valvesizing_select">
+                                                        class="form-control-sm-sm valvesizing_select sizingunits" data-desc="valvelength" name="valvesize_unit">
                                                         {% for length in metadata['units_dict']['length'] %}
                                                                 {% if length.name == item.project.lengthUnit %}
                                                                 <option value="{{length.id}}" selected>{{length.name}}</option>
@@ -729,7 +729,251 @@
 
         </div>
 </form>
+<script type="text/javascript">
+
+             
+
+
+
+        $(document).ready(function(){
+
+                const inputs = $('.sizingtable input');
+                inputs.each(function(index) {
+                        $(this).keydown(function(event) {
+                        if (event.key === 'ArrowUp') {
+                                event.preventDefault();
+                                const prevIndex = (index === 0) ? inputs.length - 1 : index - 1;
+                                inputs.eq(prevIndex).focus();
+                        } else if (event.key === 'ArrowDown') {
+                                event.preventDefault();
+                                const nextIndex = (index === inputs.length - 1) ? 0 : index + 1;
+                                inputs.eq(nextIndex).focus();
+                        }
+                        });
+                });
+
                 
+                var outerarray = []
+                $('.colborder_bottom').each(function(index, outerElement) {
+                        
+                        var innerarray = []
+                        $(outerElement).find('.sizingtable input[type="text"]').each(function(innerIndex, inputElement) {
+                                innerarray.push($(inputElement));
+                                
+                        });
+                        if(innerarray.length >= 10){
+                        outerarray.push(innerarray)
+                        }
+                        
+                });
+
+
+
+        
+                $('.sizingtable input').focus(function() {
+                        const clickedInput = $(this)[0]; 
+                        let clickedI, clickedJ; 
+                        
+                        for (let i = 0; i < outerarray.length; i++) {
+                                for (let j = 0; j < outerarray[i].length; j++) {
+                                if (outerarray[i][j][0].isSameNode(clickedInput)) {
+                                        clickedI = i;
+                                        clickedJ = j;
+                                        
+                                        handleArrowKeys(clickedI, clickedJ);
+                                        return; 
+                                }
+                                }
+                        }
+                });
+
+                function handleArrowKeys(clickedI, clickedJ) {
+                
+                $(document).keydown(function(event) {
+                        if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+                        if (clickedI !== undefined && clickedJ !== undefined) {
+                                if (event.key === 'ArrowLeft') {
+                                const newI = clickedI === 0 ? outerarray.length - 1 : clickedI - 1;
+                                outerarray[newI][clickedJ][0].focus();
+                                
+                               
+                                } else if (event.key === 'ArrowRight') {
+                                const newI = (clickedI + 1) % outerarray.length;
+                                outerarray[newI][clickedJ][0].focus();
+                                
+                                
+                                }
+                        }
+                        }
+                });
+
+                }
+
+
+
+
+
+
+                var prev_unit;
+                $('.sizingunits').on('focus', function(){
+                        prev_unit = $(this).val();
+                });
+
+                $('.sizingunits').on('change', function(){
+
+                        var final_unit = $(this).val();
+                        console.log(prev_unit,final_unit);
+                        var params = $(this).data('desc');
+                        var param_values = []
+                        var specificGravity = []
+
+                        $('.sizingvalue_' + params).each(function() {
+                                param_values.push(this.value);
+                        });
+                        $('.sizingvalue_sg').each(function (){
+                                specificGravity.push(this.value);
+                        })
+
+                        $.ajax({
+                                type: "GET",
+                                url: "/unit_change",
+                                data: {
+                                prev_unit: prev_unit,
+                                final_unit: final_unit,
+                                params: params,     
+                                param_values: JSON.stringify(param_values),
+                                specific_gravity: JSON.stringify(specificGravity)
+                                },
+                                success: function(response) {
+                                        ans_values = $.parseJSON(response)
+                                        console.log('ans',ans_values)
+                                        $('.sizingvalue_' + params).each(function(index) {
+                                                $(this).val(ans_values[index]);
+                                        });
+                                },
+                                error: function(xhr, status, error) {
+                                console.error("Error:", error);
+                                }
+                        });
+
+                        prev_unit = final_unit;
+                });
+        });
+
+                
+
+
+
+
+
+                        var copiedOuptput = {value: NaN}
+                        function clearData(obj) {
+                                var class_hide = "." + obj.className;
+                                let res = $(class_hide + ' input').map(function(){
+                                        return $(this).val('');
+                                });
+                        };
+
+                        function handleSelect(elm) {
+                                // alert('js working for fstate')
+                                window.location = elm.value
+                        };
+
+                        function copyPaste(obj) {
+                                var class_hide = "." + obj.className;
+                                let res = $(class_hide + ' input').map(function(){
+                                        return $(this).val();
+                                }).get();
+                                console.log(res);
+                                copiedOuptput.value = res
+                                alert('Values Copied from ' + obj.className)
+
+                        };
+
+                        function paste(obj) {
+                                var class_hide = "." + obj.className;
+                                let res2 = $(class_hide + ' input');
+                                copiedOuptput.value.map((value, index) => {
+                                        res2[index].value = value;
+                                }); 
+                        };
+                </script>
+                <script>
+                        function replaceNoneValues() {
+                                // Select all input elements
+                                var inputs = document.getElementsByTagName('input');
+                                
+                                // Loop through each input element
+                                for (var i = 0; i < inputs.length; i++) {
+                                        // Check if the value is 'None'
+                                        if (inputs[i].value === 'None') {
+                                        // If value is 'None', replace it with an empty string
+                                        //     alert(inputs[i].value)
+                                        inputs[i].value = '';
+                                        }
+                                }
+                                }
+                        
+                        window.onload = function () {
+                                replaceNoneValues();
+                                var fluid_dict = JSON.parse({{metadata['fluids_dict']|tojson}});
+                                var case_len = "{{total_length}}";
+                                var fluidName_ = document.getElementById("fluid_name");
+                                fluidName_.onchange = function () {
+                                        var selected_fluid = $("#fluid_name :selected").text()
+                                        var fluid_option = $("input[name='fluidOption']:checked").val()
+                                        alert(fluid_option)
+                                        var fluid_name_ = $("#fluid_name :selected").text();
+                                        console.log(fluid_dict[selected_fluid].viscosity);
+                                        if (fluid_option == 'Standard') {
+                                                $("input[name='kinematicViscosity']").each(function(index) {
+                                                        if (index > Number(case_len)-1) {
+                                                                this.value = fluid_dict[selected_fluid].viscosity;
+                                                        };
+                                                });
+                                                $("input[name='vaporPressure']").each(function(index) {
+                                                        if (index > Number(case_len)-1) {
+                                                                this.value = fluid_dict[selected_fluid].vaporPressure;
+                                                        };
+                                                });
+                                                $("input[name='specificGravity']").each(function(index) {
+                                                        if (index > Number(case_len)-1) {
+                                                                this.value = fluid_dict[selected_fluid].specificGravity;
+                                                        };
+                                                });
+                                                $("input[name='criticalPressure']").each(function(index) {
+                                                        if (index > Number(case_len)-1) {
+                                                                this.value = fluid_dict[selected_fluid].criticalPressure;
+                                                        };
+                                                });
+                                                alert(fluid_name_);
+
+                                        } else {
+                                                $("input[name='kinematicViscosity']").each(function(index) {
+                                                        if (index > Number(case_len)-1) {
+                                                                this.value = "";
+                                                        };
+                                                });
+                                                
+                                                $("input[name='vaporPressure']").each(function(index) {
+                                                        if (index > Number(case_len)-1) {
+                                                                this.value = "";
+                                                        };
+                                                });
+                                                $("input[name='specificGravity']").each(function(index) {
+                                                        if (index > Number(case_len)-1) {
+                                                                this.value = "";
+                                                        }
+                                                });
+                                                $("input[name='criticalPressure']").each(function(index) {
+                                                        if (index > Number(case_len)-1) {
+                                                                this.value = "";
+                                                        }
+                                                });
+                                        };
+                                };
+                        };
+                </script>        
 
 <script>
         var copiedOuptput = {value: NaN}
