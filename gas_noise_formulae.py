@@ -345,6 +345,16 @@ def WM_II(gamma, inletPressure, Pi, massflowrate):
     return round(a, 1)
 
 
+def getPowerLevelGas(inletPressure, outletPressure, gamma, Flp, Fp, Pi, massflowrate):
+    try:
+        regime_ = getRegime(inletPressure, outletPressure, gamma, Flp, Fp)
+        if regime_ == 'I':
+            wm_ = WM_I(gamma, inletPressure, outletPressure, Flp, Fp, Pi, massflowrate)
+        else:
+            wm_ = WM_II(gamma, inletPressure, Pi, massflowrate)
+    except:
+        wm_ = None
+    return wm_
 #
 # print(WM_II(sc_initial['specificHeatRatio_gamma'], sc_initial['iPres'], sc_initial['inletDensity'],
 #             sc_initial['massFlowrate']))

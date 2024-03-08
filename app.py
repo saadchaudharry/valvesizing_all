@@ -18,9 +18,9 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from forms import *
 import random
 from functions import FR, N1, N2, N4, N5_in, N6_lbhr_psi_lbft3, N7_60_scfh_psi_F, N8_kghr_bar_K, N9_O_m3hr_kPa_C, REv, conver_FR_noise, convert_T_SI, full_format, getBooleanFromString, getFlowCharacter, getValveType, meta_convert_P_T_FR_L, project_status_list, notes_dict_reorder, purpose_list, units_dict, actuator_data_dict, valve_force_dict,meta_convert_g_to_a,meta_convert_a_to_g
-from gas_noise_formulae import lpae_1m
+from gas_noise_formulae import getPowerLevelGas, lpae_1m
 from gas_velocity_iec import getGasVelocities
-from liquid_noise_formulae import Lpe1m
+from liquid_noise_formulae import Lpe1m, mechanicalPower
 from sqlalchemy.sql.sqltypes import String, VARCHAR, FLOAT, INTEGER
 from jinja2 import Environment, FileSystemLoader
 import smtplib
@@ -1978,6 +1978,26 @@ def trimExitVelocity(inletPressure, outletPressure, density, trimType, numberOfT
     print(f"tex values: {inletPressure}, {outletPressure}, {K1}, {density}, {a_}")
     return a_ * K1
 
+def trimExitVelocityLiquid(inletPressure, outletPressure, trimType, specificGravity):
+    trim_dict = {
+        'Contour': 3.416712,
+        'Ported': 3.2,
+        "Anti-Cavitation I": 1.864196,
+        "Anti-Cavitation II": 1.254847,
+        "Anti-Cavitation III": 0.961509,
+        "Double Offset": 2.5,
+        "Triple Offset": 2.5,
+        "Microspline": 3.416712,
+        "MHC": 3
+        }
+    try:
+        K_value = trim_dict[trimType] 
+    except:
+        K_value = trim_dict['Contour']
+
+    output = K_value * math.sqrt((inletPressure-outletPressure)/specificGravity)
+    return output
+
 
 # TODO - New Trim Exit velocity formulae
 def inletDensity(iPres, MW, R, iTemp):
@@ -2518,8 +2538,9 @@ def getOutputs(flowrate_form, fl_unit_form, inletPressure_form, iPresUnit_form, 
                                              'psia', specificGravity * 1000)
     inletPressure_p = meta_convert_P_T_FR_L('P', inletPressure_form, iPres_unit,
                                             'psia', specificGravity * 1000)
-    pLevel = power_level_liquid(inletPressure_p, outletPressure_p, specificGravity, result)
-
+    # pLevel = power_level_liquid(inletPressure_p, outletPressure_p, specificGravity, result)
+    pLevel = mechanicalPower(sc_1['massFlowRate'], sc_1['FL'], sc_1['iPressure'], sc_1['oPressure'],
+                          sc_1['vPressure'], sc_1['densityLiq'])
     # convert flowrate and dias for velocities
     flowrate_v = meta_convert_P_T_FR_L('FR', flowrate_form, fl_unit_form, 'm3/hr',
                                        1000)
@@ -2561,8 +2582,9 @@ def getOutputs(flowrate_form, fl_unit_form, inletPressure_form, iPresUnit_form, 
         port_area = float(port_area_.area)
     else:
         port_area = 1
-    tex_ = tex_new(result, ratedCV, port_area, flowrate_v / 3600, inletPressure_form, inletPressure_form, 1, 8314,
-                   inletTemp_form, 'Liquid')
+    # tex_ = tex_new(result, ratedCV, port_area, flowrate_v / 3600, inletPressure_form, inletPressure_form, 1, 8314,
+    #                inletTemp_form, 'Liquid')
+    tex_ = trimExitVelocityLiquid(inletPressure_v, outletPressure_v, trimtype, specificGravity)
 
     # ipipeSch_v = meta_convert_P_T_FR_L('L', float(iPipeSch_form), iPipeSchUnit_form,
     #                                    'inch',
@@ -3278,6 +3300,10 @@ def getOutputsGas(flowrate_form, fl_unit_form, inletPressure_form, iPresUnit_for
                                              'pa',
                                              1000)
     pLevel = power_level_gas(specificGravity, inletPressure_p, outletPressure_p, flowrate_p, gas_vels[9])
+    pLevel = getPowerLevelGas(sc_initial['iPres'], sc_initial['oPres'], sc_initial['specificHeatRatio_gamma'], 
+                              sc_initial['FLP'], sc_initial['Fp'],
+                            sc_initial['inletDensity'], sc_initial['massFlowrate'])
+    
 
     # print(sc_initial['specificHeatRatio_gamma'], inletPressure_gv, outletPressure_gv, 8314,
     #       temp_gnoise, mw, flowrate_gv, size_gnoise,
@@ -3699,7 +3725,9 @@ def liqSizing(flowrate_form, specificGravity, inletPressure_form, outletPressure
                                              'psia', specificGravity * 1000)
     inletPressure_p = meta_convert_P_T_FR_L('P', inletPressure_form, iPresUnit_form[0],
                                             'psia', specificGravity * 1000)
-    pLevel = power_level_liquid(inletPressure_p, outletPressure_p, specificGravity, result)
+    # pLevel = power_level_liquid(inletPressure_p, outletPressure_p, specificGravity, result)
+    pLevel = mechanicalPower(sc_1['massFlowRate'], sc_1['FL'], sc_1['iPressure'], sc_1['oPressure'],
+                          sc_1['vPressure'], sc_1['densityLiq'])
 
     # convert flowrate and dias for velocities
     flowrate_v = meta_convert_P_T_FR_L('FR', flowrate_form, fl_unit_form, 'm3/hr',
@@ -3756,8 +3784,9 @@ def liqSizing(flowrate_form, specificGravity, inletPressure_form, outletPressure
         port_area = float(port_area_.area)
     else:
         port_area = 1
-    tex_ = tex_new(result, ratedCV, port_area, flowrate_v / 3600, inletPressure_form, inletPressure_form, 1, 8314,
-                   inletTemp_form, 'Liquid')
+    # tex_ = tex_new(result, ratedCV, port_area, flowrate_v / 3600, inletPressure_form, inletPressure_form, 1, 8314,
+    #                inletTemp_form, 'Liquid')
+    tex_ = trimExitVelocityLiquid(inletPressure_v, outletPressure_v, trimtype, specificGravity)
 
     # ipipeSch_v = meta_convert_P_T_FR_L('L', float(iPipeSch_form), iPipeSchUnit_form,
     #                                    'inch',
@@ -4214,7 +4243,10 @@ def gasSizing(inletPressure_form, outletPressure_form, inletPipeDia_form, outlet
     outletPressure_p = meta_convert_P_T_FR_L('P', outletPressure_form, oPresUnit_form,
                                              'pa',
                                              1000)
-    pLevel = power_level_gas(specificGravity, inletPressure_p, outletPressure_p, flowrate_p, gas_vels[9])
+    # pLevel = power_level_gas(specificGravity, inletPressure_p, outletPressure_p, flowrate_p, gas_vels[9])
+    pLevel = getPowerLevelGas(sc_initial['iPres'], sc_initial['oPres'], sc_initial['specificHeatRatio_gamma'], 
+                              sc_initial['FLP'], sc_initial['Fp'],
+                            sc_initial['inletDensity'], sc_initial['massFlowrate'])
     print(sc_initial['specificHeatRatio_gamma'], inletPressure_gv, outletPressure_gv, 8314,
           temp_gnoise, sc_initial['molecularMass'], flowrate_gv, size_gnoise,
           inletPipeDia_gnoise, outletPipeDia_gnoise)
@@ -4825,7 +4857,7 @@ def valveSizing(proj_id, item_id):
                     flash_message = "Data Incomplete"
                     flash_category = "error"
                 except Exception as e:
-                    # print(e)
+                    print(e)
                     flash_message = f"Something Went Wrong"
                     flash_category = "error"
 
