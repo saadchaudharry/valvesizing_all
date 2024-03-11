@@ -24,7 +24,7 @@ from liquid_noise_formulae import Lpe1m
 from sqlalchemy.sql.sqltypes import String, VARCHAR, FLOAT, INTEGER
 from jinja2 import Environment, FileSystemLoader
 import smtplib
-from specsheet import createSpecSheet,createcvOpening_gas,createcvOpening_liquid
+from specsheet import createSpecSheet,createcvOpening_gas
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from dateutil.parser import parse
@@ -72,7 +72,7 @@ Bootstrap(app)
 # app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///fcc-db-v6-0.db"
 
 # app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL1", "sqlite:///fcc-db-v10-0.db")
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:FccSizing@localhost/ValveSizingFCC'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:Qwer1234@localhost/ValveSizingFCC'
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # db = SQLAlchemy(app)
@@ -2163,7 +2163,7 @@ def unit_change():
     else:
         specific_gravity = [1.0]
 
-
+   
     print(f'jshshhh {prev_unit},{final_unit},{param_values},{specific_gravity}')
     desc_final_value = []
     if params == 'flowrate':
@@ -5962,13 +5962,24 @@ def generate_openingcv(item_ids,proj_id):
     itemCase = [db.session.query(caseMaster).filter_by(item=item).all() for item in items]
     valve_element = [db.session.query(valveDetailsMaster).filter_by(item=item).first() for item in items]
     fluid_types = [fluid.state.name for fluid in valve_element]
-    createcvOpening_gas(itemCase,fluid_types)
+    project_element = getDBElementWithId(projectMaster,proj_id)
+    # header = []
+    # for item in items:
+    #     item_header = {
+    #         'projectId': project_element.projectId,
+    #         'customerPoNo': project_element.custPoNo,
+    #         'workOrderNo': project_element.workOrderNo,
+
+    #     }
+        
+
+    createcvOpening_gas(itemCase,fluid_types,items)
 
 
     path = "specsheet1.xlsx"
     a__ = datetime.datetime.now()
     a_ = a__.strftime("%a, %d %b %Y %H-%M-%S")
-    spec_sheet_name = f'Specsheet_{a_}.xlsx'
+    spec_sheet_name = f'CVPlot_{a_}.xlsx'
 
     return send_file(path, as_attachment=True, download_name=spec_sheet_name)
 
@@ -5981,7 +5992,7 @@ def generate_csv_project(item_id, proj_id):
     if request.method == "POST":
         items = request.form.getlist('selectedValues[]')
         items_list = [int(i) for i in items]
-        print(f'JJSHSFORM {request.form}')
+        print(f'JJSHSFORM {request.form}')  
 
         if 'controlvalve' in request.form:
             print('yes')
@@ -6181,7 +6192,7 @@ def generate_csv(item_id, proj_id, page):
             str_current_datetime = str(current_datetime)
             a__ = datetime.datetime.now()
             a_ = a__.strftime("%a, %d %b %Y %H-%M-%S")
-            spec_sheet_name = f'Specsheet_P{project_number}_{a_}.xlsx'
+            spec_sheet_name = f'ControlValveSpecification{project_number}_{a_}.xlsx'
 
             return send_file(path, as_attachment=True, download_name=spec_sheet_name)
     except Exception as e:

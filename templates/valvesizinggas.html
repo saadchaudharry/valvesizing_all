@@ -116,13 +116,16 @@
                                                                 <select id="#"
                                                                         class="sizingtable_inputs sizingunits" data-desc="flowrate" name="flowrate_unit">
                                                                         ">
+                                                                        
                                                                         {% for flowrate in metadata['units_dict']['flowrate'] %}
-                                                                                {% if flowrate.name == item.project.flowrateUnit %}
-                                                                                <option value="{{flowrate.id}}" selected>{{flowrate.name}}</option>
-                                                                                {% else %}
-                                                                                <option value="{{flowrate.id}}">{{flowrate.name}}</option>
-                                                                                {% endif %}
-                                                                        {% endfor %}
+                                                                        {% if flowrate.name == item.project.flowrateUnit %}
+                                                                            <option value="{{ flowrate.id }}" selected>{{ flowrate.name }}</option>
+                                                                        {% elif flowrate.id == 'm3/hr' or flowrate.id == 'scfh' or flowrate.id == 'gpm' %}
+                                                                            <option value="{{ flowrate.id }}" disabled>{{ flowrate.name }}</option>
+                                                                        {% else %}
+                                                                            <option value="{{ flowrate.id }}">{{ flowrate.name }}</option>
+                                                                        {% endif %}
+                                                                    {% endfor %}
                                                                 </select>
                                                         </div>
                                                         <div class="row sizingtable">
@@ -201,10 +204,10 @@
                                                 {% else %}
                                                 <div class="col-2 colborder_bottom case{{i+1}}">
                                                         <div class="row sizingtable_header"></div>
-                                                        <div class="row sizingtable"><input type="text" name="flowrate" class="sizingtable_inputs"></div>
-                                                        <div class="row sizingtable"><input type="text" name="inletPressure" class="sizingtable_inputs"></div>
-                                                        <div class="row sizingtable"><input type="text" name="outletPressure" class="sizingtable_inputs"></div>
-                                                        <div class="row sizingtable"><input type="text" name="inletTemp" class="sizingtable_inputs"></div>
+                                                        <div class="row sizingtable"><input type="text" name="flowrate" class="sizingtable_inputs sizingvalue_flowrate"></div>
+                                                        <div class="row sizingtable"><input type="text" name="inletPressure" class="sizingtable_inputs sizingvalue_inpres"></div>
+                                                        <div class="row sizingtable"><input type="text" name="outletPressure" class="sizingtable_inputs sizingvalue_outpres"></div>
+                                                        <div class="row sizingtable"><input type="text" name="inletTemp" class="sizingtable_inputs sizingvalue_temperature"></div>
                                                         <div class="row sizingtable "><input type="text" name="specificHeatRatio" class="sizingtable_inputs"></div>
                                                         <!-- <div class="row sizingtable "><input type="text" name="specificGravity" class="sizingtable_inputs"></div> -->
                                                         <div class="row sizingtable"><input type="text" name="molecularWeight" class="sizingtable_inputs"></div>
@@ -826,6 +829,7 @@
                         var params = $(this).data('desc');
                         var param_values = []
                         var specificGravity = []
+                        
 
                         $('.sizingvalue_' + params).each(function() {
                                 param_values.push(this.value);
@@ -833,7 +837,7 @@
                         $('.sizingvalue_sg').each(function (){
                                 specificGravity.push(this.value);
                         })
-
+                        console.log('sksksKskks',param_values);
                         $.ajax({
                                 type: "GET",
                                 url: "/unit_change",
