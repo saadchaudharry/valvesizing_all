@@ -3,6 +3,11 @@ from datetime import datetime
 from flask import session
 from models import cvValues, cvTable
 from dbsetup import db
+import openpyxl
+from openpyxl.chart import LineChart,Reference
+
+# wb = openpyxl.Workbook()
+# sheet = wb.active
 # from app import getDBElementWithId
 
 def getDBElementWithId(table_name, id):
@@ -13,644 +18,9 @@ def getDBElementWithId(table_name, id):
     else:
         return None
     
-def createcvOpening_liquid(itemCase_list):
-    valve_cvOpening = [10,20,30,40,50,60,70,80,90,100]
-    workbook = xlsxwriter.Workbook(f'specsheet1.xlsx')
-    print(f'itemCasessssssssss',itemCase_list)
-    count = 1
-    for itemCase in itemCase_list:
-                
-            
-            worksheet = workbook.add_worksheet()
 
 
-
-            worksheet.set_paper(9)
-            worksheet.fit_to_pages(2, 1)
-            worksheet.print_area('A2:M72')
-            worksheet.set_margins(0.36, 0.2, 0.4, 0.01)
-            # worksheet.setRowHeight(2, 50)
-            # worksheet.set_row(9, 10)
-            worksheet.set_header(margin=0.2)
-            worksheet.set_footer(margin=0.28)
-
-
-            bold = workbook.add_format(
-                {'bold': True, 'bottom': 1, 'top': 1, 'right': 1, 'left': 1, 'font': 'Arial', 'font_size': 9, 'border': 7, 'bg_color': '#EFF5F5'})
-            bold1 = workbook.add_format(
-                {'bold': True, 'bottom': 1, 'top': 1, 'left': 1, 'border': 7, 'bg_color': '#EFF5F5'})
-            boldc = workbook.add_format(
-                {'align': 'center', 'bold': True, 'bottom': 1, 'top': 1, 'right': 1, 'left': 1,'font': 'Arial', 'font_size': 9, 'border': 7,
-                'bg_color': '#EFF5F5'})
-            br = workbook.add_format({'bottom': 1, 'top': 1, 'right': 1, 'border': 7})
-            h1 = workbook.add_format({'bold': True, 'font_size': 12, 'align': 'center', 'font': 'Arial', 'bottom': 1, 'top': 1, 'right': 1, 'left': 1})
-            h2 = workbook.add_format({'bold': 0, 'font_size': 10, 'font': 'Arial'})
-            h3 = workbook.add_format({'bold': 0, 'font_size': 9, 'font': 'Arial'})
-            f1 = workbook.add_format({'bold': 0, 'font_size': 9, 'font': 'Arial', 'align': 'right'})
-
-            cell_format1 = workbook.add_format({'bottom': 1, 'top': 1, 'font': 'Arial', 'font_size': 9, 'border': 7, 'right': 0, 'left': 0})
-            cell_formatL = workbook.add_format({'bottom': 1, 'top': 1, 'font': 'Arial', 'font_size': 9,  'right': 1,'border': 7, 'left': 0 })
-            cell_format = workbook.add_format(
-                {'bold': 0, 'font_color': 'black', 'font': 'Arial', 'font_size': 9, 'bottom': 1, 'top': 1, 'right': 1, 'left': 1,
-                'border': 7})
-
-            cell_format2 = workbook.add_format(
-                {'bold': 0, 'align': 'center', 'font_color': 'black', 'font': 'Arial', 'font_size': 9, 'bottom': 1, 'top': 1,
-                'right': 1, 'left': 1, 'border': 7})
-
-            cell_format3 = workbook.add_format(
-            {'bold': True, 'align': 'center', 'font_color': 'black', 'font': 'Arial', 'font_size': 12, 'bottom': 1, 'top': 1,
-                'right': 1, 'left': 1, 'border': 7})
-
-            column_width = [{'name': 'A1:A73', 'size': 5}, {'name': 'B1:B73', 'size': 16.57}, {'name': 'C1:C73', 'size': 11},
-                            {'name': 'D1:D73', 'size': 12},
-                            {'name': 'E1:E73', 'size': 7.5}, {'name': 'F1:F73', 'size': 7}, {'name': 'G1:G73', 'size': 5},
-                            {'name': 'H1:H73', 'size': 9.5},
-                            {'name': 'I1:I73', 'size': 13}, {'name': 'J1:J73', 'size': 7.5}, {'name': 'K1:K73', 'size': 7},
-                            {'name': 'L1:L73', 'size': 6.5}, {'name': 'M1:M73', 'size': 8}]
-
-            for i in column_width:
-                worksheet.set_column(i['name'], i['size'])
-
-            # worksheet.set_column('A1:A73', 5)
-            # worksheet.set_column('B1:B73', 24)
-            # worksheet.set_column('C1:C73', 10)
-            # worksheet.set_column('D1:D73', 12)
-            # worksheet.set_column('E1:E73', 7)
-            # worksheet.set_column('F1:F73', 5)
-            # worksheet.set_column('G1:G73', 12)
-            # worksheet.set_column('H1:H73', 12)
-            # worksheet.set_column('I1:I73', 6)
-            # worksheet.set_column('J1:J73', 6)
-            # worksheet.set_column('K1:K73', 6)
-            # worksheet.set_column('L1:L73', 6)
-
-            # worksheet.insert_image('A4', 'logo.png', {'x_scale': 0.2, 'y_scale': 0.2})
-            worksheet.merge_range('A3:B7', "", cell_format)
-
-            worksheet.write('A1', '', )
-            worksheet.merge_range('A2:M2', 'Control Valve Specification Sheet', cell_format3)
-            worksheet.merge_range('A8:B8', "Application", cell_format)
-            worksheet.write('A9:B9', 'Fluid State / Name', cell_format)
-            worksheet.write('A10', 'AA', boldc)
-            worksheet.write('A11', '1', cell_format2)
-            worksheet.write('A12', '2', cell_format2)
-            worksheet.write('A13', '3', cell_format2)
-            worksheet.write('A14', '4', cell_format2)
-            worksheet.write('A15', '5', cell_format2)
-            worksheet.write('A16', '6', cell_format2)
-            worksheet.write('A17', '7', cell_format2)
-            worksheet.write('A18', '8', cell_format2)
-            worksheet.write('A19', '9', cell_format2)
-            worksheet.write('A20', '10', cell_format2)
-            worksheet.write('A21', '11', cell_format2)
-            worksheet.write('A22', '12', cell_format2)
-            worksheet.write('A23', '13', cell_format2)
-            worksheet.write('A24', '14', cell_format2)
-            worksheet.write('A25', '15', cell_format2)
-            worksheet.write('A26', '16', cell_format2)
-            worksheet.write('A27', '17', cell_format2)
-            worksheet.write('A28', '18', cell_format2)
-            worksheet.write('A29', '19', cell_format2)
-            worksheet.write('A30', '20', cell_format2)
-            worksheet.write('A31', '21', cell_format2)
-            worksheet.write('A32', '22', cell_format2)
-            worksheet.write('A33', '23', cell_format2)
-            worksheet.write('A34', '24', cell_format2)
-            worksheet.write('A35', '25', cell_format2)
-            worksheet.write('A36', '26', cell_format2)
-            worksheet.write('A37', '27', cell_format2)
-            worksheet.write('A38', '28', cell_format2)
-            worksheet.write('A39', '29', cell_format2)
-            worksheet.write('A40', '30', cell_format2)
-            worksheet.write('A41', '31', cell_format2)
-            worksheet.write('A42', '32', cell_format2)
-            worksheet.write('A43', '33', cell_format2)
-            worksheet.write('A44', '34', cell_format2)
-            worksheet.write('A45', '35', cell_format2)
-            worksheet.write('A46', '36', cell_format2)
-            worksheet.write('A47', '37', cell_format2)
-            worksheet.write('A48', '38', cell_format2)
-
-
-
-            worksheet.write('B2', '')
-            worksheet.write('B3', '')
-        
-
-            worksheet.merge_range("B10:C10", 'Valve Sizing Calculation', bold)
-            worksheet.merge_range("B11:C11", 'Flow Rate', cell_format)
-            worksheet.merge_range("B12:C12", 'Inlet Pressure', cell_format)
-            worksheet.merge_range("B13:C13", 'Outlet Pressure', cell_format)
-            worksheet.merge_range("B14:C14", 'Inlet Temperature', cell_format)
-            worksheet.merge_range("B15:C15", 'Specific Gravity', cell_format)
-            worksheet.merge_range("B16:C16", 'Kinematic Viscosity', cell_format)
-            worksheet.merge_range("B17:C17", 'Vapor Pressure', cell_format)
-            worksheet.merge_range("B18:C18", 'Liquid Pr. Recovery factor, Fl', cell_format)
-            worksheet.merge_range("B19:C19", 'Calculated Cv', cell_format)
-            worksheet.merge_range("B20:C20", 'Percentage opening / Degree', cell_format)
-            worksheet.merge_range("B21:C21", 'Noise level at 1m distance', cell_format)
-            worksheet.merge_range("B22:C22", 'Differential Pressure Drop', cell_format)
-            worksheet.merge_range("B23:C23", 'Choked pressure drop', cell_format)
-            worksheet.merge_range("B24:C24", 'Ff', cell_format1)
-            worksheet.merge_range("B25:C25", 'Fp', cell_format1)
-            worksheet.merge_range("B26:C26", 'FLp', cell_format1)
-            worksheet.merge_range("B27:C27", 'Kc', cell_format1)
-            worksheet.merge_range("B28:C28", 'Ar', cell_format1)
-            worksheet.merge_range("B29:C29", 'Re', cell_format1)
-            worksheet.merge_range("B30:C30", 'Valve Diameter', cell_format1)
-            worksheet.merge_range("B31:C31", 'Inlet pipe velocity', cell_format1)
-            worksheet.merge_range("B32:C32", 'Outlet pipe velocity', cell_format1)
-            worksheet.merge_range("B33:C33", 'Valve Velocity', cell_format1)
-            worksheet.merge_range("B34:C34", 'Trim Exit velocity', cell_format1)
-            worksheet.merge_range("B35:C35", 'Power Lvl', cell_format1)
-            worksheet.merge_range("B36:C36", 'Required Stages', cell_format1)
-            worksheet.merge_range("B37:C37", 'Warnings!!', cell_format1)
-
-
-
-
-            worksheet.write('C1', '')
-            # worksheet.write('C2', '')
-            worksheet.write('C3', 'Customer', cell_format)
-            worksheet.write('C4', 'Project', cell_format)
-            worksheet.write('C5', 'End User', cell_format)
-            worksheet.write('C6', 'RFQ No', cell_format)
-            worksheet.write('C7', 'PO No', cell_format)
-            worksheet.merge_range('C8:M8', '', cell_format)
-            worksheet.merge_range('C9:F9', '', cell_format)
-
-            # worksheet.write('D2', '')
-            worksheet.merge_range('D3:H3', '', cell_format)
-            worksheet.merge_range('D4:H4', '', cell_format)
-            worksheet.merge_range('D5:H5', '', cell_format)
-            worksheet.merge_range('D6:H6', '', cell_format)
-            worksheet.merge_range('D7:H7', '', cell_format)
-
-            worksheet.write('D10', 'Units', bold)
-            worksheet.write('D11', '', cell_format)
-            worksheet.write('D12', '', cell_format)
-            worksheet.write('D13', '', cell_format)
-            worksheet.write('D14', '', cell_format)
-            worksheet.write('D15', '', cell_format)
-            worksheet.write('D16', '', cell_format)
-            worksheet.write('D17', '', cell_format)
-            worksheet.write('D18', '', cell_format)
-            worksheet.write('D19', '', cell_format)
-            worksheet.write('D20', '', cell_format)
-            worksheet.write('D21', '', cell_format)
-            worksheet.write('D22', '', cell_format)
-            worksheet.write('D23', '', cell_format)
-            worksheet.write('D24', '', cell_format)
-            worksheet.write('D25', '', cell_format)
-            worksheet.write('D26', '', cell_format)
-            worksheet.write('D27', '', cell_format)
-            worksheet.write('D28', '', cell_format)
-            worksheet.write('D29', '', cell_format)
-            worksheet.write('D30', '', cell_format)
-            worksheet.write('D31', '', cell_format)
-            worksheet.write('D32', '', cell_format)
-            worksheet.write('D33', '', cell_format)
-            worksheet.write('D34', '', cell_format)
-            worksheet.write('D35', '', cell_format)
-            worksheet.write('D36', '', cell_format)
-            worksheet.write('D37', '', cell_format)
-            worksheet.write('D38', '', cell_format)
-            worksheet.write('D39', '', cell_format)
-            worksheet.write('D40', '', cell_format)
-            worksheet.write('D41', '', cell_format)
-            worksheet.write('D42', '', cell_format)
-            worksheet.write('D43', '', cell_format)
-            worksheet.write('D44', '', cell_format)
-            worksheet.write('D45', '', cell_format)
-            worksheet.write('D46', '', cell_format)
-            worksheet.write('D47', '', cell_format)
-
-
-
-
-
-            worksheet.merge_range("E10:F10", 'Case 1', bold)
-            case_cell = ["E:F","G:H","I:I","J:K","L:M"]
-        
-            for i in range(5):
-                st_cell,end_cell = case_cell[i].split(":") 
-                
-                if i < len(itemCase): 
-
-                    item_case = itemCase[i]     
-                    if i == 2:
-                        worksheet.write(f"{st_cell}{11}", item_case.flowrate, cell_format)
-                        worksheet.write(f"{st_cell}{12}", item_case.inletPressure, cell_format)
-                        worksheet.write(f"{st_cell}{13}:", item_case.outletPressure, cell_format)
-                        worksheet.write(f"{st_cell}{14}:", item_case.inletTemp, cell_format)
-                        worksheet.write(f"{st_cell}{15}:", item_case.specificGravity, cell_format)
-                        worksheet.write(f"{st_cell}{16}:", item_case.kinematicViscosity, cell_format)
-                        worksheet.write(f"{st_cell}{17}:", item_case.vaporPressure, cell_format)
-                        worksheet.write(f"{st_cell}{18}:", item_case.fl, cell_format)
-                        worksheet.write(f"{st_cell}{19}:", item_case.calculatedCv, cell_format)
-                        worksheet.write(f"{st_cell}{20}:", item_case.openingPercentage, cell_format)
-                        worksheet.write(f"{st_cell}{21}:", '', cell_format)
-                        worksheet.write(f"{st_cell}{22}:", item_case.x_delp, cell_format)
-                        worksheet.write(f"{st_cell}{23}:", item_case.chokedDrop, cell_format)
-                        worksheet.write(f"{st_cell}{24}:", item_case.Ff, cell_format)
-                        worksheet.write(f"{st_cell}{25}:", item_case.Fp, cell_format)
-                        worksheet.write(f"{st_cell}{26}:", item_case.Flp, cell_format)
-                        worksheet.write(f"{st_cell}{27}:", item_case.kc, cell_format)
-                        worksheet.write(f"{st_cell}{28}:", item_case.ar, cell_format)
-                        worksheet.write(f"{st_cell}{29}:", item_case.reNumber, cell_format)
-                        worksheet.write(f"{st_cell}{30}:", item_case.valveSize, cell_format)
-                        worksheet.write(f"{st_cell}{31}:", item_case.pipeInVel, cell_format)
-                        worksheet.write(f"{st_cell}{32}:", item_case.pipeOutVel, cell_format)
-                        worksheet.write(f"{st_cell}{33}:", item_case.valveVel, cell_format)
-                        worksheet.write(f"{st_cell}{34}:", item_case.tex, cell_format)
-                        worksheet.write(f"{st_cell}{35}:", item_case.powerLevel, cell_format)
-                        worksheet.write(f"{st_cell}{36}:", item_case.requiredStages, cell_format)
-                        worksheet.write(f"{st_cell}{37}:", '', cell_format)           
-
-                    else:               
-                        worksheet.merge_range(f"{st_cell}{11}:{end_cell}{11}", item_case.flowrate, cell_format)
-                        worksheet.merge_range(f"{st_cell}{12}:{end_cell}{12}", item_case.inletPressure, cell_format)
-                        worksheet.merge_range(f"{st_cell}{13}:{end_cell}{13}", item_case.outletPressure, cell_format)
-                        worksheet.merge_range(f"{st_cell}{14}:{end_cell}{14}", item_case.inletTemp, cell_format)
-                        worksheet.merge_range(f"{st_cell}{15}:{end_cell}{15}", item_case.specificGravity, cell_format)
-                        worksheet.merge_range(f"{st_cell}{16}:{end_cell}{16}", item_case.kinematicViscosity, cell_format)
-                        worksheet.merge_range(f"{st_cell}{17}:{end_cell}{17}", item_case.vaporPressure, cell_format)
-                        worksheet.merge_range(f"{st_cell}{18}:{end_cell}{18}", item_case.fl, cell_format)
-                        worksheet.merge_range(f"{st_cell}{19}:{end_cell}{19}", item_case.calculatedCv, cell_format)
-                        worksheet.merge_range(f"{st_cell}{20}:{end_cell}{20}", item_case.openingPercentage, cell_format)
-                        worksheet.merge_range(f"{st_cell}{21}:{end_cell}{21}", '', cell_format)
-                        worksheet.merge_range(f"{st_cell}{22}:{end_cell}{22}", item_case.x_delp, cell_format)
-                        worksheet.merge_range(f"{st_cell}{23}:{end_cell}{23}", item_case.chokedDrop, cell_format)
-                        worksheet.merge_range(f"{st_cell}{24}:{end_cell}{24}", item_case.Ff, cell_format)
-                        worksheet.merge_range(f"{st_cell}{25}:{end_cell}{25}", item_case.Fp, cell_format)
-                        worksheet.merge_range(f"{st_cell}{26}:{end_cell}{26}", item_case.Flp, cell_format)
-                        worksheet.merge_range(f"{st_cell}{27}:{end_cell}{27}", item_case.kc, cell_format)
-                        worksheet.merge_range(f"{st_cell}{28}:{end_cell}{28}", item_case.ar, cell_format)
-                        worksheet.merge_range(f"{st_cell}{29}:{end_cell}{29}", item_case.reNumber, cell_format)
-                        worksheet.merge_range(f"{st_cell}{30}:{end_cell}{30}", item_case.valveSize, cell_format)
-                        worksheet.merge_range(f"{st_cell}{31}:{end_cell}{31}", item_case.pipeInVel, cell_format)
-                        worksheet.merge_range(f"{st_cell}{32}:{end_cell}{32}", item_case.pipeOutVel, cell_format)
-                        worksheet.merge_range(f"{st_cell}{33}:{end_cell}{33}", item_case.valveVel, cell_format)
-                        worksheet.merge_range(f"{st_cell}{34}:{end_cell}{34}", item_case.tex, cell_format)
-                        worksheet.merge_range(f"{st_cell}{35}:{end_cell}{35}", item_case.powerLevel, cell_format)
-                        worksheet.merge_range(f"{st_cell}{36}:{end_cell}{36}", item_case.requiredStages, cell_format)
-                        worksheet.merge_range(f"{st_cell}{37}:{end_cell}{37}", '', cell_format)           
-
-                else:
-                    if i==2:
-                        worksheet.write(f"{st_cell}{11}", '', cell_format)
-                        worksheet.write(f"{st_cell}{12}", '', cell_format)
-                        worksheet.write(f"{st_cell}{13}", '', cell_format)
-                        worksheet.write(f"{st_cell}{14}", '',cell_format)
-                        worksheet.write(f"{st_cell}{15}", '', cell_format)
-                        worksheet.write(f"{st_cell}{16}", '',cell_format)
-                        worksheet.write(f"{st_cell}{17}", '', cell_format)
-                        worksheet.write(f"{st_cell}{18}", '',cell_format)
-                        worksheet.write(f"{st_cell}{19}", '', cell_format)
-                        worksheet.write(f"{st_cell}{20}", '', cell_format)
-                        worksheet.write(f"{st_cell}{21}", '', cell_format)
-                        worksheet.write(f"{st_cell}{22}", '',cell_format)
-                        worksheet.write(f"{st_cell}{23}", '', cell_format)
-                        worksheet.write(f"{st_cell}{24}", '', cell_format)
-                        worksheet.write(f"{st_cell}{25}", '', cell_format)
-                        worksheet.write(f"{st_cell}{26}", '', cell_format)
-                        worksheet.write(f"{st_cell}{27}", '', cell_format)
-                        worksheet.write(f"{st_cell}{28}", '', cell_format)
-                        worksheet.write(f"{st_cell}{29}", '', cell_format)
-                        worksheet.write(f"{st_cell}{30}", '', cell_format)
-                        worksheet.write(f"{st_cell}{31}", '', cell_format)
-                        worksheet.write(f"{st_cell}{32}", '', cell_format)
-                        worksheet.write(f"{st_cell}{33}", '', cell_format)
-                        worksheet.write(f"{st_cell}{34}", '', cell_format)
-                        worksheet.write(f"{st_cell}{35}", '', cell_format)
-                        worksheet.write(f"{st_cell}{36}", '', cell_format)
-                        worksheet.write(f"{st_cell}{37}", '', cell_format)
-                       
-                    else:
-                        worksheet.merge_range(f"{st_cell}{11}:{end_cell}{11}", '', cell_format)
-                        worksheet.merge_range(f"{st_cell}{12}:{end_cell}{12}", '', cell_format)
-                        worksheet.merge_range(f"{st_cell}{13}:{end_cell}{13}", '', cell_format)
-                        worksheet.merge_range(f"{st_cell}{14}:{end_cell}{14}", '',cell_format)
-                        worksheet.merge_range(f"{st_cell}{15}:{end_cell}{15}", '', cell_format)
-                        worksheet.merge_range(f"{st_cell}{16}:{end_cell}{16}", '',cell_format)
-                        worksheet.merge_range(f"{st_cell}{17}:{end_cell}{17}", '', cell_format)
-                        worksheet.merge_range(f"{st_cell}{18}:{end_cell}{18}", '',cell_format)
-                        worksheet.merge_range(f"{st_cell}{19}:{end_cell}{19}", '', cell_format)
-                        worksheet.merge_range(f"{st_cell}{20}:{end_cell}{20}", '', cell_format)
-                        worksheet.merge_range(f"{st_cell}{21}:{end_cell}{21}", '', cell_format)
-                        worksheet.merge_range(f"{st_cell}{22}:{end_cell}{22}", '',cell_format)
-                        worksheet.merge_range(f"{st_cell}{23}:{end_cell}{23}", '', cell_format)
-                        worksheet.merge_range(f"{st_cell}{24}:{end_cell}{24}", '', cell_format)
-                        worksheet.merge_range(f"{st_cell}{25}:{end_cell}{25}", '', cell_format)
-                        worksheet.merge_range(f"{st_cell}{26}:{end_cell}{26}", '', cell_format)
-                        worksheet.merge_range(f"{st_cell}{27}:{end_cell}{27}", '', cell_format)
-                        worksheet.merge_range(f"{st_cell}{28}:{end_cell}{28}", '', cell_format)
-                        worksheet.merge_range(f"{st_cell}{29}:{end_cell}{29}", '', cell_format)
-                        worksheet.merge_range(f"{st_cell}{30}:{end_cell}{30}", '', cell_format)
-                        worksheet.merge_range(f"{st_cell}{31}:{end_cell}{31}", '', cell_format)
-                        worksheet.merge_range(f"{st_cell}{32}:{end_cell}{32}", '', cell_format)
-                        worksheet.merge_range(f"{st_cell}{33}:{end_cell}{33}", '', cell_format)
-                        worksheet.merge_range(f"{st_cell}{34}:{end_cell}{34}", '', cell_format)
-                        worksheet.merge_range(f"{st_cell}{35}:{end_cell}{35}", '', cell_format)
-                        worksheet.merge_range(f"{st_cell}{36}:{end_cell}{36}", '', cell_format)
-                        worksheet.merge_range(f"{st_cell}{37}:{end_cell}{37}", '', cell_format)
-        
-
-
-                # Continue for other fields
-            # if item_case1:
-            #     worksheet.merge_range("E11:F11", item_case1.flowrate, cell_format)
-            #     worksheet.merge_range("E12:F12", item_case1.inletPressure, cell_format)
-            #     worksheet.merge_range("E13:F13", item_case1.outletPressure, cell_format)
-            #     worksheet.merge_range("E14:F14", item_case1.inletTemp, cell_format)
-            #     worksheet.merge_range("E15:F15", item_case1.molecularWeight, cell_format)
-            #     worksheet.merge_range("E16:F16", item_case1.specificHeatRatio, cell_format)
-            #     worksheet.merge_range("E17:F17", item_case1.compressibility, cell_format)
-            #     worksheet.merge_range("E18:F18", item_case1.xt, cell_format)
-            #     worksheet.merge_range("E19:F19", item_case1.calculatedCv, cell_format)
-            #     worksheet.merge_range("E20:F20", item_case1.openingPercentage, cell_format)
-            #     worksheet.merge_range("E21:F21", '',cell_format)
-            #     worksheet.merge_range("E22:F22", item_case1.x_delp,cell_format)
-            #     worksheet.merge_range("E23:F23", item_case1.chokedDrop, cell_format)
-            #     worksheet.merge_range("E24:F24", item_case1.y_expansion, cell_format)
-            #     worksheet.merge_range("E25:F25", item_case1.xtp, cell_format)
-            #     worksheet.merge_range("E26:F26", item_case1.fk, cell_format)
-            #     worksheet.merge_range("E27:F27", item_case1.Ff, cell_format)
-            #     worksheet.merge_range("E28:F28", item_case1.Fp, cell_format)
-            #     worksheet.merge_range("E29:F29", item_case1.Flp, cell_format)
-            #     worksheet.merge_range("E30:F30", item_case1.kc, cell_format)
-            #     worksheet.merge_range("E31:F31", item_case1.ar, cell_format)
-            #     worksheet.merge_range("E32:F32", item_case1.reNumber, cell_format)
-            #     worksheet.merge_range("E33:F33", '', cell_format)
-            #     worksheet.merge_range("E34:F34", '', cell_format)
-            #     worksheet.merge_range("E35:F35", item_case1.pipeInVel, cell_format)
-            #     worksheet.merge_range("E36:F36", item_case1.pipeOutVel, cell_format)
-            #     worksheet.merge_range("E37:F37", '', cell_format)
-            #     worksheet.merge_range("E38:F38", item_case1.machNoUp, cell_format)
-            #     worksheet.merge_range("E39:F39", item_case1.machNoDown, cell_format)
-            #     worksheet.merge_range("E40:F40", item_case1.machNoValve, cell_format)
-            #     worksheet.merge_range("E41:F41", item_case1.sonicVelUp, cell_format)
-            #     worksheet.merge_range("E42:F42", item_case1.sonicVelDown, cell_format)
-            #     worksheet.merge_range("E43:F43", item_case1.sonicVelValve, cell_format)
-            #     worksheet.merge_range("E44:F44", item_case1.outletDensity, cell_format)
-            #     worksheet.merge_range("E45:F45", '', cell_format)
-            #     worksheet.merge_range("E46:F46", '', cell_format)
-            #     worksheet.merge_range("E47:F47", '', cell_format)
-
-
-
-            worksheet.write('G1', '', )
-            worksheet.write('G2', '', )
-            worksheet.write('G8', '', )
-            worksheet.merge_range("G9:H9", 'Critical Pressure.', cell_format)
-            worksheet.merge_range("G10:H10", 'Case 2', bold)
-            # worksheet.merge_range("G11:H11", '', cell_format)
-            # worksheet.merge_range("G12:H12", '', cell_format)
-            # worksheet.merge_range("G13:H13", '', cell_format)
-            # worksheet.merge_range("G14:H14", '', cell_format)
-            # worksheet.merge_range("G15:H15", '', cell_format)
-            # worksheet.merge_range("G16:H16", '', cell_format)
-            # worksheet.merge_range("G17:H17", '', cell_format)
-            # worksheet.merge_range("G18:H18", '', cell_format)
-            # worksheet.merge_range("G19:H19", '', cell_format)
-            # worksheet.merge_range("G20:H20", '', cell_format)
-            # worksheet.merge_range("G21:H21", '', cell_format)
-            # worksheet.merge_range("G22:H22", '', cell_format)
-            # worksheet.merge_range("G23:H23", '', cell_format)
-            # worksheet.merge_range("G24:H24", '', cell_format)
-            # worksheet.merge_range("G25:H25", '', cell_format)
-            # worksheet.merge_range("G26:H26", '', cell_format)
-            # worksheet.merge_range("G27:H27", '', cell_format)
-            # worksheet.merge_range("G28:H28", '', cell_format)
-            # worksheet.merge_range("G29:H29", '', cell_format)
-            # worksheet.merge_range("G30:H30", '', cell_format)
-            # worksheet.merge_range("G31:H31", '', cell_format)
-            # worksheet.merge_range("G32:H32", '', cell_format)
-            # worksheet.merge_range("G33:H33", '', cell_format)
-            # worksheet.merge_range("G34:H34", '', cell_format)
-            # worksheet.merge_range("G35:H35", '', cell_format)
-            # worksheet.merge_range("G36:H36", '', cell_format)
-            # worksheet.merge_range("G37:H37", '', cell_format)
-            # worksheet.merge_range("G38:H38", '', cell_format)
-            # worksheet.merge_range("G39:H39", '', cell_format)
-            # worksheet.merge_range("G40:H40", '', cell_format)
-            # worksheet.merge_range("G41:H41", '', cell_format)
-            # worksheet.merge_range("G42:H42", '', cell_format)
-            # worksheet.merge_range("G43:H43", '', cell_format)
-            # worksheet.merge_range("G44:H44", '', cell_format)
-            # worksheet.merge_range("G45:H45", '', cell_format)
-            # worksheet.merge_range("G46:H46", '', cell_format)
-            # worksheet.merge_range("G47:H47", '', cell_format)
-
-
-            worksheet.write('I1', '')
-            worksheet.write('I2', '')
-            worksheet.write('I3', 'Quote No', cell_format)
-            worksheet.write('I4', 'W/O No', cell_format)
-            worksheet.write('I5', 'Serial No', cell_format)
-            worksheet.write('I6', 'Tag No', cell_format)
-            worksheet.write('I7', 'Item No / Qty', cell_format)
-            # worksheet.write('I8', '', cell_format)
-            worksheet.write('I9', '', cell_format)
-            worksheet.write('I10', 'Case 3', bold)
-            # worksheet.write('I11', '', cell_format)
-            # worksheet.write('I12', '', cell_format)
-            # worksheet.write('I13', '', cell_format)
-            # worksheet.write('I14', '', cell_format)
-            # worksheet.write('I15', '', cell_format)
-            # worksheet.write('I16', '', cell_format)
-            # worksheet.write('I17', '', cell_format)
-            # worksheet.write('I18', '', cell_format)
-            # worksheet.write('I19', '', cell_format)
-            # worksheet.write('I20', '', cell_format)
-            # worksheet.write('I21', '', cell_format)
-            # worksheet.write('I22', '', cell_format)
-            # worksheet.write('I23', '', cell_format)
-            # worksheet.write('I24', '', cell_format)
-            # worksheet.write('I25', '', cell_format)
-            # worksheet.write('I26', '', cell_format)
-            # worksheet.write('I27', '', cell_format)
-            # worksheet.write('I28', '', cell_format)
-            # worksheet.write('I29', '', cell_format)
-            # worksheet.write('I30', '', cell_format)
-            # worksheet.write('I31', '', cell_format)
-            # worksheet.write('I32', '', cell_format)
-            # worksheet.write('I33', '', cell_format)
-            # worksheet.write('I34', '', cell_format)
-            # worksheet.write('I35', '', cell_format)
-            # worksheet.write('I36', '', cell_format)
-            # worksheet.write('I37', '', cell_format)
-            # worksheet.write('I38', '', cell_format)
-            # worksheet.write('I39', '', cell_format)
-            # worksheet.write('I40', '', cell_format)
-            # worksheet.write('I41', '', cell_format)
-            # worksheet.write('I42', '', cell_format)
-            # worksheet.write('I43', '', cell_format)
-            # worksheet.write('I44', '', cell_format)
-            # worksheet.write('I45', '', cell_format)
-            # worksheet.write('I46', '', cell_format)
-            # worksheet.write('I47', '', cell_format)
-
-
-            worksheet.merge_range("J3:M3", '', cell_format)
-            worksheet.merge_range("J4:M4", '', cell_format)
-            worksheet.merge_range("J5:M5", '', cell_format)
-            worksheet.merge_range("J6:M6", '', cell_format)
-            # worksheet.merge_range("J7:M7", '', cell_format)
-            worksheet.merge_range("J9:K9", 'Shutoff Pressure.', cell_format)
-            worksheet.merge_range("J10:K10", 'Case 4', bold)
-            # worksheet.merge_range("J11:K11", '', cell_format)
-            # worksheet.merge_range("J12:K12", '', cell_format)
-            # worksheet.merge_range("J13:K13", '', cell_format)
-            # worksheet.merge_range("J14:K14", '', cell_format)
-            # worksheet.merge_range("J15:K15", '', cell_format)
-            # worksheet.merge_range("J16:K16", '', cell_format)
-            # worksheet.merge_range("J17:K17", '', cell_format)
-            # worksheet.merge_range("J18:K18", '', cell_format)
-            # worksheet.merge_range("J19:K19", '', cell_format)
-            # worksheet.merge_range("J20:K20", '', cell_format)
-            # worksheet.merge_range("J21:K21", '', cell_format)
-            # worksheet.merge_range("J22:K22", '', cell_format)
-            # worksheet.merge_range("J23:K23", '', cell_format)
-            # worksheet.merge_range("J24:K24", '', cell_format)
-            # worksheet.merge_range("J25:K25", '', cell_format)
-            # worksheet.merge_range("J26:K26", '', cell_format)
-            # worksheet.merge_range("J27:K27", '', cell_format)
-            # worksheet.merge_range("J28:K28", '', cell_format)
-            # worksheet.merge_range("J29:K29", '', cell_format)
-            # worksheet.merge_range("J30:K30", '', cell_format)
-            # worksheet.merge_range("J31:K31", '', cell_format)
-            # worksheet.merge_range("J32:K32", '', cell_format)
-            # worksheet.merge_range("J33:K33", '', cell_format)
-            # worksheet.merge_range("J34:K34", '', cell_format)
-            # worksheet.merge_range("J35:K35", '', cell_format)
-            # worksheet.merge_range("J36:K36", '', cell_format)
-            # worksheet.merge_range("J37:K37", '', cell_format)
-            # worksheet.merge_range("J38:K38", '', cell_format)
-            # worksheet.merge_range("J39:K39", '', cell_format)
-            # worksheet.merge_range("J40:K40", '', cell_format)
-            # worksheet.merge_range("J41:K41", '', cell_format)
-            # worksheet.merge_range("J42:K42", '', cell_format)
-            # worksheet.merge_range("J43:K43", '', cell_format)
-            # worksheet.merge_range("J44:K44", '', cell_format)
-            # worksheet.merge_range("J45:K45", '', cell_format)
-            # worksheet.merge_range("J46:K46", '', cell_format)
-            # worksheet.merge_range("J47:K47", '', cell_format)
-
-
-
-
-            worksheet.merge_range("L9:M9", '', cell_format)
-            worksheet.merge_range("L10:M10", 'Case 5', bold)
-            # worksheet.merge_range("L11:M11", '', cell_format)
-            # worksheet.merge_range("L12:M12", '', cell_format)
-            # worksheet.merge_range("L13:M13", '', cell_format)
-            # worksheet.merge_range("L14:M14", '', cell_format)
-            # worksheet.merge_range("L15:M15", '', cell_format)
-            # worksheet.merge_range("L16:M16", '', cell_format)
-            # worksheet.merge_range("L17:M17", '', cell_format)
-            # worksheet.merge_range("L18:M18", '', cell_format)
-            # worksheet.merge_range("L19:M19", '', cell_format)
-            # worksheet.merge_range("L20:M20", '', cell_format)
-            # worksheet.merge_range("L21:M21", '', cell_format)
-            # worksheet.merge_range("L22:M22", '', cell_format)
-            # worksheet.merge_range("L23:M23", '', cell_format)
-            # worksheet.merge_range("L24:M24", '', cell_format)
-            # worksheet.merge_range("L25:M25", '', cell_format)
-            # worksheet.merge_range("L26:M26", '', cell_format)
-            # worksheet.merge_range("L27:M27", '', cell_format)
-            # worksheet.merge_range("L28:M28", '', cell_format)
-            # worksheet.merge_range("L29:M29", '', cell_format)
-            # worksheet.merge_range("L30:M30", '', cell_format)
-            # worksheet.merge_range("L31:M31", '', cell_format)
-            # worksheet.merge_range("L32:M32", '', cell_format)
-            # worksheet.merge_range("L33:M33", '', cell_format)
-            # worksheet.merge_range("L34:M34", '', cell_format)
-            # worksheet.merge_range("L35:M35", '', cell_format)
-            # worksheet.merge_range("L36:M36", '', cell_format)
-            # worksheet.merge_range("L37:M37", '', cell_format)
-            # worksheet.merge_range("L38:M38", '', cell_format)
-            # worksheet.merge_range("L39:M39", '', cell_format)
-            # worksheet.merge_range("L40:M40", '', cell_format)
-            # worksheet.merge_range("L41:M41", '', cell_format)
-            # worksheet.merge_range("L42:M42", '', cell_format)
-            # worksheet.merge_range("L43:M43", '', cell_format)
-            # worksheet.merge_range("L44:M44", '', cell_format)
-            # worksheet.merge_range("L45:M45", '', cell_format)
-            # worksheet.merge_range("L46:M46", '', cell_format)
-            # worksheet.merge_range("L47:M47", '', cell_format)
-
-
-            
-            worksheet.write('A65', 'HH', boldc)
-            worksheet.write('A66', '41', cell_format2)
-            worksheet.write('A67', '42', cell_format2)
-            worksheet.write('A68', '43', cell_format2)
-            worksheet.write('A69', '44', cell_format2)
-            worksheet.write('A70', '45', cell_format2)
-
-
-            worksheet.merge_range("B65:J65", 'Notes', bold)
-            worksheet.merge_range("B66:J66", 'N1- MPI-Body/Bnt Castings/Forgings to ASME B16.34 at Foundry/Forge', cell_format)
-            worksheet.merge_range("B67:J67", '', cell_format)
-            worksheet.merge_range("B68:J68", '', cell_format)
-            worksheet.merge_range("B69:J69", '', cell_format)
-            worksheet.merge_range("B70:J70", '', cell_format)
-
-
-            worksheet.merge_range("K65:M65", 'Revision Control', bold)
-            worksheet.write('K66', 'Rev.', cell_format)
-            worksheet.write('L66', 'By.', cell_format)
-            worksheet.write('M66', 'Date.', cell_format)
-
-            worksheet.write('K67', '', cell_format2)
-            worksheet.write('K68', '', cell_format2)
-            worksheet.write('K69', '', cell_format2)
-            worksheet.write('K70', '', cell_format2)
-
-            worksheet.write('L67', '', cell_format2)
-            worksheet.write('L68', '', cell_format2)
-            worksheet.write('L69', '', cell_format2)
-            worksheet.write('L70', '', cell_format2)
-
-            worksheet.write('M67', '', cell_format2)
-            worksheet.write('M68', '', cell_format2)
-            worksheet.write('M69', '', cell_format2)
-            worksheet.write('M70', '', cell_format2)
-
-
-            data = valve_cvOpening[:10]
-            worksheet.write_column('C49', data)
-            data = [10,20,30,40,50,60,70,80,90,100]
-            worksheet.write_column('D49', data)
-
-            # Create a new chart object.
-            chart = workbook.add_chart({'type': 'line'})
-
-            # Add a series to the chart.
-            chart.add_series({
-            'categories': '=Sheet1!$D$49:$D$58',  # X-axis data
-            'values':     '=Sheet1!$C$49:$C$58',  # Y-axis data
-            })
-
-            # Set X-axis title
-            chart.set_x_axis({'name': 'Percentage Opening / Degree'})
-
-            # Set Y-axis title
-            chart.set_y_axis({'name': 'CV Values'})
-
-            # Insert the chart into the worksheet.
-            worksheet.insert_chart('C49', chart)
-
-            worksheet.write('A71', 'FLOW CONTROL COMMUNE', )
-            worksheet.write('M71', 'FR/AE/004', f1)
-            count+=1
-
-    workbook.close()
-            
-
-def createcvOpening_gas(itemCase_list,fluid_types):
+def createcvOpening_gas(itemCase_list,fluid_types,items):
     
 
     data = [10,20,30,40,50,60,70,80,90,100]
@@ -659,7 +29,9 @@ def createcvOpening_gas(itemCase_list,fluid_types):
     count = 1;f_cnt = 0
     print(f'FLUID {fluid_types}')
     for itemCase in itemCase_list:
-            
+            cv_graph_values = []
+            open_cv = [10,20,30,40,50,60,70,80,90,100]
+            item = items[f_cnt]
             fluid_type = fluid_types[f_cnt]
             worksheet = workbook.add_worksheet()
 
@@ -727,9 +99,9 @@ def createcvOpening_gas(itemCase_list,fluid_types):
 
             # worksheet.insert_image('A4', 'logo.png', {'x_scale': 0.2, 'y_scale': 0.2})
             worksheet.merge_range('A3:B7', "", cell_format)
-
+            worksheet.insert_image('A4', 'newlogo.png',{'x_scale': 0.18, 'y_scale': 0.18})
             worksheet.write('A1', '', )
-            worksheet.merge_range('A2:M2', 'Control Valve Specification Sheet', cell_format3)
+            worksheet.merge_range('A2:M2', 'Control Valve CV Plot', cell_format3)
             worksheet.merge_range('A8:B8', "Application", cell_format)
             worksheet.write('A9:B9', 'Fluid State / Name', cell_format)
             worksheet.write('A10', 'AA', boldc)
@@ -907,7 +279,24 @@ def createcvOpening_gas(itemCase_list,fluid_types):
             worksheet.write('D47', '', cell_format)
 
 
+            if fluid_type == 'Liquid':
+                worksheet.write('D11', item.flowrate_unit, cell_format)
+                worksheet.write('D12', item.inpres_unit, cell_format)
+                worksheet.write('D13', item.outpres_unit, cell_format)
+                worksheet.write('D14', item.intemp_unit, cell_format)
+                worksheet.write('D17', item.vaporpres_unit, cell_format)
+                worksheet.write('D30', item.valvesize_unit, cell_format)
 
+
+
+            # worksheet.write('D3', str(case_data[i][0][-1]), cell_format1)
+            # worksheet.write('C9', f"{str(case_data[i][0][16])}/{other[i][30]}")
+            # worksheet.write('J3', str(case_data[i][0][22]), cell_format1)
+            # worksheet.write('J4', str(case_data[i][0][23]), cell_format1)
+            # worksheet.write('J6', str(case_data[i][0][14]), cell_format1)
+            # worksheet.write('J7', str(case_data[i][0][15]), cell_format1)
+            # worksheet.write('D27', f"{str(case_data[i][0][18])} {units[i][-1]}", cell_format1)
+            # worksheet.write('D28', f"{str(case_data[i][0][19])} {units[i][-2]}", cell_format1)
 
 
             worksheet.merge_range("E10:F10", 'Case 1', bold)
@@ -1078,14 +467,15 @@ def createcvOpening_gas(itemCase_list,fluid_types):
 
             elif fluid_type == 'Liquid':
                 case_cv_values = 0
-                cv_graph = 0; cv_graph_values = []
+                cv_graph = 0; cv_graph_values = [];case_cv_final =[];case_cv_finalPercent = []
                 for i in range(5):
                     st_cell,end_cell = case_cell[i].split(":") 
                     
                     if i < len(itemCase): 
 
                         item_case = itemCase[i] 
-                           
+                        case_cv_final.append(item_case.calculatedCv)
+                        case_cv_finalPercent.append(item_case.openingPercentage)
                         if item_case.valveDiaId:
                             # case_cv_values
                             cv_graph = 1
@@ -1094,7 +484,7 @@ def createcvOpening_gas(itemCase_list,fluid_types):
                             # db.session.query(cvValues).filter_by(cv=cv_element, coeff='Cv').first()
                             item_case_cvs = db.session.query(cvValues).filter_by(cv=cv_element, coeff='Cv').first()
                             print(f'itemcasecvssssddvv {item_case_cvs}')
-                            cv_graph_values.extend([item_case_cvs.one, item_case_cvs.two, item_case_cvs.three,item_case_cvs.four,item_case_cvs.five,item_case_cvs.six,item_case_cvs.seven,item_case_cvs.eight,item_case_cvs.nine,item_case_cvs.ten])
+                            cv_graph_values = [item_case_cvs.one, item_case_cvs.two, item_case_cvs.three,item_case_cvs.four,item_case_cvs.five,item_case_cvs.six,item_case_cvs.seven,item_case_cvs.eight,item_case_cvs.nine,item_case_cvs.ten]
 
                         if i == 2:
                             worksheet.write(f"{st_cell}{11}", item_case.flowrate, cell_format)
@@ -1107,7 +497,7 @@ def createcvOpening_gas(itemCase_list,fluid_types):
                             worksheet.write(f"{st_cell}{18}:", item_case.fl, cell_format)
                             worksheet.write(f"{st_cell}{19}:", item_case.calculatedCv, cell_format)
                             worksheet.write(f"{st_cell}{20}:", item_case.openingPercentage, cell_format)
-                            worksheet.write(f"{st_cell}{21}:", '', cell_format)
+                            worksheet.write(f"{st_cell}{21}:", item_case.spl, cell_format)
                             worksheet.write(f"{st_cell}{22}:", item_case.x_delp, cell_format)
                             worksheet.write(f"{st_cell}{23}:", item_case.chokedDrop, cell_format)
                             worksheet.write(f"{st_cell}{24}:", item_case.Ff, cell_format)
@@ -1136,7 +526,7 @@ def createcvOpening_gas(itemCase_list,fluid_types):
                             worksheet.merge_range(f"{st_cell}{18}:{end_cell}{18}", item_case.fl, cell_format)
                             worksheet.merge_range(f"{st_cell}{19}:{end_cell}{19}", item_case.calculatedCv, cell_format)
                             worksheet.merge_range(f"{st_cell}{20}:{end_cell}{20}", item_case.openingPercentage, cell_format)
-                            worksheet.merge_range(f"{st_cell}{21}:{end_cell}{21}", '', cell_format)
+                            worksheet.merge_range(f"{st_cell}{21}:{end_cell}{21}", item_case.spl, cell_format)
                             worksheet.merge_range(f"{st_cell}{22}:{end_cell}{22}", item_case.x_delp, cell_format)
                             worksheet.merge_range(f"{st_cell}{23}:{end_cell}{23}", item_case.chokedDrop, cell_format)
                             worksheet.merge_range(f"{st_cell}{24}:{end_cell}{24}", item_case.Ff, cell_format)
@@ -1213,11 +603,13 @@ def createcvOpening_gas(itemCase_list,fluid_types):
                             worksheet.merge_range(f"{st_cell}{36}:{end_cell}{36}", '', cell_format)
                             worksheet.merge_range(f"{st_cell}{37}:{end_cell}{37}", '', cell_format)
                 print(f'cvGraphVakues {cv_graph_values}')
+                print(f'FINAL CV CALC {case_cv_final}')
             if fluid_type == 'Gas':
 
 
                 # data = valve_cvOpening[:10]
-                worksheet.write_column('C49', data)
+                # worksheet.write_column('C49', data)
+
                 data = [10,20,30,40,50,60,70,80,90,100]
                 worksheet.write_column('D49', data)
 
@@ -1228,6 +620,7 @@ def createcvOpening_gas(itemCase_list,fluid_types):
                 chart.add_series({
                 'categories': '=Sheet1!$D$49:$D$58',  # X-axis data
                 'values':     '=Sheet1!$C$49:$C$58',  # Y-axis data
+               
                 })
 
                 # Set X-axis title
@@ -1244,39 +637,116 @@ def createcvOpening_gas(itemCase_list,fluid_types):
             
             elif fluid_type == 'Liquid':
 
-                # data = valve_cvOpening[:10]
-
                 
-                cv_values = []; open_cv = [10,20,30,40,50,60,70,80,90,100]
-                for i,value in enumerate(cv_graph_values):
-                    worksheet.write(38 + i, 2, value)
-                worksheet.write_column('D39', open_cv)
-                # for i,value in enumerate(cv_graph_values):
-                #     worksheet.write(38 + i, 2, value)
-                #     worksheet.write(38 + i, 3, open_cv[i])
-                  
-                # if cv_values:
-                #     min_y_value = min(cv_values)
-                #     max_y_value = max(cv_values)
-                #     print(f'LiquidCVGRAPH {cv_values}')
+                # def getCVplotchart(opencv_final, cv_values, calc_opencv, calc_cvvalues):
+                #     cnt=0;new_x_value = [];new_y_value = []; new_y1_value = []
+                #     for i in range(len(opencv_final)-1):
+                #         print(f'ksksk {i},{cnt}')
+                #         new_x_value.append(opencv_final[i])
+                #         new_y_value.append(cv_values[i])
+                #         new_y1_value.append(None)
+                #         if cnt < len(calc_opencv) and calc_opencv[cnt] > opencv_final[i] and calc_opencv[cnt] < opencv_final[i+1]:
+                #                 print(f'newxvalue {calc_opencv[cnt]}')
+                #                 new_x_value.append(int(calc_opencv[cnt]))
+                #                 new_y_value.append(calc_cvvalues[cnt])
+                #                 new_y1_value.append(calc_cvvalues[cnt])
 
-                    # Create a new chart object.
-                chart = workbook.add_chart({'type': 'line'})
+                #                 cnt+=1 
+                #     new_x_value.append(opencv_final[-1])
+                #     new_y_value.append(cv_values[-1])
+                #     new_y1_value.append(None)
+                #     final_xy = {
+                #         'x_values' : new_x_value,
+                #         'y_values' : new_y_value,
+                #         'y1_values' : new_y1_value
+                #     }
+                #     return final_xy
 
-                # Add a series to the chart.
-                chart.add_series({
-                'categories': '=Sheet1!$D$39:$D$48',  # X-axis data
-                'values':     '=Sheet1!$C$39:$C$48',  # Y-axis data
-                })
 
-                # Set X-axis title
+                def getCVplotchart(opencv_final, cv_values, calc_opencv, calc_cvvalues):
+                    cnt = 0
+                    for i in calc_opencv:
+                        for j in range(len(opencv_final)):
+                            if opencv_final[j] > i:
+                                opencv_final.insert(j, int(i))
+                                cv_values.insert(j,calc_cvvalues[cnt])
+                                cnt+=1
+                                break
+                    calc_finalcv = []
+                    for i in cv_values:
+                        if i in calc_cvvalues:
+                            calc_finalcv.append(i)
+                        else:
+                            calc_finalcv.append(None)
+
+         
+                    print(f'openingpercentagedatas {opencv_final},{cv_values},{calc_finalcv}')
+                    final_xy = {
+                        'x_values' : opencv_final,
+                        'y_values' : cv_values,
+                        'y1_values' : calc_finalcv
+                    }
+                    return final_xy
+
+
+                cv_values = cv_graph_values
+                open_cv = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+                calc_opencv = case_cv_finalPercent
+                calc_cvvalues = case_cv_final
+
+                final_values = getCVplotchart(open_cv,cv_values,calc_opencv,calc_cvvalues)
+                print(f'LLSJSJJSJSJJ {final_values}')
+
+                values_to_mark_red = [0.0458, 0.0812, 0.142]
+
+                # Write the data to the worksheet
+                worksheet.write_column('C39', final_values['y_values'])
+                worksheet.write_column('D39', final_values['x_values'])
+                worksheet.write_column('E39', final_values['y1_values'])
+
+
+                # Add a line chart
+                chart = workbook.add_chart({"type": "line", "name": "CV Chart", "embedded": True})
+                line_series = {
+                    'categories': '=Sheet1!$D$39:$D$50',  # X-axis data
+                    'values': '=Sheet1!$C$39:$C$50',  # Y-axis data for the line chart
+                }
+                chart.add_series(line_series)
+
+                # Add a scatter chart
+                scatter_chart = workbook.add_chart({"type": "line", "name": "Scatter Chart", "embedded": True})
+                scatter_series = {
+                    'categories': '=Sheet1!$D$39:$D$50',  # X-axis data limited to the scatter data points
+                    'values': '=Sheet1!$E$39:$E$50',  # Y-axis data for scatter plot
+                    'marker': {'type': 'circle', 'size': 10, 'fill': {'color': 'red'}}, 
+                    # Marker style for scatter plot
+                }
+                scatter_chart.add_series(scatter_series)
+
+                # Combine the charts
+                chart.combine(scatter_chart)
+
+                # Set X-axis title for the combined chart
                 chart.set_x_axis({'name': 'Percentage Opening / Degree'})
 
-                # Set Y-axis title
-                chart.set_y_axis({'name': 'CV Values'})
+                # Set Y-axis title for the combined chart
+                chart.set_y_axis({'name': 'Values'})
 
-                # Insert the chart into the worksheet.
+                # Set the X-axis range for both line and scatter series
+                chart.set_x_axis({'name': 'Percentage Opening / Degree', 'min': min(open_cv), 'max': max(open_cv)})
+                scatter_chart.set_x_axis({'min': min(open_cv), 'max': max(open_cv)})
+
+                # Insert the combined chart into the worksheet
                 worksheet.insert_chart('C39', chart)
+
+
+
+
+
+
+
+
+
 
 
                 worksheet.write('A61', 'FLOW CONTROL COMMUNE', )
