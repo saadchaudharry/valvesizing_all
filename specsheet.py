@@ -668,7 +668,7 @@ def createcvOpening_gas(itemCase_list,fluid_types,items):
                     for i in calc_opencv:
                         for j in range(len(opencv_final)):
                             if opencv_final[j] > i:
-                                opencv_final.insert(j, int(i))
+                                opencv_final.insert(j,i)
                                 cv_values.insert(j,calc_cvvalues[cnt])
                                 cnt+=1
                                 break
@@ -693,11 +693,10 @@ def createcvOpening_gas(itemCase_list,fluid_types,items):
                 open_cv = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
                 calc_opencv = case_cv_finalPercent
                 calc_cvvalues = case_cv_final
+                sheet_number = f_cnt+1
 
                 final_values = getCVplotchart(open_cv,cv_values,calc_opencv,calc_cvvalues)
                 print(f'LLSJSJJSJSJJ {final_values}')
-
-                values_to_mark_red = [0.0458, 0.0812, 0.142]
 
                 # Write the data to the worksheet
                 worksheet.write_column('C39', final_values['y_values'])
@@ -708,16 +707,16 @@ def createcvOpening_gas(itemCase_list,fluid_types,items):
                 # Add a line chart
                 chart = workbook.add_chart({"type": "line", "name": "CV Chart", "embedded": True})
                 line_series = {
-                    'categories': '=Sheet1!$D$39:$D$50',  # X-axis data
-                    'values': '=Sheet1!$C$39:$C$50',  # Y-axis data for the line chart
+                    'categories': f'=Sheet{sheet_number}!$D$39:$D$53',  # X-axis data
+                    'values': f'=Sheet{sheet_number}!$C$39:$C$53',  # Y-axis data for the line chart
                 }
                 chart.add_series(line_series)
 
                 # Add a scatter chart
                 scatter_chart = workbook.add_chart({"type": "line", "name": "Scatter Chart", "embedded": True})
                 scatter_series = {
-                    'categories': '=Sheet1!$D$39:$D$50',  # X-axis data limited to the scatter data points
-                    'values': '=Sheet1!$E$39:$E$50',  # Y-axis data for scatter plot
+                    'categories': f'=Sheet{sheet_number}!$D$39:$D$53',  # X-axis data limited to the scatter data points
+                    'values': f'=Sheet{sheet_number}!$E$39:$E$53',  # Y-axis data for scatter plot
                     'marker': {'type': 'circle', 'size': 10, 'fill': {'color': 'red'}}, 
                     # Marker style for scatter plot
                 }
