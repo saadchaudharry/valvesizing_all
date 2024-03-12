@@ -2156,6 +2156,7 @@ def unit_change():
     params = request.args.get('params')
     param_values = json.loads(request.args.get('param_values'))
     specific_gravity = request.args.get('specific_gravity')
+    fluid_type = request.args.get('fluid_type')
     param_values = [float(value) if value else None for value in param_values]
     if specific_gravity is not None:
         specific_gravity = json.loads(specific_gravity)
@@ -2164,19 +2165,24 @@ def unit_change():
         specific_gravity = [1.0]
 
    
-    print(f'jshshhh {prev_unit},{final_unit},{param_values},{specific_gravity}')
+    print(f'jshshhh {prev_unit},{final_unit},{param_values},{specific_gravity},{params}')
     desc_final_value = []
     if params == 'flowrate':
         for i in range(len(param_values)):
             if param_values[i]:
                 print(f'ssjsj {param_values[i]}')
-                final_value = meta_convert_P_T_FR_L('FR', param_values[i], prev_unit,
+                if fluid_type == 'gas':
+                    final_value = meta_convert_P_T_FR_L('FR', param_values[i], prev_unit,
+                                    final_unit,0.1*1000) 
+                else:
+                    final_value = meta_convert_P_T_FR_L('FR', param_values[i], prev_unit,
                                                         final_unit,
                                                         specific_gravity[i] * 1000) 
 
                 desc_final_value.append(final_value)
             else:
                 desc_final_value.append(None) 
+        print(f'FLOWRATE {desc_final_value}')
 
     elif params == 'inpres' or params == 'outpres' or params == "vaporPres" or params == "critPres" or params == "shutoffPres" or params == "maxPres":
         print(f'KKSJJSJSJSJVAPO')
@@ -2295,73 +2301,71 @@ def getOutputs(flowrate_form, fl_unit_form, inletPressure_form, iPresUnit_form, 
 
     # 2. Pressure
     # A. inletPressure  
-    iPresUnit_form = iPresUnit_form.split(' ')
-    print(f'InletPressureB4 {iPresUnit_form[0]},{iPresUnit_form[1]},{inletPressure_form}')
+    # iPresUnit_form = iPresUnit_form.split(' ')
+    # print(f'InletPressureB4 {iPresUnit_form[0]},{iPresUnit_form[1]},{inletPressure_form}')
     
-    if iPresUnit_form[1] == '(g)':
-        inletPressure_form_new = meta_convert_g_to_a(inletPressure_form,iPresUnit_form[0])
-        print(f'Intermediates {inletPressure_form_new}')
-    else:
-        inletPressure_form_new = inletPressure_form
+    # if iPresUnit_form[1] == '(g)':
+        # inletPressure_form_new = meta_convert_g_to_a(inletPressure_form,iPresUnit_form[0])
+        # print(f'Intermediates {inletPressure_form_new}')
+    # else:
+        # inletPressure_form_new = inletPressure_form
     # if iPresUnit_form[0] not in ['kPa', 'bar', 'psia']:
-    if iPresUnit_form[0]:
-        inletPressure_liq = meta_convert_P_T_FR_L('P', inletPressure_form_new, iPresUnit_form[0],
-                                                  'bar', specificGravity * 1000)
-        iPres_unit = 'bar'
-    else:
-        iPres_unit = iPresUnit_form[0]
-        inletPressure_liq = inletPressure_form 
+    # if iPresUnit_form[0]:
+    inletPressure_liq = meta_convert_P_T_FR_L('P', inletPressure_form, iPresUnit_form,
+                                                  'bar (a)', specificGravity * 1000)
+    iPres_unit = 'bar (a)'
+
     print(f'InPressureafter {iPres_unit},{inletPressure_liq}')
 
     # B. outletPressure
-    oPresUnit_form = oPresUnit_form.split(' ')
+    # oPresUnit_form = oPresUnit_form.split(' ')
     # if oPresUnit_form[0] not in ['kPa', 'bar', 'psia']:
-    if oPresUnit_form[1] == '(g)':
-        outletPressure_form_new = meta_convert_g_to_a(outletPressure_form,oPresUnit_form[0])
-        print(f'Intermediates {outletPressure_form_new}')
-    else:
-        outletPressure_form_new = outletPressure_form
+    # if oPresUnit_form[1] == '(g)':
+    #     outletPressure_form_new = meta_convert_g_to_a(outletPressure_form,oPresUnit_form[0])
+    #     print(f'Intermediates {outletPressure_form_new}')
+    # else:
+    #     outletPressure_form_new = outletPressure_form
 
-    if oPresUnit_form:
-        outletPressure_liq = meta_convert_P_T_FR_L('P', outletPressure_form_new, oPresUnit_form[0],
-                                                   'bar', specificGravity * 1000)
-        oPres_unit = 'bar'
-    else:
-        oPres_unit = oPresUnit_form[0]
-        outletPressure_liq = outletPressure_form
+    # if oPresUnit_form:
+    outletPressure_liq = meta_convert_P_T_FR_L('P', outletPressure_form, oPresUnit_form,
+                                                   'bar (a)', specificGravity * 1000)
+    oPres_unit = 'bar (a)'
+    # else:
+    #     oPres_unit = oPresUnit_form[0]
+    #     outletPressure_liq = outletPressure_form
 
     # C. vaporPressure
-    vPresUnit_form = vPresUnit_form.split(' ')
+    # vPresUnit_form = vPresUnit_form.split(' ')
 
-    if vPresUnit_form[1] == '(g)':
-        vaporPressure_form_new = meta_convert_g_to_a(vaporPressure,vPresUnit_form[0])
-        print(f'Intermediates {vaporPressure_form_new}')
-    else:
-        vaporPressure_form_new = vaporPressure
+    # if vPresUnit_form[1] == '(g)':
+    #     vaporPressure_form_new = meta_convert_g_to_a(vaporPressure,vPresUnit_form[0])
+    #     print(f'Intermediates {vaporPressure_form_new}')
+    # else:
+    #     vaporPressure_form_new = vaporPressure
     # if vPresUnit_form[0] not in ['kPa', 'bar', 'psia']:
-    if vPresUnit_form:
-        vaporPressure = meta_convert_P_T_FR_L('P', vaporPressure_form_new, vPresUnit_form[0], 'bar',
+    # if vPresUnit_form:
+    vaporPressure = meta_convert_P_T_FR_L('P', vaporPressure, vPresUnit_form, 'bar (a)',
                                               specificGravity * 1000)
-        vPres_unit = 'bar'
-    else:
-        vPres_unit = vPresUnit_form[0]
+    vPres_unit = 'bar (a)'
+    # else:
+    #     vPres_unit = vPresUnit_form[0]
 
     # D. Critical Pressure
-    cPresUnit_form = cPresUnit_form.split(' ')
-    if cPresUnit_form[1] == '(g)':
-        criticalPressure_form_new = meta_convert_g_to_a(criticalPressure_form,cPresUnit_form[0])
-        print(f'Intermediates {criticalPressure_form_new}')
-    else:
-        criticalPressure_form_new = criticalPressure_form
+    # cPresUnit_form = cPresUnit_form.split(' ')
+    # if cPresUnit_form[1] == '(g)':
+    #     criticalPressure_form_new = meta_convert_g_to_a(criticalPressure_form,cPresUnit_form[0])
+    #     print(f'Intermediates {criticalPressure_form_new}')
+    # else:
+    #     criticalPressure_form_new = criticalPressure_form
     # if cPresUnit_form[0] not in ['kPa', 'bar', 'psia']:
-    if cPresUnit_form[0]:
-        criticalPressure_liq = meta_convert_P_T_FR_L('P', criticalPressure_form_new,
-                                                     cPresUnit_form[0], 'bar',
+    # if cPresUnit_form[0]:
+    criticalPressure_liq = meta_convert_P_T_FR_L('P', criticalPressure_form,
+                                                     cPresUnit_form, 'bar (a)',
                                                      specificGravity * 1000)
-        cPres_unit = 'bar'
-    else:
-        cPres_unit = cPresUnit_form[0]
-        criticalPressure_liq = criticalPressure_form
+    cPres_unit = 'bar (a)'
+    # else:
+    #     cPres_unit = cPresUnit_form[0]
+    #     criticalPressure_liq = criticalPressure_form
     print(f'HHNEWCRITICAL {criticalPressure_liq},{cPres_unit}')
     if fr_unit == 'm3/hr':
         length_unit_list_calculation = ['mm']
@@ -2403,7 +2407,7 @@ def getOutputs(flowrate_form, fl_unit_form, inletPressure_form, iPresUnit_form, 
     v_size_for_initial_cv = meta_convert_P_T_FR_L('L', valveSize_form, vSizeUnit_form,
                                           'mm', specificGravity * 1000)
 
-    print(f"dia of pipe: {outletPipeDia_liq}, {inletPipeDia_liq}")
+    print(f"dia of pipeget: {outletPipeDia_liq}, {inletPipeDia_liq}")
 
     service_conditions_sf = {'flowrate': flowrate_liq, 'flowrate_unit': fr_unit,
                              'iPres': inletPressure_liq, 'oPres': outletPressure_liq,
@@ -2418,13 +2422,14 @@ def getOutputs(flowrate_form, fl_unit_form, inletPressure_form, iPresUnit_form, 
                              'Ff': 0.90,
                              'cPres': criticalPressure_liq,
                              'FD': 1, 'viscosity': viscosity}
-    print(service_conditions_sf)
+    
 
     service_conditions_1 = service_conditions_sf
-    N1_val = N1[(service_conditions_1['flowrate_unit'], service_conditions_1['iPresUnit'])]
+    print(str(service_conditions_1['iPresUnit']).split(' ')[0])
+    N1_val = N1[(service_conditions_1['flowrate_unit'], str(service_conditions_1['iPresUnit']).split(' ')[0])]
     N2_val = N2[service_conditions_1['valveDiaUnit']]
     N4_val = N4[(service_conditions_1['flowrate_unit'], service_conditions_1['valveDiaUnit'])]
-    
+    print('B4outputcv')
     result_1 = CV(service_conditions_1['flowrate'], service_conditions_1['C'],
                   service_conditions_1['valveDia'],
                   service_conditions_1['iPipeDia'],
@@ -2473,10 +2478,10 @@ def getOutputs(flowrate_form, fl_unit_form, inletPressure_form, iPresUnit_form, 
     flowrate_lnoise = meta_convert_P_T_FR_L('FR', flowrate_form, fl_unit_form, 'kg/hr',
                                             specificGravity * 1000) / 3600
     outletPressure_lnoise = meta_convert_P_T_FR_L('P', outletPressure_form, oPres_unit,
-                                                  'pa', 1000)
+                                                  'pa (a)', 1000)
     inletPressure_lnoise = meta_convert_P_T_FR_L('P', inletPressure_form, iPres_unit,
-                                                 'pa', 1000)
-    vPres_lnoise = meta_convert_P_T_FR_L('P', vaporPressure, vPres_unit, 'pa', 1000)    
+                                                 'pa (a)', 1000)
+    vPres_lnoise = meta_convert_P_T_FR_L('P', vaporPressure, vPres_unit, 'pa (a)', 1000)    
     # print(f"3 press: {outletPressure_lnoise, inletPressure_lnoise, vPres_lnoise}")
     # service conditions for 4 inch vale with 8 as line size. CVs need to be changed
     sc_liq_sizing = {'valveDia': valveDia_lnoise, 'ratedCV': ratedCV, 'reqCV': result, 'FL': xt_fl,
@@ -2515,9 +2520,9 @@ def getOutputs(flowrate_form, fl_unit_form, inletPressure_form, iPresUnit_form, 
     # Power Level
         print(f'POWERLEVEL {oPres_unit}')
     outletPressure_p = meta_convert_P_T_FR_L('P', outletPressure_form, oPres_unit,
-                                             'psia', specificGravity * 1000)
+                                             'psia (a)', specificGravity * 1000)
     inletPressure_p = meta_convert_P_T_FR_L('P', inletPressure_form, iPres_unit,
-                                            'psia', specificGravity * 1000)
+                                            'psia (a)', specificGravity * 1000)
     pLevel = power_level_liquid(inletPressure_p, outletPressure_p, specificGravity, result)
 
     # convert flowrate and dias for velocities
@@ -2531,9 +2536,9 @@ def getOutputs(flowrate_form, fl_unit_form, inletPressure_form, iPresUnit_form, 
                                           'inch', specificGravity * 1000))
 
     # convert pressure for tex, p in bar, l in in
-    inletPressure_v = meta_convert_P_T_FR_L('P', inletPressure_form, iPres_unit, 'psia',
+    inletPressure_v = meta_convert_P_T_FR_L('P', inletPressure_form, iPres_unit, 'psia (a)',
                                             1000)
-    outletPressure_v = meta_convert_P_T_FR_L('P', outletPressure_form, oPres_unit, 'psia',
+    outletPressure_v = meta_convert_P_T_FR_L('P', outletPressure_form, oPres_unit, 'psia (a)',
                                              1000)
     v_det_element = valve_element
     trim_type_element = db.session.query(trimType).filter_by(id=v_det_element.trimTypeId).first()
@@ -2624,9 +2629,9 @@ def getOutputs(flowrate_form, fl_unit_form, inletPressure_form, iPresUnit_form, 
     trim_type_element = db.session.query(trimType).filter_by(id=v_det_element.trimTypeId).first()
     trimtype = trim_type_element.name
     outletPressure_psia = meta_convert_P_T_FR_L('P', outletPressure_form, oPres_unit,
-                                                'psia', 1000)
+                                                'psia (a)', 1000)
     inletPressure_psia = meta_convert_P_T_FR_L('P', inletPressure_form, iPres_unit,
-                                               'psia', 1000)
+                                               'psia (a)', 1000)
     dp_kc = inletPressure_psia - outletPressure_psia
 
     print(f"kc inputs: {size_in_in}, {trimtype}, {dp_kc}, {valve_type_}, {xt_fl},")
@@ -2668,22 +2673,22 @@ def getOutputs(flowrate_form, fl_unit_form, inletPressure_form, iPresUnit_form, 
                    outletPipeDia_form, iSch, oSch,
                    item_selected]
     # print(f'HHHHHHHHHHHHVVVSSS {fl_unit_form},{' '.join(iPresUnit_form)}')
-    iPressureUnit = ' '.join(iPresUnit_form)
-    oPressureUnit = ' '.join(oPresUnit_form)
-    vPressureUnit = ' '.join(vPresUnit_form)
-    cPressureUnit = ' '.join(cPresUnit_form)
+    # iPressureUnit = ' '.join(iPresUnit_form)
+    # oPressureUnit = ' '.join(oPresUnit_form)
+    # vPressureUnit = ' '.join(vPresUnit_form)
+    # cPressureUnit = ' '.join(cPresUnit_form)
     result_dict = {
         'flowrate': flowrate_form,
         'fl_unit_form':fl_unit_form,
         'inletPressure':inletPressure_form,
-        'iPresUnit_form':iPressureUnit,
+        'iPresUnit_form':iPresUnit_form,
         'outletPressure': outletPressure_form,
-        'oPresUnit_form': oPressureUnit,
+        'oPresUnit_form': oPresUnit_form,
         'inletTemp': inletTemp_form,
         'iTempUnit_form':iTempUnit_form,
         'specificGravity': specificGravity,
         'vaporPressure': vaporPressure,
-        'vPresUnit_form': vPressureUnit,
+        'vPresUnit_form': vPresUnit_form,
         'kinematicViscosity': viscosity,
         'valveSize': valveSize_form,
         'vSizeUnit_form':vSizeUnit_form,
@@ -2707,7 +2712,7 @@ def getOutputs(flowrate_form, fl_unit_form, inletPressure_form, iPresUnit_form, 
         'powerLevel': pLevel,
         'seatDia': seatDia,
         'criticalPressure': criticalPressure_form,
-        'cPressureUnit':cPressureUnit,
+        'cPressureUnit':cPresUnit_form,
         'inletPipeSize': inletPipeDia_form,
         'iPipeUnit_form':iPipeUnit_form,
         'outletPipeSize': outletPipeDia_form,
@@ -2968,7 +2973,8 @@ def getOutputsGas(flowrate_form, fl_unit_form, inletPressure_form, iPresUnit_for
         outletPipeDia_form), oPipeUnit_form, oSch, float(densityPipe), float(sosPipe), float(
         valveSize_form), vSizeUnit_form, float(seatDia), seatDiaUnit, float(ratedCV), float(
         rw_noise), item_selected, float(z_factor), float(sg_vale)
-
+    print(f'JJJJJJJJJJJJJJJJJJJGASSSSSSSSGGBB {iPresUnit_form}')
+    
     fl_unit = fl_unit_form
     if fl_unit in ['m3/hr', 'scfh', 'gpm']:
         fl_bin = 1
@@ -3070,10 +3076,12 @@ def getOutputsGas(flowrate_form, fl_unit_form, inletPressure_form, iPresUnit_for
     else:
         # to be converted to kg/hr, bar, K, in
         # 3. Pressure
-        inletPressure = meta_convert_P_T_FR_L('P', inletPressure_form, iPresUnit_form, 'bar',
+        
+        inletPressure = meta_convert_P_T_FR_L('P', inletPressure_form, iPresUnit_form, 'bar (a)',
                                               1000)
+        print(f'InletPressure {inletPressure}')
         outletPressure = meta_convert_P_T_FR_L('P', outletPressure_form, oPresUnit_form,
-                                               'bar',
+                                               'bar (a)',
                                                1000)
         # 4. Length
         inletPipeDia = meta_convert_P_T_FR_L('L', inletPipeDia_form, iPipeUnit_form, 'inch',
@@ -3131,10 +3139,10 @@ def getOutputsGas(flowrate_form, fl_unit_form, inletPressure_form, iPresUnit_for
     # noise and velocities
     # Liquid Noise - need flowrate in kg/s, valves in m, density in kg/m3, pressure in pa
     inletPressure_gnoise = float(meta_convert_P_T_FR_L('P', inletPressure_form, iPresUnit_form,
-                                                       'pa',
+                                                       'pa (a)',
                                                        1000))
     outletPressure_gnoise = float(meta_convert_P_T_FR_L('P', outletPressure_form, oPresUnit_form,
-                                                        'pa',
+                                                        'pa (a)',
                                                         1000))
     # vaporPressure_gnoise = meta_convert_P_T_FR_L('P', vaporPressure, vPresUnit_form, 'pa',
     #                                              1000)
@@ -3249,9 +3257,9 @@ def getOutputsGas(flowrate_form, fl_unit_form, inletPressure_form, iPresUnit_for
                                          'inch', specificGravity * 1000))
 
     # get gas velocities
-    inletPressure_gv = meta_convert_P_T_FR_L('P', inletPressure_form, iPresUnit_form, 'pa',
+    inletPressure_gv = meta_convert_P_T_FR_L('P', inletPressure_form, iPresUnit_form, 'pa (a)',
                                              1000)
-    outletPressure_gv = meta_convert_P_T_FR_L('P', outletPressure_form, oPresUnit_form, 'pa',
+    outletPressure_gv = meta_convert_P_T_FR_L('P', outletPressure_form, oPresUnit_form, 'pa (a)',
                                               1000)
     flowrate_gv = flowrate_form / 3600
     print(f'flowrate_gv: {flowrate_gv}')
@@ -3272,10 +3280,10 @@ def getOutputsGas(flowrate_form, fl_unit_form, inletPressure_form, iPresUnit_for
     # getting fr in lb/s
     flowrate_p = meta_convert_P_T_FR_L('FR', flowrate_form, fl_unit_form, 'kg/hr',
                                        specificGravity * 1000)
-    inletPressure_p = meta_convert_P_T_FR_L('P', inletPressure_form, iPresUnit_form, 'pa',
+    inletPressure_p = meta_convert_P_T_FR_L('P', inletPressure_form, iPresUnit_form, 'pa (a)',
                                             1000)
     outletPressure_p = meta_convert_P_T_FR_L('P', outletPressure_form, oPresUnit_form,
-                                             'pa',
+                                             'pa (a)',
                                              1000)
     pLevel = power_level_gas(specificGravity, inletPressure_p, outletPressure_p, flowrate_p, gas_vels[9])
 
@@ -3284,14 +3292,14 @@ def getOutputsGas(flowrate_form, fl_unit_form, inletPressure_form, iPresUnit_for
     #       inletPipeDia_gnoise, outletPipeDia_gnoise)
 
     # convert pressure for tex, p in bar, l in in
-    inletPressure_v = meta_convert_P_T_FR_L('P', inletPressure_form, iPresUnit_form, 'pa',
+    inletPressure_v = meta_convert_P_T_FR_L('P', inletPressure_form, iPresUnit_form, 'pa (a)',
                                             1000)
-    outletPressure_v = meta_convert_P_T_FR_L('P', outletPressure_form, oPresUnit_form, 'pa',
+    outletPressure_v = meta_convert_P_T_FR_L('P', outletPressure_form, oPresUnit_form, 'pa (a)',
                                              1000)
     # get tex pressure in psi
-    inletPressure_tex = meta_convert_P_T_FR_L('P', inletPressure_form, iPresUnit_form, 'psia',
+    inletPressure_tex = meta_convert_P_T_FR_L('P', inletPressure_form, iPresUnit_form, 'psia (a)',
                                               1000)
-    outletPressure_tex = meta_convert_P_T_FR_L('P', outletPressure_form, oPresUnit_form, 'psia',
+    outletPressure_tex = meta_convert_P_T_FR_L('P', outletPressure_form, oPresUnit_form, 'psia (a)',
                                                1000)
 
     tEX = trimExitVelocityGas(inletPressure_tex, outletPressure_tex) / 3.281
@@ -3322,9 +3330,9 @@ def getOutputsGas(flowrate_form, fl_unit_form, inletPressure_form, iPresUnit_for
     trim_type_element = db.session.query(trimType).filter_by(id=v_det_element.trimTypeId).first()
     trimtype = trim_type_element.name
     outletPressure_psia = meta_convert_P_T_FR_L('P', outletPressure_form, oPresUnit_form,
-                                                'psia', 1000)
+                                                'psia (a)', 1000)
     inletPressure_psia = meta_convert_P_T_FR_L('P', inletPressure_form, iPresUnit_form,
-                                               'psia', 1000)
+                                               'psia (a)', 1000)
     dp_kc = inletPressure_psia - outletPressure_psia
     # Kc = getKCValue(size_in_in, trimtype, dp_kc, valve_type_.lower(), xt_fl)
     Kc = getKc(size_in_in, trimtype, dp_kc, valve_type_, xt_fl)
@@ -3336,9 +3344,9 @@ def getOutputsGas(flowrate_form, fl_unit_form, inletPressure_form, iPresUnit_for
                   inputDict['outletDia'], N2_val)
     N1_val = 0.865
     N4_val = 76000
-    inletPressure_re = meta_convert_P_T_FR_L('P', inletPressure_form, iPresUnit_form, 'bar',
+    inletPressure_re = meta_convert_P_T_FR_L('P', inletPressure_form, iPresUnit_form, 'bar (a)',
                                              1000)
-    outletPressure_re = meta_convert_P_T_FR_L('P', outletPressure_form, oPresUnit_form, 'bar',
+    outletPressure_re = meta_convert_P_T_FR_L('P', outletPressure_form, oPresUnit_form, 'bar (a)',
                                               1000)
     inletPipeDia_re = round(meta_convert_P_T_FR_L('L', inletPipeDia_form, iPipeUnit_form, 'mm',
                                                   1000))
@@ -3385,17 +3393,23 @@ def getOutputsGas(flowrate_form, fl_unit_form, inletPressure_form, iPresUnit_for
                    outletPipeDia_form, iSch, oSch, item_selected]
     
     # f"+{Fd_gas}+{RE_number}+{Kc}+{mac_sonic_list[0]}+{mac_sonic_list[1]}+{mac_sonic_list[2]}+{mac_sonic_list[3]}+{mac_sonic_list[4]}+{mac_sonic_list[5]}+{mac_sonic_list[6]}+{round(application_ratio, 3)}+{z_factor}+{ratedCV}"
-    
+
     result_dict = {
         'flowrate': flowrate_form,
+        'fl_unit_form':fl_unit_form,
         'inletPressure':inletPressure_form,
+        'iPresUnit_form':iPresUnit_form,
         'outletPressure': outletPressure_form,
+        'oPresUnit_form': oPresUnit_form,
         'inletTemp': inletTemp_form,
+        'iTempUnit_form':iTempUnit_form,
         'specificGravity': specificGravity,
         'vaporPressure': vaporPressure,
+        'vPresUnit_form': vPresUnit_form,
         'kinematicViscosity': viscosity,
         'molecularWeight': float(sg_vale),
         'valveSize': valveSize_form,
+        'vSizeUnit_form':vSizeUnit_form,
         'fk': Cv__[2],
         'y': Cv__[4],
         'xt': float(xt_fl),
@@ -3418,8 +3432,11 @@ def getOutputsGas(flowrate_form, fl_unit_form, inletPressure_form, iPresUnit_for
         'powerLevel': pLevel,
         'seatDia': seatDia,
         'criticalPressure': criticalPressure_form,
+        'cPressureUnit':cPresUnit_form,
         'inletPipeSize': inletPipeDia_form,
+        'iPipeUnit_form':iPipeUnit_form,
         'outletPipeSize': outletPipeDia_form,
+        'oPipeUnit_form': oPipeUnit_form,
         'machNoUp': mac_sonic_list[0],
         'machNoDown': mac_sonic_list[1],
         'machNoVel': mac_sonic_list[2],
@@ -3475,66 +3492,66 @@ def liqSizing(flowrate_form, specificGravity, inletPressure_form, outletPressure
 
     # 2. Pressure
     # A. inletPressure
-    iPresUnit_form = iPresUnit_form.split(' ')
-    if iPresUnit_form[1] == '(g)':
-        inletPressure_form_new = meta_convert_g_to_a(inletPressure_form,iPresUnit_form[0])
-        print(f'Intermediates {inletPressure_form_new}')
-    else:
-        inletPressure_form_new = inletPressure_form
+    # iPresUnit_form = iPresUnit_form.split(' ')
+    # if iPresUnit_form[1] == '(g)':
+    #     inletPressure_form_new = meta_convert_g_to_a(inletPressure_form,iPresUnit_form[0])
+    #     print(f'Intermediates {inletPressure_form_new}')
+    # else:
+    #     inletPressure_form_new = inletPressure_form
     
-    if iPresUnit_form:
-        inletPressure_liq = meta_convert_P_T_FR_L('P', inletPressure_form_new, iPresUnit_form[0],
-                                                  'bar', specificGravity * 1000)
-        iPres_unit = 'bar'
-    else:
-        iPres_unit = iPresUnit_form[0]
-        inletPressure_liq = inletPressure_form
+    # if iPresUnit_form:
+    inletPressure_liq = meta_convert_P_T_FR_L('P', inletPressure_form, iPresUnit_form,
+                                                'bar (a)', specificGravity * 1000)
+    iPres_unit = 'bar (a)'
+    # else:
+    #     iPres_unit = iPresUnit_form[0]
+    #     inletPressure_liq = inletPressure_form
 
     # B. outletPressure
-    oPresUnit_form = oPresUnit_form.split(' ')
-    if oPresUnit_form[1] == '(g)':
-        outletPressure_form_new = meta_convert_g_to_a(outletPressure_form,oPresUnit_form[0])
-        print(f'Intermediates {outletPressure_form_new}')
-    else:
-        outletPressure_form_new = outletPressure_form
-    if oPresUnit_form:
-        outletPressure_liq = meta_convert_P_T_FR_L('P', outletPressure_form_new, oPresUnit_form[0],
-                                                   'bar', specificGravity * 1000)
-        oPres_unit = 'bar'
-    else:
-        oPres_unit = oPresUnit_form[0]
-        outletPressure_liq = outletPressure_form
+    # oPresUnit_form = oPresUnit_form.split(' ')
+    # if oPresUnit_form[1] == '(g)':
+    #     outletPressure_form_new = meta_convert_g_to_a(outletPressure_form,oPresUnit_form[0])
+    #     print(f'Intermediates {outletPressure_form_new}')
+    # else:
+        # outletPressure_form_new = outletPressure_form
+    # if oPresUnit_form:
+    outletPressure_liq = meta_convert_P_T_FR_L('P', outletPressure_form, oPresUnit_form,
+                                                'bar (a)', specificGravity * 1000)
+    oPres_unit = 'bar (a)'
+    # else:
+    #     oPres_unit = oPresUnit_form[0]
+    #     outletPressure_liq = outletPressure_form
 
     # C. vaporPressure
-    vPresUnit_form = vPresUnit_form.split(' ')
-    if vPresUnit_form[1] == '(g)':
-        vaporPressure_form_new = meta_convert_g_to_a(vaporPressure,vPresUnit_form[0])
-        print(f'Intermediates {vaporPressure_form_new}')
-    else:
-        vaporPressure_form_new = vaporPressure
+    # vPresUnit_form = vPresUnit_form.split(' ')
+    # if vPresUnit_form[1] == '(g)':
+    #     vaporPressure_form_new = meta_convert_g_to_a(vaporPressure,vPresUnit_form[0])
+    #     print(f'Intermediates {vaporPressure_form_new}')
+    # else:
+    #     vaporPressure_form_new = vaporPressure
     
-    if vPresUnit_form:
-        vaporPressure = meta_convert_P_T_FR_L('P', vaporPressure_form_new, vPresUnit_form[0], 'bar',
-                                              specificGravity * 1000)
-        vPres_unit = 'bar'
-    else:
-        vPres_unit = vPresUnit_form[0]
+    # if vPresUnit_form:
+    vaporPressure = meta_convert_P_T_FR_L('P', vaporPressure, vPresUnit_form, 'bar (a)',
+                                            specificGravity * 1000)
+    vPres_unit = 'bar (a)'
+    # else:
+    #     vPres_unit = vPresUnit_form[0]
 
     # D. Critical Pressure
-    cPresUnit_form = cPresUnit_form.split(' ')
-    if cPresUnit_form[1] == '(g)':
-        criticalPressure_form_new = meta_convert_g_to_a(criticalPressure_form,cPresUnit_form[0])
-        print(f'Intermediates {criticalPressure_form_new}')
-    else:
-        criticalPressure_form_new = criticalPressure_form
-    if cPresUnit_form[0]:
-        criticalPressure_liq = meta_convert_P_T_FR_L('P', criticalPressure_form_new,
-                                                     cPresUnit_form[0], 'bar',
-                                                     specificGravity * 1000)
-        cPres_unit = 'bar'
-    else:
-        cPres_unit = cPresUnit_form[0]
-        criticalPressure_liq = criticalPressure_form
+    # cPresUnit_form = cPresUnit_form.split(' ')
+    # if cPresUnit_form[1] == '(g)':
+    #     criticalPressure_form_new = meta_convert_g_to_a(criticalPressure_form,cPresUnit_form[0])
+    #     print(f'Intermediates {criticalPressure_form_new}')
+    # else:
+    #     criticalPressure_form_new = criticalPressure_form
+    # if cPresUnit_form[0]:
+    criticalPressure_liq = meta_convert_P_T_FR_L('P', criticalPressure_form,
+                                                    cPresUnit_form, 'bar (a)',
+                                                    specificGravity * 1000)
+    cPres_unit = 'bar (a)'
+    # else:
+    #     cPres_unit = cPresUnit_form[0]
+    #     criticalPressure_liq = criticalPressure_form
 
     if fr_unit == 'm3/hr':
         length_unit_list_calculation = ['mm']
@@ -3588,7 +3605,7 @@ def liqSizing(flowrate_form, specificGravity, inletPressure_form, outletPressure
                              'FD': fd, 'viscosity': viscosity}
 
     service_conditions_1 = service_conditions_sf
-    N1_val = N1[(service_conditions_1['flowrate_unit'], service_conditions_1['iPresUnit'])]
+    N1_val = N1[(service_conditions_1['flowrate_unit'], str(service_conditions_1['iPresUnit']).split(' ')[0])]
     N2_val = N2[service_conditions_1['valveDiaUnit']]
     N4_val = N4[(service_conditions_1['flowrate_unit'], service_conditions_1['valveDiaUnit'])]
 
@@ -3650,11 +3667,11 @@ def liqSizing(flowrate_form, specificGravity, inletPressure_form, outletPressure
     
     flowrate_lnoise = meta_convert_P_T_FR_L('FR', flowrate_form, fl_unit_form, 'kg/hr',
                                             specificGravity * 1000) / 3600
-    outletPressure_lnoise = meta_convert_P_T_FR_L('P', outletPressure_form, oPresUnit_form[0],
-                                                  'pa', 1000)
-    inletPressure_lnoise = meta_convert_P_T_FR_L('P', inletPressure_form, iPresUnit_form[0],
-                                                 'pa', 1000)
-    vPres_lnoise = meta_convert_P_T_FR_L('P', vaporPressure, vPresUnit_form[0], 'pa', 1000)
+    outletPressure_lnoise = meta_convert_P_T_FR_L('P', outletPressure_form, oPresUnit_form,
+                                                  'pa (a)', 1000)
+    inletPressure_lnoise = meta_convert_P_T_FR_L('P', inletPressure_form, iPresUnit_form,
+                                                 'pa (a)', 1000)
+    vPres_lnoise = meta_convert_P_T_FR_L('P', vaporPressure, vPresUnit_form, 'pa (a)', 1000)
     # print(f"3 press: {outletPressure_lnoise, inletPressure_lnoise, vPres_lnoise}")
     # service conditions for 4 inch vale with 8 as line size. CVs need to be changed
     sc_liq_sizing = {'valveDia': valveDia_lnoise, 'ratedCV': ratedCV, 'reqCV': result, 'FL': xt_fl,
@@ -3695,10 +3712,10 @@ def liqSizing(flowrate_form, specificGravity, inletPressure_form, outletPressure
     # summation = 56
 
     # Power Level
-    outletPressure_p = meta_convert_P_T_FR_L('P', outletPressure_form, oPresUnit_form[0],
-                                             'psia', specificGravity * 1000)
-    inletPressure_p = meta_convert_P_T_FR_L('P', inletPressure_form, iPresUnit_form[0],
-                                            'psia', specificGravity * 1000)
+    outletPressure_p = meta_convert_P_T_FR_L('P', outletPressure_form, oPresUnit_form,
+                                             'psia (a)', specificGravity * 1000)
+    inletPressure_p = meta_convert_P_T_FR_L('P', inletPressure_form, iPresUnit_form,
+                                            'psia (a)', specificGravity * 1000)
     pLevel = power_level_liquid(inletPressure_p, outletPressure_p, specificGravity, result)
 
     # convert flowrate and dias for velocities
@@ -3712,9 +3729,9 @@ def liqSizing(flowrate_form, specificGravity, inletPressure_form, outletPressure
                                           'inch', specificGravity * 1000))
 
     # convert pressure for tex, p in bar, l in inch
-    inletPressure_v = meta_convert_P_T_FR_L('P', inletPressure_form, iPresUnit_form[0], 'psia',
+    inletPressure_v = meta_convert_P_T_FR_L('P', inletPressure_form, iPresUnit_form, 'psia (a)',
                                             1000)
-    outletPressure_v = meta_convert_P_T_FR_L('P', outletPressure_form, oPresUnit_form[0], 'psia',
+    outletPressure_v = meta_convert_P_T_FR_L('P', outletPressure_form, oPresUnit_form, 'psia (a)',
                                              1000)
 
     v_det_element = valve_element
@@ -3818,10 +3835,10 @@ def liqSizing(flowrate_form, specificGravity, inletPressure_form, outletPressure
     valve_type_ = v_det_element.style.name
     trim_type_element = db.session.query(trimType).filter_by(id=v_det_element.trimTypeId).first()
     trimtype = trim_type_element.name
-    outletPressure_psia = meta_convert_P_T_FR_L('P', outletPressure_form, oPresUnit_form[0],
-                                                'psia', 1000)
-    inletPressure_psia = meta_convert_P_T_FR_L('P', inletPressure_form, iPresUnit_form[0],
-                                               'psia', 1000)
+    outletPressure_psia = meta_convert_P_T_FR_L('P', outletPressure_form, oPresUnit_form,
+                                                'psia (a)', 1000)
+    inletPressure_psia = meta_convert_P_T_FR_L('P', inletPressure_form, iPresUnit_form,
+                                               'psia (a)', 1000)
     dp_kc = inletPressure_psia - outletPressure_psia
     # Kc = getKCValue(size_in_in, trimtype, dp_kc, valve_type_.lower(), xt_fl)
     Kc = getKc(size_in_in, trimtype, dp_kc, valve_type_, xt_fl)
@@ -3853,7 +3870,7 @@ def liqSizing(flowrate_form, specificGravity, inletPressure_form, outletPressure
     else:
         ff = round(ff_liq, 3)
 
-    vp_ar = meta_convert_P_T_FR_L('P', vaporPressure, vPres_unit, iPresUnit_form[0], 1000)
+    vp_ar = meta_convert_P_T_FR_L('P', vaporPressure, vPres_unit, iPresUnit_form, 1000)
     application_ratio = (inletPressure_form - outletPressure_form) / (inletPressure_form - vp_ar)
     other_factors_string = f"{ff}+{Kc}+{Fd_liq}+{round(FLP_liq, 3)}+{RE_number}+{round(fp_liq, 2)}+{round(application_ratio, 3)}+{rated_cv_tex}"
 
@@ -4009,10 +4026,10 @@ def gasSizing(inletPressure_form, outletPressure_form, inletPipeDia_form, outlet
     else:
         # to be converted to kg/hr, bar, K, in
         # 3. Pressure
-        inletPressure = meta_convert_P_T_FR_L('P', inletPressure_form, iPresUnit_form, 'bar',
+        inletPressure = meta_convert_P_T_FR_L('P', inletPressure_form, iPresUnit_form, 'bar (a)',
                                               1000)
         outletPressure = meta_convert_P_T_FR_L('P', outletPressure_form, oPresUnit_form,
-                                               'bar',
+                                               'bar (a)',
                                                1000)
         # 4. Length
         inletPipeDia = meta_convert_P_T_FR_L('L', inletPipeDia_form, iPipeUnit_form, 'inch',
@@ -4071,10 +4088,10 @@ def gasSizing(inletPressure_form, outletPressure_form, inletPipeDia_form, outlet
     # noise and velocities
     # Liquid Noise - need flowrate in kg/s, valves in m, density in kg/m3, pressure in pa
     inletPressure_gnoise = meta_convert_P_T_FR_L('P', inletPressure_form, iPresUnit_form,
-                                                 'pa',
+                                                 'pa (a)',
                                                  1000)
     outletPressure_gnoise = meta_convert_P_T_FR_L('P', outletPressure_form, oPresUnit_form,
-                                                  'pa',
+                                                  'pa (a)',
                                                   1000)
     # vaporPressure_gnoise = meta_convert_P_T_FR_L('P', vaporPressure, vPresUnit_form, 'pa',
     #                                              1000)
@@ -4186,9 +4203,9 @@ def gasSizing(inletPressure_form, outletPressure_form, inletPipeDia_form, outlet
     print(f"vsize_form: {valveSize_form}, vsize_unit: {vSizeUnit_form}")
 
     # get gas velocities
-    inletPressure_gv = meta_convert_P_T_FR_L('P', inletPressure_form, iPresUnit_form, 'pa',
+    inletPressure_gv = meta_convert_P_T_FR_L('P', inletPressure_form, iPresUnit_form, 'pa (a)',
                                              1000)
-    outletPressure_gv = meta_convert_P_T_FR_L('P', outletPressure_form, oPresUnit_form, 'pa',
+    outletPressure_gv = meta_convert_P_T_FR_L('P', outletPressure_form, oPresUnit_form, 'pa (a)',
                                               1000)
     flowrate_gv = flowrate_form / 3600
     print(f'flowrate_gv: {flowrate_gv}')
@@ -4209,10 +4226,10 @@ def gasSizing(inletPressure_form, outletPressure_form, inletPipeDia_form, outlet
     # getting fr in lb/s
     flowrate_p = meta_convert_P_T_FR_L('FR', flowrate_form, fl_unit_form, 'kg/hr',
                                        specificGravity * 1000)
-    inletPressure_p = meta_convert_P_T_FR_L('P', inletPressure_form, iPresUnit_form, 'pa',
+    inletPressure_p = meta_convert_P_T_FR_L('P', inletPressure_form, iPresUnit_form, 'pa (a)',
                                             1000)
     outletPressure_p = meta_convert_P_T_FR_L('P', outletPressure_form, oPresUnit_form,
-                                             'pa',
+                                             'pa (a)',
                                              1000)
     pLevel = power_level_gas(specificGravity, inletPressure_p, outletPressure_p, flowrate_p, gas_vels[9])
     print(sc_initial['specificHeatRatio_gamma'], inletPressure_gv, outletPressure_gv, 8314,
@@ -4223,16 +4240,16 @@ def gasSizing(inletPressure_form, outletPressure_form, inletPipeDia_form, outlet
     # endof get gas
 
     # convert pressure for tex, p in bar, l in in
-    inletPressure_v = meta_convert_P_T_FR_L('P', inletPressure_form, iPresUnit_form, 'pa',
+    inletPressure_v = meta_convert_P_T_FR_L('P', inletPressure_form, iPresUnit_form, 'pa (a)',
                                             1000)
-    outletPressure_v = meta_convert_P_T_FR_L('P', outletPressure_form, oPresUnit_form, 'pa',
+    outletPressure_v = meta_convert_P_T_FR_L('P', outletPressure_form, oPresUnit_form, 'pa (a)',
                                              1000)
     # print(f"Outlet Pressure V{outletPressure_v}")
 
     # get tex pressure in psi
-    inletPressure_tex = meta_convert_P_T_FR_L('P', inletPressure_form, iPresUnit_form, 'psia',
+    inletPressure_tex = meta_convert_P_T_FR_L('P', inletPressure_form, iPresUnit_form, 'psia (a)',
                                               1000)
-    outletPressure_tex = meta_convert_P_T_FR_L('P', outletPressure_form, oPresUnit_form, 'psia',
+    outletPressure_tex = meta_convert_P_T_FR_L('P', outletPressure_form, oPresUnit_form, 'psia (a)',
                                                1000)
 
     tEX = trimExitVelocityGas(inletPressure_tex, outletPressure_tex) / 3.281
@@ -4261,9 +4278,9 @@ def gasSizing(inletPressure_form, outletPressure_form, inletPipeDia_form, outlet
     valve_type_ = v_det_element.style.name
     trimtype = trimtype
     outletPressure_psia = meta_convert_P_T_FR_L('P', outletPressure_form, oPresUnit_form,
-                                                'psia', 1000)
+                                                'psia (a)', 1000)
     inletPressure_psia = meta_convert_P_T_FR_L('P', inletPressure_form, iPresUnit_form,
-                                               'psia', 1000)
+                                               'psia (a)', 1000)
     dp_kc = inletPressure_psia - outletPressure_psia
     # Kc = getKCValue(size_in_in, trimtype, dp_kc, valve_type_.lower(), xt_fl)
     Kc = getKc(size_in_in, trimtype, dp_kc, valve_type_, xt_fl)
@@ -4275,9 +4292,9 @@ def gasSizing(inletPressure_form, outletPressure_form, inletPipeDia_form, outlet
                   N2_val)
     N1_val = 0.865
     N4_val = 76000
-    inletPressure_re = meta_convert_P_T_FR_L('P', inletPressure_form, iPresUnit_form, 'bar',
+    inletPressure_re = meta_convert_P_T_FR_L('P', inletPressure_form, iPresUnit_form, 'bar (a)',
                                              1000)
-    outletPressure_re = meta_convert_P_T_FR_L('P', outletPressure_form, oPresUnit_form, 'bar',
+    outletPressure_re = meta_convert_P_T_FR_L('P', outletPressure_form, oPresUnit_form, 'bar (a)',
                                               1000)
     inletPipeDia_re = round(meta_convert_P_T_FR_L('L', inletPipeDia_form, iPipeUnit_form, 'mm',
                                                   1000))
@@ -4397,71 +4414,72 @@ def getCVresult(fl_unit_form, specificGravity, iPresUnit_form, inletPressure_for
 
     # 2. Pressure
     # A. inletPressure
-    iPresUnit_form = iPresUnit_form.split(' ')    
+    # print('GETCVRESULT')
+    # iPresUnit_form = iPresUnit_form.split(' ')    
 
-    if iPresUnit_form[1] == '(g)':
-        inletPressure_form_new = meta_convert_g_to_a(inletPressure_form,iPresUnit_form[0])
-        print(f'Intermediates {inletPressure_form_new}')
-    else:
-        inletPressure_form_new = inletPressure_form
+    # if iPresUnit_form[1] == '(g)':
+    #     inletPressure_form_new = meta_convert_g_to_a(inletPressure_form,iPresUnit_form[0])
+    #     print(f'Intermediates {inletPressure_form_new}')
+    # else:
+    #     inletPressure_form_new = inletPressure_form
 
-    if iPresUnit_form[0]:
-        inletPressure_liq = meta_convert_P_T_FR_L('P', inletPressure_form_new, iPresUnit_form[0],
-                                                  'bar', specificGravity * 1000)
-        iPres_unit = 'bar'
-    else:
-        iPres_unit = iPresUnit_form[0]
-        inletPressure_liq = inletPressure_form
+    # if iPresUnit_form[0]:
+    inletPressure_liq = meta_convert_P_T_FR_L('P', inletPressure_form, iPresUnit_form,
+                                                  'bar (a)', specificGravity * 1000)
+    iPres_unit = 'bar (a)'
+    # else:
+    #     iPres_unit = iPresUnit_form[0]
+    #     inletPressure_liq = inletPressure_form
 
     # B. outletPressure
-    oPresUnit_form = oPresUnit_form.split(' ')
+    # oPresUnit_form = oPresUnit_form.split(' ')
 
-    if oPresUnit_form[1] == '(g)':
-        outletPressure_form_new = meta_convert_g_to_a(outletPressure_form,oPresUnit_form[0])
-        print(f'Intermediates {outletPressure_form_new}')
-    else:
-        outletPressure_form_new = outletPressure_form
+    # if oPresUnit_form[1] == '(g)':
+    #     outletPressure_form_new = meta_convert_g_to_a(outletPressure_form,oPresUnit_form[0])
+    #     print(f'Intermediates {outletPressure_form_new}')
+    # else:
+    #     outletPressure_form_new = outletPressure_form
 
-    if oPresUnit_form:
-        outletPressure_liq = meta_convert_P_T_FR_L('P', outletPressure_form_new, oPresUnit_form[0],
-                                                   'bar', specificGravity * 1000)
-        oPres_unit = 'bar'
-    else:
-        oPres_unit = oPresUnit_form[0]
-        outletPressure_liq = outletPressure_form
+    # if oPresUnit_form:
+    outletPressure_liq = meta_convert_P_T_FR_L('P', outletPressure_form, oPresUnit_form,
+                                                   'bar (a)', specificGravity * 1000)
+    oPres_unit = 'bar (a)'
+    # else:
+    #     oPres_unit = oPresUnit_form[0]
+    #     outletPressure_liq = outletPressure_form
 
     # C. vaporPressure
-    vPresUnit_form = vPresUnit_form.split(' ')
-    if vPresUnit_form[1] == '(g)':
-        vaporPressure_form_new = meta_convert_g_to_a(vaporPressure,vPresUnit_form[0])
-        print(f'Intermediates {vaporPressure_form_new}')
-    else:
-        vaporPressure_form_new = vaporPressure
+    # vPresUnit_form = vPresUnit_form.split(' ')
+    # if vPresUnit_form[1] == '(g)':
+    #     vaporPressure_form_new = meta_convert_g_to_a(vaporPressure,vPresUnit_form[0])
+    #     print(f'Intermediates {vaporPressure_form_new}')
+    # else:
+    #     vaporPressure_form_new = vaporPressure
 
-    if vPresUnit_form:
-        vaporPressure = meta_convert_P_T_FR_L('P', vaporPressure_form_new, vPresUnit_form[0], 'bar',
-                                              specificGravity * 1000)
-        vPres_unit = 'bar'
-    else:
-        vPres_unit = vPresUnit_form[0]
+    # if vPresUnit_form:
+    vaporPressure = meta_convert_P_T_FR_L('P', vaporPressure, vPresUnit_form, 'bar (a)',
+                                            specificGravity * 1000)
+    vPres_unit = 'bar (a)'
+    # else:
+    #     vPres_unit = vPresUnit_form[0]
 
     # D. Critical Pressure
-    cPresUnit_form = cPresUnit_form.split(' ')
+    # cPresUnit_form = cPresUnit_form.split(' ')
 
-    if cPresUnit_form[1] == '(g)':
-        criticalPressure_form_new = meta_convert_g_to_a(criticalPressure_form,cPresUnit_form[0])
-        print(f'Intermediates {criticalPressure_form_new}')
-    else:
-        criticalPressure_form_new = criticalPressure_form
+    # if cPresUnit_form[1] == '(g)':
+    #     criticalPressure_form_new = meta_convert_g_to_a(criticalPressure_form,cPresUnit_form[0])
+    #     print(f'Intermediates {criticalPressure_form_new}')
+    # else:
+    #     criticalPressure_form_new = criticalPressure_form
     
-    if cPresUnit_form[0]:
-        criticalPressure_liq = meta_convert_P_T_FR_L('P', criticalPressure_form_new,
-                                                     cPresUnit_form[0], 'bar',
-                                                     specificGravity * 1000)
-        cPres_unit = 'bar'
-    else:
-        cPres_unit = cPresUnit_form[0]
-        criticalPressure_liq = criticalPressure_form
+    # if cPresUnit_form[0]:
+    criticalPressure_liq = meta_convert_P_T_FR_L('P', criticalPressure_form,
+                                                    cPresUnit_form, 'bar (a)',
+                                                    specificGravity * 1000)
+    cPres_unit = 'bar (a)'
+    # else:
+    #     cPres_unit = cPresUnit_form[0]
+    #     criticalPressure_liq = criticalPressure_form
 
     # 3. Length
     if fr_unit == 'm3/hr':
@@ -4514,7 +4532,7 @@ def getCVresult(fl_unit_form, specificGravity, iPresUnit_form, inletPressure_for
                              'FD': fd, 'viscosity': viscosity}
 
     service_conditions_1 = service_conditions_sf
-    N1_val = N1[(service_conditions_1['flowrate_unit'], service_conditions_1['iPresUnit'])]
+    N1_val = N1[(service_conditions_1['flowrate_unit'], str(service_conditions_1['iPresUnit']).split(' ')[0])]
     N2_val = N2[service_conditions_1['valveDiaUnit']]
     N4_val = N4[(service_conditions_1['flowrate_unit'], service_conditions_1['valveDiaUnit'])]
 
@@ -4546,6 +4564,7 @@ def getCVGas(fl_unit_form, specificGravity, sg_choice, inletPressure_form, iPres
              flowrate_form, inletTemp_form, iTempUnit_form, ratedCV, inletPipeDia_form, iPipeUnit_form,
              outletPipeDia_form, oPipeUnit_form, xt_fl, z_factor,
              sg_vale):
+    print(f'CVGASSSSSSVV {''.join(str(iPresUnit_form.split('  ')[0]))}')
     fl_unit = fl_unit_form
     if fl_unit in ['m3/hr', 'scfh', 'gpm']:
         fl_bin = 1
@@ -4637,10 +4656,11 @@ def getCVGas(fl_unit_form, specificGravity, sg_choice, inletPressure_form, iPres
     else:
         # to be converted to kg/hr, bar, K, in
         # 3. Pressure
-        inletPressure = meta_convert_P_T_FR_L('P', inletPressure_form, iPresUnit_form, 'bar',
+        print(f'PRESUSREE {iPresUnit_form}')
+        inletPressure = meta_convert_P_T_FR_L('P', inletPressure_form, iPresUnit_form, 'bar (a)',
                                               1000)
         outletPressure = meta_convert_P_T_FR_L('P', outletPressure_form, oPresUnit_form,
-                                               'bar',
+                                               'bar (a)',
                                                1000)
         # 4. Length
         inletPipeDia = meta_convert_P_T_FR_L('L', inletPipeDia_form, iPipeUnit_form, 'inch',
@@ -4839,10 +4859,24 @@ def valveSizing(proj_id, item_id):
                 # logic to choose which formula to use - using units of flowrate and sg
 
                 len_cases_input = len(a['inletPressure'])
+                print(f'KKKKKKKKKKKSSSSS {a['flowrate'][0]}')
                 
                 try:
                     for k in range(len_cases_input):
                         try: 
+                            print(f'IIIIIIIIIIIIIIIIIIIIIIIIIIIiii')
+                            print(a['flowrate'][k], a['flowrate_unit'][0], a['inletPressure'][k],
+                                                    a['inpres_unit'][0],
+                                                    a['outletPressure'][k], a['outpres_unit'][0],
+                                                    a['inletTemp'][k], a['temp_unit'][0], '1', 'pa',
+                                                    a['specificHeatRatio'][k], '1',
+                                                    a['xt'][k], a['criticalPressure'][0], a['criticalpres_unit'][0], a['inletPipeSize'][0],
+                                                    a['inpipe_unit'][0], a['iSch'][0],
+                                                    a['outletPipeSize'][0], a['outpipe_unit'][0], a['oSch'][0], 7800,
+                                                    5000, a['vSize'][0],
+                                                    a['valvesize_unit'][0], a['vSize'][0], a['valvesize_unit'][0], a['ratedCV'][0],
+                                                    rw_noise, item_selected, a['mw_sg'][0], a['compressibility'][k], a['molecularWeight'][k], 
+                                                    fluid_element.fluidName, i_pipearea_element, valve_element, port_area_)
                             output = getOutputsGas(a['flowrate'][k], a['flowrate_unit'][0], a['inletPressure'][k],
                                                     a['inpres_unit'][0],
                                                     a['outletPressure'][k], a['outpres_unit'][0],
@@ -4875,7 +4909,18 @@ def valveSizing(proj_id, item_id):
                                                     sonicVelUp=output['sonicVelUp'], sonicVelDown=output['sonicVelDown'],
                                                     sonicVelValve=output['sonicVelValve'], outletDensity=output['outletDensity'], fluid=fluid_element,
                                                     item=item_selected, specificHeatRatio=a['specificHeatRatio'][0], compressibility=a['compressibility'][0], iPipe=None)
-                            print(fluid_element.fluidName)
+                            
+
+                            item_selected.flowrate_unit = output['fl_unit_form']
+                            item_selected.inpres_unit = output['iPresUnit_form']
+                            item_selected.outpres_unit = output['oPresUnit_form']
+                            item_selected.intemp_unit = output['iTempUnit_form']
+                            item_selected.vaporpres_unit = output['vPresUnit_form']
+                            item_selected.valvesize_unit = output['vSizeUnit_form']
+                            item_selected.inpipe_unit = output['iPipeUnit_form']
+                            item_selected.outpipe_unit = output['oPipeUnit_form']  
+                            item_selected.criticalpres_unit = output['cPressureUnit'] 
+
                             db.session.add(new_case)
                             db.session.commit()
                         except:
@@ -4887,7 +4932,7 @@ def valveSizing(proj_id, item_id):
                                                     criticalPressure=a['criticalPressure'][0], inletPipeSize=a['inletPipeSize'][0],
                                                     outletPipeSize=a['outletPipeSize'][0], ratedCv=a['ratedCV'][0],
                                                     item=item_selected, specificHeatRatio=a['specificHeatRatio'][0], compressibility=a['compressibility'][0], iPipe=None)
-                            print(fluid_element.fluidName)
+                            # print(fluid_element.fluidName)
                             db.session.add(new_case)
                             db.session.commit()
 
@@ -5234,6 +5279,7 @@ def selectValve(proj_id, item_id):
                         else:
                             rw_noise = 0.5
                         # ## done adding
+                        print(f'SELECTVALVESS {item_selected.inpres_unit}')
                         seatDia, seatDiaUnit, sosPipe, densityPipe, rw_noise, fl_unit, iPresUnit, oPresUnit, vPresUnit, cPresUnit, iPipeUnit, oPipeUnit, vSizeUnit, iPipeSchUnit, oPipeSchUnit, iTempUnit, sg_choice = case_.seatDia, item_selected.valvesize_unit, 5000, 7800, rw_noise, item_selected.flowrate_unit, item_selected.inpres_unit, item_selected.outpres_unit, item_selected.vaporpres_unit, item_selected.criticalpres_unit, item_selected.inpipe_unit,item_selected.outpipe_unit,item_selected.valvesize_unit,item_selected.valvesize_unit,item_selected.valvesize_unit,item_selected.intemp_unit, case_.mw_sg
                         select_dict = db.session.query(cvValues).filter_by(cv=cv_element, coeff='Cv').first()
                         select_dict_fl = db.session.query(cvValues).filter_by(cv=cv_element, coeff='FL').first()
@@ -5251,7 +5297,9 @@ def selectValve(proj_id, item_id):
                         fd = interpolate_fd(case_.calculatedCv, select_dict, select_dict_fd, valve_type_)
                         rated_cv_tex = select_dict.ten
                         last_case = case_
+                        print(f"GGGGGGGGGGGGGGGGGGGGGGGAAAAAAAAAAAAASSSSSS {iPresUnit}")
                         if valve_element.state.name == 'Liquid':
+                            print(f'FINALCVLIQ {iPresUnit}')
                             final_cv = getCVresult(fl_unit, last_case.specificGravity, iPresUnit, last_case.inletPressure,
                                                 last_case.flowrate,
                                                 last_case.outletPressure,
@@ -5263,6 +5311,7 @@ def selectValve(proj_id, item_id):
                                                 select_dict.ten, fl, fd,
                                                 last_case.kinematicViscosity, iTempUnit)
                         else:
+                            print(f'FINALCVGAS {iPresUnit}')
                             final_cv = getCVGas(fl_unit, last_case.specificGravity, last_case.mw_sg, last_case.inletPressure, iPresUnit,
                                                 last_case.outletPressure, oPresUnit, v_size, 'inch',
                                                 last_case.flowrate, last_case.inletTemp, iTempUnit, select_dict.ten,
@@ -5297,6 +5346,7 @@ def selectValve(proj_id, item_id):
                         fl = interpolate(final_cv1, select_dict, select_dict_fl, valve_type_)
                         xt = interpolate(final_cv1, select_dict, select_dict_xt, valve_type_)
                         fd = interpolate_fd(final_cv1, select_dict, select_dict_fd, valve_type_)
+                        print('SSSSSSSSSSSSGGGGGGGGGGGG')
                         # print('final fl, xt, select dict')
                         # print(fl, xt, select_dict_xt.id)
                         # print('percentage opening data: gas')

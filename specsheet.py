@@ -29,6 +29,7 @@ def createcvOpening_gas(itemCase_list,fluid_types,items):
     count = 1;f_cnt = 0
     print(f'FLUID {fluid_types}')
     for itemCase in itemCase_list:
+            
             cv_graph_values = []
             open_cv = [10,20,30,40,50,60,70,80,90,100]
             item = items[f_cnt]
@@ -602,8 +603,12 @@ def createcvOpening_gas(itemCase_list,fluid_types,items):
                             worksheet.merge_range(f"{st_cell}{35}:{end_cell}{35}", '', cell_format)
                             worksheet.merge_range(f"{st_cell}{36}:{end_cell}{36}", '', cell_format)
                             worksheet.merge_range(f"{st_cell}{37}:{end_cell}{37}", '', cell_format)
+                
                 print(f'cvGraphVakues {cv_graph_values}')
                 print(f'FINAL CV CALC {case_cv_final}')
+
+                
+
             if fluid_type == 'Gas':
 
 
@@ -697,7 +702,7 @@ def createcvOpening_gas(itemCase_list,fluid_types,items):
 
                 final_values = getCVplotchart(open_cv,cv_values,calc_opencv,calc_cvvalues)
                 print(f'LLSJSJJSJSJJ {final_values}')
-
+             
                 # Write the data to the worksheet
                 worksheet.write_column('C39', final_values['y_values'])
                 worksheet.write_column('D39', final_values['x_values'])
@@ -705,38 +710,46 @@ def createcvOpening_gas(itemCase_list,fluid_types,items):
 
 
                 # Add a line chart
-                chart = workbook.add_chart({"type": "line", "name": "CV Chart", "embedded": True})
-                line_series = {
-                    'categories': f'=Sheet{sheet_number}!$D$39:$D$53',  # X-axis data
-                    'values': f'=Sheet{sheet_number}!$C$39:$C$53',  # Y-axis data for the line chart
-                }
-                chart.add_series(line_series)
+                scatter_chart = workbook.add_chart({"type": "scatter", "name": "Scatter Chart", "embedded": True})
 
-                # Add a scatter chart
-                scatter_chart = workbook.add_chart({"type": "line", "name": "Scatter Chart", "embedded": True})
+                # Add the scatter series to the chart
                 scatter_series = {
-                    'categories': f'=Sheet{sheet_number}!$D$39:$D$53',  # X-axis data limited to the scatter data points
-                    'values': f'=Sheet{sheet_number}!$E$39:$E$53',  # Y-axis data for scatter plot
+                    'categories': f'=Sheet{sheet_number}!$D$39:$D$53',  # X-axis data for scatter plot
+                    'values': f'=Sheet{sheet_number}!$E$39:$E$53',       # Y-axis data for scatter plot
                     'marker': {'type': 'circle', 'size': 10, 'fill': {'color': 'red'}}, 
                     # Marker style for scatter plot
                 }
                 scatter_chart.add_series(scatter_series)
 
-                # Combine the charts
-                chart.combine(scatter_chart)
 
-                # Set X-axis title for the combined chart
-                chart.set_x_axis({'name': 'Percentage Opening / Degree'})
 
-                # Set Y-axis title for the combined chart
-                chart.set_y_axis({'name': 'Values'})
+                # Add a line series to the scatter chart
+                line_series = {
+                    'categories': f'=Sheet{sheet_number}!$D$39:$D$53',  # X-axis data for line plot
+                    'values': f'=Sheet{sheet_number}!$C$39:$C$53',
+                    'marker': {'type': 'diamond', 'size': 0, 'fill': {'color': 'green'}}, 
+                    'line': {'none': False},     # Y-axis data for line plot
+                }
+                scatter_chart.add_series(line_series)
 
-                # Set the X-axis range for both line and scatter series
-                chart.set_x_axis({'name': 'Percentage Opening / Degree', 'min': min(open_cv), 'max': max(open_cv)})
-                scatter_chart.set_x_axis({'min': min(open_cv), 'max': max(open_cv)})
+                
+         
 
-                # Insert the combined chart into the worksheet
-                worksheet.insert_chart('C39', chart)
+                # Set x-axis range and tick intervals for the combined chart
+                scatter_chart.set_x_axis({
+                    'min': 10,           # Minimum X-axis value
+                    'max': 100,          # Maximum X-axis value
+                    'major_unit': 10,    # Interval between major ticks
+                    'minor_unit': 1,     # Interval between minor ticks
+                    'minor_unit_type': 'num',  # Set minor unit type to number
+                    'num_font': {'size': 10},  # Font size for tick labels
+                    'name': 'Percentage Openings / Degree'  # Name of the X-axis
+                })
+
+
+               
+
+                worksheet.insert_chart('C39', scatter_chart)
 
 
 

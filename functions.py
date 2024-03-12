@@ -125,9 +125,32 @@ def convert_L_SI(val, unit_in, unit_out, density):
 
 
 def conver_P_SI(val, unit_in, unit_out, density):
+    print(f'unitINNNNNN {unit_in},{unit_out}')
+    unit_in = unit_in.split(' ')
+    unit_out = unit_out.split(' ')
+    print(f'G_TO_AS {unit_in[0]},{unit_out[0]}')
+    if unit_in[-1] == '(g)':
+        val = meta_convert_g_to_a(float(val),unit_in[0])
+        
+    elif unit_in[-1] == '(a)':
+        val = val
+        
+    
+
+
     SI = {'psia': 6894.76, 'kg/cm2': 98066.5, 'pa': 1, 'kPa': 1000, 'bar': 100000, 'MPa': 1000000,
           'inh20': 0.00401865, 'mmh20': 9.80665, 'inhg': 0.0002953, 'mmhg': 133.322, 'mbar': 0.01}
-    return val * SI[unit_in] / SI[unit_out]
+    final_val = val * SI[unit_in[0]] / SI[unit_out[0]]
+    print(f'INTERRVALUESGGGG {val},{unit_out[-1]},{unit_out}')
+    
+    
+    if unit_out[-1] == '(g)':
+        return_val = meta_convert_a_to_g(final_val,unit_out[0])
+    elif unit_out[-1] == '(a)':
+        return_val = final_val 
+    print(f'FINALVALUES {return_val}')
+    
+    return return_val
 
 
 
