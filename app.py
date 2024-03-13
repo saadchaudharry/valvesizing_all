@@ -2188,40 +2188,16 @@ def unit_change():
         print(f'KKSJJSJSJSJVAPO')
         for i in range(len(param_values)):
             if param_values[i]:
-        
-                prev_units = prev_unit.split(' ')
-                final_units = final_unit.split(' ')
-
-                
                 if params != "shutoffPres":
-                    prev_unit, prev_unit_factor = prev_units[0] , prev_units[1]
-                    final_unit, final_unit_factor = final_units[0] , final_units[1]
-                    if prev_unit_factor == '(g)':
-                        g_to_a = meta_convert_g_to_a(param_values[i],prev_unit)
-
-                        final_value = meta_convert_P_T_FR_L('P', g_to_a, prev_unit,
-                                                  final_unit, specific_gravity[i] * 1000)
-                    else:
-                        final_value = meta_convert_P_T_FR_L('P', param_values[i], prev_unit,
-                                                  final_unit, specific_gravity[i] * 1000)
-                else:
-                    prev_unit = prev_units[0]
-                    final_unit= final_units[0]
-                    print(f'KSHDF {param_values[i]},{prev_unit},{final_unit},{specific_gravity[i]}')
+                    print(f'IM VAPOR {str(prev_unit)+ "(a)"}')
                     final_value = meta_convert_P_T_FR_L('P', param_values[i], prev_unit,
                                                   final_unit, specific_gravity[i] * 1000)
+                else:
 
-               
+                    final_value = meta_convert_P_T_FR_L('P', param_values[i], str(prev_unit)+ "(a)",
+                                                  str(final_unit)+ "(a)", specific_gravity[i] * 1000)
                 print(f'shhshsh {final_value}')
                 if params != "shutoffPres":
-                    prev_unit, prev_unit_factor = prev_units[0] , prev_units[1]
-                    final_unit, final_unit_factor = final_units[0] , final_units[1]
-                    if final_unit_factor == '(g)':
-                        a_to_g = meta_convert_a_to_g(final_value,final_unit)
-                        desc_final_value.append(a_to_g)
-                    else:
-                        desc_final_value.append(final_value)
-                else:
                     desc_final_value.append(final_value)
                
             else:
@@ -2261,23 +2237,23 @@ def unit_change():
 
 def getOutputs(flowrate_form, fl_unit_form, inletPressure_form, iPresUnit_form, outletPressure_form, oPresUnit_form,
                inletTemp_form,
-               iTempUnit_form, vaporPressure, vPresUnit_form, specificGravity, viscosity, xt_fl, criticalPressure_form,
+               iTempUnit_form, vaporPressure_form, vPresUnit_form, specificGravity, viscosity, xt_fl, criticalPressure_form,
                cPresUnit_form,
                inletPipeDia_form, iPipeUnit_form, iSch, outletPipeDia_form, oPipeUnit_form, oSch, densityPipe, sosPipe,
                valveSize_form, vSizeUnit_form,
                seatDia, seatDiaUnit, ratedCV, rw_noise, item_selected, fluidName, valve_element, i_pipearea_element, port_area_, valvearea_element):
     # change into float/ num
-    flowrate_form, fl_unit_form, inletPressure_form, iPresUnit_form, outletPressure_form, oPresUnit_form, inletTemp_form, iTempUnit_form, vaporPressure, vPresUnit_form, specificGravity, viscosity, xt_fl, criticalPressure_form, cPresUnit_form, inletPipeDia_form, iPipeUnit_form, iSch, outletPipeDia_form, oPipeUnit_form, oSch, densityPipe, sosPipe, valveSize_form, vSizeUnit_form, seatDia, seatDiaUnit, ratedCV, rw_noise, item_selected = float(
+    flowrate_form, fl_unit_form, inletPressure_form, iPresUnit_form, outletPressure_form, oPresUnit_form, inletTemp_form, iTempUnit_form, vaporPressure_form, vPresUnit_form, specificGravity, viscosity, xt_fl, criticalPressure_form, cPresUnit_form, inletPipeDia_form, iPipeUnit_form, iSch, outletPipeDia_form, oPipeUnit_form, oSch, densityPipe, sosPipe, valveSize_form, vSizeUnit_form, seatDia, seatDiaUnit, ratedCV, rw_noise, item_selected = float(
         flowrate_form), fl_unit_form, float(inletPressure_form), iPresUnit_form, float(
         outletPressure_form), oPresUnit_form, float(inletTemp_form), iTempUnit_form, float(
-        vaporPressure), vPresUnit_form, float(specificGravity), float(viscosity), float(xt_fl), float(
+        vaporPressure_form), vPresUnit_form, float(specificGravity), float(viscosity), float(xt_fl), float(
         criticalPressure_form), cPresUnit_form, float(inletPipeDia_form), iPipeUnit_form, iSch, float(
         outletPipeDia_form), oPipeUnit_form, oSch, float(densityPipe), float(sosPipe), float(
         valveSize_form), vSizeUnit_form, float(seatDia), seatDiaUnit, float(ratedCV), float(rw_noise), item_selected
 
     # check whether flowrate, pres and l are in correct units
     # 1. flowrate
-    print(f' UNITSFORVALVEDATA {flowrate_form},{fl_unit_form},{inletPressure_form},{iPresUnit_form},{outletPressure_form},{oPresUnit_form},{inletTemp_form},{iTempUnit_form},{vaporPressure},{vPresUnit_form},{criticalPressure_form},{cPresUnit_form},{inletPipeDia_form},{iPipeUnit_form},{outletPipeDia_form},{oPipeUnit_form},{valveSize_form},{vSizeUnit_form}')
+    # print(f' UNITSFORVALVEDATA {flowrate_form},{fl_unit_form},{inletPressure_form},{iPresUnit_form},{outletPressure_form},{oPresUnit_form},{inletTemp_form},{iTempUnit_form},{vaporPressure},{vPresUnit_form},{criticalPressure_form},{cPresUnit_form},{inletPipeDia_form},{iPipeUnit_form},{outletPipeDia_form},{oPipeUnit_form},{valveSize_form},{vSizeUnit_form}')
     inletPipeDia_v = round(meta_convert_P_T_FR_L('L', inletPipeDia_form, iPipeUnit_form, 'inch',
                                                  1000))
     print(f'unitlength {iPipeUnit_form},{oPipeUnit_form},{vSizeUnit_form}')
@@ -2344,9 +2320,11 @@ def getOutputs(flowrate_form, fl_unit_form, inletPressure_form, iPresUnit_form, 
     #     vaporPressure_form_new = vaporPressure
     # if vPresUnit_form[0] not in ['kPa', 'bar', 'psia']:
     # if vPresUnit_form:
-    vaporPressure = meta_convert_P_T_FR_L('P', vaporPressure, vPresUnit_form, 'bar (a)',
+    print(f'VAPORPRESSSSSSSSSSSSSS BF {vaporPressure_form},{vPresUnit_form}')
+    vaporPressure = meta_convert_P_T_FR_L('P', vaporPressure_form, vPresUnit_form, 'bar (a)',
                                               specificGravity * 1000)
     vPres_unit = 'bar (a)'
+    print(f'VAPORPRESSSSSSSSSSSSSS AF {vaporPressure},{vPres_unit}')
     # else:
     #     vPres_unit = vPresUnit_form[0]
 
@@ -2687,7 +2665,7 @@ def getOutputs(flowrate_form, fl_unit_form, inletPressure_form, iPresUnit_form, 
         'inletTemp': inletTemp_form,
         'iTempUnit_form':iTempUnit_form,
         'specificGravity': specificGravity,
-        'vaporPressure': vaporPressure,
+        'vaporPressure': vaporPressure_form,
         'vPresUnit_form': vPresUnit_form,
         'kinematicViscosity': viscosity,
         'valveSize': valveSize_form,
@@ -4711,7 +4689,7 @@ def getCVGas(fl_unit_form, specificGravity, sg_choice, inletPressure_form, iPres
 def valveSizing(proj_id, item_id):
     metadata_ = metadata()
     item_selected = getDBElementWithId(itemMaster, item_id)
-    itemCases_1 = db.session.query(caseMaster).filter_by(item=item_selected).all()
+    itemCases_1 = db.session.query(caseMaster).filter_by(item=item_selected).order_by(caseMaster.id).all()
     valve_element = db.session.query(valveDetailsMaster).filter_by(item=item_selected).first()
     try:
         f_state = valve_element.state.name
@@ -4763,6 +4741,11 @@ def valveSizing(proj_id, item_id):
         valvearea_element = db.session.query(valveArea).filter_by(rating=valve_element.rating.name[5:],
                                                 nominalPipeSize=a['vSize'][0]).first()
         # print(f'UNIT {a['inletPipeSize'][0]}')
+        for i in itemCases_1:
+            print('deleteing casees')
+            db.session.delete(i)
+            db.session.commit()
+
         if f_state == 'Liquid':
                 len_cases_input = len(a['inletPressure'])
                 
@@ -4834,10 +4817,10 @@ def valveSizing(proj_id, item_id):
                             db.session.add(new_case)
                             db.session.commit()
                         
-                        for i in itemCases_1:
-                            print('deleteing casees')
-                            db.session.delete(i)
-                            db.session.commit()
+                        # for i in itemCases_1:
+                        #     print('deleteing casees')
+                        #     db.session.delete(i)
+                        #     db.session.commit()
 
                     flash_message = "Calculation Complete"
                     flash_category = "success"

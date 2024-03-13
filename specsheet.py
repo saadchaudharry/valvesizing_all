@@ -287,6 +287,13 @@ def createcvOpening_gas(itemCase_list,fluid_types,items):
                 worksheet.write('D14', item.intemp_unit, cell_format)
                 worksheet.write('D17', item.vaporpres_unit, cell_format)
                 worksheet.write('D30', item.valvesize_unit, cell_format)
+            elif fluid_type == 'Gas':
+                worksheet.write('D11', item.flowrate_unit, cell_format)
+                worksheet.write('D12', item.inpres_unit, cell_format)
+                worksheet.write('D13', item.outpres_unit, cell_format)
+                worksheet.write('D14', item.intemp_unit, cell_format)
+                worksheet.write('D33', item.valvesize_unit, cell_format)
+
 
 
 
@@ -304,12 +311,25 @@ def createcvOpening_gas(itemCase_list,fluid_types,items):
             case_cell = ["E:F","G:H","I:I","J:K","L:M"]
             
             if fluid_type == 'Gas':
+                cv_graph = 0; cv_graph_values = [];case_cv_final =[];case_cv_finalPercent = []
                 for i in range(5):
                     st_cell,end_cell = case_cell[i].split(":") 
                     
                     if i < len(itemCase): 
 
-                        item_case = itemCase[i]     
+                        item_case = itemCase[i]   
+                        case_cv_final.append(item_case.calculatedCv)
+                        case_cv_finalPercent.append(item_case.openingPercentage)  
+                        if item_case.valveDiaId:
+                            # case_cv_values
+                            cv_graph = 1
+
+                            cv_element = getDBElementWithId(cvTable, item_case.valveDiaId)
+                            # db.session.query(cvValues).filter_by(cv=cv_element, coeff='Cv').first()
+                            item_case_cvs = db.session.query(cvValues).filter_by(cv=cv_element, coeff='Cv').first()
+                            print(f'itemcasecvssssddvv {item_case_cvs}')
+                            cv_graph_values = [item_case_cvs.one, item_case_cvs.two, item_case_cvs.three,item_case_cvs.four,item_case_cvs.five,item_case_cvs.six,item_case_cvs.seven,item_case_cvs.eight,item_case_cvs.nine,item_case_cvs.ten]
+                            
                         if i == 2:
                             worksheet.write(f"{st_cell}{11}", item_case.flowrate, cell_format)
                             worksheet.write(f"{st_cell}{12}", item_case.inletPressure, cell_format)
@@ -611,61 +631,94 @@ def createcvOpening_gas(itemCase_list,fluid_types,items):
 
             if fluid_type == 'Gas':
 
+                def getCVplotchart(opencv_final, cv_values, calc_opencv, calc_cvvalues):
+                    cnt = 0
+                    for i in calc_opencv:
+                        for j in range(len(opencv_final)):
+                            if opencv_final[j] > i:
+                                opencv_final.insert(j,i)
+                                cv_values.insert(j,calc_cvvalues[cnt])
+                                cnt+=1
+                                break
+                    calc_finalcv = []
+                    for i in cv_values:
+                        if i in calc_cvvalues:
+                            calc_finalcv.append(i)
+                        else:
+                            calc_finalcv.append(None)
 
-                # data = valve_cvOpening[:10]
-                # worksheet.write_column('C49', data)
+         
+                    print(f'openingpercentagedatas {opencv_final},{cv_values},{calc_finalcv}')
+                    final_xy = {
+                        'x_values' : opencv_final,
+                        'y_values' : cv_values,
+                        'y1_values' : calc_finalcv
+                    }
+                    return final_xy
 
-                data = [10,20,30,40,50,60,70,80,90,100]
-                worksheet.write_column('D49', data)
 
-                # Create a new chart object.
-                chart = workbook.add_chart({'type': 'line'})
+                cv_values = cv_graph_values
+                open_cv = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+                calc_opencv = case_cv_finalPercent
+                calc_cvvalues = case_cv_final
+                sheet_number = f_cnt+1
 
-                # Add a series to the chart.
-                chart.add_series({
-                'categories': '=Sheet1!$D$49:$D$58',  # X-axis data
-                'values':     '=Sheet1!$C$49:$C$58',  # Y-axis data
-               
-                })
+                final_values = getCVplotchart(open_cv,cv_values,calc_opencv,calc_cvvalues)
+                print(f'LLSJSJJSJSJJ {final_values}')
+             
+                # Write the data to the worksheet
+                worksheet.write_column('C49', final_values['y_values'])
+                worksheet.write_column('D49', final_values['x_values'])
+                worksheet.write_column('E49', final_values['y1_values'])
 
-                # Set X-axis title
-                chart.set_x_axis({'name': 'Percentage Opening / Degree'})
 
-                # Set Y-axis title
-                chart.set_y_axis({'name': 'CV Values'})
+                # Add a line chart
+                scatter_chart = workbook.add_chart({"type": "scatter", "name": "Scatter Chart", "embedded": True})
 
-                # Insert the chart into the worksheet.
-                worksheet.insert_chart('C49', chart)
+                # Add the scatter series to the chart
+                scatter_series = {
+                    'categories': f'=Sheet{sheet_number}!$D$49:$D$58',  # X-axis data for scatter plot
+                    'values': f'=Sheet{sheet_number}!$E$49:$E$58',       # Y-axis data for scatter plot
+                    'marker': {'type': 'circle', 'size': 10, 'fill': {'color': 'blue'}}, 
+                    # Marker style for scatter plot
+                }
+                scatter_chart.add_series(scatter_series)
 
-                worksheet.write('A71', 'FLOW CONTROL COMMUNE', )
-                worksheet.write('M71', 'FR/AE/004', f1)
-            
-            elif fluid_type == 'Liquid':
+
+
+                # Add a line series to the scatter chart
+                line_series = {
+                    'categories': f'=Sheet{sheet_number}!$D$49:$D$58',  # X-axis data for line plot
+                    'values': f'=Sheet{sheet_number}!$C$49:$C$58',
+                    'marker': {'type': 'none'},
+                    'line': {'none': False},     # Y-axis data for line plot
+                }
+                scatter_chart.add_series(line_series)
 
                 
-                # def getCVplotchart(opencv_final, cv_values, calc_opencv, calc_cvvalues):
-                #     cnt=0;new_x_value = [];new_y_value = []; new_y1_value = []
-                #     for i in range(len(opencv_final)-1):
-                #         print(f'ksksk {i},{cnt}')
-                #         new_x_value.append(opencv_final[i])
-                #         new_y_value.append(cv_values[i])
-                #         new_y1_value.append(None)
-                #         if cnt < len(calc_opencv) and calc_opencv[cnt] > opencv_final[i] and calc_opencv[cnt] < opencv_final[i+1]:
-                #                 print(f'newxvalue {calc_opencv[cnt]}')
-                #                 new_x_value.append(int(calc_opencv[cnt]))
-                #                 new_y_value.append(calc_cvvalues[cnt])
-                #                 new_y1_value.append(calc_cvvalues[cnt])
+         
 
-                #                 cnt+=1 
-                #     new_x_value.append(opencv_final[-1])
-                #     new_y_value.append(cv_values[-1])
-                #     new_y1_value.append(None)
-                #     final_xy = {
-                #         'x_values' : new_x_value,
-                #         'y_values' : new_y_value,
-                #         'y1_values' : new_y1_value
-                #     }
-                #     return final_xy
+                # Set x-axis range and tick intervals for the combined chart
+                scatter_chart.set_x_axis({
+                    'min': 10,           # Minimum X-axis value
+                    'max': 100,          # Maximum X-axis value
+                    'major_unit': 10,    # Interval between major ticks
+                    'minor_unit': 1,     # Interval between minor ticks
+                    'minor_unit_type': 'num',  # Set minor unit type to number
+                    'num_font': {'size': 10},  # Font size for tick labels
+                    'name': 'Percentage Openings / Degree'  # Name of the X-axis
+                })
+
+
+               
+
+                worksheet.insert_chart('C49', scatter_chart)
+                worksheet.write('A71', 'FLOW CONTROL COMMUNE', )
+                worksheet.write('M71', 'FR/AE/004', f1)
+
+
+            
+            elif fluid_type == 'Liquid':
 
 
                 def getCVplotchart(opencv_final, cv_values, calc_opencv, calc_cvvalues):
@@ -750,17 +803,6 @@ def createcvOpening_gas(itemCase_list,fluid_types,items):
                
 
                 worksheet.insert_chart('C39', scatter_chart)
-
-
-
-
-
-
-
-
-
-
-
                 worksheet.write('A61', 'FLOW CONTROL COMMUNE', )
                 worksheet.write('M61', 'FR/AE/004', f1)
                 # Continue for other fields
