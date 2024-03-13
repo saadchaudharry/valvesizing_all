@@ -137,11 +137,11 @@ def conver_P_SI(val, unit_in, unit_out, density):
         
     
 
-
+    print(f'INTERRVALUESGGGG {type(val)},{type(unit_out[-1])},{type(unit_out)}')
     SI = {'psia': 6894.76, 'kg/cm2': 98066.5, 'pa': 1, 'kPa': 1000, 'bar': 100000, 'MPa': 1000000,
           'inh20': 0.00401865, 'mmh20': 9.80665, 'inhg': 0.0002953, 'mmhg': 133.322, 'mbar': 0.01}
     final_val = val * SI[unit_in[0]] / SI[unit_out[0]]
-    print(f'INTERRVALUESGGGG {val},{unit_out[-1]},{unit_out}')
+    
     
     
     if unit_out[-1] == '(g)':

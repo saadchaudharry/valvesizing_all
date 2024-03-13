@@ -1895,15 +1895,10 @@ def handle_change():
     minTempUnit = request.args.get('minTempUnit')
     prev_units = maxPresUnit.split(' ')
     
-    prev_unit, prev_unit_factor = prev_units[0] , prev_units[1]
-    if prev_unit_factor == '(g)':
-        g_to_a = meta_convert_g_to_a(float(maxPres),prev_unit)
 
-        maxPressure = meta_convert_P_T_FR_L('P', g_to_a, prev_unit,
-                                        'bar', 1.0 * 1000)
-    else:
-        maxPressure = meta_convert_P_T_FR_L('P', float(maxPres), prev_unit,
-                                        'bar', 1.0 * 1000)
+    maxPressure = meta_convert_P_T_FR_L('P', float(maxPres), maxPresUnit,
+                                        'bar (a)', 1.0 * 1000)
+
     
     
 
