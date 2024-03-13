@@ -118,7 +118,7 @@
                                                                         ">
                                                                         
                                                                         {% for flowrate in metadata['units_dict']['flowrate'] %}
-                                                                        {% if flowrate.name == item.project.flowrateUnit %}
+                                                                        {% if flowrate.id == item.flowrate_unit %}
                                                                             <option value="{{ flowrate.id }}" selected>{{ flowrate.name }}</option>
                                                                         {% elif flowrate.id == 'm3/hr' or flowrate.id == 'scfh' or flowrate.id == 'gpm' %}
                                                                             <option value="{{ flowrate.id }}" disabled>{{ flowrate.name }}</option>
@@ -132,7 +132,7 @@
                                                                 <select id="#"
                                                                         class="sizingtable_inputs sizingunits" data-desc="inpres" name="inpres_unit">
                                                                         {% for presunit in metadata['units_dict']['pressure'] %}
-                                                                                {% if presunit.id == item.project.pressureUnit %}
+                                                                                {% if presunit.id == item.inpres_unit %}
                                                                                 <option value="{{presunit.id}}" selected>{{presunit.name}}</option>
                                                                                 {% else %}
                                                                                 <option value="{{presunit.id}}">{{presunit.name}}</option>
@@ -144,7 +144,7 @@
                                                                 <select id="#"
                                                                         class="sizingtable_inputs sizingunits" data-desc="outpres" name="outpres_unit">
                                                                         {% for presunit in metadata['units_dict']['pressure'] %}
-                                                                                {% if presunit.id == item.project.pressureUnit %}
+                                                                                {% if presunit.id == item.outpres_unit %}
                                                                                 <option value="{{presunit.id}}" selected>{{presunit.name}}</option>
                                                                                 {% else %}
                                                                                 <option value="{{presunit.id}}">{{presunit.name}}</option>
@@ -156,7 +156,7 @@
                                                                 <select id="#"
                                                                         class="sizingtable_inputs sizingunits" data-desc="temperature" name="temp_unit">
                                                                         {% for temperature in metadata['units_dict']['temperature'] %}
-                                                                                {% if temperature.name == item.project.temperatureUnit %}
+                                                                                {% if temperature.name == item.intemp_unit %}
                                                                                 <option value="{{temperature.id}}" selected>{{temperature.name}}</option>
                                                                                 {% else %}
                                                                                 <option value="{{temperature.id}}">{{temperature.name}}</option>
@@ -537,14 +537,14 @@
                                                         class="form-control-sm-sm valvesizing_fluid_data valvesizing_inputbox">
                                                 {% else %}
                                                 <input type="text" name="criticalPressure" value=""
-                                                        class="form-control-sm-sm valvesizing_fluid_data valvesizing_inputbox">
+                                                        class="form-control-sm-sm valvesizing_fluid_data valvesizing_inputbox sizingvalue_critPres">
                                                 {% endif %}
                                         </div>
                                         <div class="col-3">
                                                 <select id="#"
-                                                        class="form-control-sm-sm valvesizing_select">
+                                                        class="form-control-sm-sm valvesizing_select " data-desc="critPres" name="criticalpres_unit">
                                                         {% for presunit in metadata['units_dict']['pressure'] %}
-                                                                {% if presunit.id == item.project.pressureUnit %}
+                                                                {% if presunit.id == item.criticalpres_unit %}
                                                                 <option value="{{presunit.id}}" selected>{{presunit.name}}</option>
                                                                 {% else %}
                                                                 <option value="{{presunit.id}}">{{presunit.name}}</option>
@@ -570,7 +570,7 @@
                                                 <select id="#"
                                                         class="form-control-sm-sm valvesizing_select sizingunits" data-desc="inletlength" name="inpipe_unit">
                                                         {% for length in metadata['units_dict']['length'] %}
-                                                                {% if length.name == item.project.lengthUnit %}
+                                                                {% if length.name == item.inpipe_unit %}
                                                                 <option value="{{length.id}}" selected>{{length.name}}</option>
                                                                 {% else %}
                                                                 <option value="{{length.id}}">{{length.name}}</option>
@@ -615,7 +615,7 @@
                                                 <select id="#"
                                                         class="form-control-sm-sm valvesizing_select sizingunits" data-desc="outletlength" name="outpipe_unit">
                                                         {% for length in metadata['units_dict']['length'] %}
-                                                                {% if length.name == item.project.lengthUnit %}
+                                                                {% if length.name == item.outpipe_unit %}
                                                                 <option value="{{length.id}}" selected>{{length.name}}</option>
                                                                 {% else %}
                                                                 <option value="{{length.id}}">{{length.name}}</option>
@@ -663,7 +663,7 @@
                                                 <select id="#"
                                                         class="form-control-sm-sm valvesizing_select sizingunits" data-desc="valvelength" name="valvesize_unit">
                                                         {% for length in metadata['units_dict']['length'] %}
-                                                                {% if length.name == item.project.lengthUnit %}
+                                                                {% if length.name == item.valvesize_unit %}
                                                                 <option value="{{length.id}}" selected>{{length.name}}</option>
                                                                 {% else %}
                                                                 <option value="{{length.id}}">{{length.name}}</option>
@@ -834,9 +834,7 @@
                         $('.sizingvalue_' + params).each(function() {
                                 param_values.push(this.value);
                         });
-                        $('.sizingvalue_sg').each(function (){
-                                specificGravity.push(this.value);
-                        })
+
                         console.log('sksksKskks',param_values);
                         $.ajax({
                                 type: "GET",
@@ -846,7 +844,8 @@
                                 final_unit: final_unit,
                                 params: params,     
                                 param_values: JSON.stringify(param_values),
-                                specific_gravity: JSON.stringify(specificGravity)
+                                specific_gravity: [0.1],
+                                fluid_type:'gas'
                                 },
                                 success: function(response) {
                                         ans_values = $.parseJSON(response)
