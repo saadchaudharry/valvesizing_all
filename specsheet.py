@@ -20,7 +20,7 @@ def getDBElementWithId(table_name, id):
     
 
 
-def createcvOpening_gas(itemCase_list,fluid_types,items):
+def createcvOpening_gas(itemCase_list,fluid_types,items,header_details):
     
 
     data = [10,20,30,40,50,60,70,80,90,100]
@@ -297,11 +297,18 @@ def createcvOpening_gas(itemCase_list,fluid_types,items):
 
 
 
-            # worksheet.write('D3', str(case_data[i][0][-1]), cell_format1)
-            # worksheet.write('C9', f"{str(case_data[i][0][16])}/{other[i][30]}")
-            # worksheet.write('J3', str(case_data[i][0][22]), cell_format1)
-            # worksheet.write('J4', str(case_data[i][0][23]), cell_format1)
-            # worksheet.write('J6', str(case_data[i][0][14]), cell_format1)
+            worksheet.write('D3', header_details[f_cnt][0], cell_format1)
+            worksheet.write('D4', header_details[f_cnt][1], cell_format1)
+            worksheet.write('D5', header_details[f_cnt][2], cell_format1)
+            worksheet.write('D6', header_details[f_cnt][3], cell_format1)
+            worksheet.write('D7', header_details[f_cnt][4], cell_format1)
+
+            
+
+
+
+           
+            # worksheet.write('J6', str(case_data[i][0][14]), cell_format1) 
             # worksheet.write('J7', str(case_data[i][0][15]), cell_format1)
             # worksheet.write('D27', f"{str(case_data[i][0][18])} {units[i][-1]}", cell_format1)
             # worksheet.write('D28', f"{str(case_data[i][0][19])} {units[i][-2]}", cell_format1)
@@ -944,6 +951,23 @@ def createcvOpening_gas(itemCase_list,fluid_types,items):
             worksheet.merge_range("J4:M4", '', cell_format)
             worksheet.merge_range("J5:M5", '', cell_format)
             worksheet.merge_range("J6:M6", '', cell_format)
+            worksheet.merge_range("J7:M7", '', cell_format)
+            worksheet.write('J3', header_details[f_cnt][5], cell_format1)
+            worksheet.write('J4', header_details[f_cnt][6], cell_format1)
+            worksheet.write('J5', header_details[f_cnt][7], cell_format1)
+            worksheet.write('J6', header_details[f_cnt][8], cell_format1)
+            worksheet.write('J7', header_details[f_cnt][9], cell_format1)
+
+            
+            worksheet.merge_range("L9:M9", '', cell_format)
+            worksheet.merge_range("L10:M10", 'Case 5', bold)
+            
+
+            worksheet.write('C8', header_details[f_cnt][10], cell_format1)
+            worksheet.write('C9', header_details[f_cnt][11], cell_format1)
+            worksheet.write('I9', header_details[f_cnt][12], cell_format1)
+            worksheet.write('L9', header_details[f_cnt][13], cell_format1)
+           
             # worksheet.merge_range("J7:M7", '', cell_format)
             worksheet.merge_range("J9:K9", 'Shutoff Pressure.', cell_format)
             worksheet.merge_range("J10:K10", 'Case 4', bold)
@@ -988,8 +1012,6 @@ def createcvOpening_gas(itemCase_list,fluid_types,items):
 
 
 
-            worksheet.merge_range("L9:M9", '', cell_format)
-            worksheet.merge_range("L10:M10", 'Case 5', bold)
             # worksheet.merge_range("L11:M11", '', cell_format)
             # worksheet.merge_range("L12:M12", '', cell_format)
             # worksheet.merge_range("L13:M13", '', cell_format)
@@ -1838,8 +1860,8 @@ def createSpecSheet(case_data, units, other, act_):
         worksheet.write('J4', str(case_data[i][0][23]), cell_format1)
         worksheet.write('J6', str(case_data[i][0][14]), cell_format1)
         worksheet.write('J7', str(case_data[i][0][15]), cell_format1)
-        worksheet.write('D27', f"{str(case_data[i][0][18])} {units[i][-1]}", cell_format1)
-        worksheet.write('D28', f"{str(case_data[i][0][19])} {units[i][-2]}", cell_format1)
+        worksheet.write('D27', f"{str(case_data[i][0][18])} {units[i][-2]}", cell_format1)
+        worksheet.write('D28', f"{str(case_data[i][0][19])} {units[i][-1]}", cell_format1)
 
         column_dict_tuple = [('E', 0), ('G', 1), ('I', 2), ('J', 3), ('L', 4)]
         len_cases = len(case_data[i])

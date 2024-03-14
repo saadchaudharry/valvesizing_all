@@ -11,7 +11,7 @@
                                                 <h6 class="sub_heading"><b>Project</b></h6>
                                                 <div class="row ml-4">
                                                     <div class="form-check">
-                                                        <input class="form-check-input" disabled type="checkbox" value="" name="" id="flexCheckDefault">
+                                                        <input class="form-check-input" disabled type="checkbox" value="datasheet" name="reportname" id="flexCheckDefault">
                                                         <label for="" class="form-check-label project_lable" for="flexCheckDefault">
                                                           Data Sheet
                                                         </label>
@@ -20,7 +20,7 @@
             
                                                 <div class="row ml-4 mt-1">
                                                     <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox" value="controlvalve"  name="controlvalve" id="flexCheckDefault">
+                                                        <input class="form-check-input" type="checkbox" value="controlvalve"  name="reportname" id="flexCheckDefault">
                                                         <label for="" class="form-check-label project_lable" for="flexCheckDefault">
                                                           Control Valve Sizing Sheet
                                                         </label>
@@ -29,7 +29,7 @@
             
                                                 <div class="row ml-4 mt-1">
                                                     <div class="form-check">
-                                                        <input class="form-check-input" disabled type="checkbox" value="" name="" id="flexCheckDefault">
+                                                        <input class="form-check-input" disabled type="checkbox" value="actuatorsizing" name="reportname" id="flexCheckDefault">
                                                         <label for="" class="form-check-label project_lable" for="flexCheckDefault">
                                                           Actuator Sizing Sheet
                                                         </label>
@@ -38,7 +38,7 @@
             
                                                 <div class="row ml-4 mt-1">
                                                     <div class="form-check">
-                                                        <input class="form-check-input" disabled type="checkbox" value=""  name=""  id="flexCheckDefault">
+                                                        <input class="form-check-input" disabled type="checkbox" value="projectnotes"  name="reportname"  id="flexCheckDefault">
                                                         <label for=""  class="form-check-label project_lable" for="flexCheckDefault">
                                                           Project Notes
                                                         </label>
@@ -47,7 +47,7 @@
             
                                                 <div class="row ml-4 mt-1">
                                                     <div class="form-check">
-                                                        <input class="form-check-input" disabled type="checkbox" value=""  name=""  id="flexCheckDefault">
+                                                        <input class="form-check-input" disabled type="checkbox" value="projectsummary"  name="reportname"  id="flexCheckDefault">
                                                         <label for="" class="form-check-label project_lable" for="flexCheckDefault">
                                                           Project Summary
                                                         </label>
@@ -56,7 +56,7 @@
             
                                                 <div class="row ml-4 mt-1">
                                                     <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox" value="cvplot"  name="cvplot" >
+                                                        <input class="form-check-input" type="checkbox" value="cvplot"  name="reportname" >
                                                         <label for="" class="form-check-label project_lable" for="flexCheckDefault">
                                                           CV Plot
                                                         </label>
@@ -65,7 +65,7 @@
             
                                                 <div class="row ml-4 mt-1">
                                                     <div class="form-check">
-                                                        <input class="form-check-input" disabled type="checkbox" value=""  name=""  id="flexCheckDefault">
+                                                        <input class="form-check-input" disabled type="checkbox" value="gad"  name="reportname"  id="flexCheckDefault">
                                                         <label for="" class="form-check-label project_lable" for="flexCheckDefault">
                                                           GA Drawing
                                                         </label>
@@ -135,28 +135,7 @@
                                    
                                     $('.checkbox_item').prop('checked', $(this).prop('checked'));
                                 });
-                                $('#submitBtn').on('click',function(){
-                                    event.preventDefault();
-                                    
-                                    var selectedValues = [];
-                                  
-                                    $('.checkbox_item:checked').each(function() {
-                                        
-                                        selectedValues.push($(this).val());
-                                    });
-                                    console.log(selectedValues)
-
-                                    for (var i = 0; i < selectedValues.length; i++) {
-                                            $('<input>').attr({
-                                                type: 'hidden',
-                                                name: 'selectedValues[]', 
-                                                value: selectedValues[i]
-                                            }).appendTo('#itemForm');
-                                    }
-                                        
-                                       
-                                    $('#itemForm').submit();
-                                })
+                            
 
                             });
                         </script>
