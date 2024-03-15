@@ -105,9 +105,9 @@
                                     <input type="number" value="{{act.availableAirSupplyMin}}" class="form-control-sm-sm actuator_input1" required name="availableAirSupplyMin">
                                 </div>
                                 <div class="col-3">
-                                    <select class="form-control-sm-sm actuator_select1" name="airUnit">
+                                    <select class="form-control-sm-sm actuator_select1" name="availableAirSupplyMaxUnit">
                                         {% for presunit in metadata['units_dict']['pressure'] %}
-                                                {% if presunit.name == item.project.pressureUnit %}
+                                                {% if presunit.name == act.availableAirSupplyMaxUnit %}
                                                 <option value="{{presunit.id}}" selected>{{presunit.name}}</option>
                                                 {% else %}
                                                 <option value="{{presunit.name}}" >{{presunit.name}}</option>
@@ -127,9 +127,9 @@
                                     <input type="number" value="{{act.availableAirSupplyMax}}" class="form-control-sm-sm actuator_input1" required name="availableAirSupplyMax">
                                 </div>
                                 <div class="col-3">
-                                    <select class="actuator_select1 form-control-sm-sm" name="set pressure">
+                                    <select class="actuator_select1 form-control-sm-sm" name="setPressureUnit">
                                         {% for presunit in metadata['units_dict']['pressure'] %}
-                                                {% if presunit.name == item.project.pressureUnit %}
+                                                {% if presunit.name == act.setPressureUnit %}
                                                 <option value="{{presunit.id}}" selected>{{presunit.name}}</option>
                                                 {% else %}
                                                 <option value="{{presunit.name}}" >{{presunit.name}}</option>
@@ -145,10 +145,10 @@
                                     <label for="shutoffDelP">Shut Off Pressure</label>
                                 </div>
                                 <div class="col-3">
-                                    <input type="text" value="{{valve.shutOffDelP}}"  class="form-control-sm-sm actuator_input1" name="shutoffDelP">
+                                    <input type="text" readonly value="{{valve.shutOffDelP}}"  class="form-control-sm-sm actuator_input1" name="shutoffDelP">
                                 </div>
                                 <div class="col-3">
-                                    <input type="text" value="{{valve.shutOffDelPUnit}}" readonly class="form-control-sm-sm actuator_input" name="shutoffDelP">
+                                    <input type="text" value="{{valve.shutOffDelPUnit}}" readonly class="form-control-sm-sm actuator_input" name="shutoffDelPUnit">
                                 </div>
                             </div>
                         </div>
@@ -226,7 +226,7 @@
                                             <p class="sizingp" name="">Packing Friction</p>
                                         </div>
                                         <div class="row sizingtableleft">
-                                            <p class="sizingp" name="">Seat Load Force</p>
+                                            <p class="sizingp" name="">Seat Load Factor</p>
                                         </div>
                                         <div class="row sizingtableleft">
                                             <p class="sizingp" name="">P1</p>
@@ -252,85 +252,110 @@
                                             <p class="sizingp">Unit</p>
                                         </div>
                                         <div class="row sizingtable">
-                                            <select name="" class="sliding_select">
-                                                <option value="{{item.project.lengthUnit}}">{{item.project.lengthUnit}}</option>
+                                            <select name="valveSizeUnit" class="sliding_select">
+                                                {% for length in metadata['units_dict']['length'] %}
+                                                    <option value="{{length.id}}" {% if act_case %} {% if act_case.valveSizeUnit %} {% if act_case.valveSizeUnit == length.name %} selected {% endif %} {% endif %} {% endif %}>{{length.name}}</option>
+                                                {% endfor %}
                                             </select>
                                         </div>
                                         <div class="row sizingtable">
-                                            <select name="" class="form-control-sm-sm sliding_select"
+                                            <select name="seatDiaUnit" class="form-control-sm-sm sliding_select"
                                                 >
-                                                <option value="{{item.project.lengthUnit}}">{{item.project.lengthUnit}}</option>
+                                                {% for length in metadata['units_dict']['length'] %}
+                                                    <option value="{{length.id}}" {% if act_case %} {% if act_case.seatDiaUnit %} {% if act_case.seatDiaUnit == length.name %} selected {% endif %} {% endif %} {% endif %}>{{length.name}}</option>
+                                                {% endfor %}
+                                                </select>
+                                        </div>
+                                        <div class="row sizingtable">
+                                            <select name="unbalanceAreaUnit" class="form-control-sm-sm sliding_select"
+                                                >
+                                                {% for length in metadata['units_dict']['area'] %}
+                                                    <option value="{{length.id}}" {% if act_case %} {% if act_case.unbalanceAreaUnit %} {% if act_case.unbalanceAreaUnit == length.id %} selected {% endif %} {% endif %} {% endif %}>{{length.name}}</option>
+                                                {% endfor %}
                                             </select>
                                         </div>
                                         <div class="row sizingtable">
-                                            <select name="" class="form-control-sm-sm sliding_select"
+                                            <select name="stemDiaUnit" class="form-control-sm-sm sliding_select"
                                                 >
-                                                <option value="{{item.project.lengthUnit}}²">{{item.project.lengthUnit}}²</option>
-                                                <option>inch²</option>
+                                                {% for length in metadata['units_dict']['length'] %}
+                                                    <option value="{{length.id}}" {% if act_case %} {% if act_case.stemDiaUnit %} {% if act_case.stemDiaUnit == length.name %} selected {% endif %} {% endif %} {% endif %}>{{length.name}}</option>
+                                                {% endfor %}
                                             </select>
                                         </div>
                                         <div class="row sizingtable">
-                                            <select name="" class="form-control-sm-sm sliding_select"
+                                            <select name="plugDiaUnit" class="form-control-sm-sm sliding_select"
                                                 >
-                                                <option value="{{item.project.lengthUnit}}">{{item.project.lengthUnit}}</option>
+                                                {% for length in metadata['units_dict']['length'] %}
+                                                    <option value="{{length.id}}" {% if act_case %} {% if act_case.plugDiaUnit %} {% if act_case.plugDiaUnit == length.name %} selected {% endif %} {% endif %} {% endif %}>{{length.name}}</option>
+                                                {% endfor %}
                                             </select>
                                         </div>
                                         <div class="row sizingtable">
-                                            <select name="" class="form-control-sm-sm sliding_select"
+                                            <select name="valveTravelUnit" class="form-control-sm-sm sliding_select"
                                                 >
-                                                <option value="{{item.project.lengthUnit}}">{{item.project.lengthUnit}}</option>
-                                            </select>
-                                        </div>
-                                        <div class="row sizingtable">
-                                            <select name="" class="form-control-sm-sm sliding_select"
-                                                >
-                                                <option value="{{item.project.lengthUnit}}">{{item.project.lengthUnit}}</option>
+                                                {% for length in metadata['units_dict']['length'] %}
+                                                    <option value="{{length.id}}" {% if act_case %} {% if act_case.valveTravelUnit %} {% if act_case.valveTravelUnit == length.name %} selected {% endif %} {% endif %} {% endif %}>{{length.name}}</option>
+                                                {% endfor %}
                                             </select>
                                         </div>
                                        
-                                        <div class="row sizingtable"><input type="text" class="form-control-sm-sm sliding_input"
-                                              name=""  ></div>
                                         <div class="row sizingtable">
-                                            <select id="" class="form-control-sm-sm sliding_select" name=""
+                                              <select name="packingFrictionUnit" class="form-control-sm-sm sliding_select"
                                                 >
-                                                <option>lbf</option>
-                                                <option>mm</option>
+                                                {% for length in metadata['units_dict']['force'] %}
+                                                    <option value="{{length.id}}" {% if act_case %} {% if act_case.packingFrictionUnit %} {% if act_case.packingFrictionUnit == length.name %} selected {% endif %} {% endif %} {% endif %}>{{length.name}}</option>
+                                                {% endfor %}
+                                            </select>
+                                            </div>
+                                        <div class="row sizingtable">
+                                        </div>
+                                        <div class="row sizingtable">
+                                            <select name="inletPressureUnit" class="form-control-sm-sm sliding_select" name=""
+                                                >
+                                                {% for length in metadata['units_dict']['pressure'] %}
+                                                    <option value="{{length.id}}" {% if act_case %} {% if act_case.inletPressureUnit %} {% if act_case.inletPressureUnit == length.name %} selected {% endif %} {% endif %} {% endif %}>{{length.name}}</option>
+                                                {% endfor %}
                                             </select>
                                         </div>
                                         <div class="row sizingtable">
-                                            <select id="" class="form-control-sm-sm sliding_select" name=""
+                                            <select name="outletPressureUnit" class="form-control-sm-sm sliding_select" name=""
                                                 >
-                                                <option value="{{item.project.pressureUnit}}">{{item.project.pressureUnit}}</option>
+                                                {% for length in metadata['units_dict']['pressure'] %}
+                                                    <option value="{{length.id}}" {% if act_case %} {% if act_case.outletPressureUnit %} {% if act_case.outletPressureUnit == length.name %} selected {% endif %} {% endif %} {% endif %}>{{length.name}}</option>
+                                                {% endfor %}
                                             </select>
                                         </div>
                                         <div class="row sizingtable">
-                                            <select id="" class="form-control-sm-sm sliding_select" name=""
+                                            <!-- <select name="delPShutoffUnit" class="form-control-sm-sm sliding_select" name=""
                                                 >
-                                                <option value="{{item.project.pressureUnit}}">{{item.project.pressureUnit}}</option>
+                                                {% for length in metadata['units_dict']['delPressure'] %}
+                                                    <option value="{{length.id}}" {% if act_case %} {% if act_case.delPShutoffUnit %} {% if act_case.delPShutoffUnit == length.name %} selected  {% endif %} {% endif %} {% endif %}>{{length.name}}</option>
+                                                {% endfor %}
+                                            </select> -->
+                                            <input type="text" class="form-control-sm-sm sliding_input" readonly value="{{valve.shutOffDelPUnit}}">
+                                        </div>
+                                        <div class="row sizingtable">
+                                            <select name="unbalForceOpenUnit" class="form-control-sm-sm sliding_select" name=""
+                                                >
+                                                {% for length in metadata['units_dict']['force'] %}
+                                                    <option value="{{length.id}}" {% if act_case %} {% if act_case.unbalForceOpenUnit %} {% if act_case.unbalForceOpenUnit == length.name %} selected {% endif %} {% endif %} {% endif %}>{{length.name}}</option>
+                                                {% endfor %}
                                             </select>
                                         </div>
                                         <div class="row sizingtable">
-                                            <select id="" class="form-control-sm-sm sliding_select" name=""
+                                            <select name="negativeGradientUnit" class="form-control-sm-sm sliding_select" name=""
                                                 >
-                                                <option value="{{item.project.pressureUnit}}">{{item.project.pressureUnit}}</option>
+                                                {% for length in metadata['units_dict']['length'] %}
+                                                    <option value="{{length.id}}" {% if act_case %} {% if act_case.negativeGradientUnit %} {% if act_case.negativeGradientUnit == length.name %} selected {% endif %} {% endif %} {% endif %}>{{length.name}}</option>
+                                                {% endfor %}
                                             </select>
                                         </div>
                                         <div class="row sizingtable">
-                                            <select id="" class="form-control-sm-sm sliding_select" name=""
+                                               <select name="delPFlowingUnit" class="form-control-sm-sm sliding_select" name=""
                                                 >
-                                                <option value="{{item.project.pressureUnit}}">{{item.project.pressureUnit}}</option>
-                                            </select>
-                                        </div>
-                                        <div class="row sizingtable">
-                                            <select id="" class="form-control-sm-sm sliding_select" name=""
-                                                >
-                                                <option value="{{item.project.pressureUnit}}">{{item.project.pressureUnit}}</option>
-                                            </select>
-                                        </div>
-                                        <div class="row sizingtable">
-                                            <select id="" class="form-control-sm-sm sliding_select" name=""
-                                               >
-                                               <option value="{{item.project.pressureUnit}}">{{item.project.pressureUnit}}</option>
+                                                {% for length in metadata['units_dict']['delPressure'] %}
+                                                    <option value="{{length.id}}" {% if act_case %} {% if act_case.delPFlowingUnit %} {% if act_case.delPFlowingUnit == length.name %} selected {% endif %} {% endif %} {% endif %}>{{length.name}}</option>
+                                                {% endfor %}
                                             </select>
                                         </div>
 
@@ -339,17 +364,17 @@
                                         <div class="row sizingtableleft">
                                             <p class="sizingp">Values</p>
                                         </div>
-                                        <div class="row sizingtable"><input type="text" required name="valveSize" value="{{cases[0].valveSize}}" class="form-control-sm-sm sliding_input"></div>
-                                        <div class="row sizingtable"><input type="text" required name="seatDia" value="{{cv_element.seatBore}}" class="form-control-sm-sm sliding_input"></div>
+                                        <div class="row sizingtable"><input type="text" required name="valveSize" {% if cases %} value="{{cases[0].valveSize}}"{% else %} value="{{act_case.valveSize}}" {% endif %}class="form-control-sm-sm sliding_input"></div>
+                                        <div class="row sizingtable"><input type="text" required name="seatDia" {% if act_case.seatDia %} value="{{act_case.seatDia}}"  {% else %} value="{{cv_element.seatBore}}" {% endif %} class="form-control-sm-sm sliding_input"></div>
+                                        <div class="row sizingtable"><input type="text" required name="ua" value="{{act_case.unbalanceArea}}" class="form-control-sm-sm sliding_input"></div>
+                                        <div class="row sizingtable"><input type="text" required name="stemDia" value="{{act_case.stemDia}}" class="form-control-sm-sm sliding_input"></div>
+                                        <div class="row sizingtable"><input type="text" required name="plugDia" value="{{act_case.plugDia}}" class="form-control-sm-sm sliding_input"></div>
+                                        <div class="row sizingtable"><input type="text" required name="valveTravel" value="{{act_case.valveTravel}}" value="" class="form-control-sm-sm sliding_input"></div>
                                         <div class="row sizingtable"><input type="text" required name="" class="form-control-sm-sm sliding_input"></div>
                                         <div class="row sizingtable"><input type="text" required name="" class="form-control-sm-sm sliding_input"></div>
-                                        <div class="row sizingtable"><input type="text" required name="" class="form-control-sm-sm sliding_input"></div>
-                                        <div class="row sizingtable"><input type="text" required name="travel" value="{{cv_element.travel}}" class="form-control-sm-sm sliding_input"></div>
-                                        <div class="row sizingtable"><input type="text" required name="" class="form-control-sm-sm sliding_input"></div>
-                                        <div class="row sizingtable"><input type="text" required name="" class="form-control-sm-sm sliding_input"></div>
-                                        <div class="row sizingtable"><input type="text" required name="iPressure" class="form-control-sm-sm sliding_input"></div>
-                                        <div class="row sizingtable"><input type="text" required name="oPressure" class="form-control-sm-sm sliding_input"></div>
-                                        <div class="row sizingtable"><input type="text" required name="shutOffDelP" value="{{valve.shutOffDelP}}" class="form-control-sm-sm sliding_input"></div>
+                                        <div class="row sizingtable"><input type="text" required name="iPressure" value="{{act_case.iPressure}}" class="form-control-sm-sm sliding_input"></div>
+                                        <div class="row sizingtable"><input type="text" required name="oPressure"  value="{{act_case.oPressure}}" class="form-control-sm-sm sliding_input"></div>
+                                        <div class="row sizingtable"><input type="text" readonly required name="shutOffDelP" value="{{valve.shutOffDelP}}" class="form-control-sm-sm sliding_input"></div>
                                         <div class="row sizingtable"><input type="text" name="" class="form-control-sm-sm sliding_input"></div>
                                         <div class="row sizingtable"><input type="text" name="" class="form-control-sm-sm sliding_input"></div>
                                         <div class="row sizingtable"><input type="text" name="" class="form-control-sm-sm sliding_input"></div>
@@ -357,7 +382,7 @@
                                 </div>
                                 <div class="button mt-3 ml-3">
                                     <div class="row">
-                                        <input type="submit" class="btn btn-info input_btn1" name="submit" value="Calculate">
+                                        <input type="submit" class="btn btn-info input_btn1" name="submit1" value="Calculate">
                                         <!-- <button type="button" class="btn btn-info input_btn1">Calculate</button> -->
                                         <a href="Selectacuator(rotary).html"><button type="button" class="btn btn-info ml-3 input_btn2">Select Actuator</button></a>
                                     </div>

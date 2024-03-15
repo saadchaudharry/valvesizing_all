@@ -98,6 +98,8 @@ flowrate_unit_list = [{'id': 'm3/hr', 'name': 'm3/hr'}, {'id': 'scfh', 'name': '
                           {'id': 'gpm', 'name': 'gpm'},
                           {'id': 'lb/hr', 'name': 'lb/hr'}, {'id': 'kg/hr', 'name': 'kg/hr'}]
 
+area_unit_list = [{'id': 'inch2', 'name': 'inch²'}, {'id': 'mm2', 'name': 'mm²'}]
+
 del_p_unit_list = [{'id': 'bar', 'name': 'bar'},
                           {'id': 'kPa', 'name': 'kPa'},
                           {'id': 'MPa', 'name': 'MPa'}, 
@@ -112,11 +114,16 @@ del_p_unit_list = [{'id': 'bar', 'name': 'bar'},
                           {'id': 'atm', 'name': 'atm'}, 
                           {'id': 'torr', 'name': 'torr'}, ]
 
+force_unit_list = [{'id': 'lbf', 'name': 'lbf'}, {'id': 'kgf', 'name': 'kgf'}, {'id': 'N', 'name': 'N'}]
+
 pipe_schedule = ['std', 10, 20, 30, 40, 80, 120, 160, 'xs', 'xxs']
 
 pipe_shedule_list = [{"id": item, "name": item} for item in pipe_schedule]
 
-units_dict = {"pressure": pressure_unit_list, "temperature": temperature_unit_list, "flowrate": flowrate_unit_list, "length": length_unit_list, "delPressure": del_p_unit_list, "pipe_schedule": pipe_shedule_list}
+units_dict = {"pressure": pressure_unit_list, "temperature": temperature_unit_list, 
+              "flowrate": flowrate_unit_list, "length": length_unit_list, 
+              "delPressure": del_p_unit_list, "pipe_schedule": pipe_shedule_list, 
+              "area": area_unit_list, "force": force_unit_list}
 
 # Unit Conversion Logic
 def convert_L_SI(val, unit_in, unit_out, density):
@@ -188,10 +195,13 @@ def conver_FR_SI(val, unit_in, unit_out, density):
     SI = {'m3/hr': 1, 'scfh': 1 / 35.31, 'gpm': 1 / 4.402868, 'lb/hr': 1 / (2.2 * density), 'kg/hr': 1 / density}
     return val * SI[unit_in] / SI[unit_out]
 
+def convert_A_SI(val, unit_in, unit_out, density):
+    SI = {'inch2': 1, 'mm2': 645.16}
+    return val * SI[unit_in] / SI[unit_out]
 
 def meta_convert_P_T_FR_L(prop, val, unit_in, unit_out, density):
     print(f'KLASDFF {prop},{val},{unit_in},{unit_out}')
-    properties = {"T": convert_T_SI, "P": conver_P_SI, "FR": conver_FR_SI, "L": convert_L_SI}
+    properties = {"T": convert_T_SI, "P": conver_P_SI, "FR": conver_FR_SI, "L": convert_L_SI, 'A': convert_A_SI}
     return properties[prop](val, unit_in, unit_out, density)
 
 def meta_convert_g_to_a(value, prop):
@@ -320,6 +330,7 @@ valve_force_dict = [{'key': ('contour', 'unbalanced', 'under', 'shutoff'), 'form
                     {'key': ('cage', 'balanced', 'under', 'open'), 'formula': 19},
                     {'key': ('cage', 'balanced', 'over', 'open'), 'formula': 20},
                     ]
+
 
 valve_table_keys = [
   'id',

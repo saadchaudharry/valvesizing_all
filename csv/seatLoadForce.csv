@@ -1,0 +1,212 @@
+﻿trimType_,stemDia,ANSI Class II,ANSI Class III,ANSI Class IV,ANSI Class V,ANSI Class VI
+Microspline,0.1875,20,40,40,250,40
+Microspline,0.25,20,40,40,250,40
+Microspline,0.5,20,40,40,250,40
+Contour,0.25,20,40,40,250,40
+Contour,0.375,20,40,40,250,40
+Contour,0.5,20,40,40,250,40
+Contour,0.75,20,40,40,250,40
+Contour,1,20,40,40,250,40
+Contour,1.125,20,40,40,250,40
+Contour,1.25,20,40,40,250,40
+Contour,1.5,20,40,40,250,50
+Contour,2,20,40,40,250,50
+Contour,3,20,40,40,250,50
+Contour,4,20,40,40,250,50
+Ported,0.75,20,40,40,250,40
+Ported,1,20,40,40,250,40
+Ported,1.3125,20,40,40,250,50
+Ported,1.313,20,40,40,250,50
+Ported,1.875,20,40,40,250,50
+Ported,1.93,20,40,40,250,50
+Ported,2.25,20,40,40,250,50
+Ported,2.3125,20,40,40,250,50
+Ported,2.313,20,40,40,250,50
+Ported,2.785,20,40,40,250,50
+Ported,2.875,20,40,40,250,50
+Ported,2.9,20,40,40,250,50
+Ported,3.4375,20,40,40,250,50
+Ported,3.438,20,40,40,250,50
+Ported,3.625,20,40,80,250,50
+Ported,3.6,20,40,80,250,50
+Ported,4.166,20,40,80,250,50
+Ported,4.167,20,40,80,250,50
+Ported,4.375,20,40,80,250,50
+Ported,5.375,20,40,80,250,50
+Ported,5.375,20,40,80,250,50
+Ported,5.625,20,40,80,250,50
+Ported,7,20,40,80,250,50
+Ported,8,20,40,80,250,50
+Ported,10,20,40,80,250,50
+Ported,11,20,40,80,250,50
+Ported,14.75,20,40,80,250,50
+Ported,16.25,20,40,80,250,50
+Ported,18.25,20,40,80,250,50
+Ported,19.75,20,40,80,250,50
+Ported,24,20,40,80,250,50
+Ported,26,20,40,80,250,50
+MHC,0.75,20,40,40,250,40
+MHC,1,20,40,40,250,40
+MHC,1.3125,20,40,40,250,50
+MHC,1.313,20,40,40,250,50
+MHC,2.3125,20,40,40,250,50
+MHC,3.4375,20,40,40,250,50
+MHC,4.375,20,40,80,250,50
+MHC,7,20,40,80,250,50
+MHC,8,20,40,80,250,50
+MHC,10,20,40,80,250,50
+MHC,11,20,40,80,250,50
+MHC,14.75,20,40,80,250,50
+MHC,16.25,20,40,80,250,50
+MHC,18.25,20,40,80,250,50
+MHC,19.75,20,40,80,250,50
+MHC,24,20,40,80,250,50
+MHC,26,20,40,80,250,50
+Low Noise Trim A1,0.75,20,40,40,250,40
+Low Noise Trim A1,1,20,40,40,250,40
+Low Noise Trim A1,1.313,20,40,40,250,50
+Low Noise Trim A1,1.785,20,40,40,250,50
+Low Noise Trim A1,1.875,20,40,40,250,50
+Low Noise Trim A1,2.25,20,40,40,250,50
+Low Noise Trim A1,2.313,20,40,40,250,50
+Low Noise Trim A1,2.875,20,40,40,250,50
+Low Noise Trim A1,2.9,20,40,40,250,50
+Low Noise Trim A1,3.438,20,40,40,250,50
+Low Noise Trim A1,3.625,20,40,40,250,50
+Low Noise Trim A1,3.6,20,40,40,250,50
+Low Noise Trim A1,4.166667,20,40,40,250,50
+Low Noise Trim A1,4.375,20,40,80,250,50
+Low Noise Trim A1,5.4,20,40,80,250,50
+Low Noise Trim A1,5.375,20,40,80,250,50
+Low Noise Trim A1,7,20,40,80,250,50
+Low Noise Trim A1,8,20,40,80,250,50
+Low Noise Trim A1,10,20,40,80,250,50
+Low Noise Trim A1,11,20,40,80,250,50
+Low Noise Trim A1,14.75,20,40,80,250,50
+Low Noise Trim A1,16.25,20,40,80,250,50
+Low Noise Trim A1,18.25,20,40,80,250,50
+Low Noise Trim A1,19.75,20,40,80,250,50
+Low Noise Trim A1,24,20,40,80,250,50
+Low Noise Trim A1,26,20,40,80,250,50
+Low Noise Trim A3,1.313,20,40,40,250,50
+Low Noise Trim A3,2.25,20,40,40,250,50
+Low Noise Trim A3,2.313,20,40,40,250,50
+Low Noise Trim A3,2.9,20,40,40,250,50
+Low Noise Trim A3,3.6,20,40,40,250,50
+Low Noise Trim A3,3.625,20,40,40,250,50
+Low Noise Trim A3,4.166,20,40,40,250,50
+Low Noise Trim A3,5.375,20,40,80,250,50
+Low Noise Trim A3,5.4,20,40,80,250,50
+Low Noise Trim A3,5.625,20,40,80,250,50
+Low Noise Trim A3,8,20,40,80,250,50
+Low Noise Trim A3,11,20,40,80,250,50
+Low Noise Trim A3,14.75,20,40,80,250,50
+Low Noise Trim A3,18.25,20,40,80,250,50
+Low Noise Trim B1,1.313,20,40,40,250,50
+Low Noise Trim B1,2.313,20,40,40,250,50
+Low Noise Trim B1,5.375,20,40,80,250,50
+Low Noise Trim B1,8,20,40,80,250,50
+Low Noise Trim B1,11,20,40,80,250,50
+Low Noise Trim B1,14.75,20,40,80,250,50
+Low Noise Trim B1,18.25,20,40,80,250,50
+Low Noise Trim B3,1.313,20,40,40,250,50
+Low Noise Trim B3,2.25,20,40,40,250,50
+Low Noise Trim B3,2.313,20,40,40,250,50
+Low Noise Trim B3,2.9,20,40,40,250,50
+Low Noise Trim B3,4.166667,20,40,40,250,50
+Low Noise Trim B3,5.375,20,40,80,250,50
+Low Noise Trim B3,8,20,40,80,250,50
+Low Noise Trim B3,11,20,40,80,250,50
+Low Noise Trim B3,14.75,20,40,80,250,50
+Low Noise Trim B3,18.25,20,40,80,250,50
+Low Noise Trim C1,0.75,20,40,40,250,40
+Low Noise Trim C1,1,20,40,40,250,40
+Low Noise Trim C1,1.313,20,40,40,250,50
+Low Noise Trim C1,2.313,20,40,40,250,50
+Low Noise Trim C1,5.375,20,40,80,250,50
+Low Noise Trim C1,8,20,40,80,250,50
+Low Noise Trim C1,11,20,40,80,250,50
+Low Noise Trim C1,14.75,20,40,80,250,50
+Low Noise Trim C1,18.25,20,40,80,250,50
+Low Noise Trim C3,0.75,20,40,40,250,40
+Low Noise Trim C3,1,20,40,40,250,40
+Low Noise Trim C3,1.313,20,40,40,250,50
+Low Noise Trim C3,2.25,20,40,40,250,50
+Low Noise Trim C3,2.313,20,40,40,250,50
+Low Noise Trim C3,2.9,20,40,40,250,50
+Low Noise Trim C3,3.6,20,40,40,250,50
+Low Noise Trim C3,3.625,20,40,40,250,50
+Low Noise Trim C3,5.375,20,40,80,250,50
+Low Noise Trim C3,5.4,20,40,80,250,50
+Low Noise Trim C3,8,20,40,80,250,50
+Low Noise Trim C3,11,20,40,80,250,50
+Low Noise Trim C3,14.75,20,40,80,250,50
+Low Noise Trim C3,18.25,20,40,80,250,50
+Low Noise Trim D1,0.75,20,40,40,250,40
+Low Noise Trim D1,1.313,20,40,40,250,50
+Low Noise Trim D1,2.313,20,40,40,250,50
+Low Noise Trim D1,5.375,20,40,80,250,50
+Low Noise Trim D1,8,20,40,80,250,50
+Low Noise Trim D1,11,20,40,80,250,50
+Low Noise Trim D1,14.75,20,40,80,250,50
+Low Noise Trim D1,18.25,20,40,80,250,50
+Low Noise Trim D3,0.75,20,40,40,250,40
+Low Noise Trim D3,1.313,20,40,40,250,50
+Low Noise Trim D3,1.375,20,40,40,250,50
+Low Noise Trim D3,2.25,20,40,40,250,50
+Low Noise Trim D3,2.313,20,40,40,250,50
+Low Noise Trim D3,2.875,20,40,40,250,50
+Low Noise Trim D3,4.166667,20,40,40,250,50
+Low Noise Trim D3,4.375,20,40,80,250,50
+Low Noise Trim D3,5.375,20,40,80,250,50
+Low Noise Trim D3,10,20,40,80,250,50
+Low Noise Trim D3,11,20,40,80,250,50
+Low Noise Trim D3,14.75,20,40,80,250,50
+Low Noise Trim D3,18.25,20,40,80,250,50
+Anti-Cavitation I,0.75,20,40,40,250,40
+Anti-Cavitation I,0.875,20,40,40,250,40
+Anti-Cavitation I,1,20,40,40,250,40
+Anti-Cavitation I,1.313,20,40,40,250,50
+Anti-Cavitation I,1.9375,20,40,40,250,50
+Anti-Cavitation I,2.3125,20,40,40,250,50
+Anti-Cavitation I,2.875,20,40,40,250,50
+Anti-Cavitation I,3.4375,20,40,40,250,50
+Anti-Cavitation I,3.438,20,40,40,250,50
+Anti-Cavitation I,4.375,20,40,80,250,50
+Anti-Cavitation I,7,20,40,80,250,50
+Anti-Cavitation I,8,20,40,80,250,50
+Anti-Cavitation I,10,20,40,80,250,50
+Anti-Cavitation I,11,20,40,80,250,50
+Anti-Cavitation I,14.75,20,40,80,250,50
+Anti-Cavitation I,16.25,20,40,80,250,50
+Anti-Cavitation I,18.25,20,40,80,250,50
+Anti-Cavitation I,19.75,20,40,80,250,50
+Anti-Cavitation I,24,20,40,80,250,50
+Anti-Cavitation I,26,20,40,80,250,50
+Anti-Cavitation II,0.75,20,40,40,250,40
+Anti-Cavitation II,0.875,20,40,40,250,40
+Anti-Cavitation II,1,20,40,40,250,40
+Anti-Cavitation II,1.3125,20,40,40,250,50
+Anti-Cavitation II,1.875,20,40,40,250,50
+Anti-Cavitation II,2,20,40,40,250,50
+Anti-Cavitation II,2.25,20,40,40,250,50
+Anti-Cavitation II,2.5,20,40,40,250,50
+Anti-Cavitation II,2.3125,20,40,40,250,50
+Anti-Cavitation II,2.875,20,40,40,250,50
+Anti-Cavitation II,2.9,20,40,40,250,50
+Anti-Cavitation II,3.4375,20,40,40,250,50
+Anti-Cavitation II,3.6,20,40,40,250,50
+Anti-Cavitation II,4.166667,20,40,40,250,50
+Anti-Cavitation II,4.375,20,40,80,250,50
+Anti-Cavitation II,5.25,20,40,80,250,50
+Anti-Cavitation II,5.375,20,40,80,250,50
+Anti-Cavitation II,5.4,20,40,80,250,50
+Anti-Cavitation II,7,20,40,80,250,50
+Anti-Cavitation II,8,20,40,80,250,50
+Anti-Cavitation III,1,20,40,40,250,40
+Anti-Cavitation III,1.375,20,40,40,250,40
+Anti-Cavitation III,1.875,20,40,40,250,50
+Anti-Cavitation III,2.25,20,40,40,250,50
+Anti-Cavitation III,2.875,20,40,40,250,50
+Anti-Cavitation III,4.166667,20,40,40,250,50
+Anti-Cavitation III,4.5625,20,40,80,250,50

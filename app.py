@@ -193,31 +193,36 @@ def valveForces(p1_, p2_, d1, d2, d3, ua, rating, material, leakageClass, trimty
     a3 = 0.785 * d3 * d3  # stem dia
     shutoffDelP = shutoffDelP
     with app.app_context():
-        friction_element = db.session.query(packingFriction).filter_by(stemDia=d3, pressure=rating).first()
-        print(trimtype, d1)
-        a_ = {'ptfe1': friction_element.ptfe1, 'ptfe2': friction_element.ptfe2, 'ptfer': friction_element.ptfer,
-              'graphite': friction_element.graphite}
-        print(trimtype, d1)
-        sf_element = db.session.query(seatLoadForce).filter_by(trimtype=trimtype, seatBore=d1).first()
+        friction_element = db.session.query(packingFriction).filter_by(rating=rating, packing_=material).order_by(func.abs(packingFriction.stemDia - d3)).first()
+        # print(float(friction_element.value))
+        sf_element = db.session.query(seatLoadForce).filter_by(trimType_=trimtype, leakage=leakageClass).order_by(func.abs(seatLoadForce.seatBore - d1)).first()
         # print(trimtype, d1)
         try:
-            b_ = {'six': sf_element.six, 'two': sf_element.two, 'three': sf_element.three, 'four': sf_element.four,
-                'five': sf_element.five}
-            B = float(a_[material])
-            C = math.pi * d1 * float(b_[leakageClass])
+            B = float(friction_element.value)
+            C = math.pi * d1 * float(sf_element.value)
         except AttributeError:
-            b_ = {'six': None, 'two': None, 'three': None, 'four': None,
-                'five': None}
             B = 0
             C = 0
-        # print(f"Packing friction: {B}, Seat Load Force: {C}")
+        print(f"Packing friction: {B}, Seat Load Force: {C}")
     print((trimtype, balance, flow, case))
+    # Trimtype, balance, flow logic
+    if trimtype.name in ['Contour', 'Microspline']:
+        trimtype_in = "contour"
+    else:
+        trimtype_in = "cage"
+    
+    if balance == 'Unbalanced':
+        balance_in = 'unbalanced'
+    else:
+        balance_in = 'balanced'
+
+    
     for i in valve_force_dict:
-        if i['key'] == (trimtype, balance, flow.lower(), case):
+        if i['key'] == (trimtype_in, balance_in, flow.name.lower(), case):
             num = int(i['formula'])
     print(f'num: {num}')
     if num == 1:
-        a_ = shutoffDelP * a1
+        a_ = shutoffDelP * a1 # Shutoff
         UA = a1
     elif num == 2:
         a_ = shutoffDelP * a1
@@ -232,7 +237,7 @@ def valveForces(p1_, p2_, d1, d2, d3, ua, rating, material, leakageClass, trimty
         a_ = shutoffDelP * ua
         UA = ua
     elif num == 6:
-        a_ = (shutoffDelP * a1) + B + C
+        a_ = (shutoffDelP * a1) + B + C # Shutoff+
         UA = a1
         # print(a_, p1, a1)
     elif num == 7:
@@ -250,7 +255,7 @@ def valveForces(p1_, p2_, d1, d2, d3, ua, rating, material, leakageClass, trimty
         a_ = (shutoffDelP * ua) + B + C
         UA = ua
     elif num in [11, 12]:
-        a_ = (p1 * a1) + (p2 * (a2 - a1)) - (p2 * (a2 - a3))
+        a_ = (p1 * a1) + (p2 * (a2 - a1)) - (p2 * (a2 - a3)) # Close
         print(f"eq 11 or 12 inputs: {p1}, {p2}, {a1}, {a2}, {a3}")
         UA = a2 - a1
     elif num == 13:
@@ -263,7 +268,7 @@ def valveForces(p1_, p2_, d1, d2, d3, ua, rating, material, leakageClass, trimty
         a_ = p1 * (a2 - a1) + p2 * a1 - p2 * (a2 - a3)
         UA = a2 - a1
     elif num in [16, 17, 19]:
-        a_ = (p1 * a2) - (p2 * (a2 - a3))
+        a_ = (p1 * a2) - (p2 * (a2 - a3)) # Open
         print(f"eq 16 inputs: {p1}, {p2}, {a2}, {a3}")
         UA = a2 - a1
     elif num in [18, 20]:
@@ -273,7 +278,7 @@ def valveForces(p1_, p2_, d1, d2, d3, ua, rating, material, leakageClass, trimty
         a_ = 1
         UA = a2 - a1
 
-    return_list = [round(a_, 3), UA, B, b_[leakageClass]]
+    return_list = [round(a_, 3), UA, B, sf_element.value, friction_element, sf_element, C]
 
     return return_list
 
@@ -414,6 +419,19 @@ def packing_friction_upload(data_set):
             packing_element = db.session.query(packing).filter_by(name=key_).first()
             new_packing_friction = packingFriction(stemDia=stem_dia, rating=rating_element, packing_=packing_element, value=data_[key_])
             db.session.add(new_packing_friction)
+            db.session.commit()
+
+def seat_load_force_upload(data_set):
+    data_delete(seatLoadForce)
+    key_list = getList(data_set[0])
+    print(key_list)
+    for data_ in data_set:
+        stem_dia = float(data_['stemDia'])
+        trimType_element = db.session.query(trimType).filter_by(name=data_['trimType_']).first()
+        for key_ in key_list[2:]:
+            leakage_element = db.session.query(seatLeakageClass).filter_by(name=key_).first()
+            new_seat_load = seatLoadForce(seatBore=stem_dia, trimType_=trimType_element, leakage=leakage_element, value=data_[key_])
+            db.session.add(new_seat_load)
             db.session.commit()
 
 def add_many(list_many, table_name):
@@ -768,6 +786,9 @@ def addNewItem(project, itemNumber, alternate):
     new_actuator = actuatorMaster(item=new_item)
     db.session.add(new_actuator)
     db.session.commit()
+    new_actuator_case = actuatorCaseData(actuator_=new_actuator)
+    db.session.add(new_actuator_case)
+    db.session.commit()
     new_accessories = accessoriesData(item=new_item)
     db.session.add(new_accessories)
     db.session.commit()
@@ -800,6 +821,9 @@ def addNewItemAlternate(project, itemNumber, alternate, valveElement):
         db.session.commit()
     new_actuator = actuatorMaster(item=new_item)
     db.session.add(new_actuator)
+    db.session.commit()
+    new_actuator_case = actuatorCaseData(actuator_=new_actuator)
+    db.session.add(new_actuator_case)
     db.session.commit()
     new_accessories = accessoriesData(item=new_item)
     db.session.add(new_accessories)
@@ -4572,7 +4596,7 @@ def getCVGas(fl_unit_form, specificGravity, sg_choice, inletPressure_form, iPres
              flowrate_form, inletTemp_form, iTempUnit_form, ratedCV, inletPipeDia_form, iPipeUnit_form,
              outletPipeDia_form, oPipeUnit_form, xt_fl, z_factor,
              sg_vale):
-    print(f'CVGASSSSSSVV {''.join(str(iPresUnit_form.split('  ')[0]))}')
+    # print(f'CVGASSSSSSVV {''.join(str(iPresUnit_form.split('  ')[0]))}')
     fl_unit = fl_unit_form
     if fl_unit in ['m3/hr', 'scfh', 'gpm']:
         fl_bin = 1
@@ -4872,7 +4896,7 @@ def valveSizing(proj_id, item_id):
                 # logic to choose which formula to use - using units of flowrate and sg
 
                 len_cases_input = len(a['inletPressure'])
-                print(f'KKKKKKKKKKKSSSSS {a['flowrate'][0]}')
+                # print(f'KKKKKKKKKKKSSSSS {a['flowrate'][0]}')
                 
                 try:
                     for k in range(len_cases_input):
@@ -5514,14 +5538,26 @@ def actuatorSizing(proj_id, item_id):
 @app.route('/sliding-stem/proj-<proj_id>/item-<item_id>', methods=['GET', 'POST'])
 def slidingStem(proj_id, item_id):
     item_element = getDBElementWithId(itemMaster, int(item_id))
-    cases = db.session.query(caseMaster).filter_by(item=item_element).all()
-    cv_element = db.session.query(cvValues).filter_by(cv=cases[0].cv).first() 
+    try:
+        cases = db.session.query(caseMaster).filter_by(item=item_element).all()
+        cv_element = db.session.query(cvValues).filter_by(cv=cases[0].cv).first()
+        selected_sized_valve_element = db.session.query(cvTable).filter_by(id=cases[0].cv.id).first()
+        balancing_element = db.session.query(balancing).filter_by(id=selected_sized_valve_element.balancingId).first() 
+        print(len(cases))
+        print(cv_element.seatBore)
+    except:
+        cv_element = None
+        selected_sized_valve_element = None
+        balancing_element = None
 
-    print(cv_element.seatBore)
     act_element = db.session.query(actuatorMaster).filter_by(item=item_element).first()
-    print(len(cases))
-    selected_sized_valve_element = db.session.query(cvTable).filter_by(id=cases[0].cv.id).first()
-    balancing_element = db.session.query(balancing).filter_by(id=selected_sized_valve_element.balancingId).first()
+    act_case_data = db.session.query(actuatorCaseData).filter_by(actuator_=act_element).first()
+    if not act_case_data:
+        new_act_case_data = actuatorCaseData(actuator_=act_element)
+        db.session.add(new_act_case_data)
+        db.session.commit()
+        act_case_data = new_act_case_data
+
     valve_element = db.session.query(valveDetailsMaster).filter_by(item=item_element).first()
     trimType_element = db.session.query(trimType).filter_by(id=valve_element.trimTypeId).first()
     fl_d_element = db.session.query(flowDirection).filter_by(id=valve_element.flowDirectionId).first()
@@ -5536,6 +5572,8 @@ def slidingStem(proj_id, item_id):
         actuator_input_dict['orientation'] = [request.form.get('orientation')]
         actuator_input_dict['availableAirSupplyMin'] = [request.form.get('availableAirSupplyMin')]
         actuator_input_dict['availableAirSupplyMax'] = [request.form.get('availableAirSupplyMax')]
+        actuator_input_dict['availableAirSupplyMaxUnit'] = [request.form.get('availableAirSupplyMaxUnit')]
+        actuator_input_dict['setPressureUnit'] = [request.form.get('setPressureUnit')]
         # print(actuator_input_dict)
         if request.form.get('sliding'):
             print('working')
@@ -5548,50 +5586,123 @@ def slidingStem(proj_id, item_id):
             act_element.update(actuator_input_dict, act_element.id)
             return redirect(url_for('strokeTime', item_id=item_id, proj_id=proj_id))
         elif request.form.get('submit1'):
-            plugDia = float(request.form.get('plugDia'))
-            stemDia = float(request.form.get('stemDia'))
-            ua = float(request.form.get('ua'))
-            seatDia = float(request.form.get('seatDia'))
+            # print('req sbumit 1 working')
+            actuator_input_dict_2 = {}
+            actuator_input_dict_2['actuatorType'] = [request.form.get('actType')]
+            actuator_input_dict_2['springAction'] = [request.form.get('failAction')]
+            actuator_input_dict_2['handWheel'] = [request.form.get('mount')]
+            actuator_input_dict_2['adjustableTravelStop'] = [request.form.get('travel')]
+            actuator_input_dict_2['orientation'] = [request.form.get('orientation')]
+            actuator_input_dict_2['availableAirSupplyMin'] = [request.form.get('availableAirSupplyMin')]
+            actuator_input_dict_2['availableAirSupplyMax'] = [request.form.get('availableAirSupplyMax')]
+            actuator_input_dict_2['availableAirSupplyMaxUnit'] = [request.form.get('availableAirSupplyMaxUnit')]
+            actuator_input_dict_2['setPressureUnit'] = [request.form.get('setPressureUnit')]
+            act_element.update(actuator_input_dict, act_element.id)
+            data = request.form.to_dict(flat=False)
+            a = jsonify(data).json
+            print(a)
+
+            # Inputs conversion
+            valveSize = meta_convert_P_T_FR_L('L', float(a['valveSize'][0]), a['valveSizeUnit'][0],
+                                        'inch', 1.0 * 1000)
+            plugDia = meta_convert_P_T_FR_L('L', float(a['plugDia'][0]), a['plugDiaUnit'][0],
+                                        'inch', 1.0 * 1000)
+            stemDia = meta_convert_P_T_FR_L('L', float(a['stemDia'][0]), a['stemDiaUnit'][0],
+                                        'inch', 1.0 * 1000)
+            ua =  meta_convert_P_T_FR_L('A', float(a['ua'][0]), a['unbalanceAreaUnit'][0],
+                                        'inch2', 1.0 * 1000)
+            seatDia = meta_convert_P_T_FR_L('L', float(a['seatDia'][0]), a['seatDiaUnit'][0],
+                                        'inch', 1.0 * 1000)
             balance = request.form.get('balance')
-            stroke = request.form.get('stroke')
-            iPressure = float(request.form.get('iPressure'))
-            oPressure = float(request.form.get('oPressure'))
-            shutOffDelP = float(request.form.get('shutOffDelP'))
-            valve_forces = valveForces(iPressure, oPressure, seatDia, plugDia, stemDia, ua, valve_element.rating.name, 'ptfe1',
-                                        valve_element.seatLeakageClass__.name, valve_element.trimType__.name, balance, valve_element.flowDirection__.name, 'shutoff+', shutOffDelP)
-            vf_shutoff = valveForces(iPressure, oPressure, seatDia, plugDia, stemDia, ua, valve_element.rating.name, 'ptfe1',
-                                        valve_element.seatLeakageClass__.name, valve_element.trimType__.name, balance, valve_element.flowDirection__.name, 'shutoff', shutOffDelP)
-            vf_open = valveForces(iPressure, oPressure, seatDia, plugDia, stemDia, ua, valve_element.rating.name, 'ptfe1',
-                                        valve_element.seatLeakageClass__.name, valve_element.trimType__.name, balance, valve_element.flowDirection__.name, 'open', shutOffDelP)
-            vf_close = valveForces(iPressure, oPressure, seatDia, plugDia, stemDia, ua, valve_element.rating.name, 'ptfe1',
-                                        valve_element.seatLeakageClass__.name, valve_element.trimType__.name, balance, valve_element.flowDirection__.name, 'close', shutOffDelP)
+            stroke = meta_convert_P_T_FR_L('L', float(a['valveTravel'][0]), a['valveTravelUnit'][0],
+                                        'inch', 1.0 * 1000)
+            iPressure = meta_convert_P_T_FR_L('P', float(a['iPressure'][0]), a['inletPressureUnit'][0],
+                                        'psia (a)', 1.0 * 1000)
+            oPressure = meta_convert_P_T_FR_L('P', float(a['oPressure'][0]), a['outletPressureUnit'][0],
+                                        'psia (a)', 1.0 * 1000)
+            shutOffDelP = meta_convert_P_T_FR_L('P', float(a['shutOffDelP'][0]), a['shutoffDelPUnit'][0],
+                                        'psia (a)', 1.0 * 1000)
+
+            # Call case data update function here.
+            act_case_data_json = {}
+            act_case_data_json['valveSize'] = a["valveSize"]
+            act_case_data_json['plugDia'] = a["plugDia"]
+            act_case_data_json['stemDia'] = a["stemDia"]
+            act_case_data_json['unbalanceArea'] = a["ua"]
+            act_case_data_json['seatDia'] = a["seatDia"]
+            act_case_data_json['iPressure'] = a["iPressure"]
+            act_case_data_json['oPressure'] = a["oPressure"]
+            act_case_data_json['valveTravel'] = a["valveTravel"]
+
+            act_case_data_json['valveSizeUnit'] = a['valveSizeUnit']
+            act_case_data_json['seatDiaUnit'] = a['seatDiaUnit']
+            act_case_data_json['unbalanceAreaUnit'] = a['unbalanceAreaUnit']
+            act_case_data_json['stemDiaUnit'] = a['stemDiaUnit']
+            act_case_data_json['plugDiaUnit'] = a['plugDiaUnit']
+            act_case_data_json['valveTravelUnit'] = a['valveTravelUnit']
+            act_case_data_json['packingFrictionUnit'] = a['packingFrictionUnit']
+            act_case_data_json['inletPressureUnit'] = a['inletPressureUnit']
+            act_case_data_json['outletPressureUnit'] = a['outletPressureUnit']
+            act_case_data_json['unbalForceOpenUnit'] = a['unbalForceOpenUnit']
+            act_case_data_json['negativeGradientUnit'] = a['negativeGradientUnit']
+            act_case_data_json['delPFlowingUnit'] = a['delPFlowingUnit']
+            print(act_case_data_json)
+
+            act_case_data.update(act_case_data_json, act_case_data.id)
+
+            # Calculations
+            valve_forces = valveForces(iPressure, oPressure, seatDia, plugDia, stemDia, ua, valve_element.rating, valve_element.packing__,
+                                        valve_element.seatLeakageClass__, valve_element.trimType__, balance, valve_element.flowDirection__, 'shutoff+', shutOffDelP)
+            vf_shutoff = valveForces(iPressure, oPressure, seatDia, plugDia, stemDia, ua, valve_element.rating, valve_element.packing__,
+                                        valve_element.seatLeakageClass__, valve_element.trimType__, balance, valve_element.flowDirection__, 'shutoff', shutOffDelP)
+            vf_open = valveForces(iPressure, oPressure, seatDia, plugDia, stemDia, ua, valve_element.rating, valve_element.packing__,
+                                        valve_element.seatLeakageClass__, valve_element.trimType__, balance, valve_element.flowDirection__, 'open', shutOffDelP)
+            vf_close = valveForces(iPressure, oPressure, seatDia, plugDia, stemDia, ua, valve_element.rating, valve_element.packing__,
+                                        valve_element.seatLeakageClass__, valve_element.trimType__, balance, valve_element.flowDirection__, 'close', shutOffDelP)
             v_shutoff, v_shutoff_plus, v_open, v_close = round(vf_shutoff[0]), round(valve_forces[0]), round(
                 vf_open[0]), round(vf_close[0])
 
             packing_fric = valve_forces[2]
             seatload_fact = valve_forces[3]
+
+            packing_friction = valve_forces[4]
+            seat_load_force = valve_forces[5]
+            print(v_shutoff)
             # store data in v_details
-            valve_element.valve_size = f"{balance}#{stroke}#{round(seatDia, 3)}#{plugDia}#{stemDia}#{ua}#{v_shutoff}#{v_shutoff_plus}#{v_open}#{v_close}#{packing_fric}#{seatload_fact}"
+            # valve_element.valve_size = f"{balance}#{stroke}#{round(seatDia, 3)}#{plugDia}#{stemDia}#{ua}#{v_shutoff}#{v_shutoff_plus}#{v_open}#{v_close}#{packing_fric}#{seatload_fact}"
             db.session.commit()
             v_data = [v_shutoff, v_shutoff_plus, v_open, v_close]
-            act_case_data = db.session.query(actuatorCaseData).filter_by(actuator_=act_element).all()
-            if len(act_case_data) == 0:
-                new_act = actuatorCaseData(actuator_=act_element)
-                db.session.add(new_act)
-                db.session.commit()
+            print(v_data, packing_fric, seatload_fact)
+            act_case_data_json_result = {}
+            act_case_data_json_result['valveThrustClose'] = [v_shutoff_plus]
+            act_case_data_json_result['valveThrustOpen'] = [v_open]
+            act_case_data_json_result['shutOffForce'] = [valve_forces[6]]
+            print(act_case_data_json)
+
+            act_case_data.update(act_case_data_json_result, act_case_data.id)
+
+            act_case_data.packingF = packing_friction
+            act_case_data.seatLoad = seat_load_force
+            db.session.commit()
+            # act_case_data = db.session.query(actuatorCaseData).filter_by(actuator_=act_element).all()
+            # if len(act_case_data) == 0:
+            #     new_act = actuatorCaseData(actuator_=act_element)
+            #     db.session.add(new_act)
+            #     db.session.commit()
             
-            act_case_data_ = db.session.query(actuatorCaseData).filter_by(actuator_=act_element).first()
+            # act_case_data_ = db.session.query(actuatorCaseData).filter_by(actuator_=act_element).first()
             
             # get data again
-            data__ = [valve_element.trimType__.name, valve_element.flowDirection__.name, cases[0].valveSize, cv_element.seatBore, iPressure, oPressure, shutOffDelP,
-                        iPressure - oPressure]
+            # data__ = [valve_element.trimType__.name, valve_element.flowDirection__.name, cases[0].valveSize, cv_element.seatBore, iPressure, oPressure, shutOffDelP,
+            #             iPressure - oPressure]
+            return redirect(url_for('slidingStem', item_id=item_id, proj_id=proj_id))
         else:
             pass
     return render_template('slidingstem.html', item=getDBElementWithId(itemMaster, int(item_id)), 
                            user=current_user, metadata=metadata_, page='slidingStem', 
                            valve=valve_element, cv=selected_sized_valve_element, act=act_element, 
                            cases=cases,trimtType=trimType_element,fl_d_element=fl_d_element, 
-                           cv_element=cv_element, balancing=balancing_element)
+                           cv_element=cv_element, balancing=balancing_element, act_case=act_case_data)
 
 
 @app.route('/rotary-actuator/proj-<proj_id>/item-<item_id>', methods=['GET', 'POST'])
