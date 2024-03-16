@@ -1373,7 +1373,11 @@ class actuatorMaster(db.Model):
     orientation = Column(String(100))
     availableAirSupplyMin = Column(Float)
     availableAirSupplyMax = Column(Float)
+    availableAirSupplyMaxUnit = Column(String(20))
     travelStops = Column(String(100))
+    setPressure = Column(Float)
+    setPressureUnit = Column(String(20))
+
 
     # rel as parent
     actCase = relationship('actuatorCaseData', cascade="all,delete", back_populates='actuator_')
@@ -1451,6 +1455,12 @@ class actuatorCaseData(db.Model):
         'confirm_deleted_rows': False
     }
     id = Column(Integer, primary_key=True)
+
+    valveSize = Column(Float)
+    seatDia = Column(Float)
+    valveTravel = Column(Float)
+    iPressure = Column(Float)
+    oPressure = Column(Float)
     # sliding
     balancing = Column(String(100))
     unbalanceArea = Column(Float)
@@ -1490,6 +1500,42 @@ class actuatorCaseData(db.Model):
     mast = Column(Float)
     setPressureR = Column(Float)
     reqHandTorque = Column(Float)
+
+    
+    # Units
+    valveSizeUnit = Column(String(20))
+    seatDiaUnit = Column(String(20))
+    unbalanceAreaUnit = Column(String(20))
+    stemDiaUnit = Column(String(20))
+    plugDiaUnit = Column(String(20))
+    valveTravelUnit = Column(String(20))
+    packingFrictionUnit = Column(String(20))
+    inletPressureUnit = Column(String(20))
+    outletPressureUnit = Column(String(20))
+    delPShutoffUnit = Column(String(20))
+    unbalForceOpenUnit = Column(String(20))
+    negativeGradientUnit = Column(String(20))
+    delPFlowingUnit = Column(String(20))
+
+    # Output Units
+    valveThrustCloseUnit = Column(String(20))
+    valveThrustOpenUnit = Column(String(20))
+    shutOffForceUnit = Column(String(20))
+    stemAreaUnit = Column(String(20))
+    actuatorTravelUnit = Column(String(20))
+    effectiveAreaUnit = Column(String(20))
+    lowerBenchsetUnit = Column(String(20))
+    upperBenchSetUnit = Column(String(20))
+    springRateUnit = Column(String(20))
+    springWindupUnit = Column(String(20))
+    maximumSpringLoadUnit = Column(String(20))
+    maximumAirSupplyUnit = Column(String(20))
+    setPressureUnit = Column(String(20))
+    actuatorThrustValveCloseUnit = Column(String(20))
+    actuatorThrustValveOpenUnit = Column(String(20))
+    frictionBandUnit = Column(String(20))
+    reqHandwheelUnit = Column(String(20))
+    hwThrustUnit = Column(String(20))
 
     # rel as child
     actuatorMasterId = Column(Integer, ForeignKey('actuatorMaster.id'))

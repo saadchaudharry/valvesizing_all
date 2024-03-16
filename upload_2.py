@@ -1,6 +1,6 @@
 from datetime import datetime
 from app import cageClamp, data_upload_shaft, db, app, endConnection, endFinish, fluidProperties, gasket, industryMaster, limitSwitch, notesMaster, packing, packingType, pipeArea, positioner, pressure_temp_upload, \
-    regionMaster, fluidState, designStandard, rotaryActuatorData, seat, seatLeakageClass, shaft, slidingActuatorData, solenoid, studNut, valveArea, valveStyle, applicationMaster, \
+    regionMaster, fluidState, designStandard, rotaryActuatorData, seat, seat_load_force_upload, seatLeakageClass, shaft, slidingActuatorData, solenoid, studNut, valveArea, valveStyle, applicationMaster, \
     ratingMaster, materialMaster, data_upload, add_many, afr, balanceSeal, bonnet, bonnetType, certification, \
     cleaning, flowDirection, trimType, flowCharacter, balancing, cv_upload, data_upload_disc_seat_packing, disc, \
     departmentMaster, designationMaster, packing_friction_upload
@@ -196,7 +196,8 @@ with app.app_context():
     # add_many(getRowsFromCsvFile("csv/solenoid.csv"), solenoid)
     # pressure_temp_upload(getRowsFromCsvFile("csv/pressureTemp.csv"))
     # packing_friction_upload(getRowsFromCsvFile("csv/packing_friction.csv"))
-    add_many(getRowsFromCsvFile("csv/kcTable.csv"), kcTable)
+    # add_many(getRowsFromCsvFile("csv/kcTable.csv"), kcTable)
+    # seat_load_force_upload(getRowsFromCsvFile("csv/seatLoadForce.csv"))
     pass
 
 
