@@ -52,9 +52,10 @@ def xF(inletPressure, outletPressure, vaporPressure):
 
 # pressure differential for UVC calculation
 def deltaPC(inletPressure, outletPressure, vaporPressure, Fl):
+    print(f'b4delpc: {inletPressure},{outletPressure},{Fl},{vaporPressure}')
     a = inletPressure - outletPressure
     b = (Fl ** 2) * (inletPressure - vaporPressure)
-    # print(f"deltaPC: {min(a, b)}")
+    print(f"deltaPC: {a},{b}")
     return min(a, b)
 
 
@@ -92,8 +93,12 @@ def jetDia(Fl, Fd, C):
 
 # Vena contracta velocity
 def jetVelocity(inletPressure, outletPressure, vaporPressure, density, Fl):
-    a = (1 / Fl) * (math.sqrt(2 * deltaPC(inletPressure, outletPressure, vaporPressure, Fl) / density))
-    # print(f"jetVelocity: {a}")
+    print(f'b4jet')
+    try:
+        a = (1 / Fl) * (math.sqrt(2 * deltaPC(inletPressure, outletPressure, vaporPressure, Fl) / density))
+    except:
+        a = 1
+    print(f"jetVelocity: {a}")
     return round(a, 3)
 
 

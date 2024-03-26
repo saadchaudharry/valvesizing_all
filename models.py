@@ -7,6 +7,29 @@ from dbsetup import db
 
 # issues check
 
+
+class stemSize(db.Model):
+    __tablename__ = "stemSize"
+
+    id = Column(Integer, primary_key=True)  
+    valveSize = Column(Float)
+    stemDia = Column(String(10))
+
+class unbalanceAreaTb(db.Model):
+    __tablename__ = "unbalanceAreaTb" 
+
+    id = Column(Integer, primary_key=True)
+    seatDia = Column(Float)
+    plugDia = Column(Float)
+    Ua = Column(Float)
+
+    trimTypeId = Column(Integer, ForeignKey("trimType.id"))
+    trimType_ = relationship('trimType', back_populates='trimType_ua')
+
+    leakageClassId = Column(Integer, ForeignKey("seatLeakageClass.id"))
+    seatLeakageClass__ = relationship('seatLeakageClass', back_populates='leakage_ua')
+
+
 class Test(db.Model):
     __tablename__ = "Test"
     id = Column(Integer, primary_key=True)
@@ -653,9 +676,9 @@ class packingType(db.Model):
     }
     id = Column(Integer, primary_key=True)
     name = Column(String(300))
-
+     
     packingType_ = relationship('valveDetailsMaster', cascade="all,delete", back_populates='packingType__')
-
+    # packingT = relationship('packingFriction', cascade="all,delete", back_populates='packingType_')
     @staticmethod
     def update(new_data, id):
         # note that this method is static and
@@ -681,8 +704,10 @@ class trimType(db.Model):
 
     trimType_ = relationship('valveDetailsMaster', cascade="all,delete", back_populates='trimType__')
     trimType_c = relationship('cvTable', cascade="all,delete", back_populates='trimType_')
+    trimType_ua = relationship('unbalanceAreaTb', back_populates='trimType_')
     seatLoad = relationship('seatLoadForce', cascade="all,delete", back_populates='trimType_')
     kn = relationship("knValue", cascade="all,delete", back_populates="trimType_")
+    actuatorCase = relationship('actuatorCaseData',back_populates='trimType_')
 
     valveStyleId = Column(Integer, ForeignKey("valveStyle.id"))
     style = relationship('valveStyle', back_populates='trimtype_')
@@ -739,6 +764,8 @@ class flowDirection(db.Model):  # TODO - Paandi  ............Done
 
     flowDirection_ = relationship('valveDetailsMaster', cascade="all,delete", back_populates='flowDirection__')
     flowDirection_c = relationship('cvTable', cascade="all,delete", back_populates='flowDirection_')
+    actuatorCase = relationship('actuatorCaseData',back_populates='flowDirection_')
+    
     kn = relationship('knValue', cascade="all,delete", back_populates='flowDirection_')
 
     @staticmethod
@@ -764,7 +791,7 @@ class seatLeakageClass(db.Model):  # TODO - Paandi    ..........Done
     }
     id = Column(Integer, primary_key=True)
     name = Column(String(300))
-
+    leakage_ua = relationship('unbalanceAreaTb', back_populates='seatLeakageClass__')
     seatLeakageClass_ = relationship('valveDetailsMaster', cascade="all,delete", back_populates='seatLeakageClass__')
     seatLoad = relationship('seatLoadForce', cascade="all,delete", back_populates='leakage')
 
@@ -1014,6 +1041,7 @@ class balancing(db.Model):
     name = Column(String(300))
 
     balancing_c = relationship('cvTable', cascade="all,delete", back_populates='balancing_')
+    actuatorCase = relationship('actuatorCaseData',back_populates='balancing_')
 
     @staticmethod
     def update(new_data, id):
@@ -1475,11 +1503,21 @@ class actuatorCaseData(db.Model):
     springWindUp = Column(Float)
     maxSpringLoad = Column(Float)
     setPressure = Column(Float)
-    actThrustClose = Column(Float)
-    actThrustOpen = Column(Float)
+    sfMin = Column(Float)
+    natMin = Column(Float)
     frictionBand = Column(Float)
     reqHandwheelThrust = Column(Float)
     thrust = Column(Float)
+    act_size = Column(Float)
+    act_travel = Column(Float)
+    diaphragm_ea = Column(Float)
+    lower_benchset = Column(Float)
+    upper_benchset = Column(Float)
+    spring_rate = Column(Float)
+    airsupply_min = Column(Float) 
+    airsupply_max = Column(Float)
+    knValue = Column(Float)
+  
 
     # rotary
     bushingCoeff = Column(Float)
@@ -1537,6 +1575,19 @@ class actuatorCaseData(db.Model):
     reqHandwheelUnit = Column(String(20))
     hwThrustUnit = Column(String(20))
 
+
+    trimTypeId = Column(Integer, ForeignKey("trimType.id"))
+    trimType_ = relationship('trimType', back_populates='actuatorCase')
+
+    balancingId = Column(Integer, ForeignKey("balancing.id"))
+    balancing_ = relationship('balancing', back_populates='actuatorCase')
+
+    flowDirectionId = Column(Integer, ForeignKey("flowDirection.id"))
+    flowDirection_ = relationship('flowDirection', back_populates='actuatorCase')
+
+
+   
+
     # rel as child
     actuatorMasterId = Column(Integer, ForeignKey('actuatorMaster.id'))
     actuator_ = relationship('actuatorMaster', back_populates='actCase')
@@ -1571,6 +1622,19 @@ class actuatorCaseData(db.Model):
             print(new_data[key])
             exec("files.{0} = new_data['{0}'][0]".format(key))
         db.session.commit()
+    
+    @staticmethod
+    def delete(new_data, id):
+        # note that this method is static and
+        # you have to pass id of the object you want to update
+        keys = new_data.keys()  # new_data in your case is filenames
+        files = actuatorCaseData.query.filter_by(id=id).first()  # files is the record
+        # you want to update
+        for key in keys:
+            print(key)
+            print(new_data[key])
+            exec("files.{0} = new_data['{0}'][0]".format(key))
+        db.session.commit()
 
 
 class packingFriction(db.Model):
@@ -1589,6 +1653,9 @@ class packingFriction(db.Model):
 
     packingMaterialId = Column(Integer, ForeignKey("packing.id"))
     packing_ = relationship('packing', back_populates='packingF')
+
+    # packingTypeId = Column(Integer, ForeignKey("packingType.id"))
+    # packingType_ = relationship('packingType', back_populates='packingT')
 
     # rel as parent
     actuatorCase = relationship('actuatorCaseData', cascade="all,delete", back_populates='packingF')
@@ -2100,6 +2167,8 @@ class knValue(db.Model):
     portDia = Column(Float)
     value = Column(Float)
 
+    series = Column(String(20))
+
     # rel as child
     trimTypeId = Column(Integer, ForeignKey("trimType.id"))
     trimType_ = relationship('trimType', back_populates='kn')
@@ -2109,7 +2178,8 @@ class knValue(db.Model):
 
     flowDirId = Column(Integer, ForeignKey("flowDirection.id"))
     flowDirection_ = relationship('flowDirection', back_populates='kn')
-
+    
+    # seriesId = Column(Integer,Foreign)
 
 class OTP(db.Model):
     __tablename__ = "OTP"

@@ -144,7 +144,7 @@ def conver_P_SI(val, unit_in, unit_out, density):
         
     
 
-    print(f'INTERRVALUESGGGG {type(val)},{type(unit_out[-1])},{type(unit_out)}')
+    print(f'INTERRVALUESGGGG {val},{unit_in[-1]},{unit_out[-1]}')
     SI = {'psia': 6894.76, 'kg/cm2': 98066.5, 'pa': 1, 'kPa': 1000, 'bar': 100000, 'MPa': 1000000,
           'inh20': 0.00401865, 'mmh20': 9.80665, 'inhg': 0.0002953, 'mmhg': 133.322, 'mbar': 0.01}
     final_val = val * SI[unit_in[0]] / SI[unit_out[0]]
@@ -196,12 +196,16 @@ def conver_FR_SI(val, unit_in, unit_out, density):
     return val * SI[unit_in] / SI[unit_out]
 
 def convert_A_SI(val, unit_in, unit_out, density):
-    SI = {'inch2': 1, 'mm2': 645.16}
+    SI = {'inch2': 1, 'mm2': 1 / 645.16}
+    return val * SI[unit_in] / SI[unit_out]
+
+def convert_F_SI(val, unit_in, unit_out, density):
+    SI = {'lbf': 1, 'kgf': 1 / 0.453, 'N': 1 / 4.448}
     return val * SI[unit_in] / SI[unit_out]
 
 def meta_convert_P_T_FR_L(prop, val, unit_in, unit_out, density):
-    print(f'KLASDFF {prop},{val},{unit_in},{unit_out}')
-    properties = {"T": convert_T_SI, "P": conver_P_SI, "FR": conver_FR_SI, "L": convert_L_SI, 'A': convert_A_SI}
+    print(f'KLASDFF {prop},{type(val)},{type(unit_in)},{type(unit_out)}')
+    properties = {"T": convert_T_SI, "P": conver_P_SI, "FR": conver_FR_SI, "L": convert_L_SI, 'A': convert_A_SI, 'F':convert_F_SI}
     return properties[prop](val, unit_in, unit_out, density)
 
 def meta_convert_g_to_a(value, prop):
@@ -264,8 +268,8 @@ def getFlowCharacter(flowcharacter):
 
 actuator_type_dict = [
       {'id': 'Manual Gearbox', 'name': 'Manual Gearbox'},
-      {'id': 'Spring & Diaphragam', 'name': 'Spring & Diaphragam'},
-      {'id': 'Multi Spring & Diaphragam', 'name': 'Multi Spring & Diaphragam'},
+      {'id': 'Spring & Diaphragm', 'name': 'Spring & Diaphragm'},
+      {'id': 'Multi Spring & Diaphragm', 'name': 'Multi Spring & Diaphragm'},
       {'id': 'Piston with Spring', 'name': 'Piston with Spring'},
       {'id': 'Piston without Spring', 'name': 'Piston without Spring'},
       {'id': 'SY', 'name': 'Scotch Yoke'},

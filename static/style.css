@@ -432,10 +432,10 @@ select {
 }
 
 .selectvalve_table {
-    width: 100%;
-    overflow-y: scroll;
+    /* width: 100% !important; */
+    /* overflow-y: scroll; */
     display: block;
-    height: 80%;
+    /* height: 80%; */
     font-size: 11px;
 }
 

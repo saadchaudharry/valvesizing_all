@@ -792,6 +792,17 @@ def createcvOpening_gas(itemCase_list,fluid_types,items,header_details):
                 }
                 scatter_chart.add_series(line_series)
 
+                scatter_chart.set_y_axis({
+                    'min': cv_graph_values[0],           # Minimum X-axis value
+                    'max': cv_graph_values[-1],          # Maximum X-axis value
+                    'major_unit': cv_graph_values[0],    # Interval between major ticks
+                    'minor_unit': 1,     # Interval between minor ticks
+                    'minor_unit_type': 'num',  # Set minor unit type to number
+                    'num_font': {'size': 10},  # Font size for tick labels
+                    'name': 'Percentage Openings / Degree'  # Name of the X-axis
+                })
+            
+           
                 
          
 
@@ -805,6 +816,7 @@ def createcvOpening_gas(itemCase_list,fluid_types,items,header_details):
                     'num_font': {'size': 10},  # Font size for tick labels
                     'name': 'Percentage Openings / Degree'  # Name of the X-axis
                 })
+            
 
 
                
@@ -1990,7 +2002,7 @@ act_dict = {'v_type': 0, 'trim_type': 0, 'Balancing': 0, 'fl_direction': 'over',
 proj_details = {'customer': '', 'project': 1, 'quote': '', 'wo': '', 'sNo': '', 'tagNo': '', 'qty': 1, 'item_no': 1}
 
 
-def createActSpecSheet(act_data, proj_data):
+def createActSpecSheet():
     current_datetime = datetime.today().date().timetuple()
     str_current_datetime = str(current_datetime)
     a__ = datetime.now()
@@ -2419,68 +2431,68 @@ def createActSpecSheet(act_data, proj_data):
     worksheet.merge_range('C1:G1', "Actuator Sizing Calculation Sheet", h1)
 
     # Add data - proj details
-    worksheet.write('C4', str(proj_data['customer']), cell_format)
-    worksheet.write('C5', str(proj_data['project']), cell_format)
-    worksheet.write('G4', str(proj_data['quote']), cell_format)
-    worksheet.write('G5', str(proj_data['wo']), cell_format)
-    worksheet.write('G6', str(proj_data['sNo']), cell_format)
-    worksheet.write('G7', str(proj_data['tagNo']), cell_format)
-    worksheet.write('G8', str(proj_data['qty']), cell_format)
-    worksheet.write('G9', str(proj_data['item_no']), cell_format)
+    # worksheet.write('C4', str(proj_data['customer']), cell_format)
+    # worksheet.write('C5', str(proj_data['project']), cell_format)
+    # worksheet.write('G4', str(proj_data['quote']), cell_format)
+    # worksheet.write('G5', str(proj_data['wo']), cell_format)
+    # worksheet.write('G6', str(proj_data['sNo']), cell_format)
+    # worksheet.write('G7', str(proj_data['tagNo']), cell_format)
+    # worksheet.write('G8', str(proj_data['qty']), cell_format)
+    # worksheet.write('G9', str(proj_data['item_no']), cell_format)
 
     # Add data - actuator Data
-    worksheet.write('D14', str(act_data['v_type']), cell_format)
-    worksheet.write('D15', str(act_data['trim_type']), cell_format)
-    worksheet.write('D16', str(act_data['Balancing']), cell_format)
-    worksheet.write('D17', str(act_data['fl_direction']), cell_format)
-    worksheet.write('D18', str(act_data['v_size']), cell_format)
-    worksheet.write('C18', str(act_data['v_size_unit']), cell_format)
-    worksheet.write('D19', str(act_data['Seat_Dia']), cell_format)
-    worksheet.write('C19', str(act_data['seat_dia_unit']), cell_format)
-    worksheet.write('D20', str(act_data['unbalance_area']), cell_format)
-    worksheet.write('C20', str(act_data['unbalance_area_unit']), cell_format)
-    worksheet.write('D21', str(act_data['Stem_size']), cell_format)
-    worksheet.write('C21', str(act_data['Stem_size_unit']), cell_format)
-    worksheet.write('D22', str(act_data['Travel']), cell_format)
-    worksheet.write('C22', str(act_data['travel_unit']), cell_format)
-    worksheet.write('D23', str(act_data['Packing_Friction']), cell_format)
-    worksheet.write('C23', str(act_data['packing_friction_unit']), cell_format)
-    worksheet.write('D24', str(act_data['Seat_Load_Factor']), cell_format)
-    worksheet.write('D25', str(act_data['Additional_Factor']), cell_format)
-    worksheet.write('D26', str(act_data['P1']), cell_format)
-    worksheet.write('C26', str(act_data['p1_unit']), cell_format)
-    worksheet.write('D27', str(act_data['P2']), cell_format)
-    worksheet.write('C27', str(act_data['p2_unit']), cell_format)
-    worksheet.write('D28', str(act_data['delP_Shutoff']), cell_format)
-    worksheet.write('C28', str(act_data['delP_Shutoff_unit']), cell_format)
-    worksheet.write('D29', str(act_data['unbal_force']), cell_format)
-    worksheet.write('D30', str(act_data['Kn']), cell_format)
-    worksheet.write('D31', str(act_data['delP_flowing']), cell_format)
+    # worksheet.write('D14', str(act_data['v_type']), cell_format)
+    # worksheet.write('D15', str(act_data['trim_type']), cell_format)
+    # worksheet.write('D16', str(act_data['Balancing']), cell_format)
+    # worksheet.write('D17', str(act_data['fl_direction']), cell_format)
+    # worksheet.write('D18', str(act_data['v_size']), cell_format)
+    # worksheet.write('C18', str(act_data['v_size_unit']), cell_format)
+    # worksheet.write('D19', str(act_data['Seat_Dia']), cell_format)
+    # worksheet.write('C19', str(act_data['seat_dia_unit']), cell_format)
+    # worksheet.write('D20', str(act_data['unbalance_area']), cell_format)
+    # worksheet.write('C20', str(act_data['unbalance_area_unit']), cell_format)
+    # worksheet.write('D21', str(act_data['Stem_size']), cell_format)
+    # worksheet.write('C21', str(act_data['Stem_size_unit']), cell_format)
+    # worksheet.write('D22', str(act_data['Travel']), cell_format)
+    # worksheet.write('C22', str(act_data['travel_unit']), cell_format)
+    # worksheet.write('D23', str(act_data['Packing_Friction']), cell_format)
+    # worksheet.write('C23', str(act_data['packing_friction_unit']), cell_format)
+    # worksheet.write('D24', str(act_data['Seat_Load_Factor']), cell_format)
+    # worksheet.write('D25', str(act_data['Additional_Factor']), cell_format)
+    # worksheet.write('D26', str(act_data['P1']), cell_format)
+    # worksheet.write('C26', str(act_data['p1_unit']), cell_format)
+    # worksheet.write('D27', str(act_data['P2']), cell_format)
+    # worksheet.write('C27', str(act_data['p2_unit']), cell_format)
+    # worksheet.write('D28', str(act_data['delP_Shutoff']), cell_format)
+    # worksheet.write('C28', str(act_data['delP_Shutoff_unit']), cell_format)
+    # worksheet.write('D29', str(act_data['unbal_force']), cell_format)
+    # worksheet.write('D30', str(act_data['Kn']), cell_format)
+    # worksheet.write('D31', str(act_data['delP_flowing']), cell_format)
 
-    worksheet.write('I14', str(act_data['act_type']), cell_format)
-    worksheet.write('I15', str(act_data['fail_action']), cell_format)
-    worksheet.write('I16', str(act_data['act_size']), cell_format)
-    worksheet.write('H16', str(act_data['act_size_unit']), cell_format)
-    worksheet.write('I17', str(act_data['act_travel']), cell_format)
-    worksheet.write('H17', str(act_data['act_travel_unit']), cell_format)
-    worksheet.write('I18', str(act_data['eff_area']), cell_format)
-    worksheet.write('H18', str(act_data['eff_area_unit']), cell_format)
-    worksheet.write('I19', str(act_data['sMin']), cell_format)
-    worksheet.write('I20', str(act_data['sMax']), cell_format)
-    worksheet.write('I21', str(act_data['spring_rate']), cell_format)
-    worksheet.write('I22', str(act_data['spring_windup']), cell_format)
-    worksheet.write('I23', str(act_data['max_spring_load']), cell_format)
-    worksheet.write('I24', str(act_data['max_air_supply']), cell_format)
-    worksheet.write('I25', str(act_data['set_pressure']), cell_format)
-    worksheet.write('H25', str(act_data['set_pressure_unit']), cell_format)
-    worksheet.write('I26', str(act_data['act_thrust_down']), cell_format)
-    worksheet.write('I27', str(act_data['act_thrust_up']), cell_format)
-    worksheet.write('I28', str(act_data['friction_band']), cell_format)
-    worksheet.write('I29', str(act_data['req_handWheel_thrust']), cell_format)
-    worksheet.write('I30', str(act_data['max_thrust']), cell_format)
+    # worksheet.write('I14', str(act_data['act_type']), cell_format)
+    # worksheet.write('I15', str(act_data['fail_action']), cell_format)
+    # worksheet.write('I16', str(act_data['act_size']), cell_format)
+    # worksheet.write('H16', str(act_data['act_size_unit']), cell_format)
+    # worksheet.write('I17', str(act_data['act_travel']), cell_format)
+    # worksheet.write('H17', str(act_data['act_travel_unit']), cell_format)
+    # worksheet.write('I18', str(act_data['eff_area']), cell_format)
+    # worksheet.write('H18', str(act_data['eff_area_unit']), cell_format)
+    # worksheet.write('I19', str(act_data['sMin']), cell_format)
+    # worksheet.write('I20', str(act_data['sMax']), cell_format)
+    # worksheet.write('I21', str(act_data['spring_rate']), cell_format)
+    # worksheet.write('I22', str(act_data['spring_windup']), cell_format)
+    # worksheet.write('I23', str(act_data['max_spring_load']), cell_format)
+    # worksheet.write('I24', str(act_data['max_air_supply']), cell_format)
+    # worksheet.write('I25', str(act_data['set_pressure']), cell_format)
+    # worksheet.write('H25', str(act_data['set_pressure_unit']), cell_format)
+    # worksheet.write('I26', str(act_data['act_thrust_down']), cell_format)
+    # worksheet.write('I27', str(act_data['act_thrust_up']), cell_format)
+    # worksheet.write('I28', str(act_data['friction_band']), cell_format)
+    # worksheet.write('I29', str(act_data['req_handWheel_thrust']), cell_format)
+    # worksheet.write('I30', str(act_data['max_thrust']), cell_format)
 
-    worksheet.write('D33', str(act_data['v_thrust_close']), cell_format)
-    worksheet.write('D34', str(act_data['v_thrust_open']), cell_format)
-    worksheet.write('D35', str(act_data['seat_load']), cell_format)
+    # worksheet.write('D33', str(act_data['v_thrust_close']), cell_format)
+    # worksheet.write('D34', str(act_data['v_thrust_open']), cell_format)
+    # worksheet.write('D35', str(act_data['seat_load']), cell_format)
 
     workbook.close()

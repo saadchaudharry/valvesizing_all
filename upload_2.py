@@ -3,7 +3,7 @@ from app import cageClamp, data_upload_shaft, db, app, endConnection, endFinish,
     regionMaster, fluidState, designStandard, rotaryActuatorData, seat, seat_load_force_upload, seatLeakageClass, shaft, slidingActuatorData, solenoid, studNut, valveArea, valveStyle, applicationMaster, \
     ratingMaster, materialMaster, data_upload, add_many, afr, balanceSeal, bonnet, bonnetType, certification, \
     cleaning, flowDirection, trimType, flowCharacter, balancing, cv_upload, data_upload_disc_seat_packing, disc, \
-    departmentMaster, designationMaster, packing_friction_upload
+    departmentMaster, designationMaster, packing_friction_upload,stemSize,unbalanceAreaTb,unbalanceArea_upload,knValue,knValue_upload,hwThrust_upload
 import csv
 
 from models import kcTable
@@ -56,8 +56,8 @@ cleaning_list = ['As per FCC Standard', 'As per Customer specification']
 flow_dir_list = ['Over', 'Under', 'Seat Downstream', 'Seat Upstream']
 
 trim_type_list_globe = ['Microspline', 'Contour', 'Ported', 'Anti-Cavitation I', 'Anti-Cavitation II', 'Anti-Cavitation III', 'MHC',
-                'Low Noise Trim A1','Low Noise Trim A3','Low Noise Trim B1','Low Noise Trim B3','Low Noise Trim C1',
-                'Low Noise Trim C3','Low Noise Trim D1','Low Noise Trim D3']
+                    'Low Noise Trim A1','Low Noise Trim A3','Low Noise Trim B1','Low Noise Trim B3','Low Noise Trim C1',
+                    'Low Noise Trim C3','Low Noise Trim D1','Low Noise Trim D3']
 
 trim_type_list_butterfly = ['Double Offset', 'Triple Offset']
 
@@ -146,6 +146,12 @@ def getRowsFromCsvFile(file_path):
 
 
 with app.app_context():
+    
+    # hwThrust_upload(getRowsFromCsvFile("csv/handwheel.csv"))
+    # unbalanceArea_upload(getRowsFromCsvFile("csv/unbalanceArea.csv"))
+    # knValue_upload(getRowsFromCsvFile("csv/knValue.csv"))
+    #   add_many(getRowsFromCsvFile("csv/unbalanceArea.csv"),unbalanceArea)
+    #   add_many(getRowsFromCsvFile("csv/stemSize.csv"),stemSize)
     # data_upload(valve_style_list, valveStyle)
     # butterfly_element_1 = db.session.query(valveStyle).filter_by(name="Butterfly Lugged Wafer").first()
     # butterfly_element_2 = db.session.query(valveStyle).filter_by(name="Butterfly Double Flanged").first()
@@ -169,7 +175,7 @@ with app.app_context():
     # data_upload(certification_list, certification)
     # data_upload(cleaning_list, cleaning)
     # data_upload(flow_dir_list, flowDirection)
-    # # data_upload(trim_type_list, trimType)
+    # data_upload(trim_type_list, trimType)
     # data_upload(flow_charac_list, flowCharacter)
     # data_upload(balancing_list, balancing)
     # # cv_upload(getRowsFromCsvFile("csv/cvtable_small.csv"))
@@ -199,6 +205,7 @@ with app.app_context():
     # add_many(getRowsFromCsvFile("csv/kcTable.csv"), kcTable)
     # seat_load_force_upload(getRowsFromCsvFile("csv/seatLoadForce.csv"))
     pass
+
 
 
 # region___list = ['North America', 'South America', 'European Union', 
