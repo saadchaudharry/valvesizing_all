@@ -3,7 +3,7 @@ from app import cageClamp, data_upload_shaft, db, app, endConnection, endFinish,
     regionMaster, fluidState, designStandard, rotaryActuatorData, seat, seat_load_force_upload, seatLeakageClass, shaft, slidingActuatorData, solenoid, studNut, valveArea, valveStyle, applicationMaster, \
     ratingMaster, materialMaster, data_upload, add_many, afr, balanceSeal, bonnet, bonnetType, certification, \
     cleaning, flowDirection, trimType, flowCharacter, balancing, cv_upload, data_upload_disc_seat_packing, disc, \
-    departmentMaster, designationMaster, packing_friction_upload,stemSize,unbalanceAreaTb,unbalanceArea_upload,knValue,knValue_upload,hwThrust_upload
+    departmentMaster, designationMaster, packing_friction_upload,stemSize,unbalanceAreaTb,unbalanceArea_upload,knValue,knValue_upload,hwThrust_upload,yieldStrength_upload,rotary_upload
 import csv
 
 from models import kcTable
@@ -146,7 +146,8 @@ def getRowsFromCsvFile(file_path):
 
 
 with app.app_context():
-    
+    # rotary_upload(getRowsFromCsvFile("csv/rotaryActuatorData.csv"))
+    # yieldStrength_upload(getRowsFromCsvFile("csv/yield_strength.csv"))
     # hwThrust_upload(getRowsFromCsvFile("csv/handwheel.csv"))
     # unbalanceArea_upload(getRowsFromCsvFile("csv/unbalanceArea.csv"))
     # knValue_upload(getRowsFromCsvFile("csv/knValue.csv"))

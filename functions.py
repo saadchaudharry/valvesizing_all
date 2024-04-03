@@ -78,7 +78,7 @@ def notes_dict_reorder(input_dict, company, address):
             output_dict[keys_] = input_dict[keys_]
     return output_dict
 
-
+volume_unit_list = [{"id" : "inch3", "name": "inch3 "},{"id" : "m3", "name": "m3 "}]
 temperature_unit_list = [{"id": "C", "name": "°C"}, {"id": "F", "name": "°F"}, {"id": "R", "name": "R"}, {"id": "K", "name": "K"}]
 length_unit_list = [{'id': 'inch', 'name': 'inch'}, {'id': 'mm', 'name': 'mm'}]
 pressure_unit_list = [{'id': 'bar (a)', 'name': 'bar (a)'}, {'id': 'bar (g)', 'name': 'bar (g)'},
@@ -115,6 +115,7 @@ del_p_unit_list = [{'id': 'bar', 'name': 'bar'},
                           {'id': 'torr', 'name': 'torr'}, ]
 
 force_unit_list = [{'id': 'lbf', 'name': 'lbf'}, {'id': 'kgf', 'name': 'kgf'}, {'id': 'N', 'name': 'N'}]
+torque_unit_list = [{'id': 'lbf.inch', 'name': 'lbf.inch'}, {'id':'kgf.m', 'name':'kgf.m'}, {'id':'N.m', 'name':'N.m'}]
 
 pipe_schedule = ['std', 10, 20, 30, 40, 80, 120, 160, 'xs', 'xxs']
 
@@ -123,7 +124,7 @@ pipe_shedule_list = [{"id": item, "name": item} for item in pipe_schedule]
 units_dict = {"pressure": pressure_unit_list, "temperature": temperature_unit_list, 
               "flowrate": flowrate_unit_list, "length": length_unit_list, 
               "delPressure": del_p_unit_list, "pipe_schedule": pipe_shedule_list, 
-              "area": area_unit_list, "force": force_unit_list}
+              "area": area_unit_list, "force": force_unit_list, "volume":volume_unit_list,"torque":torque_unit_list}
 
 # Unit Conversion Logic
 def convert_L_SI(val, unit_in, unit_out, density):
@@ -202,10 +203,17 @@ def convert_A_SI(val, unit_in, unit_out, density):
 def convert_F_SI(val, unit_in, unit_out, density):
     SI = {'lbf': 1, 'kgf': 1 / 0.453, 'N': 1 / 4.448}
     return val * SI[unit_in] / SI[unit_out]
+def convert_V_SI(val, unit_in, unit_out, density):
+    SI = {'inch3': 1, 'm3': 61020}
+    return val * SI[unit_in] / SI[unit_out]
+
+def convert_TOR_SI(val, unit_in, unit_out, density):
+    SI = {'lbf.inch': 1, 'kgf.m':0.012, 'N.m':0.1129}
+    return val * SI[unit_in] / SI[unit_out]
 
 def meta_convert_P_T_FR_L(prop, val, unit_in, unit_out, density):
     print(f'KLASDFF {prop},{type(val)},{type(unit_in)},{type(unit_out)}')
-    properties = {"T": convert_T_SI, "P": conver_P_SI, "FR": conver_FR_SI, "L": convert_L_SI, 'A': convert_A_SI, 'F':convert_F_SI}
+    properties = {"T": convert_T_SI, "P": conver_P_SI, "FR": conver_FR_SI, "L": convert_L_SI, 'A': convert_A_SI, 'F':convert_F_SI, 'V':convert_V_SI, 'TOR':convert_TOR_SI}
     return properties[prop](val, unit_in, unit_out, density)
 
 def meta_convert_g_to_a(value, prop):

@@ -1,0 +1,83 @@
+{% block content %}
+{% include "header.html" %}
+
+
+<!-- 
+    <div class="col-10">
+      <div class="row head"> -->
+
+
+      <form action="{{url_for('selectRotaryActuator', item_id=item.id, proj_id=item.project.id)}}" method="post">
+        <div class="row mt-4">
+            <div class="col-12">
+              <table class="table table-striped table-bordered selectvalve_table" width="100%">
+                <thead class="table-sm selecthead">
+                    <tr>
+                      <th></th>
+                        <th>Fail Action</th>
+                        <th>Valve Interface</th>
+                        <th>Actuator Size</th>
+                        <th>Spring Set</th>
+                        <th>Set Pressure</th>
+                       
+                        <th>S1</th>
+                        <th>S2</th>
+                        <th>S3</th>
+                        <th>A1</th>
+                        <th>A2</th>
+                        <th>A3</th>
+               
+                    </tr>
+                </thead>
+                <tbody class="table-sm">
+              
+                  {% for i in data %}
+                  <tr>
+                    <td><input type="radio" id="valve" name="rAct" value="{{i}}" style="text-align:center"></td>
+                    <td>{{ i['fail_action'] }}</td>
+                      <td>{{i['valve_interface']}}</td> 
+                      <td>{{i['act_size']}}</td>
+                      <td>{{i['spring_set']}}</td>
+                      <td>{{i['set_pressure']}}</td> 
+                      <td>{{i['s1']}}</td>
+                      <td>{{i['s2']}}</td>
+                      <td>{{i['s3']}}</td>
+                      <td>{{i['a1']}}</td>
+                      <td>{{i['a2']}}</td>
+                      <td>{{i['a3']}}</td>
+                      
+                    
+                      
+              
+               
+                    
+                  </tr>
+                  {% endfor %}
+              </tbody>
+         </table>
+          </div>
+         
+
+            
+        </div>
+      <div>
+        <!-- <input type="number" value="{{setP}}" name="setP" style="display:none"> -->
+        <input type="submit" value="Select Actuator" name="select_act" style="width: 120px; height: 30px; margin-right: 5px;">
+      </div>
+
+        </div>
+
+      </form>
+
+
+
+
+
+
+
+
+    <!-- </div>
+  </div> -->
+
+{% include "footer.html" %}
+{% endblock %}

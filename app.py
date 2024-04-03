@@ -2,6 +2,7 @@ import codecs
 import datetime
 import json
 import os
+import ast
 import io
 import zipfile
 from flask_sqlalchemy import SQLAlchemy  # Create DB with Flask
@@ -178,14 +179,20 @@ table_data_render = [
 
 ### ----------------------------------------- Actuator Functions --------------------------------#
 def valveForces(p1_, p2_, d1, d2, d3, ua, rating, material, leakageClass, trimtype, balance, flow,
-                case, shutoffDelP):
+                case, shutoffDelP,packingF,seatF):
     print('Valve forces inputs:')
     print(p1_, p2_, d1, d2, d3, ua, rating, material, leakageClass, trimtype, balance, flow,
-          case, shutoffDelP)
+          case, shutoffDelP,packingF,seatF)
     num = 0
-    if trimtype == 'contour':
-        flow = 'under'
-        balance = 'unbalanced'
+
+    # if trimtype.name == 'Contour':
+    #     flow = 'under'
+    #     balance = 'unbalanced'
+    # if balance == 'Unbalanced' or balance == 'unbalanced':
+    #     balance_in = 'unbalanced'
+    # elif balance == 'Balanced' or balance == 'balanced':
+    #     balance_in = 'balanced'
+    # print(f'balance_in {trimtype.name},{balance_in}')
     if d1 in [1, 3, 8, 11, 4]:
         d1 = round(d1)
     p1 = p1_
@@ -193,15 +200,16 @@ def valveForces(p1_, p2_, d1, d2, d3, ua, rating, material, leakageClass, trimty
     a1 = 0.785 * d1 * d1  # seat bore - seat dia
     a2 = 0.785 * d2 * d2  # plug dia
     a3 = 0.785 * d3 * d3  # stem dia
-    shutoffDelP = shutoffDelP
+    shutoffDelP = shutoffDelP 
+
     with app.app_context():
         friction_element = db.session.query(packingFriction).filter_by(rating=rating, packing_=material).order_by(func.abs(packingFriction.stemDia - d3)).first()
         # print(float(friction_element.value))
         sf_element = db.session.query(seatLoadForce).filter_by(trimType_=trimtype, leakage=leakageClass).order_by(func.abs(seatLoadForce.seatBore - d1)).first()
         # print(trimtype, d1)
         try:
-            B = float(friction_element.value)
-            C = math.pi * d1 * float(sf_element.value)
+            B = float(packingF)
+            C = math.pi * d1 * float(seatF)
         except AttributeError:
             B = 0
             C = 0
@@ -213,12 +221,14 @@ def valveForces(p1_, p2_, d1, d2, d3, ua, rating, material, leakageClass, trimty
     else:
         trimtype_in = "cage"
     
-    if balance == 'Unbalanced':
-        balance_in = 'unbalanced'
+    if balance.name == 'Balanced':
+        balance_in = 'balanced' 
     else:
-        balance_in = 'balanced'
+        balance_in = 'unbalanced'
+    print(f'jsjsshHhshhshshs {balance}')
 
-    
+
+    print(f'balance {(trimtype_in, balance_in, flow.name.lower(), case)}')
     for i in valve_force_dict:
         if i['key'] == (trimtype_in, balance_in, flow.name.lower(), case):
             num = int(i['formula'])
@@ -241,7 +251,7 @@ def valveForces(p1_, p2_, d1, d2, d3, ua, rating, material, leakageClass, trimty
     elif num in [6,7]:
         a_ = (shutoffDelP * a1) + B + C # Shutoff+
         UA = a1
-        # print(a_, p1, a1)
+        print(f'KSKKSKSKSKYYYYYYYYY {(shutoffDelP * a1)}, {a_}, {p1}, {a1}')
 
     elif num == 8:
         a_ = (shutoffDelP * (a3 - a1)) + B + C
@@ -629,6 +639,52 @@ def hwThrust_upload(data_list):
         db.session.add(hwThrust_)
         db.session.commit()
 
+def rotary_upload(data_list):
+    print("delete begin: AD")
+    # # data_delete(cvValues)
+    data_delete(rotaryActuatorData)
+    print("delete done: AD")
+    print(f"Data Upload AD Start {len(data_list)}")
+    
+    for data in data_list:
+        rotaryActuator_ = rotaryActuatorData(
+            actType = data['actType'],
+            failAction = data['failAction'],
+            valveInterface = data['valveInterface'],
+            actSize_ = data['actSize_'],
+            springSet = data['springSet'],
+            torqueType = data['torqueType'],
+            setPressure = data['setPressure'],
+            start = float(data['start']),
+            mid = float(data['mid']),
+            end = float(data['end']),
+            actSize = float(data['actSize']),
+        
+        )
+
+        db.session.add(rotaryActuator_)
+        db.session.commit()
+        print('END')
+
+
+def yieldStrength_upload(data_list):
+    print("delete begin: YD")
+    # # data_delete(cvValues)
+    data_delete(yieldStrength)
+    print("delete done: HW")
+    print(f"Data Upload HW Start {len(data_list)}")
+    print(data_list)
+    for data in data_list:
+        yieldStrength_ = yieldStrength(
+            shaft_material = data['shaftMaterial'],
+            yield_strength = data['yieldStrength'],
+        
+        )
+
+        db.session.add(yieldStrength_)
+        db.session.commit()
+
+
 
 
 
@@ -967,6 +1023,12 @@ def addNewItem(project, itemNumber, alternate):
     db.session.commit()
     new_actuator_case = actuatorCaseData(actuator_=new_actuator)
     db.session.add(new_actuator_case)
+    db.session.commit()
+    new_rotary_case = rotaryCaseData(actuator_=new_actuator)
+    db.session.add(new_rotary_case)
+    db.session.commit()
+    new_stroke_case = strokeCase(actuatorCase_=new_actuator_case,status=1)
+    db.session.add(new_stroke_case)
     db.session.commit()
     new_accessories = accessoriesData(item=new_item)
     db.session.add(new_accessories)
@@ -2430,10 +2492,12 @@ def unit_change():
    
     print(f'jshshhh {prev_unit},{final_unit},{param_values},{specific_gravity},{params}')
     desc_final_value = []
-    area_params = ['Ua','stemArea','diaphragm_ea']
-    length_params = ['inletlength','outletlength','valvelength','valveSize','seatDia','stemDia','plugDia','valveTravel','negGrad','actTravel','springWindup']
-    force_params = ['packFricton','valveThrustClose','valveThrustOpen','shutOffForce','maxSpringLoad','actThrustClose','actThrustOpen','reqHandWheel']
-    pressure_params = ['inpres','outpres','vaporPres','critPres','shutoffPres','maxPres','ipres','opres','delpflow','lowBenchSet','UpBenchSet','maxAirSupply','setPressure','frictionBand']
+    volume_params = ['clearanceVolUnit','sweptVolUnit']
+    area_params = ['Ua','stemArea','diaphragm_ea','diaphragmArea']
+    length_params = ['actTravel','inletlength','outletlength','valvelength','valveSize','seatDia','stemDia','plugDia','valveTravel','negGrad','actTravel','springWindup','valveSize','discDia','shaftDia','packingRadial']
+    force_params = ['spring_rateUnit','packFricton','valveThrustClose','valveThrustOpen','shutOffForce','maxSpringLoad','actThrustClose','actThrustOpen','reqHandWheel']
+    pressure_params = ['setPressureUnit','lower_benchsetUnit','upper_benchsetUnit','inpres','outpres','vaporPres','critPres','shutoffPres','maxPres','ipres','opres','delpflow','lowBenchSet','UpBenchSet','maxAirSupply','setPressure','frictionBand','setPUnit','maxAirUnit','delp']
+    torque_params = ['stUnit','ptUnit','ftUnit','btoUnit','rtoUnit','etoUnit','btcUnit','rtcUnit','etcUnit','mastUnit','stStartUnit','stMidUnit','stEndUnit','atStartUnit','atMidUnit','atEndUnit','handWheelUnit']
     print(f'params_GET {params}')
     if params == 'flowrate':
         for i in range(len(param_values)):
@@ -2524,6 +2588,31 @@ def unit_change():
                 desc_final_value.append(round(final_value,2))
             else:
                 desc_final_value.append(None)   
+    elif params in volume_params:
+        for i in range(len(param_values)):
+            if param_values[i] != None:
+                print(f'ssjsjFFF {param_values[i]},{prev_unit},{final_unit}')
+                final_value = meta_convert_P_T_FR_L('V', param_values[i], prev_unit,
+                                                        final_unit,
+                                                        1000)
+                print(f'VOLUME {final_value}')
+
+                desc_final_value.append(round(final_value,5))
+            else:
+                desc_final_value.append(None)   
+    elif params in torque_params:
+        for i in range(len(param_values)):
+            if param_values[i] != None:
+                print(f'ssjsjFFF {param_values[i]},{prev_unit},{final_unit}')
+                final_value = meta_convert_P_T_FR_L('TOR', param_values[i], prev_unit,
+                                                        final_unit,
+                                                        1000)
+                print(f'TOR {final_value}')
+
+                desc_final_value.append(round(final_value,2))
+            else:
+                desc_final_value.append(None)   
+
 
 
 
@@ -5806,6 +5895,46 @@ def selectValve(proj_id, item_id):
                            metadata=metadata_, page='selectValve', valve=valve_element, valve_data=[])
 
 
+@app.route('/saveStrokeCV')
+def saveStrokeCV():
+    cvFill = request.args.get('cvFill')
+    cvExhaust = request.args.get('cvExhaust')
+    act_case = request.args.get('act_case')
+
+    act_case_element = getDBElementWithId(actuatorCaseData,int(act_case))
+    stroke_element = db.session.query(strokeCase).filter_by(actuatorCase_=act_case_element).first()
+
+    stroke_element.combinedCVFill = cvFill 
+    stroke_element.combinedCVExhaust = cvExhaust 
+    db.session.commit()
+    print(f'SAVEVEVVEVEV {cvFill},{cvExhaust},{act_case_element}')
+    return "SUCCESS"
+
+@app.route('/calculateStrokeCV')
+def calculateStrokeCV():
+    cvFill_ = json.loads(request.args.get('cvFill'))
+    cvExhaust_ = json.loads(request.args.get('cvExhaust'))
+    cvFill = [float(val) for val in cvFill_ if val]
+    cvExhaust = [float(val) for val in cvExhaust_ if val]
+    # Clean up the elements and remove empty strings
+    # cvFill_ = [value.strip('"') for value in cvFill if value.strip()]
+    # cvExhaust_ = [value.strip('"') for value in cvExhaust if value.strip()]
+
+
+    print(f'strokecalculation {cvFill},{cvExhaust}')  
+    cvFillList = 1 / math.sqrt(sum([(1 / i) * (1 / i) for i in cvFill]))
+    cvExhaustList = 1 / math.sqrt(sum([(1 / i) * (1 / i) for i in cvExhaust]))
+
+
+
+    print(f'cvFillcvExhaustKKK {cvFillList} , {cvExhaustList}')
+  
+    return jsonify({
+        'cvFill': round(cvFillList,3),
+        'cvExhaust': round(cvExhaustList,3)
+        })
+
+
 # Actuator Sizing
 @app.route('/actuator-sizing/proj-<proj_id>/item-<item_id>', methods=['GET', 'POST'])
 def actuatorSizing(proj_id, item_id):
@@ -5838,6 +5967,23 @@ def actuatorSizing(proj_id, item_id):
     return render_template('actuatorSizing.html', item=getDBElementWithId(itemMaster, int(item_id)), user=current_user,
                            metadata=metadata_, page='actuatorSizing', valve=valve_element, act=act_element)
 
+
+@app.route('/slidingStemDel')
+def slidingStemDel():
+    act_id = request.args.get('act_id')
+    actMaster = getDBElementWithId(actuatorMaster,act_id)
+    act_element = db.session.query(actuatorCaseData).filter_by(actuator_=actMaster)\
+        .filter(actuatorCaseData.valveThrustClose != None )\
+        .first()
+    print(f'ACTELEMENT {act_element}')
+    if act_element:
+        db.session.delete(act_element)
+        db.session.commit()
+        print('success')
+        return "SUCCESS"
+    else:
+        print('fail')
+        return "FAIL"
 
 
 @app.route('/slidingStemDelete/proj-<proj_id>/item-<item_id>/act-<act_id>',methods=['GET','POST'])
@@ -5891,7 +6037,7 @@ def actuatorForce(size, stroke, r1, r2, setPressure):
 
 
 def compareForces(p1, p2, d1, d2, d3, ua, rating, material, leakageClass, trimtype, balance, flow,
-                  case, shutoffDelP, size, stroke, r1, r2, setPressure, failAction, valveTravel, flowChar, act_type):
+                  case, shutoffDelP, size, stroke, r1, r2, setPressure, failAction, valveTravel, flowChar, act_type,packingF,seatF):
     
     print(f'After Selecting actuator')
     print(p1, p2, d1, d2, d3, ua, rating, material, leakageClass, trimtype, balance, flow,
@@ -5901,13 +6047,13 @@ def compareForces(p1, p2, d1, d2, d3, ua, rating, material, leakageClass, trimty
         stroke = valveTravel
 
     vForce_ = valveForces(p1, p2, d1, d2, d3, ua, rating, material, leakageClass, trimtype, balance, flow,
-                          case, shutoffDelP)
+                          case, shutoffDelP,packingF,seatF)
     vForce_shutoff_ = valveForces(p1, p2, d1, d2, d3, ua, rating, material, leakageClass, trimtype, balance, flow,
-                                  'shutoff', shutoffDelP)
+                                  'shutoff', shutoffDelP,packingF,seatF)
     vForce_open_ = valveForces(p1, p2, d1, d2, d3, ua, rating, material, leakageClass, trimtype, balance, flow,
-                               'open', shutoffDelP)
+                               'open', shutoffDelP,packingF,seatF)
     vForce_close_ = valveForces(p1, p2, d1, d2, d3, ua, rating, material, leakageClass, trimtype, balance, flow,
-                                'close', shutoffDelP)
+                                'close', shutoffDelP,packingF,seatF)
 
     vForce = shutoffDelP
     # vForce_shutoff = vForce_shutoff_[0]
@@ -6111,7 +6257,8 @@ def slidingStem(proj_id, item_id):
         cases = db.session.query(caseMaster).filter_by(item=item_element).all()
         cv_element = db.session.query(cvValues).filter_by(cv=cases[0].cv).first()
         selected_sized_valve_element = db.session.query(cvTable).filter_by(id=cases[0].cv.id).first()
-        balancing_element = db.session.query(balancing).filter_by(id=selected_sized_valve_element.balancingId).first() 
+        # balancing_element = db.session.query(balancing).filter_by(id=selected_sized_valve_element.balancingId).first() 
+       
         stemDiaDrop = db.session.query(stemSize).filter_by(valveSize=cases[0].valveSize).all()
         
         print(len(cases))
@@ -6137,6 +6284,12 @@ def slidingStem(proj_id, item_id):
         .first()
     trimType_element = db.session.query(trimType).filter_by(id=valve_element.trimTypeId).first()
     fl_d_element = db.session.query(flowDirection).filter_by(id=valve_element.flowDirectionId).first()
+    print(f'UNNHHSHSHHSSH {valve_element.balanceSeal__}')
+    if valve_element.balanceSeal__.name == 'Unbalanced':
+        balancing_element = db.session.query(balancing).filter_by(name='Unbalanced').first() 
+    else:
+        balancing_element = db.session.query(balancing).filter_by(name='Balanced').first() 
+    
     metadata_ = metadata()
     # print(selected_sized_valve_element.balancing_.name)
     if request.method == 'POST':
@@ -6159,7 +6312,7 @@ def slidingStem(proj_id, item_id):
             act_element.update(actuator_input_dict, act_element.id)
             return redirect(url_for('rotaryActuator', item_id=item_id, proj_id=proj_id))
         elif request.form.get('stroketime'):
-            act_element.update(actuator_input_dict, act_element.id)
+            # act_element.update(actuator_input_dict, act_element.id)
             return redirect(url_for('strokeTime', item_id=item_id, proj_id=proj_id))
         elif request.form.get('submit1'):
             # print('req sbumit 1 working')
@@ -6195,16 +6348,17 @@ def slidingStem(proj_id, item_id):
                                         'inch2', 1.0 * 1000)
             seatDia = meta_convert_P_T_FR_L('L', float(a['seatDia'][0]), a['seatDiaUnit'][0],
                                         'inch', 1.0 * 1000)
-            balance = request.form.get('balance')
+            
             stroke = meta_convert_P_T_FR_L('L', float(a['valveTravel'][0]), a['valveTravelUnit'][0],
                                         'inch', 1.0 * 1000)
             iPressure = meta_convert_P_T_FR_L('P', float(a['iPressure'][0]), a['inletPressureUnit'][0],
-                                        'psia (a)', 1.0 * 1000)
+                                        'psia (g)', 1.0 * 1000)
             oPressure = meta_convert_P_T_FR_L('P', float(a['oPressure'][0]), a['outletPressureUnit'][0],
-                                        'psia (a)', 1.0 * 1000)
-            shutOffDelP = meta_convert_P_T_FR_L('P', float(a['shutOffDelP'][0]), a['shutoffDelPUnit'][0],
-                                        'psia (a)', 1.0 * 1000)
-            print(f'LLLLLLLLLLL {stemDia}')
+                                        'psia (g)', 1.0 * 1000)
+            print(f'B$$$$$$$$ {a['shutOffDelP'][0]}, {a['shutoffDelPUnit'][0]}')
+            shutOffDelP = meta_convert_P_T_FR_L('P', float(a['shutOffDelP'][0]), str(a['shutoffDelPUnit'][0])+" (a)",
+                                        'psia (g)', 1.0 * 1000)
+            print(f'LLLLLLLLLLL {shutOffDelP}')
             stemDiaDrop = db.session.query(stemSize).filter_by(valveSize=valveSize).all()
             # Call case data update function here.
             act_case_data_json = {}
@@ -6219,6 +6373,22 @@ def slidingStem(proj_id, item_id):
             act_case_data_json['trimTypeId'] = a["trimType"]
             act_case_data_json['balancingId'] = a["balancing"]
             act_case_data_json['flowDirectionId'] = a["flowDirection"]
+            act_case_data_json['packingFriction'] = a['packingF']
+            act_case_data_json['seatloadFactor'] = a['seatF']
+            act_case_data_json['shutOffDelP'] = a['shutOffDelP']
+            act_case_data_json['balancingId'] = a['balancing']
+            # act_case_data_json['shutOffDelP'] = a['shutOffDelP']
+            # balance = a['balancing']
+            print(f'PACKINGSSS {a['packingF']},{ a['packingFrictionUnit']}')   
+            packingF = meta_convert_P_T_FR_L('F', float(a['packingF'][0]), a['packingFrictionUnit'][0],
+                                        'lbf',
+                                        1000)
+            trimType__ = getDBElementWithId(trimType,a["trimType"][0])
+            balancing__ = getDBElementWithId(balancing,a["balancing"][0]) 
+            flowDirection__ = getDBElementWithId(flowDirection,a["flowDirection"][0])
+            # act_case_data_json['unbalForce'] = a['unbalForce']
+            # act_case_data_json['negGrad'] = a['negGrad']
+
 
             act_case_data_json['valveSizeUnit'] = a['valveSizeUnit']
             act_case_data_json['seatDiaUnit'] = a['seatDiaUnit']
@@ -6232,19 +6402,29 @@ def slidingStem(proj_id, item_id):
             act_case_data_json['unbalForceOpenUnit'] = a['unbalForceOpenUnit']
             act_case_data_json['negativeGradientUnit'] = a['negativeGradientUnit']
             act_case_data_json['delPFlowingUnit'] = a['delPFlowingUnit']
-            print(f'iiiiiiiisjsjsjsjsjj {act_case_data_json}')
+            # act_case_data_json['unbalForceOpenUnit'] = a['unbalForceOpenUnit']
+            # act_case_data_json['negativeGradientUnit'] = a['negativeGradientUnit']
+            # print(f'iiiiiiiisjsjsjsjsjj {act_case_data_json}')
 
             act_case_data.update(act_case_data_json, act_case_data.id)
+            # print(f'PPPASSS {a['balancing'][0]}')
+            # if int(a['balancing'][0]) == 1:
+            #     balance = 'Balanced'
+            # elif int(a['balancing'][0]) == 2:
+            #     balance = 'Unbalanced'
+            # else:
+            #     balance = 'Unbalanced'
+            # print(f'KSKKSKSK {balance}')
 
             # Calculations
             valve_forces = valveForces(iPressure, oPressure, seatDia, plugDia, stem_fraction, ua, valve_element.rating, valve_element.packing__,
-                                        valve_element.seatLeakageClass__, valve_element.trimType__, balance, valve_element.flowDirection__, 'shutoff+', shutOffDelP)
+                                        valve_element.seatLeakageClass__, trimType__, balancing__, flowDirection__, 'shutoff+', shutOffDelP,packingF,a['seatF'][0])
             vf_shutoff = valveForces(iPressure, oPressure, seatDia, plugDia, stem_fraction, ua, valve_element.rating, valve_element.packing__,
-                                        valve_element.seatLeakageClass__, valve_element.trimType__, balance, valve_element.flowDirection__, 'shutoff', shutOffDelP)
+                                        valve_element.seatLeakageClass__, trimType__, balancing__, flowDirection__, 'shutoff', shutOffDelP,packingF,a['seatF'][0])
             vf_open = valveForces(iPressure, oPressure, seatDia, plugDia, stem_fraction, ua, valve_element.rating, valve_element.packing__,
-                                        valve_element.seatLeakageClass__, valve_element.trimType__, balance, valve_element.flowDirection__, 'open', shutOffDelP)
+                                        valve_element.seatLeakageClass__, trimType__, balancing__, flowDirection__, 'open', shutOffDelP,packingF,a['seatF'][0])
             vf_close = valveForces(iPressure, oPressure, seatDia, plugDia, stem_fraction, ua, valve_element.rating, valve_element.packing__,
-                                        valve_element.seatLeakageClass__, valve_element.trimType__, balance, valve_element.flowDirection__, 'close', shutOffDelP)
+                                        valve_element.seatLeakageClass__, trimType__, balancing__,flowDirection__, 'close', shutOffDelP,packingF,a['seatF'][0])
             v_shutoff, v_shutoff_plus, v_open, v_close = round(vf_shutoff[0]), round(valve_forces[0]), round(
                 vf_open[0]), round(vf_close[0])
             
@@ -6411,9 +6591,9 @@ def slidingStem(proj_id, item_id):
             stemsize_ = getDBElementWithId(stemSize,act_case_data.stemDia)
             stem_fraction = float(Fraction(''.join(str(stemsize_.stemDia))))
             iPressure = meta_convert_P_T_FR_L('P', act_case_data.iPressure, act_case_data.inletPressureUnit,
-                                        'psia (a)', 1.0 * 1000)
+                                        'psia (g)', 1.0 * 1000)
             oPressure = meta_convert_P_T_FR_L('P', act_case_data.oPressure, act_case_data.outletPressureUnit,
-                                        'psia (a)', 1.0 * 1000)
+                                        'psia (g)', 1.0 * 1000)
             seatDia = meta_convert_P_T_FR_L('L', act_case_data.seatDia, act_case_data.seatDiaUnit,
                             'inch', 1.0 * 1000) 
             plugDia = meta_convert_P_T_FR_L('L', act_case_data.plugDia, act_case_data.plugDiaUnit,
@@ -6422,11 +6602,17 @@ def slidingStem(proj_id, item_id):
                                         'inch', 1.0 * 1000)
             ua =  meta_convert_P_T_FR_L('A', act_case_data.unbalanceArea, act_case_data.unbalanceAreaUnit,
                             'inch2', 1.0 * 1000)
+            # trimType__ = getDBElementWithId(trimType,a["trimType"][0])
+            # balancing__ = getDBElementWithId(balancing,a["balancing"][0]) 
+            # flowDirection__ = getDBElementWithId(flowDirection,a["flowDirection"][0])
+            # packingF = meta_convert_P_T_FR_L('F', float(a['packingF'][0]), a['packingFrictionUnit'][0],
+            #                             'lbf',
+            #                             1000)
             act_fun_output = compareForces(iPressure, oPressure, seatDia, plugDia,
-                stemDia, ua, valve_element.rating, valve_element.packing__,
+                stem_fraction, ua, valve_element.rating, valve_element.packing__,
                 valve_element.seatLeakageClass__, act_case_data.trimType_, act_case_data.balancing_,act_case_data.flowDirection_ ,
                 'shutoff+', act_case_data.valveThrustClose, act_element_sliding.effectiveArea, act_element_sliding.travel, act_element_sliding.sMin, act_element_sliding.sMax, act_master.availableAirSupplyMax, act_element_sliding.failAction,
-                act_case_data.valveTravel, valve_element.flowCharacter__, act_element_sliding.actType) 
+                act_case_data.valveTravel, valve_element.flowCharacter__, act_element_sliding.actType,act_case_data.packingFriction,act_case_data.seatloadFactor) 
             # other inputs for page
             stemArea = round((math.pi * float(stemDia) * float(stemDia) / 4), 3)
             actuatorSize_ = act_element_sliding.actSize
@@ -6475,6 +6661,7 @@ def slidingStem(proj_id, item_id):
             act_case_data.actuatorThrustValveCloseUnit = 'lbf'
             act_case_data.actuatorThrustValveOpenUnit = 'lbf'
             act_case_data.frictionBand = frictionBand 
+            act_case_data.act_VO = act_element_sliding.VO
             if maxHW:
                 act_case_data.reqHandwheelThrust = maxHW
             act_case_data.airsupply_min = round(airsupplyMin,2)
@@ -6484,6 +6671,8 @@ def slidingStem(proj_id, item_id):
             act_case_data.knValue = kn
             act_case_data.frictionBandUnit = 'psia (g)'
             act_case_data.reqHandwheelUnit = 'lbf'
+            act_case_data.slidingActuatorId = act_element_sliding.id
+            
 
             print(f'KNNNN {kn}')
             db.session.commit()
@@ -6520,7 +6709,7 @@ def slidingStem(proj_id, item_id):
         
         else:
             pass
-    print(f'CVELEMENT {balancing_element}')
+    print(f'CVELEMENTTT {balancing_element.id}')
     return render_template('slidingstem.html', item=getDBElementWithId(itemMaster, int(item_id)), 
                            user=current_user, metadata=metadata_, page='slidingStem', 
                            valve=valve_element, cv=selected_sized_valve_element, act=act_element, 
@@ -6553,9 +6742,25 @@ def rotaryActuator(proj_id, item_id):
     item_element = getDBElementWithId(itemMaster, int(item_id))
     act_element = db.session.query(actuatorMaster).filter_by(item=item_element).first()
     valve_element = db.session.query(valveDetailsMaster).filter_by(item=item_element).first()
-    trimType_element = db.session.query(trimType).filter_by(id=valve_element.trimTypeId).first()
-    fl_d_element = db.session.query(flowDirection).filter_by(id=valve_element.flowDirectionId).first()
+
+
+
+    try:
+        cases = db.session.query(caseMaster).filter_by(item=item_element).all()
+        cv_element = db.session.query(cvValues).filter_by(cv=cases[0].cv).first()
+    except:
+        cv_element = None
+
+
+    act_case_data = db.session.query(rotaryCaseData).filter_by(actuator_=act_element).first()
+    if not act_case_data:
+        new_act_case_data = rotaryCaseData(actuator_=act_element)
+        db.session.add(new_act_case_data)
+        db.session.commit()
+        act_case_data = new_act_case_data
+
     metadata_ = metadata()
+
     if request.method == 'POST':
         actuator_input_dict = {}
         actuator_input_dict['actuatorType'] = [request.form.get('actType')]
@@ -6565,6 +6770,8 @@ def rotaryActuator(proj_id, item_id):
         actuator_input_dict['orientation'] = [request.form.get('orientation')]
         actuator_input_dict['availableAirSupplyMin'] = [request.form.get('availableAirSupplyMin')]
         actuator_input_dict['availableAirSupplyMax'] = [request.form.get('availableAirSupplyMax')]
+        actuator_input_dict['availableAirSupplyMaxUnit'] = [request.form.get('availableAirSupplyMaxUnit')]
+        actuator_input_dict['setPressureUnit'] = [request.form.get('setPressureUnit')]
         # print(actuator_input_dict)
         if request.form.get('sliding'):
             print('working')
@@ -6576,49 +6783,349 @@ def rotaryActuator(proj_id, item_id):
         elif request.form.get('stroketime'):
             act_element.update(actuator_input_dict, act_element.id)
             return redirect(url_for('strokeTime', item_id=item_id, proj_id=proj_id))
-        else:
-            pass
+        elif request.form.get('rotary_calculate'):
+            act_element.update(actuator_input_dict, act_element.id)
+
+        
+            data = request.form.to_dict(flat=False)
+            a = jsonify(data).json
+            print(a)
+            rotary_case_inputs = {}
+            rotary_case_inputs['v_size'] = a['v_size']
+            rotary_case_inputs['disc_dia'] = a['disc_dia']
+            rotary_case_inputs['shaft_dia'] = a['shaft_dia']
+            rotary_case_inputs['max_rot'] = a['max_rot']
+            rotary_case_inputs['delP'] = a['delP']
+            rotary_case_inputs['bush_coeff'] = a['bush_coeff']
+            rotary_case_inputs['csc'] = a['csc']
+            rotary_case_inputs['csv'] = a['csv']
+            rotary_case_inputs['a_factor'] = a['a_factor']
+            rotary_case_inputs['b_factor'] = a['b_factor']
+            rotary_case_inputs['pack_coeff'] = a['pack_coeff']
+            rotary_case_inputs['radial_coeff'] = a['radial_coeff']
+            rotary_case_inputs['Section'] = a['Section']
+
+
+            #op Calc 
+            seating_torque__ = round((float(a['delP'][0]) * float(a['b_factor'][0])) + float(a['a_factor'][0]))
+            packing_torque__ = round(0.75 * float(a['delP'][0]) * math.pi * float(a['radial_coeff'][0]) * float(a['Section'][0]) * float(a['pack_coeff'][0]) * (float(a['shaft_dia'][0]) ** 2))
+            friction_torque__ = round((math.pi / 8) * (float(a['disc_dia'][0]) ** 2) * float(a['delP'][0]) * float(a['shaft_dia'][0]) * float(a['bush_coeff'][0]))
+            bto_ = seating_torque__ + packing_torque__ + friction_torque__
+            btc_ = round(0.8 * bto_)
+            rto_ = eto_ = rtc_ = etc_ = 0.5 * bto_
+            shaft_mat = getDBElementWithId(shaft,valve_element.shaftId)
+            yeild = db.session.query(shaft).filter_by(name=shaft_mat.name).first()
+            print(f'YIELD {yeild}')
+            strength = round(int(yeild.yield_strength) / math.sqrt(3))
+            rotary_case_inputs['mast'] = [(math.pi * strength * (float(a['shaft_dia'][0]) ** 3)) / 16]
+            rotary_case_inputs['st'] = [seating_torque__]
+            rotary_case_inputs['pt'] = [packing_torque__]
+            rotary_case_inputs['ft'] = [friction_torque__]
+            rotary_case_inputs['bto'] = [bto_]
+            rotary_case_inputs['rto'] = [rto_]
+            rotary_case_inputs['eto'] = [eto_]
+            rotary_case_inputs['btc'] = [btc_]
+            rotary_case_inputs['rtc'] = [rtc_]
+            rotary_case_inputs['etc'] = [etc_ ]
+            rotary_case_inputs['setP'] = [act_element.availableAirSupplyMax]
+
+            act_case_data.update(rotary_case_inputs, act_case_data.id)
+
+        
+
+            print(f'ROTARY {data},{a}')
+
+
+
+
+
+            return redirect(url_for('rotaryActuator', item_id=item_id, proj_id=proj_id,act_case_data=act_case_data))
+            
+        elif request.form.get('select_Ractuator'):
+            print(f'SELECT ACT ROTARY')
+            setPressure_ = meta_convert_P_T_FR_L('P', float(act_element.availableAirSupplyMax), act_element.availableAirSupplyMaxUnit,
+                        'bar (a)', 1.0 * 1000) 
+            
+            print(f'SETPRESSURESS {str(setPressure_).rstrip('0').rstrip('.')}')
+            print(f'SELECT ACT DATAS {setPressure_}, {''.join(str(act_element.springAction))},{act_element.actuatorType}')
+            return_actuator_data = db.session.query(rotaryActuatorData).filter_by(actType=act_element.actuatorType,failAction=act_element.springAction, setPressure=str(setPressure_).rstrip('0').rstrip('.')).all()
+            print(f'len_act_data: {len(return_actuator_data)}')
+            all_act_data = []
+            for acts in return_actuator_data:
+                if act_element.springAction == 'DA':
+                    if float(acts.start) < act_case_data.bto and float(acts.mid) < act_case_data.rto and float(acts.end) < act_case_data.eto:
+                        a_dict = {'id': (acts.id, 0), 'fail_action': acts.failAction,
+                                    'valve_interface': acts.valveInterface, 'act_size': acts.actSize_,
+                                    'spring_set': acts.springSet, 's1': 'NA', 's2': 'NA',
+                                    's3': 'NA', 'a1': acts.start, 'a2': acts.mid, 'a3': acts.end,
+                                    'set_pressure': acts.setPressure}
+                else:
+                    if act_element.springAction == "AFO":
+                        bt1 = act_case_data.btc
+                        bt2 = act_case_data.bto
+                        rt1 = act_case_data.rtc
+                        rt2 = act_case_data.rto
+                        et1 = act_case_data.etc
+                        et2 = act_case_data.eto
+                    else:
+                        bt2 = act_case_data.btc
+                        bt1 = act_case_data.bto
+                        rt2 = act_case_data.rtc
+                        rt1 = act_case_data.rto
+                        et2 = act_case_data.etc
+                        et1 = act_case_data.eto
+                    if float(acts.start) < bt1 and float(acts.mid) < rt1 and float(acts.end) < et1:
+                        st_element = db.session.query(rotaryActuatorData).filter_by(
+                            valveInterface=acts.valveInterface, springSet=acts.springSet).first()
+                        if st_element:
+                            if float(st_element.start) < bt2 and float(st_element.mid) < rt2 and float(
+                                    st_element.end) < et2:
+                                a_dict = {'id': (acts.id, st_element.id), 'fail_action': acts.failAction,
+                                            'valve_interface': acts.valveInterface, 'act_size': acts.actSize_,
+                                            'spring_set': acts.springSet, 's1': st_element.start,
+                                            's2': st_element.mid,
+                                            's3': st_element.end, 'a1': acts.start, 'a2': acts.mid, 'a3': acts.end,
+                                            'set_pressure': acts.setPressure}
+                            else:
+                                pass
+
+                all_act_data.append(a_dict)
+
+                print('bt, rt, et')
+               
+                print(f'all_act_data {all_act_data}')
+
+                return render_template('select_ractuator.html', data=all_act_data, item_d=item_element,
+                        page='selectActuator', item=item_element, user=current_user)
+            
+
+
+
+
+
+
+
+           
     return render_template('RotaryActuatorSizing.html', item=getDBElementWithId(itemMaster, int(item_id)), 
                            user=current_user, metadata=metadata_, page='rotaryActuator',
-                           trimtType=trimType_element,
-                           fl_d_element=fl_d_element, valve=valve_element, act=act_element)
+                         valve=valve_element, act=act_element,act_case_data=act_case_data)
+
+
+@app.route('/select-rotary-actuator/proj-<proj_id>/item-<item_id>', methods=['GET', 'POST'])
+def selectRotaryActuator(proj_id, item_id):
+    item_element = getDBElementWithId(itemMaster, int(item_id))
+    act_element = db.session.query(actuatorMaster).filter_by(item=item_element).first()
+    act_case_data = db.session.query(rotaryCaseData).filter_by(actuator_=act_element).first()
+    if request.method == 'POST':
+       
+        a_ = request.form.to_dict(flat=True)
+        # a_ = jsonify(rAct_.get('rAct')).json
+       
+        act_data = {}
+        b_ = ast.literal_eval(a_['rAct'])
+
+   
+        
+        act_case_data.springSet = b_['spring_set']
+        act_case_data.springSt = b_['s1']
+        act_case_data.springMd = b_['s2']
+        act_case_data.springEd = b_['s3']
+        act_case_data.AirSt = b_['a1']
+        act_case_data.AirMd = b_['a2']
+        act_case_data.AirEd = b_['a3']
+        act_case_data.actSize_ = b_['act_size']
+        act_case_data.maxAir = float(act_element.availableAirSupplyMax)
+        db.session.commit()                            
+        
+
+        return redirect(url_for('rotaryActuator', item_id=item_id, proj_id=proj_id))
+
+
+
+
+def calX(p1,p2):
+    
+    return ((p1-p2)/p1)
+
+
+def calY(p1,p2):
+    y_result = 1 - (calX(p1,p2)  / (3 * 1 * 0.65))
+    print(f'YCALC {y_result}')
+    return y_result
+
+
+def strokeVol(input1, input2):
+    print(f'INPUT FOR VOLUME : {input1}, {input2}')
+    result = (input1 * input2) / (39.37 * 39.37 * 39.37)
+    print(f'VOLUME : {result}')
+    return result
+
+def strokeFlowrate(p1,p2,cv):
+    print(f'P1: p2 {p1},{p2}')
+    Q = (cv * 2240 * 1 * p1 * calY(p1,p2) * math.sqrt(calX(p1,p2) / (28.96 * 1 * 303.15)))
+    print(f'FLOWRATE : {Q}')
+    return Q
+
+
+def totalFillStrokep2(p1,piFill,pfFill):
+    delp = piFill + (2/3 * (pfFill - piFill))
+    return p1 - delp 
+
+def preExhaustStrokep1(piExhaust,setPressure):
+    return piExhaust + ((setPressure - piExhaust) / 2)
+
+def totalExhaustStrokep1(pfExhaust,setPressure):
+    return pfExhaust + ((setPressure - pfExhaust) / 4)
+
+def CalcStrokeTime(vol,flowrate):
+    result = round(((vol / flowrate) * 3600) , 3)
+    print(f'Final Result {result}')
+    return result
+
 
 
 @app.route('/stroke-time/proj-<proj_id>/item-<item_id>', methods=['GET', 'POST'])
 def strokeTime(proj_id, item_id):
     item_element = getDBElementWithId(itemMaster, int(item_id))
     valve_element = db.session.query(valveDetailsMaster).filter_by(item=item_element).first()
-    act_element = db.session.query(actuatorMaster).filter_by(item=item_element).first()
-    actuator_element = db.session.query(actuatorMaster).filter_by(item=item_element).first()
+    act_element_master = db.session.query(actuatorMaster).filter_by(item=item_element).first()
+    act_element_case = db.session.query(actuatorCaseData).filter_by(actuator_=act_element_master).first()
+    stroke_element = db.session.query(strokeCase).filter_by(actuatorCase_=act_element_case).first()
+    # sliding_act = getDBElementWithId(slidingActuatorData, act_element_case.slidingActuatorId)
+    clearance_vol = act_element_case.act_VO
+    swept_vol = float(act_element_case.diaphragm_ea) * float(act_element_case.act_travel)
+    if not stroke_element:
+        new_stroke_data = strokeCase(actuatorCase_=act_element_case)
+        db.session.add(new_stroke_data)
+        db.session.commit()
+        stroke_element = new_stroke_data
+    print(f'STROKE ELEMENTSVV {act_element_case}')
+    # act_VO = db.session.query(slidingActuatorData).filter_by(VO=)
+
     metadata_ = metadata()
-    if actuator_element.actuatorType == 'Piston without Spring':
+    if act_element_master.actuatorType == 'Piston without Spring':
         html_page = 'stroke_time_piston.html'
     else:
         html_page = 'stroke_time_spring.html'
-    if request.method == 'POST':
-        actuator_input_dict = {}
-        actuator_input_dict['actuatorType'] = [request.form.get('actType')]
-        actuator_input_dict['springAction'] = [request.form.get('failAction')]
-        actuator_input_dict['handWheel'] = [request.form.get('mount')]
-        actuator_input_dict['adjustableTravelStop'] = [request.form.get('travel')]
-        actuator_input_dict['orientation'] = [request.form.get('orientation')]
-        actuator_input_dict['availableAirSupplyMin'] = [request.form.get('availableAirSupplyMin')]
-        actuator_input_dict['availableAirSupplyMax'] = [request.form.get('availableAirSupplyMax')]
-        # print(actuator_input_dict)
-        if request.form.get('sliding'):
-            print('working')
-            act_element.update(actuator_input_dict, act_element.id)
-            return redirect(url_for('slidingStem', item_id=item_id, proj_id=proj_id))
-        elif request.form.get('rotary'):
-            act_element.update(actuator_input_dict, act_element.id)
-            return redirect(url_for('rotaryActuator', item_id=item_id, proj_id=proj_id))
-        elif request.form.get('stroketime'):
-            act_element.update(actuator_input_dict, act_element.id)
-            return redirect(url_for('strokeTime', item_id=item_id, proj_id=proj_id))
-        else:
-            pass
+
+    if request.method == "POST":
+        print(f'PPPPPPPPPSS {request.method}')
+        if request.form.get('strokeinput'):
+            print("INPUT")
+            data = request.form.to_dict() 
+            packingFriction_ =  float(data['packingF']) 
+            data.pop('strokeinput')
+            data.pop('packingF')
+            
+            a_ = jsonify(data).json
+           
+            
+           
+
+
+            # stroke_inputs = {} 
+
+            actSize_ = float(data['act_size'])
+            diaphragmArea_ = meta_convert_P_T_FR_L('A', float(data['diaphragm_ea']), data['diaphragm_eaUnit'],
+                                    'inch2', 1.0 * 1000)
+            actTravel_ = meta_convert_P_T_FR_L('L', float(data['act_travel']), data['act_travelUnit'],
+                                    'inch', 1.0 * 1000)
+            setPressure_ = meta_convert_P_T_FR_L('P', float(data['airsupply_max']), data['airsupply_maxUnit'],
+                                    'psia (g)', 1.0 * 1000)
+            lower_benchset_ = meta_convert_P_T_FR_L('P', float(data['lower_benchset']), data['lower_benchsetUnit'],
+                                    'psia (g)', 1.0 * 1000)
+            upper_benchset_ = meta_convert_P_T_FR_L('P', float(data['upper_benchset']), data['upper_benchsetUnit'],
+                                    'psia (g)', 1.0 * 1000)
+            spring_rate_ = float(data['spring_rate'])
+            
+            clearanceVol_ = float(data['clearance_vol']) 
+            sweptVol_ = float(data['swept_vol']) 
+
+
+
+
+            piExhaust = upper_benchset_ - (packingFriction_ / diaphragmArea_)
+            pfExhaust = lower_benchset_ - (packingFriction_ / diaphragmArea_)
+            piFill = lower_benchset_ + (packingFriction_ / diaphragmArea_) 
+            pfFill = upper_benchset_ + (packingFriction_ / diaphragmArea_)
+
+            a_['piExhaust'] = round(piExhaust,3)
+            a_['pfExhaust'] = round(pfExhaust,3)
+            a_['piFill'] = round(piFill,3)
+            a_['pfFill'] = round(pfFill,3)
+
+            a_['piExhaustUnit'] = 'psia (g)'
+            a_['pfExhaustUnit'] = 'psia (g)'
+            a_['piFillUnit'] = 'psia (g)'
+            a_['pfFillUnit'] = 'psia (g)'
+
+
+            print(f'STROKE DATASSSSSSSVVV {stroke_element}')
+            stroke_element.update(a_, stroke_element.id)
+            
+
+
+            return redirect(url_for('strokeTime', item_id=item_id, proj_id=proj_id, stroke_element=stroke_element))
+            
+        
+        if request.form.get('interstroke'):
+            data = request.form.to_dict()
+            packingFriction_ =  float(data['packingF']) 
+            data.pop('interstroke')
+            data.pop('packingF')
+            
+            a_ = jsonify(data).json
+            setPressure_ = meta_convert_P_T_FR_L('P', float(data['airsupply_max']), data['airsupply_maxUnit'],
+                        'bar (g)', 1.0 * 1000)
+            print(f'DATASXX {data}')
+            piExhaust__ =  meta_convert_P_T_FR_L('P', float(data['piExhaust']), data['piExhaustUnit'],
+                                        'bar (g)', 1.0 * 1000)
+            pfExhaust__ = meta_convert_P_T_FR_L('P', float(data['pfExhaust']), data['pfExhaustUnit'],
+                                        'bar (g)', 1.0 * 1000)
+            piFill__ = meta_convert_P_T_FR_L('P', float(data['piFill']), data['piFillUnit'],
+                            'bar (g)', 1.0 * 1000)
+            pfFill__ = meta_convert_P_T_FR_L('P', float(data['pfFill']), data['pfFillUnit'],
+                            'bar (g)', 1.0 * 1000)
+            print(f'BEFORE CALC {piExhaust__},{pfExhaust__},{piFill__},{pfFill__}')
+  
+            
+
+            cvFill__ = float(data['combinedCVFill'])
+            cvExhaust__ = float(data['combinedCVExhaust'])
+            clearanceVol__ = float(data['clearance_vol'])
+            sweptVol__ = float(data['swept_vol'])
+            totalVol = clearanceVol__ + sweptVol__ 
+            
+
+
+            preFillTime = CalcStrokeTime(strokeVol(piFill__, clearanceVol__), strokeFlowrate(setPressure_,piFill__,cvFill__)) 
+            totalFillTime = CalcStrokeTime(strokeVol(pfFill__, totalVol), strokeFlowrate(setPressure_,totalFillStrokep2(setPressure_,piFill__,pfFill__),cvFill__) ) 
+            preExhaustTime = CalcStrokeTime(strokeVol(piExhaust__ , totalVol),  strokeFlowrate(preExhaustStrokep1(piExhaust__,setPressure_),0,cvExhaust__))
+            totalExhaustTime = CalcStrokeTime(strokeVol(pfExhaust__, sweptVol__), strokeFlowrate(totalExhaustStrokep1(pfExhaust__,setPressure_),0,cvExhaust__)) 
+            print(f'RESULTS {preFillTime},{totalFillTime},{preExhaustTime},{totalExhaustTime}')
+            print(f'INTERRRRRRRRRRR')
+            
+            a_['prefillTime'] = preFillTime 
+            a_['totalfillTime'] = totalFillTime 
+            a_['preExhaustTime'] = preExhaustTime 
+            a_['totalExhaustTime'] = totalExhaustTime 
+
+            stroke_element.update(a_, stroke_element.id)
+
+        if request.form.get('clear'):
+            print(f'ClearStroke')
+            if stroke_element.piExhaust or stroke_element.prefillTime:
+                db.session.delete(stroke_element)
+                db.session.commit()
+                return redirect(url_for('strokeTime', item_id=item_id, proj_id=proj_id))
+            else:
+                flash('Calculate before deleting')
+
+
     return render_template(html_page, item=getDBElementWithId(itemMaster, int(item_id)), user=current_user,
-                           metadata=metadata_, page='strokeTime', valve=valve_element, act=act_element)
+                           metadata=metadata_, page='strokeTime', valve=valve_element, act=act_element_master,act_case=act_element_case,stroke_element=stroke_element,clearance_vol=clearance_vol,swept_vol=swept_vol)
+
+
 
 
 # Accessories
