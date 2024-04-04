@@ -6,6 +6,11 @@ from dbsetup import db
 
 
 # issues check
+class newColumn(db.Model):
+    __tablename__ = "newCol"
+
+    id = Column(Integer, primary_key=True)  
+    newRow = Column(Float)
 
 
 class stemSize(db.Model):
@@ -1409,6 +1414,7 @@ class actuatorMaster(db.Model):
 
     # rel as parent
     actCase = relationship('actuatorCaseData', cascade="all,delete", back_populates='actuator_')
+    rotCase = relationship('rotaryCaseData', cascade="all,delete", back_populates='actuator_')
 
     # rel as child to item
     itemId = Column(Integer, ForeignKey("itemMaster.id"))
@@ -1465,7 +1471,7 @@ class rotaryActuatorData(db.Model):
     valveInterface = Column(String(100))
     actSize_ = Column(String(100))
     actSize = Column(Float)
-    springSet = Column(Integer)
+    springSet = Column(String(100))
     torqueType = Column(String(100))
     setPressure = Column(String(100))
     start = Column(Float)
@@ -1474,6 +1480,191 @@ class rotaryActuatorData(db.Model):
 
     # rel as parent
     actuatorCase = relationship('actuatorCaseData', cascade="all,delete", back_populates='rotaryActuator')
+
+class strokeCase(db.Model):
+    __tablename__ = "strokeCase"
+    
+    #input
+    id = Column(Integer, primary_key=True) 
+    act_size = Column(Float)
+    act_travel = Column(Float)
+    diaphragm_ea = Column(Float)
+    lower_benchset = Column(Float)
+    upper_benchset = Column(Float)
+    spring_rate = Column(Float)
+    airsupply_max = Column(Float)
+    clearance_vol = Column(Float)
+    swept_vol = Column(Float) 
+
+    diaphragm_eaUnit = Column(String(20))
+    lower_benchsetUnit = Column(String(20))
+    upper_benchsetUnit = Column(String(20))
+    spring_rateUnit = Column(String(20))
+    airsupply_maxUnit = Column(String(20))
+    clearance_volUnit = Column(String(20))
+    swept_volUnit = Column(String(20))
+    act_travelUnit = Column(String(20))
+
+    #intermediate results
+    piExhaust = Column(Float)
+    pfExhaust = Column(Float)
+    piFill = Column(Float)
+    pfFill = Column(Float)
+    combinedCVFill = Column(Float)
+    combinedCVExhaust = Column(Float)
+
+    piExhaustUnit = Column(String(20))
+    pfExhaustUnit = Column(String(20))
+    piFillUnit = Column(String(20))
+    pfFillUnit = Column(String(20))
+
+    #final results 
+    prefillTime = Column(Float) 
+    totalfillTime = Column(Float) 
+    preExhaustTime = Column(Float) 
+    totalExhaustTime = Column(Float) 
+
+    preFillUnit = Column(String(20))
+    totalFillUnit = Column(String(20))
+    preExhaustUnit = Column(String(20))
+    totalExhaustUnit = Column(String(20))
+
+
+    
+    actuatorCaseId = Column(Integer, ForeignKey('actuatorCaseData.id'))
+    actuatorCase_ = relationship('actuatorCaseData', back_populates='strokeCase_')
+
+    status = Column(Integer)
+
+
+
+    @staticmethod
+    def update(new_data, id):
+        print(f'NEWDATA {new_data}')
+        # note that this method is static and
+        # you have to pass id of the object you want to update
+        keys = new_data.keys()  # new_data in your case is filenames
+        files = strokeCase.query.filter_by(id=id).first()  # files is the record
+        # you want to update
+        for key in keys:
+            print(f'IM KEYS {key}')
+            print(new_data[key])
+            value = new_data[key] if new_data[key] else None  
+            setattr(files, key, value)
+        db.session.commit()
+
+    
+    
+
+class rotaryCaseData(db.Model):
+    __tablename__ = "rotaryCaseData"
+
+    id = Column(Integer, primary_key=True) 
+
+    #inputs
+    v_size = Column(Float)
+    disc_dia = Column(Float)
+    shaft_dia = Column(Float)
+    max_rot = Column(Float)
+    delP = Column(Float)
+    bush_coeff = Column(Float)
+    csc = Column(Float)
+    csv = Column(Float)
+    a_factor = Column(Float)
+    b_factor = Column(Float)
+    pack_coeff = Column(Float)
+    radial_coeff = Column(Float)
+    Section = Column(Float)
+
+    #units 
+    valveSizeUnit = Column(String(100))
+    discDiaUnit = Column(String(100))
+    shaftDiaUnit = Column(String(100))
+    max_rotUnit = Column(String(100))
+    delpUnit = Column(String(100))
+    packingRadialUnit = Column(String(100))
+
+    #outputs 
+    st = Column(Float)
+    pt = Column(Float)
+    ft = Column(Float)
+    bto = Column(Float)
+    rto = Column(Float)
+    eto = Column(Float)
+    btc = Column(Float)
+    rtc = Column(Float)
+    etc = Column(Float)
+    mast = Column(Float)
+    setP = Column(Float)
+    actSize_ = Column(String(100))
+    maxAir = Column(Float)
+    springSet = Column(String(100))
+    springSt = Column(String(100))
+    springMd = Column(String(100))
+    springEd = Column(String(100))
+    AirSt = Column(String(100))
+    AirMd = Column(String(100))
+    AirEd = Column(String(100))
+    ReqHand = Column(Float)
+
+    #units 
+    stUnit = Column(String(100))
+    ptUnit = Column(String(100))
+    ftUnit = Column(String(100))
+    btoUnit = Column(String(100))
+    rtoUnit = Column(String(100))
+    etoUnit = Column(String(100))
+    btcUnit = Column(String(100))
+    rtcUnit = Column(String(100))
+    etcUnit = Column(String(100))
+    mastUnit = Column(String(100))
+    setPUnit = Column(String(100))
+    maxAirUnit = Column(String(100))
+    stStartUnit = Column(String(100))
+    stMidUnit = Column(String(100))
+    stEndUnit = Column(String(100))
+    atStartUnit = Column(String(100))
+    atMidUnit = Column(String(100))
+    atEndUnit = Column(String(100))
+    handWheelUnit = Column(String(100))
+
+
+    actuatorMasterId = Column(Integer, ForeignKey('actuatorMaster.id'))
+    actuator_ = relationship('actuatorMaster', back_populates='rotCase')
+
+    @staticmethod
+    def update(new_data, id):
+        # note that this method is static and
+        # you have to pass id of the object you want to update
+        keys = new_data.keys()  # new_data in your case is filenames
+        files = rotaryCaseData.query.filter_by(id=id).first()  # files is the record
+        # you want to update
+        if files:
+            for key, value in new_data.items():
+                # Check if the value is empty (assuming empty strings are considered empty)
+                if value[0] == "":
+                    # Set the attribute to None (NULL) if the value is empty
+                    setattr(files, key, None)
+                else:
+                    # Set the attribute to the value from the JSON
+                    setattr(files, key, value[0])
+            
+            db.session.commit()
+        else:
+            # Handle the case where the record with the given ID is not found
+            print("Record not found")
+
+
+    
+
+
+
+
+
+
+
+
+
 
 
 class actuatorCaseData(db.Model):
@@ -1517,27 +1708,36 @@ class actuatorCaseData(db.Model):
     airsupply_min = Column(Float) 
     airsupply_max = Column(Float)
     knValue = Column(Float)
+    packingFriction = Column(Float)
+    seatloadFactor = Column(Float)
+    shutOffDelP = Column(Float)
+    unbalForce = Column(Float) 
+    negGrad = Column(Float)
+    act_VO = Column(Float)
+
+
+
   
 
     # rotary
-    bushingCoeff = Column(Float)
-    packingFrictionCoeff = Column(Float)
-    aFactor = Column(Float)
-    bFactor = Column(Float)
-    packingRadialAxialStress = Column(Float)
-    packingSection = Column(Float)
-    seatingTorqueCalc = Column(Float)
-    packingTorqueCalc = Column(Float)
-    frictionTorqueCalc = Column(Float)
-    bto = Column(Float)
-    rto = Column(Float)
-    eto = Column(Float)
-    btc = Column(Float)
-    rtc = Column(Float)
-    etc = Column(Float)
-    mast = Column(Float)
-    setPressureR = Column(Float)
-    reqHandTorque = Column(Float)
+    # bushingCoeff = Column(Float)
+    # packingFrictionCoeff = Column(Float)
+    # aFactor = Column(Float)
+    # bFactor = Column(Float)
+    # packingRadialAxialStress = Column(Float)
+    # packingSection = Column(Float)
+    # seatingTorqueCalc = Column(Float)
+    # packingTorqueCalc = Column(Float)
+    # frictionTorqueCalc = Column(Float)
+    # bto = Column(Float)
+    # rto = Column(Float)
+    # eto = Column(Float)
+    # btc = Column(Float)
+    # rtc = Column(Float)
+    # etc = Column(Float)
+    # mast = Column(Float)
+    # setPressureR = Column(Float)
+    # reqHandTorque = Column(Float)
 
     
     # Units
@@ -1610,6 +1810,9 @@ class actuatorCaseData(db.Model):
     rotaryActuatorId = Column(Integer, ForeignKey("rotaryActuatorData.id"))
     rotaryActuator = relationship('rotaryActuatorData', back_populates='actuatorCase')
 
+
+    strokeCase_ = relationship('strokeCase', back_populates='actuatorCase_')
+
     @staticmethod
     def update(new_data, id):
         # note that this method is static and
@@ -1635,6 +1838,15 @@ class actuatorCaseData(db.Model):
             print(new_data[key])
             exec("files.{0} = new_data['{0}'][0]".format(key))
         db.session.commit()
+
+class yieldStrength(db.Model):
+    __tablename__ = "yieldStrength"
+
+    id = Column(Integer, primary_key=True)
+    shaft_material = Column(String(200))
+    yield_strength = Column(String(200))
+
+
 
 
 class packingFriction(db.Model):

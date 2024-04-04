@@ -166,7 +166,7 @@
                         <div class="mt-3">
                             <input type="submit" class="btn btn-info active actuator_button1" name="sliding" value="Sliding Stem Actuator Sizing">
                             <input type="submit" class="btn  btn-info actuator_button2 mt-2"  name="rotary" value="Rotary Actuator Sizing">
-                            <input type="submit" class="btn btn-info actuator_button3 mt-2"  name="stroketime" value="Stroketime">
+                          
                         </div>
                     </div>
 
@@ -376,6 +376,7 @@
                                             </select>
                                             </div>
                                         <div class="row sizingtable">
+                                        
                                         </div>
                                         <div class="row sizingtable">
                                             <select name="inletPressureUnit" class="form-control-sm-sm sliding_select actuatorUnits" name="ipres" data-desc="ipres"
@@ -449,13 +450,13 @@
                                         </div> 
                                         <div class="row sizingtable"><input type="text" required name="plugDia"  {% if act_case.plugDia %} value="{{act_case.plugDia}}"{% else %} value="{{ua_element.plugDia }}" {% endif %}  class="form-control-sm-sm sliding_input plugDia actuatorvalue_plugDia"></div>
                                         <div class="row sizingtable"><input type="text" required name="valveTravel" {% if act_case.valveTravel %} value="{{act_case.valveTravel}}"{% else %} value="{{cv_element.travel}}" {% endif %}  class="form-control-sm-sm sliding_input actuatorvalue_valveTravel"></div>
-                                        <div class="row sizingtable"><input type="text" required name="" class="form-control-sm-sm sliding_input packingF actuatorvalue_packFricton"></div>
-                                        <div class="row sizingtable"><input type="text" required name="" class="form-control-sm-sm sliding_input seatF "></div>
+                                        <div class="row sizingtable"><input type="text"  name="packingF" {% if act_case.packingFriction %} value="{{act_case.packingFriction}}" {% endif %} class="form-control-sm-sm sliding_input packingF actuatorvalue_packFricton"></div>
+                                        <div class="row sizingtable"><input type="text" name="seatF" {% if act_case.seatloadFactor %} value="{{act_case.seatloadFactor}}" {% endif %} class="form-control-sm-sm sliding_input seatF "></div>
                                         <div class="row sizingtable"><input type="text" required name="iPressure" {% if act_case.iPressure %} value="{{act_case.iPressure}}"{% else %} value="{{cases[0].inletPressure}}" {% endif %} class="form-control-sm-sm sliding_input ipres actuatorvalue_ipres"></div>
                                         <div class="row sizingtable"><input type="text" required name="oPressure" {% if act_case.oPressure %} value="{{act_case.oPressure}}"{% else %} value="{{cases[0].outletPressure}}" {% endif %} class="form-control-sm-sm sliding_input opres actuatorvalue_opres"></div>
-                                        <div class="row sizingtable"><input type="text" readonly required name="shutOffDelP" value="{{valve.shutOffDelP}}" class="form-control-sm-sm sliding_input "></div>
-                                        <div class="row sizingtable"><input type="text" name="" class="form-control-sm-sm sliding_input unbal_f actuatorvalue_unbalForce"></div>
-                                        <div class="row sizingtable"><input type="text" name="" class="form-control-sm-sm sliding_input actuatorvalue_negGrad" {% if act_case.knValue %} value="{{act_case.knValue}}" {% endif %}></div>
+                                        <div class="row sizingtable"><input type="text" required name="shutOffDelP" {% if act_case.shutOffDelP %} value="{{act_case.shutOffDelP}}" {% else %} value="{{valve.shutOffDelP}}" {% endif %}  class="form-control-sm-sm sliding_input "></div>
+                                        <div class="row sizingtable"><input type="text" name="unbalForce" class="form-control-sm-sm sliding_input unbal_f actuatorvalue_unbalForce"></div>
+                                        <div class="row sizingtable"><input type="text" name="negGrad" class="form-control-sm-sm sliding_input actuatorvalue_negGrad" {% if act_case.knValue %} value="{{act_case.knValue}}" {% endif %}></div>
                                         <div class="row sizingtable"><input type="text" name="" class="form-control-sm-sm sliding_input delp actuatorvalue_delpflow"></div>
                                     </div>
                                 </div>
@@ -463,6 +464,7 @@
                                     <div class="row">
                                         <input type="submit" class="btn btn-info input_btn1" name="submit1" value="Calculate">
                                         <input type="submit" class="btn btn-info ml-3 input_btn2" name="select-actuator-sliding" value="Select Actuators">
+                                        <input type="submit" class="btn btn-info actuator_button3 mt-2"  name="stroketime" value="Stroketime">
                                         <!-- <button type="button" class="btn btn-info input_btn1">Calculate</button> -->
                                         <!-- <a href="Selectacuator(rotary).html"><button type="button" class="btn btn-info ml-3 input_btn2">Select Actuator</button></a> -->
                                     </div>
@@ -784,6 +786,32 @@
 <script>
 
     $(document).ready(function(){
+        $('.trimType, .balance, .flowDirection').on('change',function(){
+            act_id = "{{act.id}}"
+            $.ajax({
+                        type: "GET",
+                        url: "/slidingStemDel",
+                        data: {
+                            act_id : act_id
+                        
+                        },
+                        success: function(response) {
+                            console.log(response)
+                            if(response == 'SUCCESS'){
+                                location.reload();
+                            }
+                            
+                                
+                         
+                           
+                        },
+                        error: function(xhr, status, error) {
+                        console.error("Error:", error);
+                        }
+                });
+        })
+
+  
         var stem_prev_unit;
         $('.stemDiaUnit').on('focus',function(){
             
@@ -909,49 +937,49 @@
         oPres = "{{cases[0].outletPressure}}"
         $('.delp').val(iPres-oPres);
 
-       
-        var stemDia = $('.stemDia').val();
-                var itemId = "{{item.id}}";
+        
+    //     var stemDia = $('.stemDia').val();
+    //             var itemId = "{{item.id}}";
                 
                 
-                $.ajax({
-                    type: "GET",
-                    url: "/getpackingfriction",
-                    data: {
-                        stemDia: stemDia,
-                        itemId: itemId
-                    },
-                    success: function(data) {
-                        $('.packingF').val(data.value);
+    //             $.ajax({
+    //                 type: "GET",
+    //                 url: "/getpackingfriction",
+    //                 data: {
+    //                     stemDia: stemDia,
+    //                     itemId: itemId
+    //                 },
+    //                 success: function(data) {
+    //                     $('.packingF').val(data.value);
 
-                    },
+    //                 },
 
-                    error: function(xhr, status, error) {
-                        alert(data.message);
-                    }
-                    });
+    //                 error: function(xhr, status, error) {
+    //                     alert(data.message);
+    //                 }
+    //                 });
 
 
-        var seatDia = $('.seatDia').val();
-        var itemId = "{{item.id}}";
-        console.log(seatDia,itemId);
-        $.ajax({
-                    type: "GET",
-                    url: "/getseatload",
-                    data: {
-                        itemId: itemId,
-                        seatDia: seatDia
-                    },
-                    success: function(data) {
-                        $('.seatF').val(data.value);
+    //     var seatDia = $('.seatDia').val();
+    //     var itemId = "{{item.id}}";
+    //     console.log(seatDia,itemId);
+    //     $.ajax({
+    //                 type: "GET",
+    //                 url: "/getseatload",
+    //                 data: {
+    //                     itemId: itemId,
+    //                     seatDia: seatDia
+    //                 },
+    //                 success: function(data) {
+    //                     $('.seatF').val(data.value);
 
-                    },
+    //                 },
 
-                    error: function(xhr, status, error) {
-                        alert(data.message);
-                    }
-                    });
-    })
+    //                 error: function(xhr, status, error) {
+    //                     alert(data.message);
+    //                 }
+    //                 });
+     })
        
     
         $(document).ready(function() {
