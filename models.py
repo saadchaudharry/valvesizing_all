@@ -1639,11 +1639,20 @@ class rotaryCaseData(db.Model):
         keys = new_data.keys()  # new_data in your case is filenames
         files = rotaryCaseData.query.filter_by(id=id).first()  # files is the record
         # you want to update
-        for key in keys:
-            print(key)
-            print(new_data[key])
-            exec("files.{0} = new_data['{0}'][0]".format(key))
-        db.session.commit()
+        if files:
+            for key, value in new_data.items():
+                # Check if the value is empty (assuming empty strings are considered empty)
+                if value[0] == "":
+                    # Set the attribute to None (NULL) if the value is empty
+                    setattr(files, key, None)
+                else:
+                    # Set the attribute to the value from the JSON
+                    setattr(files, key, value[0])
+            
+            db.session.commit()
+        else:
+            # Handle the case where the record with the given ID is not found
+            print("Record not found")
 
 
     

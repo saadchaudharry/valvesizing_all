@@ -1155,10 +1155,10 @@ def sendOTP(username):
         db.session.commit()
     try:
         # Send email using Hostinger's SMTP server
-        s = smtplib.SMTP('smtp.hostinger.com', 587)
+        s = smtplib.SMTP('smtp.gmail.com', 587)
         s.starttls()
-        sender_email = 'noreply@valvesizing.fccommune.com'  # Replace with your Hostinger email
-        sender_email_password = 'Qwer@4321'  # Replace with your Hostinger email password
+        sender_email = 'fccommuneit@gmail.com'  # Replace with your Hostinger email
+        sender_email_password = 'reuk tgqf ftyi mrsx'  # Replace with your Hostinger email password
         # sender_email = 'sizinghelp@valvesizing.fccommune.com'  # Replace with your Hostinger email
         # sender_email_password = 'Sizing@admin0'  # Replace with your Hostinger email password
         reciever_email = ['pandi709410@gmail.com', username]
@@ -6788,28 +6788,66 @@ def rotaryActuator(proj_id, item_id):
 
         
             data = request.form.to_dict(flat=False)
+            data.pop('rotary_calculate')
+            data.pop('availableAirSupplyMax')
+            data.pop('availableAirSupplyMaxUnit')
+            data.pop('availableAirSupplyMin')
+            data.pop('shutoffDelP')
+            data.pop('actType')
+            data.pop('maxAirUnit')
+            data.pop('mount')
+            data.pop('failAction')
+            data.pop('orientation')
+            data.pop('setPressureUnit')
+            data.pop('shutoffDelPUnit')
+            data.pop('travel')
+            # data.pop('rotaryCaseData_id')
+           
             a = jsonify(data).json
-            print(a)
+            print(f'ROTARY DATAS {a}')
+            
+
+
+            
             rotary_case_inputs = {}
-            rotary_case_inputs['v_size'] = a['v_size']
-            rotary_case_inputs['disc_dia'] = a['disc_dia']
-            rotary_case_inputs['shaft_dia'] = a['shaft_dia']
-            rotary_case_inputs['max_rot'] = a['max_rot']
-            rotary_case_inputs['delP'] = a['delP']
-            rotary_case_inputs['bush_coeff'] = a['bush_coeff']
-            rotary_case_inputs['csc'] = a['csc']
-            rotary_case_inputs['csv'] = a['csv']
-            rotary_case_inputs['a_factor'] = a['a_factor']
-            rotary_case_inputs['b_factor'] = a['b_factor']
-            rotary_case_inputs['pack_coeff'] = a['pack_coeff']
-            rotary_case_inputs['radial_coeff'] = a['radial_coeff']
-            rotary_case_inputs['Section'] = a['Section']
+            # rotary_case_inputs['v_size'] = a['v_size']
+            # rotary_case_inputs['valveSizeUnit'] = a['valveSizeUnit']
+
+            # rotary_case_inputs['disc_dia'] = a['disc_dia']
+            # rotary_case_inputs['discDiaUnit'] = a['discDiaUnit']
+
+            # rotary_case_inputs['shaft_dia'] = a['shaft_dia']
+            # rotary_case_inputs['shaftDiaUnit'] = a['shaftDiaUnit']
+
+            # rotary_case_inputs['max_rot'] = a['max_rot']
+            # rotary_case_inputs['max_rotUnit'] = a['max_rotUnit']
+
+            # rotary_case_inputs['delP'] = a['delP']
+            # rotary_case_inputs['delpUnit'] = a['delpUnit']
+
+            # rotary_case_inputs['bush_coeff'] = a['bush_coeff']
+            # rotary_case_inputs['csc'] = a['csc']
+            # rotary_case_inputs['csv'] = a['csv']
+            # rotary_case_inputs['a_factor'] = a['a_factor']
+            # rotary_case_inputs['b_factor'] = a['b_factor']
+            # rotary_case_inputs['pack_coeff'] = a['pack_coeff']
+            # rotary_case_inputs['radial_coeff'] = a['radial_coeff']
+            # rotary_case_inputs['Section'] = a['Section']
 
 
             #op Calc 
-            seating_torque__ = round((float(a['delP'][0]) * float(a['b_factor'][0])) + float(a['a_factor'][0]))
-            packing_torque__ = round(0.75 * float(a['delP'][0]) * math.pi * float(a['radial_coeff'][0]) * float(a['Section'][0]) * float(a['pack_coeff'][0]) * (float(a['shaft_dia'][0]) ** 2))
-            friction_torque__ = round((math.pi / 8) * (float(a['disc_dia'][0]) ** 2) * float(a['delP'][0]) * float(a['shaft_dia'][0]) * float(a['bush_coeff'][0]))
+            delp = meta_convert_P_T_FR_L('P', float(a['delP'][0]), a['delpUnit'][0],
+                                    'bar (a)', 1.0 * 1000)
+            section = meta_convert_P_T_FR_L('L', float(a['Section'][0]), a['packingRadialUnit'][0],
+                        'inch', 1.0 * 1000)
+            shaftDia = meta_convert_P_T_FR_L('L', float(a['shaft_dia'][0]), a['shaftDiaUnit'][0],
+                        'inch', 1.0 * 1000)
+            discDia = meta_convert_P_T_FR_L('L', float(a['disc_dia'][0]), a['discDiaUnit'][0],
+                        'inch', 1.0 * 1000)
+            print(f'CALC {delp},{section},{shaftDia},{discDia}')
+            seating_torque__ = round((delp * float(a['b_factor'][0])) + float(a['a_factor'][0]))
+            packing_torque__ = round(0.75 * delp * math.pi * float(a['radial_coeff'][0]) * section * float(a['pack_coeff'][0]) * (shaftDia ** 2))
+            friction_torque__ = round((math.pi / 8) * (discDia ** 2) * delp * shaftDia * float(a['bush_coeff'][0]))
             bto_ = seating_torque__ + packing_torque__ + friction_torque__
             btc_ = round(0.8 * bto_)
             rto_ = eto_ = rtc_ = etc_ = 0.5 * bto_
@@ -6817,21 +6855,20 @@ def rotaryActuator(proj_id, item_id):
             yeild = db.session.query(shaft).filter_by(name=shaft_mat.name).first()
             print(f'YIELD {yeild}')
             strength = round(int(yeild.yield_strength) / math.sqrt(3))
-            rotary_case_inputs['mast'] = [(math.pi * strength * (float(a['shaft_dia'][0]) ** 3)) / 16]
-            rotary_case_inputs['st'] = [seating_torque__]
-            rotary_case_inputs['pt'] = [packing_torque__]
-            rotary_case_inputs['ft'] = [friction_torque__]
-            rotary_case_inputs['bto'] = [bto_]
-            rotary_case_inputs['rto'] = [rto_]
-            rotary_case_inputs['eto'] = [eto_]
-            rotary_case_inputs['btc'] = [btc_]
-            rotary_case_inputs['rtc'] = [rtc_]
-            rotary_case_inputs['etc'] = [etc_ ]
-            rotary_case_inputs['setP'] = [act_element.availableAirSupplyMax]
+            a['mast'] = [(math.pi * strength * (shaftDia ** 3)) / 16]
+            a['st'] = [seating_torque__]
+            a['pt'] = [packing_torque__]
+            a['ft'] = [friction_torque__]
+            a['bto'] = [bto_]
+            a['rto'] = [rto_]
+            a['eto'] = [eto_]
+            a['btc'] = [btc_]
+            a['rtc'] = [rtc_]
+            a['etc'] = [etc_ ]
+            a['setP'] = [act_element.availableAirSupplyMax]
 
-            act_case_data.update(rotary_case_inputs, act_case_data.id)
 
-        
+            act_case_data.update(a, act_case_data.id)
 
             print(f'ROTARY {data},{a}')
 
@@ -6845,6 +6882,21 @@ def rotaryActuator(proj_id, item_id):
             print(f'SELECT ACT ROTARY')
             setPressure_ = meta_convert_P_T_FR_L('P', float(act_element.availableAirSupplyMax), act_element.availableAirSupplyMaxUnit,
                         'bar (a)', 1.0 * 1000) 
+            bto = meta_convert_P_T_FR_L('TOR', float(act_case_data.bto), act_case_data.btoUnit,
+                        'lbf.inch', 1.0 * 1000) 
+            rto = meta_convert_P_T_FR_L('TOR', float(act_case_data.rto), act_case_data.rtoUnit,
+                        'lbf.inch', 1.0 * 1000) 
+            eto = meta_convert_P_T_FR_L('TOR', float(act_case_data.eto), act_case_data.etoUnit,
+                        'lbf.inch', 1.0 * 1000) 
+            btc = meta_convert_P_T_FR_L('TOR', float(act_case_data.btc), act_case_data.btcUnit,
+                        'lbf.inch', 1.0 * 1000) 
+            rtc = meta_convert_P_T_FR_L('TOR', float(act_case_data.rtc), act_case_data.rtcUnit,
+                        'lbf.inch', 1.0 * 1000) 
+            etc = meta_convert_P_T_FR_L('TOR', float(act_case_data.etc), act_case_data.etcUnit,
+                        'lbf.inch', 1.0 * 1000) 
+
+
+            
             
             print(f'SETPRESSURESS {str(setPressure_).rstrip('0').rstrip('.')}')
             print(f'SELECT ACT DATAS {setPressure_}, {''.join(str(act_element.springAction))},{act_element.actuatorType}')
@@ -6853,7 +6905,7 @@ def rotaryActuator(proj_id, item_id):
             all_act_data = []
             for acts in return_actuator_data:
                 if act_element.springAction == 'DA':
-                    if float(acts.start) < act_case_data.bto and float(acts.mid) < act_case_data.rto and float(acts.end) < act_case_data.eto:
+                    if float(acts.start) < bto and float(acts.mid) < rto and float(acts.end) < eto:
                         a_dict = {'id': (acts.id, 0), 'fail_action': acts.failAction,
                                     'valve_interface': acts.valveInterface, 'act_size': acts.actSize_,
                                     'spring_set': acts.springSet, 's1': 'NA', 's2': 'NA',
@@ -6861,19 +6913,19 @@ def rotaryActuator(proj_id, item_id):
                                     'set_pressure': acts.setPressure}
                 else:
                     if act_element.springAction == "AFO":
-                        bt1 = act_case_data.btc
-                        bt2 = act_case_data.bto
-                        rt1 = act_case_data.rtc
-                        rt2 = act_case_data.rto
-                        et1 = act_case_data.etc
-                        et2 = act_case_data.eto
+                        bt1 = btc
+                        bt2 = bto
+                        rt1 = rtc
+                        rt2 = rto
+                        et1 = etc
+                        et2 = eto
                     else:
-                        bt2 = act_case_data.btc
-                        bt1 = act_case_data.bto
-                        rt2 = act_case_data.rtc
-                        rt1 = act_case_data.rto
-                        et2 = act_case_data.etc
-                        et1 = act_case_data.eto
+                        bt2 = btc
+                        bt1 = bto
+                        rt2 = rtc
+                        rt1 = rto
+                        et2 = etc
+                        et1 = eto
                     if float(acts.start) < bt1 and float(acts.mid) < rt1 and float(acts.end) < et1:
                         st_element = db.session.query(rotaryActuatorData).filter_by(
                             valveInterface=acts.valveInterface, springSet=acts.springSet).first()
@@ -6897,18 +6949,22 @@ def rotaryActuator(proj_id, item_id):
 
                 return render_template('select_ractuator.html', data=all_act_data, item_d=item_element,
                         page='selectActuator', item=item_element, user=current_user)
-            
-
-
-
-
-
-
-
-           
+          
     return render_template('RotaryActuatorSizing.html', item=getDBElementWithId(itemMaster, int(item_id)), 
                            user=current_user, metadata=metadata_, page='rotaryActuator',
                          valve=valve_element, act=act_element,act_case_data=act_case_data)
+
+
+
+@app.route('/rotaryActCaseDelete/proj-<proj_id>/item-<item_id>/act-<act_id>',methods=['GET','POST'])
+def rotaryActCaseDelete(proj_id,item_id,act_id):
+    actMaster = getDBElementWithId(actuatorMaster,act_id)
+    act_element = db.session.query(rotaryCaseData).filter_by(actuator_=actMaster).first()
+    print(f'ACTELEMENT {act_element}')
+    db.session.delete(act_element)
+    db.session.commit()
+    return redirect(url_for('rotaryActuator', item_id=item_id, proj_id=proj_id))
+
 
 
 @app.route('/select-rotary-actuator/proj-<proj_id>/item-<item_id>', methods=['GET', 'POST'])
@@ -6923,9 +6979,10 @@ def selectRotaryActuator(proj_id, item_id):
        
         act_data = {}
         b_ = ast.literal_eval(a_['rAct'])
-
-   
+        print(f'SELECT B {b_}')
         
+        #outputs 
+
         act_case_data.springSet = b_['spring_set']
         act_case_data.springSt = b_['s1']
         act_case_data.springMd = b_['s2']
@@ -6934,6 +6991,12 @@ def selectRotaryActuator(proj_id, item_id):
         act_case_data.AirMd = b_['a2']
         act_case_data.AirEd = b_['a3']
         act_case_data.actSize_ = b_['act_size']
+        act_case_data.stStartUnit = 'lbf.inch'
+        act_case_data.stMidUnit = 'lbf.inch'
+        act_case_data.stEndUnit = 'lbf.inch'
+        act_case_data.atStartUnit = 'lbf.inch'
+        act_case_data.atMidUnit = 'lbf.inch'
+        act_case_data.atEndUnit = 'lbf.inch'
         act_case_data.maxAir = float(act_element.availableAirSupplyMax)
         db.session.commit()                            
         

@@ -169,7 +169,7 @@
                                         <h6 class="sliding_heading"><b>Input</b></h6>
                                     </div>
                                
-                                    <a href="#" data-id="" class="col-1 delete-actcase">
+                                    <a href="{{url_for('rotaryActCaseDelete', item_id=item.id, proj_id=item.project.id, act_id=act.id)}}"  data-id="" class="col-1 delete-actcase">
                                         <i class="fa-solid fa-close fa-1x closeicon " data-toggle="tooltip" title="Delete Actuator Case"></i>
                                     </a>
                                  
@@ -200,7 +200,12 @@
                                             <select name="valveSizeUnit" class="form-control-sm-sm sliding_select RactuatorUnits" data-desc="valveSize"
                                             >
                                             {% for length in metadata['units_dict']['length'] %}
-                                                <option value="{{length.id}}">{{length.name}}</option>
+                                                <option value="{{length.id}}" 
+                                                {% if act_case_data.valveSizeUnit == length.id %}
+                                                selected
+                                                {% endif %}
+                                                
+                                                >{{length.name}}</option>
                                             {% endfor %}
                                         </select>
                                         </div>
@@ -208,7 +213,11 @@
                                             <select name="discDiaUnit" class="form-control-sm-sm sliding_select RactuatorUnits" data-desc="discDia"
                                             >
                                             {% for length in metadata['units_dict']['length'] %}
-                                                <option value="{{length.id}}">{{length.name}}</option>
+                                                <option value="{{length.id}}" 
+                                                {% if act_case_data.discDiaUnit == length.id %}
+                                                selected
+                                                {% endif %}
+                                                >{{length.name}}</option>
                                             {% endfor %}
                                         </select>
                                         </div>
@@ -216,7 +225,12 @@
                                             <select name="shaftDiaUnit" class="form-control-sm-sm sliding_select RactuatorUnits" data-desc="shaftDia"
                                             >
                                             {% for length in metadata['units_dict']['length'] %}
-                                                <option value="{{length.id}}">{{length.name}}</option>
+                                                <option value="{{length.id}}" 
+                                                {% if act_case_data.shaftDiaUnit == length.id %}
+                                                selected
+                                                {% endif %}
+                                                
+                                                >{{length.name}}</option>
                                             {% endfor %}
                                         </select>
                                         </div>
@@ -229,7 +243,11 @@
                                             <select name="delpUnit" class="form-control-sm-sm sliding_select RactuatorUnits" data-desc="delp"
                                             >
                                             {% for length in metadata['units_dict']['pressure'] %}
-                                                <option value="{{length.id}}">{{length.name}}</option>
+                                                <option value="{{length.id}}" 
+                                                {% if act_case_data.delpUnit == length.id %}
+                                                selected
+                                                {% endif %}
+                                                >{{length.name}}</option>
                                             {% endfor %}
                                         </select>
                                         </div>
@@ -246,7 +264,11 @@
                                             <select name="packingRadialUnit" class="form-control-sm-sm sliding_select RactuatorUnits" data-desc="packingRadial"
                                             >
                                             {% for length in metadata['units_dict']['length'] %}
-                                                <option value="{{length.id}}">{{length.name}}</option>
+                                                <option value="{{length.id}}" 
+                                                {% if act_case_data.packingRadialUnit == length.id %}
+                                                selected
+                                                {% endif %}
+                                                >{{length.name}}</option>
                                             {% endfor %}
                                         </select>
                                         </div>
@@ -314,77 +336,121 @@
                                         <div class="row sizingtable">
                                             <select name="stUnit"  class="form-control-sm-sm Rotary_select RactuatorUnits" data-desc="stUnit">
                                             {% for length in metadata['units_dict']['torque'] %}
-                                                <option value="{{length.id}}">{{length.name}}</option>
+                                                <option value="{{length.id}}" 
+                                                {% if act_case_data.stUnit == length.id %}
+                                                selected
+                                                {% endif %}
+                                                >{{length.name}}</option>
                                             {% endfor %}
                                             </select>
                                         </div>
                                         <div class="row sizingtable">
                                             <select  name="ptUnit"  class="form-control-sm-sm Rotary_select RactuatorUnits" data-desc="ptUnit">
                                                 {% for length in metadata['units_dict']['torque'] %}
-                                                <option value="{{length.id}}">{{length.name}}</option>
+                                                <option value="{{length.id}}" 
+                                                {% if act_case_data.ptUnit == length.id %}
+                                                selected
+                                                {% endif %}
+                                                >{{length.name}}</option>
                                             {% endfor %}
                                             </select>
                                         </div>   
                                         <div class="row sizingtable">
                                             <select name="ftUnit" class="form-control-sm-sm Rotary_select RactuatorUnits" data-desc="ftUnit">
                                                 {% for length in metadata['units_dict']['torque'] %}
-                                                <option value="{{length.id}}">{{length.name}}</option>
+                                                <option value="{{length.id}}" 
+                                                {% if act_case_data.ftUnit == length.id %}
+                                                selected
+                                                {% endif %}
+                                                >{{length.name}}</option>
                                             {% endfor %}
                                             </select>
                                         </div>   
                                         <div class="row sizingtable">
                                             <select name="btoUnit" class="form-control-sm-sm Rotary_select RactuatorUnits" data-desc="btoUnit">
                                                 {% for length in metadata['units_dict']['torque'] %}
-                                                <option value="{{length.id}}">{{length.name}}</option>
+                                                <option value="{{length.id}}" 
+                                                {% if act_case_data.btoUnit == length.id %}
+                                                selected
+                                                {% endif %}
+                                                >{{length.name}}</option>
                                             {% endfor %}
                                             </select>
                                         </div>   
                                         <div class="row sizingtable">
                                             <select name="rtoUnit" class="form-control-sm-sm Rotary_select RactuatorUnits" data-desc="rtoUnit">
                                                 {% for length in metadata['units_dict']['torque'] %}
-                                                <option value="{{length.id}}">{{length.name}}</option>
+                                                <option value="{{length.id}}" 
+                                                {% if act_case_data.rtoUnit == length.id %}
+                                                selected
+                                                {% endif %}
+                                                >{{length.name}}</option>
                                             {% endfor %}
                                             </select>
                                         </div>   
                                         <div class="row sizingtable">
                                             <select name="etoUnit"  class="form-control-sm-sm Rotary_select RactuatorUnits" data-desc="etoUnit">
                                                 {% for length in metadata['units_dict']['torque'] %}
-                                                <option value="{{length.id}}">{{length.name}}</option>
+                                                <option value="{{length.id}}" 
+                                                {% if act_case_data.etoUnit == length.id %}
+                                                selected
+                                                {% endif %}
+                                                >{{length.name}}</option>
                                             {% endfor %}
                                             </select>
                                         </div>   
                                         <div class="row sizingtable">
                                             <select  name="btcUnit" class="form-control-sm-sm Rotary_select RactuatorUnits" data-desc="btcUnit">
                                                 {% for length in metadata['units_dict']['torque'] %}
-                                                <option value="{{length.id}}">{{length.name}}</option>
+                                                <option value="{{length.id}}" 
+                                                {% if act_case_data.btcUnit == length.id %}
+                                                selected
+                                                {% endif %}
+                                                >{{length.name}}</option>
                                             {% endfor %}
                                             </select>
                                         </div>   
                                         <div class="row sizingtable">
                                             <select name="rtcUnit" class="form-control-sm-sm Rotary_select RactuatorUnits" data-desc="rtcUnit">
                                                 {% for length in metadata['units_dict']['torque'] %}
-                                                <option value="{{length.id}}">{{length.name}}</option>
+                                                <option value="{{length.id}}" 
+                                                {% if act_case_data.rtcUnit == length.id %}
+                                                selected
+                                                {% endif %}
+                                                >{{length.name}}</option>
                                             {% endfor %}
                                             </select>
                                         </div>   
                                         <div class="row sizingtable">
                                             <select name="etcUnit"class="form-control-sm-sm Rotary_select RactuatorUnits" data-desc="etcUnit">
                                                 {% for length in metadata['units_dict']['torque'] %}
-                                                <option value="{{length.id}}">{{length.name}}</option>
+                                                <option value="{{length.id}}" 
+                                                {% if act_case_data.etcUnit == length.id %}
+                                                selected
+                                                {% endif %}
+                                                >{{length.name}}</option>
                                             {% endfor %}
                                             </select>
                                         </div>
                                         <div class="row sizingtable">
                                             <select  name="mastUnit" class="form-control-sm-sm Rotary_select RactuatorUnits" data-desc="mastUnit">
                                                 {% for length in metadata['units_dict']['torque'] %}
-                                                <option value="{{length.id}}">{{length.name}}</option>
+                                                <option value="{{length.id}}" 
+                                                {% if act_case_data.mastUnit == length.id %}
+                                                selected
+                                                {% endif %}
+                                                >{{length.name}}</option>
                                             {% endfor %}
                                             </select>
                                         </div>
                                         <div class="row sizingtable">
                                             <select name="setPUnit" class="form-control-sm-sm Rotary_select RactuatorUnits" data-desc="setPUnit">
                                                 {% for length in metadata['units_dict']['pressure'] %}
-                                                <option value="{{length.id}}">{{length.name}}</option>
+                                                <option value="{{length.id}}" 
+                                                {% if act_case_data.setPUnit == length.id %}
+                                                selected
+                                                {% endif %}
+                                                >{{length.name}}</option>
                                             {% endfor %}
                                             </select>
                                         </div>
@@ -394,7 +460,11 @@
                                         <div class="row sizingtable">
                                             <select name="maxAirUnit" class="form-control-sm-sm Rotary_select RactuatorUnits" data-desc="maxAirUnit">
                                                 {% for length in metadata['units_dict']['pressure'] %}
-                                                <option value="{{length.id}}">{{length.name}}</option>
+                                                <option value="{{length.id}}" 
+                                                {% if act_case_data.maxAirUnit == length.id %}
+                                                selected
+                                                {% endif %}
+                                                >{{length.name}}</option>
                                             {% endfor %}
                                             </select>
                                         </div>
@@ -404,42 +474,66 @@
                                         <div class="row sizingtable">
                                             <select name="stStartUnit" class="form-control-sm-sm Rotary_select RactuatorUnits" data-desc="stStartUnit">
                                                 {% for length in metadata['units_dict']['torque'] %}
-                                                <option value="{{length.id}}">{{length.name}}</option>
+                                                <option value="{{length.id}}" 
+                                                {% if act_case_data.stStartUnit == length.id %}
+                                                selected
+                                                {% endif %}
+                                                >{{length.name}}</option>
                                             {% endfor %}
                                             </select>
                                         </div> 
                                         <div class="row sizingtable">
                                             <select name="stMidUnit" class="form-control-sm-sm Rotary_select RactuatorUnits" data-desc="stMidUnit">
                                                 {% for length in metadata['units_dict']['torque'] %}
-                                                <option value="{{length.id}}">{{length.name}}</option>
+                                                <option value="{{length.id}}" 
+                                                {% if act_case_data.stMidUnit == length.id %}
+                                                selected
+                                                {% endif %}>
+                                                {{length.name}}</option>
                                             {% endfor %}
                                             </select>
                                         </div> 
                                         <div class="row sizingtable">
                                             <select name="stEndUnit" class="form-control-sm-sm Rotary_select RactuatorUnits" data-desc="stEndUnit">
                                                 {% for length in metadata['units_dict']['torque'] %}
-                                                <option value="{{length.id}}">{{length.name}}</option>
+                                                <option value="{{length.id}}" 
+                                                {% if act_case_data.stEndUnit == length.id %}
+                                                selected
+                                                {% endif %}
+                                                >{{length.name}}</option>
                                             {% endfor %}
                                             </select>
                                         </div> 
                                         <div class="row sizingtable">
                                             <select name="atStartUnit" class="form-control-sm-sm Rotary_select RactuatorUnits" data-desc="atStartUnit" >
                                                 {% for length in metadata['units_dict']['torque'] %}
-                                                <option value="{{length.id}}">{{length.name}}</option>
+                                                <option value="{{length.id}}" 
+                                                {% if act_case_data.atStartUnit == length.id %}
+                                                selected
+                                                {% endif %}
+                                                >{{length.name}}</option>
                                             {% endfor %}
                                             </select>
                                         </div> 
                                         <div class="row sizingtable">
                                             <select name="atMidUnit" class="form-control-sm-sm Rotary_select RactuatorUnits" data-desc="atMidUnit">
                                                 {% for length in metadata['units_dict']['torque'] %}
-                                                <option value="{{length.id}}">{{length.name}}</option>
+                                                <option value="{{length.id}}" 
+                                                {% if act_case_data.atMidUnit == length.id %}
+                                                selected
+                                                {% endif %}
+                                                >{{length.name}}</option>
                                             {% endfor %}
                                             </select>
                                         </div> 
                                         <div class="row sizingtable">
                                             <select name="atEndUnit" class="form-control-sm-sm Rotary_select RactuatorUnits" data-desc="atEndUnit">
                                                 {% for length in metadata['units_dict']['torque'] %}
-                                                <option value="{{length.id}}">{{length.name}}</option>
+                                                <option value="{{length.id}}" 
+                                                {% if act_case_data.atEndUnit == length.id %}
+                                                selected
+                                                {% endif %}
+                                                >{{length.name}}</option>
                                             {% endfor %}
                                             </select>
                                         </div> 
