@@ -1167,8 +1167,8 @@ def sendOTP(username):
         s.login(sender_email, sender_email_password)
 
         # Construct the email message
-        message = f"Subject: OTP for Reset Password\n\n"
-        message += f"OTP for Reset Password is {random_int}"
+        message = f"Subject: OTP for Create Password\n\n"
+        message += f"OTP for Create Password is {random_int}"
         print(random_int)
         # Send the email
         s.sendmail(sender_email, reciever_email, message)
