@@ -639,6 +639,31 @@ def hwThrust_upload(data_list):
         db.session.add(hwThrust_)
         db.session.commit()
 
+def shaft_rotary_upload(data_list):
+    print("delete begin: SR")
+    # # data_delete(cvValues)
+    data_delete(shaftRotary)
+    print("delete done: SR")
+    print(f"Data Upload SR Start {data_list}")
+    
+    for data in data_list:
+        print(f'ratingPRESSURE {data['ratingPressure']}')
+        rating_element = db.session.query(ratingMaster).filter_by(
+        name=data['ratingPressure']).first()
+        print(f'rating_element {rating_element}')
+        shaftRotary_ = shaftRotary(
+            rating = rating_element,
+            valveSize = data['valveSize'],
+            stemDia = data['shaftDia'],
+            valveInterface = data['valveInterface'] 
+        )
+
+        db.session.add(shaftRotary_)
+        db.session.commit()
+        print('END')
+
+
+
 def rotary_upload(data_list):
     print("delete begin: AD")
     # # data_delete(cvValues)
@@ -665,6 +690,35 @@ def rotary_upload(data_list):
         db.session.add(rotaryActuator_)
         db.session.commit()
         print('END')
+
+def seating_torque_upload(data_list):
+    print("delete begin: ST")
+
+    data_delete(seatingTorque)
+    print("delete done: ST")
+    print(f"Data Upload ST Start {len(data_list)}")
+    print(data_list)
+    for data in data_list:
+        seatingTorque_ = seatingTorque(
+            valveSize = float(data['valveSize']),
+            discDia = float(data['discDia']),
+            discDia2 = float(data['discDia2']),
+            cusc = float(data['cUsc']),
+            cusp = float(data['cUsp']),
+            softSeatA = float(data['softSeatA']),
+            softSeatB = float(data['softSeatB']),
+            metalSeatA = float(data['metalSeatA']),
+            metalSeatB = float(data['metalSeatB'])
+        
+        )
+
+        db.session.add(seatingTorque_)
+        db.session.commit()
+
+
+
+
+
 
 
 def yieldStrength_upload(data_list):
@@ -6007,6 +6061,46 @@ def removeTrim():
     # db.session.query(actuatorCaseData).filter_by()
     return "SUCCESS"
 
+
+@app.route('/get_rotaryinputs')
+def get_rotaryinputs():
+    valve_size = request.args.get('valve_size')
+    disc_dia = request.args.get('disc_dia')
+    seatId = request.args.get('seatId')
+    seat_element = getDBElementWithId(seat, seatId)
+    seating_element = db.session.query(seatingTorque)\
+            .filter_by(valveSize=valve_size)\
+            .order_by(func.abs(seatingTorque.discDia - disc_dia))\
+            .first()
+
+    if seat_element.name == 'PTFE':
+        a_factor = seating_element.softSeatA
+        b_factor = seating_element.softSeatB 
+    else:
+        a_factor = seating_element.metalSeatA
+        b_factor = seating_element.metalSeatB 
+
+    data = {
+        'afac': float(a_factor),
+        'bfac': float(b_factor),
+        'cusc': float(seating_element.cusc),
+        'cusp': float(seating_element.cusp)
+    }
+    
+
+    return jsonify(data) 
+
+
+        
+
+    
+    
+
+
+
+
+
+
 @app.route('/getUaElement')
 def getUaElement():
     seatDia = request.args.get('seatDia')
@@ -6735,6 +6829,17 @@ def getStemSize():
     return stem_list
 
 
+@app.route('/get_radialaxial')
+def get_radialaxial():
+    packingId = request.args.get('packingId')
+    print(f'GETRADIAL {packingId}')
+    packingElement = getDBElementWithId(packing, packingId) 
+    if "Graphite" in packingElement.name:
+        return "25.2"
+    else:
+        return "12.9"
+
+
 
 
 @app.route('/rotary-actuator/proj-<proj_id>/item-<item_id>', methods=['GET', 'POST'])
@@ -6952,7 +7057,7 @@ def rotaryActuator(proj_id, item_id):
           
     return render_template('RotaryActuatorSizing.html', item=getDBElementWithId(itemMaster, int(item_id)), 
                            user=current_user, metadata=metadata_, page='rotaryActuator',
-                         valve=valve_element, act=act_element,act_case_data=act_case_data)
+                         valve=valve_element, act=act_element,act_case_data=act_case_data,cases=cases,cv_element=cv_element)
 
 
 
@@ -8768,4 +8873,4 @@ def DATA_UPLOAD_BULK():
     
 
 if __name__ == "__main__":
-    app.run(debug=True,port=8000)
+    app.run(debug=True,port=5000)
