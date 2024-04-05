@@ -6083,8 +6083,9 @@ def get_rotaryinputs():
     data = {
         'afac': float(a_factor),
         'bfac': float(b_factor),
-        'cusc': float(seating_element.cusc),
-        'cusp': float(seating_element.cusp)
+        'cusc': float(seating_element.cusc),    
+        'cusp': float(seating_element.cusp),
+       
     }
     
 
