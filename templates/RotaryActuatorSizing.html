@@ -275,19 +275,19 @@
                                     </div>
                                     <div class="col-3" style="border-bottom:  1px solid #607274;">
                                         <div class="row sizingtableleft"><p class="sizingp">Values</p></div>
-                                        <div class="row sizingtable"><input type="text" class="form-control-sm-sm Rotary_input rActuator_valveSize" name="v_size" {% if act_case_data.v_size %} value="{{act_case_data.v_size}}" {% endif %} ></div>
-                                        <div class="row sizingtable"><input type="text" class="form-control-sm-sm Rotary_input rActuator_discDia" name="disc_dia" {% if act_case_data.disc_dia %} value="{{act_case_data.disc_dia}}" {% endif %}></div>
+                                        <div class="row sizingtable"><input type="text" class="form-control-sm-sm Rotary_input rActuator_valveSize v_size" name="v_size"  {% if act_case_data.v_size %} value="{{act_case_data.v_size}}"  {% else %} value="{{cases[0].valveSize}}" {% endif %} ></div>
+                                        <div class="row sizingtable"><input type="text" class="form-control-sm-sm Rotary_input rActuator_discDia d_dia" name="disc_dia" {% if act_case_data.disc_dia %} value="{{act_case_data.disc_dia}}" {% else %} value="{{cv_element.seatBore}}" {% endif %}></div>
                                         <div class="row sizingtable"><input type="text" class="form-control-sm-sm Rotary_input rActuator_shaftDia" name="shaft_dia" {% if act_case_data.shaft_dia %} value="{{act_case_data.shaft_dia}}" {% endif %}></div>
-                                        <div class="row sizingtable"><input type="text" class="form-control-sm-sm Rotary_input"  name="max_rot" {% if act_case_data.max_rot %} value="{{act_case_data.max_rot}}" {% endif %}></div>
-                                        <div class="row sizingtable"><input type="text" class="form-control-sm-sm Rotary_input rActuator_delp" name="delP" {% if act_case_data.delP %} value="{{act_case_data.delP}}" {% endif %}></div>
-                                        <div class="row sizingtable"><input type="text" class="form-control-sm-sm Rotary_input"  name="bush_coeff" {% if act_case_data.bush_coeff %} value="{{act_case_data.bush_coeff}}" {% endif %}></div>
-                                        <div class="row sizingtable"><input type="text" class="form-control-sm-sm Rotary_input"  name="csc" {% if act_case_data.csc %} value="{{act_case_data.csc}}" {% endif %}></div>
-                                        <div class="row sizingtable"><input type="text" class="form-control-sm-sm Rotary_input" name="csv" {% if act_case_data.csv %} value="{{act_case_data.csv}}" {% endif %}></div>
-                                        <div class="row sizingtable"><input type="text" class="form-control-sm-sm Rotary_input" name="a_factor" {% if act_case_data.a_factor %} value="{{act_case_data.a_factor}}" {% endif %}></div>
-                                        <div class="row sizingtable"><input type="text" class="form-control-sm-sm Rotary_input"  name="b_factor" {% if act_case_data.b_factor %} value="{{act_case_data.b_factor}}" {% endif %}></div>
-                                        <div class="row sizingtable"><input type="text" class="form-control-sm-sm Rotary_input"  name="pack_coeff" {% if act_case_data.pack_coeff %} value="{{act_case_data.pack_coeff}}" {% endif %}></div>
-                                        <div class="row sizingtable"><input type="text" class="form-control-sm-sm Rotary_input" name="radial_coeff" {% if act_case_data.radial_coeff %} value="{{act_case_data.radial_coeff}}" {% endif %} ></div>
-                                        <div class="row sizingtable"><input type="text" class="form-control-sm-sm Rotary_input rActuator_packingRadial" name="Section" {% if act_case_data.Section %} value="{{act_case_data.Section}}" {% endif %}></div>
+                                        <div class="row sizingtable"><input type="text" class="form-control-sm-sm Rotary_input" readonly name="max_rot" value=90></div>
+                                        <div class="row sizingtable"><input type="text" class="form-control-sm-sm Rotary_input rActuator_delp" name="delP" {% if act_case_data.delP %} value="{{act_case_data.delP}}" {% else %} value="{{valve.shutOffDelP}}" {% endif %}></div>
+                                        <div class="row sizingtable"><input type="text" class="form-control-sm-sm Rotary_input"  name="bush_coeff" {% if act_case_data.bush_coeff %} value="{{act_case_data.bush_coeff}}" {% else %} value=0.15 {% endif %}></div>
+                                        <div class="row sizingtable"><input type="text" class="form-control-sm-sm Rotary_input cusc"  name="csc" {% if act_case_data.csc %} value="{{act_case_data.csc}}" {% endif %}></div>
+                                        <div class="row sizingtable"><input type="text" class="form-control-sm-sm Rotary_input cusp" name="csv" {% if act_case_data.csv %} value="{{act_case_data.csv}}" {% endif %}></div>
+                                        <div class="row sizingtable"><input type="text" class="form-control-sm-sm Rotary_input a_fac" name="a_factor" {% if act_case_data.a_factor %} value="{{act_case_data.a_factor}}" {% endif %}></div>
+                                        <div class="row sizingtable"><input type="text" class="form-control-sm-sm Rotary_input b_fac"  name="b_factor" {% if act_case_data.b_factor %} value="{{act_case_data.b_factor}}" {% endif %}></div>
+                                        <div class="row sizingtable"><input type="text" class="form-control-sm-sm Rotary_input"  name="pack_coeff" {% if act_case_data.pack_coeff %} value="{{act_case_data.pack_coeff}}" {% else %} value=0.5 {% endif %}></div>
+                                        <div class="row sizingtable"><input type="text" class="form-control-sm-sm Rotary_input radial_coeff" name="radial_coeff" {% if act_case_data.radial_coeff %} value="{{act_case_data.radial_coeff}}" {% endif %} ></div>
+                                        <div class="row sizingtable"><input type="text" class="form-control-sm-sm Rotary_input rActuator_packingRadial" name="Section" {% if act_case_data.Section %} value="{{act_case_data.Section}}" {% else %} value=0.375 {% endif %}></div>
                                     </div>
                                 </div>
 
@@ -593,7 +593,79 @@
                 </div>
 </form>
 <script>
-    	$(document).ready(function () {
+ $(document).ready(function () {
+    $('.v_size, .d_dia').on('change', function(){
+        var valveSize = $('.v_size').val();
+        var discDia = $('.d_dia').val();
+        var seatId = "{{valve.seatId}}"; 
+        console.log(valveSize, discDia, seatId)
+        $.ajax({
+            type: "GET",
+            url: "/get_rotaryinputs",
+            data: {
+                valve_size: valveSize,
+                disc_dia: discDia,
+                seatId: seatId
+            },
+            success: function(response) {
+                console.log('RESPONSE:', response.afac);
+                $('.cusc').val(response.cusc);
+                $('.cusp').val(response.cusp);
+                $('.a_fac').val(response.afac);
+                $('.b_fac').val(response.bfac);
+            },
+            error: function(xhr, status, error) {
+                console.error("Error:", error);
+            }
+        });
+    });
+});
+
+$(document).ready(function () {
+    var packingId = "{{valve.packingId}}"
+    var valveSize = $('.v_size').val()
+    var discDia = $('.d_dia').val()
+    var seatId = "{{valve.seatId}}"
+    console.log(valveSize, discDia, seatId)
+    $.ajax({
+                type: "GET",
+                url: "/get_radialaxial",
+                data: {
+                    packingId: packingId
+                },
+                success: function(response) {
+                    
+                        console.log('RES',response)
+                        $('.radial_coeff').val(parseFloat(response))
+                },
+                error: function(xhr, status, error) {
+                console.error("Error:", error);
+                }
+        });
+    $.ajax({
+            type: "GET",
+            url: "/get_rotaryinputs",
+            data: {
+                valve_size: valveSize,
+                disc_dia: discDia,
+                seatId: seatId
+            },
+            success: function(response) {
+                console.log('RESPOMSEs' ,response.afac);
+                $('.cusc').val(response.cusc)
+                $('.cusp').val(response.cusp)
+                $('.a_fac').val(response.afac)
+                $('.b_fac').val(response.bfac)
+                
+       
+            },
+            error: function(xhr, status, error) {
+            console.error("Error:", error);
+            }
+    });
+    
+
+
 
 var prev_unit;
 $('.RactuatorUnits').on('focus', function(){

@@ -507,7 +507,7 @@ class ratingMaster(db.Model):
     __mapper_args__ = {
         'polymorphic_identity': 'rating',
         'confirm_deleted_rows': False
-    }
+    }   
     id = Column(Integer, primary_key=True)
     name = Column(String(100))
 
@@ -517,6 +517,7 @@ class ratingMaster(db.Model):
     cv = relationship('cvTable', cascade="all,delete", back_populates='rating_c')
     packingF = relationship('packingFriction', cascade="all,delete", back_populates='rating')
     torque = relationship("packingTorque", cascade="all,delete", back_populates='rating')
+    rotaryAct = relationship("shaftRotary", back_populates='rating')
 
     @staticmethod
     def update(new_data, id):
@@ -858,6 +859,20 @@ class nde2(db.Model):
     name = Column(String(300))
 
     nde2_ = relationship('valveDetailsMaster', cascade="all,delete", back_populates='nde2__')
+
+
+
+class shaftRotary(db.Model):
+    __tablename__ = "shaftRotary"
+
+    id = Column(Integer, primary_key=True)
+
+    ratingId = Column(Integer, ForeignKey("ratingMaster.id"))
+    rating = relationship("ratingMaster", back_populates="rotaryAct")
+
+    valveSize = Column(Float)
+    stemDia = Column(String(10))
+    valveInterface = Column(String(10))
 
 
 class shaft(db.Model):  # Stem in globe
@@ -1801,9 +1816,6 @@ class actuatorCaseData(db.Model):
     seatLoadId = Column(Integer, ForeignKey("seatLoadForce.id"))
     seatLoad = relationship('seatLoadForce', back_populates='actuatorCase')
 
-    seatingTorqueId = Column(Integer, ForeignKey("seatingTorque.id"))
-    seatT = relationship('seatingTorque', back_populates='actuatorCase')
-
     slidingActuatorId = Column(Integer, ForeignKey("slidingActuatorData.id"))
     slidingActuator = relationship('slidingActuatorData', back_populates='actuatorCase')
 
@@ -1960,12 +1972,17 @@ class seatingTorque(db.Model):
         'confirm_deleted_rows': False
     }
     id = Column(Integer, primary_key=True)
-    discDia = Column(Float)
     valveSize = Column(Float)
+    discDia = Column(Float)
+    discDia2 = Column(Float)
     cusc = Column(Float)
     cusp = Column(Float)
+    softSeatA = Column(Float)
+    softSeatB = Column(Float)
+    metalSeatA = Column(Float)
+    metalSeatB = Column(Float)
 
-    actuatorCase = relationship('actuatorCaseData', cascade="all,delete", back_populates='seatT')
+    
 
     @staticmethod
     def update(new_data, id):
