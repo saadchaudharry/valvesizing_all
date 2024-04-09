@@ -2,6 +2,7 @@
 
 body {
     background-color: #fffefe;
+    overflow:hidden;
 }
 
 .nav-pills .nav-link.active {
@@ -132,7 +133,7 @@ label {
 input{
     border: 0.4px solid #9ba7a7 !important; 
    
-    color: #4b4b4b;
+    color: #2b2b2b;
     border-radius:2px;  
     padding-left:4px;
     padding-top:1px;
@@ -141,7 +142,7 @@ input{
 }
 textarea{
     border: 0.4px solid #9ba7a7 !important; 
-    color: #4b4b4b;
+    color: #2b2b2b;
     border-radius:2px;  
     font-size:12px;
    
@@ -149,7 +150,7 @@ textarea{
 }
 select {
     border: 0.4px solid #9ba7a7 !important; 
-    color: #4b4b4b;
+    color: #2b2b2b;
    
     font-size:11px !important;
     border-radius: 2px;  
@@ -165,6 +166,8 @@ select {
     padding-right: 20px; /* Adjust padding for the icon */
     background-position: calc(100% - 3px) center;
 }
+
+
 /* .valveselection .row{
     margin-bottom:4px !important;
 }
@@ -281,6 +284,22 @@ select {
     width: 100%;
 }
 /* -------------------------------------valvesizing page------------------------------------------------------------------------ */
+.cvsizing {
+    height: 100vh;
+    width: 100vh;
+    overflow: auto;
+    scrollbar-width: thin;
+}
+.cvsizing2{
+    height: 100vh;
+    overflow: auto;
+}
+.pipedate{
+    padding: 0rem 1rem 1rem 1rem;
+}   
+
+
+
 .sizingtable {
     height: 25px;
     border-top: 1px solid #9ba7a7;
@@ -336,8 +355,14 @@ select {
 }
 
 .colborder_bottom {
-    border-bottom: 1px solid #607274;
+    /* border-bottom: 1px solid #607274; */
     /* justify-content: space-between; */
+}
+.sizingicons_container{
+    display: flex;
+    flex-direction: column;
+   
+
 }
 .valve_parameters {
     width: 100%;
