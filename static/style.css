@@ -22,8 +22,9 @@ label {
     font-size: 11px;
 }
 
+
 .sidenav {
-    background-color: #353a40;
+    background-color: #41474e;
     position: fixed;
 
     width: 15%;
@@ -41,12 +42,29 @@ label {
     padding-bottom: 2px;
 }
 
-.nav-link:hover {
+ .nav-link:hover {
     background-color: white;
     color: black;
     border-radius: 0%;
 
+} 
+.nav-link-user{
+    color: white;
+    font-size: 16px;
+    padding: .5rem 1rem;
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    
+  }
+  .nav-link-user svg {
+    margin-right: 5px; 
+  }
+.icons-container{
+    display: flex;
+    justify-content: space-between;
 }
+
 
 .fa-circle-user {
     font-size: 25px;
@@ -61,7 +79,7 @@ label {
     height: 30px;
 }
 
-.projectdetails {
+ .projectdetails {
 
     width: 97%;
 
@@ -90,6 +108,7 @@ label {
 
 .fa-solid {
     color: black;
+
 }
 
 .fa-magnifying-glass {
@@ -101,7 +120,57 @@ label {
     outline: none;
     border: none;
 }
+.input-box{
+    text-align: center;
+    border: 1px solid #858585 !important;
+    color: #363636;
+    border-radius: 2px;
+    font-size: 14px !important;
+    padding: 5px !important;
+}
 
+input{
+    border: 0.4px solid #9ba7a7 !important; 
+   
+    color: #4b4b4b;
+    border-radius:2px;  
+    padding-left:4px;
+    padding-top:1px;
+    padding-bottom:1px; 
+    font-size:11px !important;   
+}
+textarea{
+    border: 0.4px solid #9ba7a7 !important; 
+    color: #4b4b4b;
+    border-radius:2px;  
+    font-size:12px;
+   
+
+}
+select {
+    border: 0.4px solid #9ba7a7 !important; 
+    color: #4b4b4b;
+   
+    font-size:11px !important;
+    border-radius: 2px;  
+    padding-left:4px;
+    padding-top:1px;
+    padding-bottom:1px;
+    appearance: none; /* Remove default appearance */
+    -moz-appearance: none; /* Firefox */
+    -webkit-appearance: none; /* Webkit browsers */
+    background-image: url('data:image/svg+xml;utf8,<svg fill="none" height="11" viewBox="0 0 24 24" width="11" xmlns="http://www.w3.org/2000/svg"><path d="m4 8 8 8 8-8" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>'); /* Use CSS variable for dropdown icon color */
+    background-repeat: no-repeat;
+    
+    padding-right: 20px; /* Adjust padding for the icon */
+    background-position: calc(100% - 3px) center;
+}
+/* .valveselection .row{
+    margin-bottom:4px !important;
+}
+.materialselection .row{
+    margin-bottom:4px !important;
+}    */
 
 /* ----------------------------------------------------project details page-------------------------------------------------------------- */
 .projectdetails-form {
@@ -187,7 +256,7 @@ label {
     width: 155%;
     height: 69%;
     background-color: white;
-    border: 1px solid #607274;
+    
     font-size: 11px;
 }
 
@@ -200,7 +269,8 @@ label {
 }
 
 .warnings {
-    height: 300%;
+    height: 100%;
+    
 }
 
 .valvebutton {
@@ -213,8 +283,8 @@ label {
 /* -------------------------------------valvesizing page------------------------------------------------------------------------ */
 .sizingtable {
     height: 25px;
-    border-top: 1px solid #607274;
-    border-right: 1px solid #607274;
+    border-top: 1px solid #9ba7a7;
+    border-right: 1px solid #9ba7a7;
 
 
     /* width: 100%; */
@@ -223,18 +293,18 @@ label {
 
 .sizingtableleft {
     height: 25px;
-    border-top: 1px solid #607274;
-    border-right: 1px solid #607274;
-    border-left: 1px solid #607274;
+    border-top: 1px solid #9ba7a7;
+    border-right: 1px solid #9ba7a7;
+    border-left: 1px solid #9ba7a7;
     background-color: #e5e5e5;
     /* border:1px solid #607274; */
 }
 
 .sizingtableleft_warning {
     height: 25px;
-    border-top: 1px solid #607274;
+    border-top: 1px solid #9ba7a7;
     border-right: white;
-    border-left: 1px solid #607274;
+    border-left: 1px solid #9ba7a7;
     background-color: #ffffff;
     /* border:1px solid #607274; */
 
@@ -242,17 +312,17 @@ label {
 
 .sizingtable_header {
     height: 25px;
-    border-top: 1px solid #607274;
+    border-top: 1px solid #9ba7a7;
     border-right: white;
 
 }
 
 .sizingtablebottom {
     height: 21px;
-    border-top: 1px solid #607274;
-    border-right: 1px solid #607274;
-    border-left: 1px solid #607274;
-    border-bottom: 1px solid #607274;
+    border-top: 1px solid #9ba7a7;
+    border-right: 1px solid #9ba7a7;
+    border-left: 1px solid #9ba7a7;
+    border-bottom: 1px solid #9ba7a7;
     /* border:1px solid #607274; */
 }
 
@@ -289,7 +359,7 @@ label {
 
 .sizingtable_inputs {
     width: 100%;
-    border: 0px solid;
+    border: 0px solid !important;
 }
 .size_persentage {
     background-color: white;
@@ -316,7 +386,7 @@ label {
 
 .calculatedcv_row {
     width: 100%;
-    border: 0px solid;
+    border: 0px solid !important;
     background-color: #ddebf7
 }
 
@@ -338,6 +408,7 @@ input {
     height: 100%;
     font-size: 11px;
 }
+
 
 
 select {
@@ -1226,10 +1297,26 @@ td {
 
 /* --------------------Customer Master------------------------- */
 
+.reference_input {
+    width: 100%;
+    height:32px;
+    padding: 0.5rem 1rem;
+   
+    border-radius: 10px; /* Border radius */
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
 
+
+
+/* Placeholder style */
+.reference_input::placeholder {
+    color: #757575; /* Placeholder color */
+}
 #customer-scroll {
-    height: 135px;
+    /* height: 135px; */
     overflow: auto;
+    scrollbar-width: thin;
     /* margin-top: 10px; */
 }
 

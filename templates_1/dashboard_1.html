@@ -111,7 +111,7 @@
 
                                             <tbody class="table-sm" style="height: 90px; font-size: 11px;" id="projectlist">
                                                 {% for project in projects %}
-                                                <tr>
+                                                <tr>    
                                                     {% if item.project.id == project.id %}
                                                     <td style="text-align: left; width: 2%"><input type="radio" checked onclick="window.location='{{url_for('getItems', proj_id=project.id)}}'"></td>
                                                     {% else %}

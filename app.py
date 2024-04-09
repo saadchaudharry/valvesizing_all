@@ -769,6 +769,7 @@ def cv_upload(data_list):
         rating_element = db.session.query(ratingMaster).filter_by(
             name=new_data_list[data_index]['rating_c']).first()
         v_style_element = db.session.query(valveStyle).filter_by(name=new_data_list[data_index]['style']).first()
+        print(f'CV Valvesize {new_data_list[data_index]['valveSize']}, {data_index}')
         valve_size = float(new_data_list[data_index]['valveSize'])
         series = new_data_list[data_index]['series']
         
@@ -819,6 +820,7 @@ def cv_upload(data_list):
     print(len(all_cvs))
     for cv_index in range(len(all_cvs)):
         # CV value from excel
+        print(f'CV SEAT {data_list[cv_index * 4]['seatBore']}, {cv_index}')
         new_cv_values_cv = cvValues(
             coeff=data_list[cv_index * 4]['coeff'],
             seatBore=float(data_list[cv_index * 4]['seatBore']),
@@ -1211,8 +1213,8 @@ def sendOTP(username):
         # Send email using Hostinger's SMTP server
         s = smtplib.SMTP('smtp.gmail.com', 587)
         s.starttls()
-        sender_email = 'fccommuneit@gmail.com'  # Replace with your Hostinger email
-        sender_email_password = 'reuk tgqf ftyi mrsx'  # Replace with your Hostinger email password
+        sender_email = 'info@fccommune.com'  # Replace with your Hostinger email
+        sender_email_password = 'nmmbylrkmsqyllyp'  # Replace with your Hostinger email password
         # sender_email = 'sizinghelp@valvesizing.fccommune.com'  # Replace with your Hostinger email
         # sender_email_password = 'Sizing@admin0'  # Replace with your Hostinger email password
         reciever_email = ['pandi709410@gmail.com', username]
@@ -5148,6 +5150,21 @@ def getCVGas(fl_unit_form, specificGravity, sg_choice, inletPressure_form, iPres
     Cv_gas_final = Cv__[0]
     return Cv_gas_final
 
+
+@app.route('/getunbalforce')
+def getunbalforce():
+    p1 = request.args.get('iPres')
+    stemDia_id = request.args.get('stemDia')
+    stemDia_element = getDBElementWithId(stemSize,stemDia_id)
+    print(f'packingB4 {stemDia_element.stemDia}')
+    a3 = Decimal(float(Fraction(stemDia_element.stemDia)))
+    print(f'unbal {p1},{a3}')
+    res = str(float(p1)*float(a3))
+    return res
+
+
+
+
 @app.route('/getseatload')
 def getseatload():
     itemId = request.args.get('itemId')
@@ -6022,6 +6039,47 @@ def actuatorSizing(proj_id, item_id):
                            metadata=metadata_, page='actuatorSizing', valve=valve_element, act=act_element)
 
 
+@app.route('/getNegGradient')
+def getNegGradient():
+    trim_type = request.args.get('trim_type')
+    balance = request.args.get('balance')
+    flow_dir = request.args.get('flow_dir')
+    unbal_area = request.args.get('unbal_area')
+    seat_dia = request.args.get('seat_dia')
+    item_element = getDBElementWithId(itemMaster, request.args.get('item_id'))
+
+    trim_element = getDBElementWithId(trimType, trim_type)
+    balancing_element = getDBElementWithId(balancing, balance)
+    flowdir_element = getDBElementWithId(flowDirection, flow_dir)
+    valve_element = db.session.query(valveDetailsMaster).filter_by(item=item_element).first()
+
+
+    if balancing_element.name == 'Unbalanced':
+        if flowdir_element.name == 'Under':
+            kn = 0
+        elif flowdir_element.name == 'Over':
+            kn = 0
+    elif balancing_element.name == 'Balanced':
+
+        kn_element = db.session.query(knValue)\
+            .filter_by(trimType_=trim_element, flowDirection_=flowdir_element, flowCharacter_=valve_element.flowCharacter__)\
+            .order_by(func.abs(knValue.portDia - seat_dia))\
+            .first()
+        
+        print(f'getNegGrad {kn_element.value}')
+    
+
+    return str(kn_element.value)
+    
+
+    
+
+
+
+
+
+
+
 @app.route('/slidingStemDel')
 def slidingStemDel():
     act_id = request.args.get('act_id')
@@ -6481,6 +6539,11 @@ def slidingStem(proj_id, item_id):
             trimType__ = getDBElementWithId(trimType,a["trimType"][0])
             balancing__ = getDBElementWithId(balancing,a["balancing"][0]) 
             flowDirection__ = getDBElementWithId(flowDirection,a["flowDirection"][0])
+
+
+
+
+        
             # act_case_data_json['unbalForce'] = a['unbalForce']
             # act_case_data_json['negGrad'] = a['negGrad']
 
@@ -6523,19 +6586,18 @@ def slidingStem(proj_id, item_id):
             v_shutoff, v_shutoff_plus, v_open, v_close = round(vf_shutoff[0]), round(valve_forces[0]), round(
                 vf_open[0]), round(vf_close[0])
             
-            # balance_element = getDBElementWithId(balancing, a["balancing"])
-            # flow_element = getDBElementWithId(flowDirection,a["flowDirection"])
-            # if balance_element.name == 'Unbalanced' and flow_element.name == 'Under':
-            #     kn = 0
-            # elif balance_element.name == 'Balanced' and flow_element.name == 'Over':
-            #     kn = 0 #(table)
-            # elif balance_element.name == 'Unbalanced' and flow_element.name == 'Over':
-            #     kn = (2 * a["ua"] ) / valveTravel
-            # else:
-            #     if kn_value == 0:
-            #         kn = (2 * iPressure / valveTravel)
-            #     else:
-            #         kn = kn_value
+            if balancing__.name == 'Unbalanced':
+                if flowDirection__.name == 'Under':
+                    kn = 0
+                elif flowDirection__.name == 'Over':
+                    kn = (2 * float(a['ua'][0])) / float(a(['valveTravel'][0]))
+            elif balancing_element.name == 'Balanced':
+
+                kn_element = db.session.query(knValue)\
+                    .filter_by(trimType_=trimType__, flowDirection_=flowDirection__, flowCharacter_=valve_element.flowCharacter__)\
+                    .order_by(func.abs(knValue.portDia - seatDia))\
+                    .first()
+                kn = kn_element.value
 
             packing_fric = valve_forces[2]
             seatload_fact = valve_forces[3]
@@ -6549,6 +6611,7 @@ def slidingStem(proj_id, item_id):
             v_data = [v_shutoff, v_shutoff_plus, v_open, v_close]
             print(v_data, packing_fric, seatload_fact)
             act_case_data_json_result = {}
+            act_case_data_json_result['knValue'] = [kn]
             act_case_data_json_result['valveThrustClose'] = [v_shutoff_plus]
             act_case_data_json_result['valveThrustOpen'] = [v_open]
             act_case_data_json_result['shutOffForce'] = [round(valve_forces[6],2)]
@@ -6763,7 +6826,6 @@ def slidingStem(proj_id, item_id):
             act_case_data.maximumAirSupplyUnit = 'psia (g)'
             act_case_data.airsupply_max = round(airsupplyMax,2) 
             act_case_data.setPressureUnit = 'psia (g)'
-            act_case_data.knValue = kn
             act_case_data.frictionBandUnit = 'psia (g)'
             act_case_data.reqHandwheelUnit = 'lbf'
             act_case_data.slidingActuatorId = act_element_sliding.id
@@ -8841,7 +8903,7 @@ def DATA_UPLOAD_BULK():
         # data_upload(flow_charac_list, flowCharacter)
         # data_upload(balancing_list, balancing)
         # # cv_upload(getRowsFromCsvFile("csv/cvtable_small.csv"))
-        # # cv_upload(getRowsFromCsvFile("csv/cvtable.csv"))
+        cv_upload(getRowsFromCsvFile("csv/cvtable.csv"))
         # data_upload_disc_seat_packing([disc_material_list_butterfly, disc_material_list_butterfly, plug_material_list_globe, plug_material_list_globe], v_style_list, disc)
         # data_upload_disc_seat_packing([seat_material_list_butterfly, seat_material_list_butterfly, seat_material_list_globe, seat_material_list_globe], v_style_list, seat)
         # data_upload_disc_seat_packing([trim_type_list_butterfly, trim_type_list_butterfly, trim_type_list_globe, trim_type_list_globe], v_style_list, trimType)

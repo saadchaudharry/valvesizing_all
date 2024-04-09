@@ -32,6 +32,22 @@ body {
 
 /* ---------------Dashboard Table 1----------------------------- */
 
+.input-box{
+    text-align: center;
+    border: 1px solid #858585;
+    color: #363636;
+    border-radius: 2px;
+    font-size: 14px;
+    padding: 4px;
+}
+/* .input-box:focus{
+    border: 1px solid #969696;
+} */
+.input-box:focus {
+    border-color: #969696;
+}
+
+
 table {
 
     table-layout: fixed;
@@ -59,8 +75,10 @@ table {
 #table-scroll {
     height: 177px;
     overflow: auto;
+    scrollbar-width: thin;
     margin-top: 10px;
 }
+
 
 table td {
     white-space: nowrap;
@@ -170,14 +188,19 @@ td {
  
 
 /* Dashboard Table2 */
-
 .table-container2 {
     max-height: 176px;
     overflow-y: auto;
     position: relative;
     margin-top: 2%;
+    scrollbar-width: thin;
+    /* Hide the scrollbar */
+    overflow: auto;
 
 }
+
+
+
 
 .table2_ratio {
     text-align: center;
@@ -272,12 +295,12 @@ td {
     height: 30px;
 }
 
-.projectdetails {
+/* .projectdetails {
     margin-top: 2%;
 
     width: 97%;
 
-}
+} */
 
 
 .project {
@@ -302,8 +325,23 @@ td {
     margin-top: 15px;
 } */
 
+.fa-upload{
+    color:rgb(82, 82, 82);
+}
+
 .fa-solid {
     color: black;
+
+}
+.fa-plus{
+    font-weight: 100;
+}
+.fa-xmark{
+    color: black;
+}
+.fa-times{
+    color:black;
+    font-weight:300;
 }
 
 .fa-magnifying-glass {
@@ -315,6 +353,20 @@ td {
     background-color: #353a40;
     outline: none;
     border: none;
+}
+.icons-container{
+    display: flex;
+    justify-content: space-between;
+}
+
+.reference_input {
+    width: 100%;
+    height:32px;
+    padding: 0.5rem 1rem;
+  
+    border-radius: 10px; /* Border radius */
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
 }
 
 
@@ -328,7 +380,7 @@ img {
 
 /* ------------------------------------------Sidenavbaar----------------------------------------------------------- */
 .sidenav {
-    background-color: #353a40;
+    background-color: #41474e;
     position: fixed;
 
     width: 15%;
@@ -351,9 +403,21 @@ img {
     background-color: white;
     color: black;
     border-radius: 0%;
+ 
 
 }
-
+.nav-link-user{
+    color: white;
+    font-size: 16px;
+    padding: .5rem 1rem;
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    
+}
+.nav-link-user svg {
+    margin-right: 5px; 
+}
 .nav-pills .nav-link.active {
     background-color: white;
     color: black;

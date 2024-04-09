@@ -182,7 +182,7 @@
                                         <select class="Spring Action actuator_select trimType" name="trimType">
                                             
                                             {% for act_type in metadata['trimtype'] %}
-                                            {% if act_type.valveStyleId == 1 %} 
+                                          
                                                     
                                                         <option value="{{ act_type.id }}" 
                                                         {% if act_case.trimTypeId == act_type.id %}
@@ -192,7 +192,7 @@
                                                                 selected 
                                                             {% endif %}
                                                         {% endif %}>{{ act_type.name }}</option>
-                                            {% endif %}
+                                           
                                             
                                             {% endfor %}
                                         </select>
@@ -308,9 +308,7 @@
                                         <div class="row sizingtableleft">
                                             <p class="sizingp" name="">Unbal Force(Open)</p>
                                         </div>
-                                        <div class="row sizingtableleft">
-                                            <p class="sizingp" name="">Fluid Neg.Gardient</p>
-                                        </div>
+
                                         <div class="row sizingtableleft">
                                             <p class="sizingp" name="">ΔP Flowing </p>
                                         </div>
@@ -411,14 +409,7 @@
                                                 {% endfor %}
                                             </select>
                                         </div>
-                                        <div class="row sizingtable">
-                                            <select name="negativeGradientUnit" class="form-control-sm-sm sliding_select actuatorUnits" name="" data-desc="negGrad"
-                                                >
-                                                {% for length in metadata['units_dict']['length'] %}
-                                                    <option value="{{length.id}}" {% if act_case %} {% if act_case.negativeGradientUnit %} {% if act_case.negativeGradientUnit == length.name %} selected {% endif %} {% endif %} {% endif %}>{{length.name}}</option>
-                                                {% endfor %}
-                                            </select>
-                                        </div>
+                              
                                         <div class="row sizingtable">
                                                <select name="delPFlowingUnit" class="form-control-sm-sm sliding_select actuatorUnits" name="" data-desc="delpflow"
                                                 >
@@ -455,8 +446,8 @@
                                         <div class="row sizingtable"><input type="text" required name="iPressure" {% if act_case.iPressure %} value="{{act_case.iPressure}}"{% else %} value="{{cases[0].inletPressure}}" {% endif %} class="form-control-sm-sm sliding_input ipres actuatorvalue_ipres"></div>
                                         <div class="row sizingtable"><input type="text" required name="oPressure" {% if act_case.oPressure %} value="{{act_case.oPressure}}"{% else %} value="{{cases[0].outletPressure}}" {% endif %} class="form-control-sm-sm sliding_input opres actuatorvalue_opres"></div>
                                         <div class="row sizingtable"><input type="text" required name="shutOffDelP" {% if act_case.shutOffDelP %} value="{{act_case.shutOffDelP}}" {% else %} value="{{valve.shutOffDelP}}" {% endif %}  class="form-control-sm-sm sliding_input "></div>
-                                        <div class="row sizingtable"><input type="text" name="unbalForce" class="form-control-sm-sm sliding_input unbal_f actuatorvalue_unbalForce"></div>
-                                        <div class="row sizingtable"><input type="text" name="negGrad" class="form-control-sm-sm sliding_input actuatorvalue_negGrad" {% if act_case.knValue %} value="{{act_case.knValue}}" {% endif %}></div>
+                                        <div class="row sizingtable"><input type="text" name="unbalForce" {% if act_case.unbalanceForce %} value="{{act_case.unbalanceForce}}" {% endif %} class="form-control-sm-sm sliding_input unbal_f actuatorvalue_unbalForce"></div>
+                                      
                                         <div class="row sizingtable"><input type="text" name="" class="form-control-sm-sm sliding_input delp actuatorvalue_delpflow"></div>
                                     </div>
                                 </div>
@@ -491,8 +482,12 @@
                                             <p class="sizingp" name="">Stem Area</p>
                                         </div>
                                         <div class="row sizingtableleft">
+                                            <p class="sizingp" name="">Fluid Neg.Gardient</p>
+                                        </div> 
+                                        <div class="row sizingtableleft">
                                             <p class="sizingp" name="">Actuator Size</p>
                                         </div>
+
                                         <div class="row sizingtableleft">
                                             <p class="sizingp" name="">Actuator Travel</p>
                                         </div>
@@ -591,6 +586,14 @@
                                             {% endfor %}
                                         </select>
                                         </div>
+                                        <div class="row sizingtable">
+                                            <select name="negativeGradientUnit" class="form-control-sm-sm sliding_select actuatorUnits" name="" data-desc="negGrad"
+                                                >
+                                                {% for length in metadata['units_dict']['length'] %}
+                                                    <option value="{{length.id}}" {% if act_case %} {% if act_case.negativeGradientUnit %} {% if act_case.negativeGradientUnit == length.name %} selected {% endif %} {% endif %} {% endif %}>{{length.name}}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div> 
                                         <div class="row sizingtable">
                                             
                                         </div>
@@ -750,6 +753,7 @@
                                         <div class="row sizingtable"><input type="text" class="form-control-sm-sm sliding_input actuatorvalue_valveThrustOpen" name="valveThrustOpen" {% if act_case.valveThrustOpen %} value="{{act_case.valveThrustOpen}}"{% else %} value="" {% endif %}></div>
                                         <div class="row sizingtable"><input type="text" class="form-control-sm-sm sliding_input actuatorvalue_shutOffForce" name="shutOffForce" {% if act_case.shutOffForce %} value="{{act_case.shutOffForce}}"{% else %} value="" {% endif %}></div>
                                         <div class="row sizingtable"><input type="text" class="form-control-sm-sm sliding_input actuatorvalue_stemArea" name="" {% if act_case.stemArea %} value="{{act_case.stemArea}}" {% endif %}></div>
+                                        <div class="row sizingtable"><input type="text" name="negGrad" class="form-control-sm-sm sliding_input actuatorvalue_negGrad neg_grad" {% if act_case.knValue %} value="{{act_case.knValue}}" {% endif %}></div>
                                         <div class="row sizingtable"><input type="text" class="form-control-sm-sm sliding_input " name="" {% if act_case.act_size %} value="{{act_case.act_size}}" {% endif %}></div>
                                         <div class="row sizingtable"><input type="text" class="form-control-sm-sm sliding_input actuatorvalue_actTravel" name="" {% if act_case.act_travel %} value="{{act_case.act_travel}}" {% endif %}></div>
                                         <div class="row sizingtable"><input type="text" class="form-control-sm-sm sliding_input actuatorvalue_diaphragm_ea" name="" {% if act_case.diaphragm_ea %} value="{{act_case.diaphragm_ea}}" {% endif %}></div>
@@ -785,9 +789,86 @@
 
 <script>
 
+    var iPres = "{{cases[0].inletPressure}}"
+    var oPres = "{{cases[0].outletPressure}}"
+    var seatDia = $('.seatDia').val();
+    var itemId = "{{item.id}}";
+    var balance = $('.balance').val();
+    var flow_dir = $('.flowDirection').val();
+    var trim_type = $('.trimType').val();
+    var stemDia = $('.stemDia').val();
+    var itemId = "{{item.id}}";
+
+    $(document).ready(function() {
+
+        $('.delp').val(iPres-oPres);
+        $.ajax({
+            type: "GET",    
+            url: "/getpackingfriction",
+            data: {
+                stemDia: stemDia,
+                itemId: itemId
+            },
+            success: function(data) {
+                $('.packingF').val(data.value);
+
+            },
+
+            error: function(xhr, status, error) {
+                alert(data.message);
+            }
+        });
+
+
+        
+        $.ajax({
+            type: "GET",
+            url: "/getseatload",
+            data: {
+                itemId: itemId,
+                seatDia: seatDia
+            },
+            success: function(data) {
+                $('.seatF').val(data.value);
+
+            },
+
+            error: function(xhr, status, error) {
+                alert(data.message);
+            }
+        });
+
+
+
+
+
+        $.ajax({
+            type: "GET",
+            url: "/getunbalforce",
+            data: {
+                iPres: iPres,
+                stemDia: stemDia
+            },
+            success: function(data) {
+                $('.unbal_f').val(parseFloat(data));
+
+            },
+
+            error: function(xhr, status, error) {
+                alert(data.message);
+            }
+        });
+
+        
+
+    });
+
     $(document).ready(function(){
+
+   
         $('.trimType, .balance, .flowDirection').on('change',function(){
             act_id = "{{act.id}}"
+
             $.ajax({
                         type: "GET",
                         url: "/slidingStemDel",
@@ -809,6 +890,49 @@
                         console.error("Error:", error);
                         }
                 });
+        })
+
+        $('.ipres, .stemDia').on('change',function() {
+          
+            var iPres = $('.ipres').val();
+            var stemDia = $('.stemDia').val();
+            $.ajax({
+            type: "GET",
+            url: "/getunbalforce",
+            data: {
+                iPres: iPres,
+                stemDia: stemDia
+            },
+            success: function(data) {
+                $('.unbal_f').val(parseFloat(data));
+
+            },
+
+            error: function(xhr, status, error) {
+                alert(data.message);
+            }
+        });
+        })
+
+        $('.seatDia').on('change',function() {
+            var seatDia = $('.seatDia').val() 
+            var itemId = "{{item.id}}";
+            $.ajax({
+            type: "GET",
+            url: "/getseatload",
+            data: {
+                itemId: itemId,
+                seatDia: seatDia
+            },
+            success: function(data) {
+                $('.seatF').val(data.value);
+
+            },
+
+            error: function(xhr, status, error) {
+                alert(data.message);
+            }
+        });
         })
 
   
@@ -920,177 +1044,43 @@
 
 
 
-
-
-        iPres = "{{cases[0].inletPressure}}"
-        oPres = "{{cases[0].outletPressure}}"
-        balance = $('.balance').val();
-        flow_dir = $('.flowDirection').val();
-        // if(balance == 2 && flow_dir == 2){
-        //     unbal_f = iPres * 
-        // }
-
-
-
-
-        iPres = "{{cases[0].inletPressure}}"
-        oPres = "{{cases[0].outletPressure}}"
-        $('.delp').val(iPres-oPres);
-
-        
-    //     var stemDia = $('.stemDia').val();
-    //             var itemId = "{{item.id}}";
-                
-                
-    //             $.ajax({
-    //                 type: "GET",
-    //                 url: "/getpackingfriction",
-    //                 data: {
-    //                     stemDia: stemDia,
-    //                     itemId: itemId
-    //                 },
-    //                 success: function(data) {
-    //                     $('.packingF').val(data.value);
-
-    //                 },
-
-    //                 error: function(xhr, status, error) {
-    //                     alert(data.message);
-    //                 }
-    //                 });
-
-
-    //     var seatDia = $('.seatDia').val();
-    //     var itemId = "{{item.id}}";
-    //     console.log(seatDia,itemId);
-    //     $.ajax({
-    //                 type: "GET",
-    //                 url: "/getseatload",
-    //                 data: {
-    //                     itemId: itemId,
-    //                     seatDia: seatDia
-    //                 },
-    //                 success: function(data) {
-    //                     $('.seatF').val(data.value);
-
-    //                 },
-
-    //                 error: function(xhr, status, error) {
-    //                     alert(data.message);
-    //                 }
-    //                 });
-     })
-       
-    
-        $(document).ready(function() {
-
-            // $('.trimType').on('change',function(){
-                
-            //     var act_case_id = "{{act_case.id}}"
-            //     alert(act_case_id)
-            //     $.ajax({             
-            //         url: '/removeTrim', 
-            //         method: 'GET',
-            //         data: { act_case_id: act_case_id },
-            //         success: function(response) {
-            //           window.location.reload();
-            //         },
-            //         error: function(xhr, status, error) {
-            //             console.error('Error:', error);
-            //             // Handle error if needed
-            //         }
-            //     });
-
-            // })
-        
-
-            $('.ipres').on('change',function(){
+        $('.ipres').on('change',function(){
                 var ipres = $('.ipres').val();
                 var opres = $('.opres').val();
-              
+                
                 $('.delp').val(ipres-opres);
             })
-            $('.opres').on('change',function(){
-                var ipres = $('.ipres').val();
-                var opres = $(this).val();
-                $('.delp').val(ipres-opres);
-            })
- 
-            $('.valveSize').on('change', function() {
-                var valveSize = $(this).val();
-               
-                $.ajax({
-                    url: '/getStemSize', 
-                    method: 'GET',
-                    data: { valveSize: valveSize },
-                    success: function(response) {
-                        // Clear previous options
-                        $('.stemDia').empty();
-                        // Append new options
-                        $.each(response, function(index, option) {
-                            $('.stemDia').append($('<option>', {
-                                value: option.id,
-                                text: option.value
-                            }));
-                        });
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('Error:', error);
-                        // Handle error if needed
-                    }
-                });
-            });
-            $('.seatDia').on('change', function() {
-                var itemId = "{{item.id}}";
-                var seatDia = $('.seatDia').val();
-                $.ajax({
-                    type: "GET",
-                    url: "/getUaElement",
-                    data: {
-                        seatDia: seatDia,
-                        itemId: itemId
-                    },
-                    success: function(data) {
-                        console.log(data);
-                        $('.plugDia').val(data.plugDia);
-                        $('.ua').val(data.ua);
+        $('.opres').on('change',function(){
+            var ipres = $('.ipres').val();
+            var opres = $(this).val();
+            $('.delp').val(ipres-opres);
+        })
 
-                    },
-
-                    error: function(xhr, status, error) {
-                        alert(data.message);
-                    }
-                    });
-
-
-
-                 
-                var seatDia = $('.seatDia').val();
-                var itemId = "{{item.id}}";
-                
-                $.ajax({
-                    type: "GET",
-                    url: "/getseatload",
-                    data: {
-                        itemId: itemId,
-                        seatDia: seatDia
-                    },
-                    success: function(data) {
-                        $('.seatF').val(data.value);
-
-                    },
-
-                    error: function(xhr, status, error) {
-                        alert(data.message);
-                    }
-                    });
-                
-                
-
-            });
+        $('.valveSize').on('change', function() {
+            var valveSize = $(this).val();
             
-            
-            $('.stemDia').on('change', function() {
+            $.ajax({
+                url: '/getStemSize', 
+                method: 'GET',
+                data: { valveSize: valveSize },
+                success: function(response) {
+                    // Clear previous options
+                    $('.stemDia').empty();
+                    // Append new options
+                    $.each(response, function(index, option) {
+                        $('.stemDia').append($('<option>', {
+                            value: option.id,
+                            text: option.value
+                        }));
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                    // Handle error if needed
+                }
+            });
+        });
+        $('.stemDia').on('change', function() {
                 var stemDia = $('.stemDia').val();
                 var itemId = "{{item.id}}";
             
@@ -1114,7 +1104,33 @@
                 
 
             });
-        });
+
+        $('.seatDia').on('change', function() {
+            var itemId = "{{item.id}}";
+            var seatDia = $('.seatDia').val();
+            $.ajax({
+                type: "GET",
+                url: "/getUaElement",
+                data: {
+                    seatDia: seatDia,
+                    itemId: itemId
+                },
+                success: function(data) {
+                    console.log(data);
+                    $('.plugDia').val(data.plugDia);
+                    $('.ua').val(data.ua);
+
+                },
+
+                error: function(xhr, status, error) {
+                    alert(data.message);
+                }
+            });  
+
+     });
+       
+    });
+
 
         
 </script>

@@ -1087,7 +1087,7 @@ class valveDetailsMaster(db.Model):
     }
     id = Column(Integer, primary_key=True)
     quantity = Column(Integer)
-    tagNumber = Column(String(50))
+    tagNumber = Column(String(150))
     serialNumber = Column(String(50))
     shutOffDelP = Column(Float)
     maxPressure = Column(Float)
