@@ -98,48 +98,59 @@
 
             <div class="col-10 vh-100">
                 <div class="row">
-                        <div class="col-12">
-                            <div class="topicons">
-                                <div class="row "> 
-                                    <div class="icon mt-2 ml-3">
-                                        <a href="{{url_for('nextItem', control='first', page=page, proj_id=item.project.id, item_id=item.id)}}">
-                                            <i class="fa-solid fa-backward-step" data-toggle="tooltip" title="first"></i>
+                    <div class="col-9">
+                        <div class="topicons ">
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="icons-container icon mt-2 ml-3">
+                                        <a
+                                            href="{{url_for('nextItem', control='first', page=page, proj_id=item.project.id, item_id=item.id)}}">
+                                            <svg fill="none" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg"><g fill="black"><path clip-rule="evenodd" d="m6.5 12 14.5 9v-18zm13.5-7.20234-11.60377 7.20234 11.60377 7.2023z" fill-rule="evenodd"/><path d="m3 3h1v18h-1z"/></g></svg>
                                         </a>
-                                        <a href="{{url_for('nextItem', control='prev', page=page, proj_id=item.project.id, item_id=item.id)}}">
-                                            <i class="fa-solid fa-angle-left ml-3" data-toggle="tooltip" title="Previous"></i>
+                                        <a
+                                            href="{{url_for('nextItem', control='prev', page=page, proj_id=item.project.id, item_id=item.id)}}">
+                                            <svg height="18" width="18" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="m8.293 16 14 14 .707-.707-13.293-13.293 13.293-13.293-.707-.707z" fill="black"/></svg>
                                         </a>
-                                        <input type="text" style="text-align: center;" class="form-control-sm ml-3" name="name" readonly value="Q240000{{item.project.id}}-00{{item.itemNumber}}-{{item.alternate}}">
-                                        <a href="{{url_for('nextItem', control='next', page=page, proj_id=item.project.id, item_id=item.id)}}">
-                                            <i class="fa-solid fa-angle-right ml-3" data-toggle="tooltip" title="next"></i>
-                                        </a><a href="{{url_for('nextItem', control='last', page=page, proj_id=item.project.id, item_id=item.id)}}">
-                                            <i class="fa-solid fa-forward-step ml-3" data-toggle="tooltip" title="last"></i>  
-                                        </a>                              
-                                        <i class="fa-solid fa-file ml-3" data-toggle="tooltip" title="file"></i>
-                                        <!-- <i class="fa-solid fa-file"></i> -->
-                                        <i class="fa-solid fa-floppy-disk  ml-3 fa-lg" data-toggle="tooltip" title="save"></i>
-                                        <a href="{{url_for('preferences', proj_id=item.project.id, item_id=item.id, page=page)}}"><i class="fa-solid fa-sliders fa-1x ml-3" data-toggle="tooltip" title="Preference"></i></a>
-                                        <i class="fa-solid fa-question ml-3" data-toggle="tooltip" title="help"></i>
+                                        <input type="text" style="text-align: center;" class="input-box"
+                                            name="name" readonly
+                                            value="Q240000{{item.project.id}}-00{{item.itemNumber}}-{{item.alternate}}">
+                                        <a
+                                            href="{{url_for('nextItem', control='next', page=page, proj_id=item.project.id, item_id=item.id)}}">
+                                            <svg height="18" width="18" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="m23.707 16-14-14-.707.707 13.293 13.293-13.293 13.293.707.707z" fill="black"/></svg>
+                                        </a><a
+                                            href="{{url_for('nextItem', control='last', page=page, proj_id=item.project.id, item_id=item.id)}}">
+                                            <svg fill="none" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg"><g fill="black"><path clip-rule="evenodd" d="m17.5 12-14.5-9v18zm-1.8962 0-11.6038-7.20234v14.40464z" fill-rule="evenodd"/><path d="m21 3h-1v18h1z"/></g></svg>
+                                        </a>
+
+                                      
+                                        <a
+                                            href="{{url_for('preferences', proj_id=item.project.id, item_id=item.id, page=page)}}"><svg height="18" viewBox="0 0 20 20" width="18" xmlns="http://www.w3.org/2000/svg"><g fill="none" stroke="#000"><ellipse cx="6.11" cy="3.55" rx="2.11" ry="2.15"/><ellipse cx="6.11" cy="15.55" rx="2.11" ry="2.15"/><circle cx="13.15" cy="9.55" r="2.15"/></g><path d="m1 3h3v1h-3z"/><path d="m10 3h8v1h-8z"/><path d="m1 9h8v1h-8z"/><path d="m15 9h3v1h-3z"/><path d="m1 15h3v1h-3z"/><path d="m10 15h8v1h-8z"/></svg></a>
+                                                <a>
+                                                    <svg height="19" preserveAspectRatio="xMidYMid meet" viewBox="0 0 36 36" width="19" xmlns="http://www.w3.org/2000/svg"><path d="m18 2a16 16 0 1 0 16 16 16 16 0 0 0 -16-16zm0 30a14 14 0 1 1 14-14 14 14 0 0 1 -14 14z"/><path d="m18.29 8.92a7.38 7.38 0 0 0 -5.72 2.57 1 1 0 0 0 -.32.71.92.92 0 0 0 .95.92 1.08 1.08 0 0 0 .71-.29 5.7 5.7 0 0 1 4.33-2c2.36 0 3.83 1.52 3.83 3.41v.05c0 2.21-1.76 3.44-4.54 3.65a.8.8 0 0 0 -.76.92s0 2.32 0 2.75a1 1 0 0 0 1 .9h.11a1 1 0 0 0 .9-1v-2.06c3-.42 5.43-2 5.43-5.28v-.05c-.03-3-2.37-5.2-5.92-5.2z"/><circle cx="17.78" cy="26.2" r="1.25"/><path d="m0 0h36v36h-36z" fill="none"/></svg></i>
+                                                </a>
+                                        
+                                       
                                     </div>
                                 </div>
-                                <hr>
+                               
                             </div>
-                                
+                            <hr>
                         </div>
-                
-                
-                </div>
-                <div class="row flash">
-                    {% with messages = get_flashed_messages() %}
-                        {% if messages %}
-                            
-                                {% for message in messages %}
-                                    <p class="flashes">{{ message }}</p>
-                                {% endfor %}
-                            
-                        {% endif %}
-                    {% endwith %}
-                    {% block body %}{% endblock %}
+
+                    </div>
+                    
+                    <div class="col-3 flash">
+                        {% with messages = get_flashed_messages() %}
+                            {% if messages %}
+                                
+                                    {% for message in messages %}
+                                        <p class="flashes">{{ message }}</p>
+                                    {% endfor %}
+                                
+                            {% endif %}
+                        {% endwith %}
+                        {% block body %}{% endblock %}
+                        <!-- <p>Flash Check</p> -->
+                    </div>
 
                 </div>
-                
-                <!-- WRITE YOUR CODE HERE USING NEW ROW -->

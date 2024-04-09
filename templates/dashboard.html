@@ -5,81 +5,86 @@
         <!-- <div class="project shadow"> -->
             <div class="row">
                 <div class="col-6 mt-2">
-                    <div class="row ml-1">
+                    <div  class="row ml-1">
                         <div class="col-2 mt-1">
-                            <h6><b>Project</b></h6>
+                            <h6>Project</h6>
                         </div>
-                        <div class="col-1">
-                            <a
+                        <div class="col-4">
+                            <div class="icons-container">
+                                <a
                                 href="{{url_for('addProject', proj_id=item.project.id, item_id=item.id)}}"
                                 data-toggle="tooltip"
                                 title="Create"
                                 data-placement="bottom"
                             >
-                                <i class="fa-solid fa-plus"></i
-                            ></a>
-                        </div>
-                        <div class="col-1">
+                            <svg id="i-plus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="15" height="14" fill="none" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                                <path d="M16 2 L16 30 M2 16 L30 16" />
+                            </svg></a>
+
                             <a
-                                href="{{url_for('projectDelete', proj_id=item.project.id, item_id=item.id)}}"
-                                data-toggle="tooltip"
-                                title="Delete"
-                                data-placement="bottom"
-                            >
-                                <i class="fa-solid fa-xmark"></i
-                            ></a>
-                        </div>
-                        <div class="col-1">
-                            <a
+                            href="{{url_for('projectDelete', proj_id=item.project.id, item_id=item.id)}}"
+                            data-toggle="tooltip"
+                            title="Delete"
+                            data-placement="bottom"
+                        >
+                           
+                        <svg id="i-close" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="11" height="11" fill="none" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                                <path d="M2 30 L30 2 M30 30 L2 2" />
+                            </svg>
+                          </a>
+
+                          <a
                                 href="{{url_for('exportProject', proj_id=item.project.id, item_id=item.id)}}"
                                 data-toggle="tooltip"
                                 title="Download"
                                 data-placement="bottom"
                             >
-                                <i class="fa-solid fa-download"></i
-                            ></a>
-                        </div>
-                        <div class="col-1">
+                            <svg height="22" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="m20 6.52797748v12.97202252c0 1.3807119-1.1192881 2.5-2.5 2.5h-11c-1.38071187 0-2.5-1.1192881-2.5-2.5v-15c0-1.38071187 1.11928813-2.5 2.5-2.5h8.9720225c.1327463-.00841947.2709238.03583949.3815309.14644661l4 4c.1106071.11060712.1548661.24878464.1464466.38153087zm-5-3.52797748h-8.5c-.82842712 0-1.5.67157288-1.5 1.5v15c0 .8284271.67157288 1.5 1.5 1.5h11c.8284271 0 1.5-.6715729 1.5-1.5v-12.5h-3.5c-.2761424 0-.5-.22385763-.5-.5zm1 .70710678v2.29289322h2.2928932zm-4 12.58578642 2.1464466-2.1464466c.1952622-.1952621.5118446-.1952621.7071068 0 .1952621.1952622.1952621.5118446 0 .7071068l-2.9337265 2.9337265c-.0891066.1374188-.24385.2283299-.4198269.2283299s-.3307203-.0909111-.4198269-.2283299l-2.93372649-2.9337265c-.19526215-.1952622-.19526215-.5118446 0-.7071068.19526215-.1952621.51184463-.1952621.70710678 0l2.14644661 2.1464466v-6.7928932c0-.27614237.2238576-.5.5-.5s.5.22385763.5.5z"/></svg></a>
+
+
                             <a
-                                href="{{url_for('importProject', proj_id=item.project.id, item_id=item.id)}}"
-                                data-toggle="tooltip"
-                                title="Upload"
-                                data-placement="bottom"
-                            >
-                                <i class="fa-solid fa-upload"></i
-                            ></a>
+                            href="{{url_for('importProject', proj_id=item.project.id, item_id=item.id)}}"
+                            data-toggle="tooltip"
+                            title="Upload"
+                            data-placement="bottom"
+                        >
+                        <svg height="22" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="m20 6.52897986v12.97202254c0 1.3807119-1.1192881 2.5-2.5 2.5h-11c-1.38071187 0-2.5-1.1192881-2.5-2.5v-15.00000002c0-1.38071188 1.11928813-2.5 2.5-2.5h8.9720225c.1327463-.00841947.2709238.03583949.3815309.14644661l4 4c.1106071.11060712.1548661.24878464.1464466.38153087zm-5-3.52797748h-8.5c-.82842712 0-1.5.67157287-1.5 1.5v15.00000002c0 .8284271.67157288 1.5 1.5 1.5h11c.8284271 0 1.5-.6715729 1.5-1.5v-12.50000002h-3.5c-.2761424 0-.5-.22385763-.5-.5zm1 .70710678v2.29289322h2.2928932zm-4 6.99899764v6.7928932c0 .2761424-.2238576.5-.5.5s-.5-.2238576-.5-.5v-6.7928932l-2.14644661 2.1464466c-.19526215.1952621-.51184463.1952621-.70710678 0-.19526215-.1952622-.19526215-.5118446 0-.7071068l2.99999999-2.99999999c.1952622-.19526215.5118446-.19526215.7071068 0l3 2.99999999c.1952621.1952622.1952621.5118446 0 .7071068-.1952622.1952621-.5118446.1952621-.7071068 0z"/></svg></a>
+
+                        <a
+                        href="#"
+                        data-toggle="tooltip"
+                        title="Copy"
+                        data-placement="bottom"
+                    >
+                    <svg viewBox="0 0 32 32" width="17" height="16" xmlns="http://www.w3.org/2000/svg"><path d="m28 10v18h-18v-18zm0-2h-18a2 2 0 0 0 -2 2v18a2 2 0 0 0 2 2h18a2 2 0 0 0 2-2v-18a2 2 0 0 0 -2-2z"/><path d="m4 18h-2v-14a2 2 0 0 1 2-2h14v2h-14z"/><path d="m0 0h32v32h-32z" fill="none"/></svg></a>
+
+                    <a></a>
+                  
+
+                            </div>
                         </div>
-                        <div class="col-1">
-                            <a
-                                href="#"
-                                data-toggle="tooltip"
-                                title="Copy"
-                                data-placement="bottom"
-                            >
-                                <i class="fa-solid fa-copy"></i
-                            ></a>
-                        </div>
+                       
                     </div>
                 </div>
 
                 <div class="col-6 mt-1">
-                    <div class="row justify-content-end">
-                        <div class="col-8">
+                    <div class="row ml-1 justify-content-end">
+                        <div class="col-5">
                             <div class="form-group">
                                 <input
                                     type="text"
                                     name="name"
                                     placeholder="Search........."
-                                    class="form-control"
+                                    class="form-control reference_input"
                                     id="projectinput"
                                 />
                             </div>
                         </div>
-                        <div class="col-2">
+                        <!-- <div class="col-2">
                             <button type="button" class="btn btn-primary" id="btn">
                                 <i class="fa-solid fa-magnifying-glass"></i>
                             </button>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>
@@ -91,7 +96,7 @@
                         <thead class="table-sm dash_thead" >
                             <tr class="table-sm">
                                 <th class="table1_ratio"></th>
-                                <th class="table1_quote">
+                                <th class="table1_quote" >
                                     <div class="">Quote No</div>
                                 </th>
                                 <th class="table1_customer">
@@ -162,7 +167,11 @@
                                 
                                 <td class="table1_print">                         
                                     <a href="{{url_for('generate_csv_project', proj_id=item.project.id, item_id=item.id)}}">
-                                        <i class="fa-solid fa-print"></i>
+                                        <svg width="14" height="14" stroke-width="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M17 13.01L17.01 12.9989" stroke="black" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M7 17H17M6 10V3.6C6 3.26863 6.26863 3 6.6 3H17.4C17.7314 3 18 3.26863 18 3.6V10M21 20.4V14C21 11.7909 19.2091 10 17 10H7C4.79086 10 3 11.7909 3 14V20.4C3 20.7314 3.26863 21 3.6 21H20.4C20.7314 21 21 20.7314 21 20.4Z" stroke="black" stroke-linecap="round" stroke-linejoin="round"/>
+                                            </svg>
+                                            
                                     </a>
                                     
                                 </td>
@@ -182,92 +191,88 @@
                     <div class="col-6 mt-2">
                         <div class="row ml-1">
                             <div class="col-2 mt-1">
-                                <h6><b>Item</b></h6>
+                                <h6>Item</h6>
                             </div>
-                            <div class="col-1">
-                                <a
+                            <div class="col-4">
+                                <div class="icons-container">
+                                    <a
                                     href="{{url_for('addItem', proj_id=item.project.id, item_id=item.id)}}"
                                     data-toggle="tooltip"
                                     title="Create"
                                     data-placement="bottom"
                                 >
-                                    <i class="fa-solid fa-plus"></i
-                                ></a>
-                            </div>
-                            <div class="col-1">
+                                <svg id="i-plus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="15" height="14" fill="none" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                                    <path d="M16 2 L16 30 M2 16 L30 16" />
+                                </svg>
+
                                 <a
-                                    href="{{url_for('itemDelete', proj_id=item.project.id, item_id=item.id)}}"
-                                    data-toggle="tooltip"
-                                    title="Delete"
-                                    data-placement="bottom"
-                                >
-                                    <i class="fa-solid fa-xmark"></i
-                                ></a>
-                            </div>
-                            <div class="col-1">
-                                <a
-                                    href="{{url_for('exportItem', proj_id=item.project.id, item_id=item.id)}}"
-                                    data-toggle="tooltip"
-                                    title="Download"
-                                    data-placement="bottom"
-                                >
-                                    <i class="fa-solid fa-download"></i
-                                ></a>
-                            </div>
-                            <div class="col-1">
-                                <a
-                                    href="#"
-                                    data-toggle="tooltip"
-                                    title="Upload"
-                                    data-placement="bottom"
-                                >
-                                    <i class="fa-solid fa-upload"></i
-                                ></a>
-                            </div>
-                            <div class="col-1">
-                                <a
+                                href="{{url_for('itemDelete', proj_id=item.project.id, item_id=item.id)}}"
+                                data-toggle="tooltip"
+                                title="Delete"
+                                data-placement="bottom"
+                            >
+                            <svg id="i-close" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="11" height="11" fill="none" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                                <path d="M2 30 L30 2 M30 30 L2 2" />
+                            </svg>
+                            <a
+                            href="{{url_for('exportItem', proj_id=item.project.id, item_id=item.id)}}"
+                            data-toggle="tooltip"
+                            title="Download"
+                            data-placement="bottom"
+                        >
+                        <svg height="19" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="m20 6.52797748v12.97202252c0 1.3807119-1.1192881 2.5-2.5 2.5h-11c-1.38071187 0-2.5-1.1192881-2.5-2.5v-15c0-1.38071187 1.11928813-2.5 2.5-2.5h8.9720225c.1327463-.00841947.2709238.03583949.3815309.14644661l4 4c.1106071.11060712.1548661.24878464.1464466.38153087zm-5-3.52797748h-8.5c-.82842712 0-1.5.67157288-1.5 1.5v15c0 .8284271.67157288 1.5 1.5 1.5h11c.8284271 0 1.5-.6715729 1.5-1.5v-12.5h-3.5c-.2761424 0-.5-.22385763-.5-.5zm1 .70710678v2.29289322h2.2928932zm-4 12.58578642 2.1464466-2.1464466c.1952622-.1952621.5118446-.1952621.7071068 0 .1952621.1952622.1952621.5118446 0 .7071068l-2.9337265 2.9337265c-.0891066.1374188-.24385.2283299-.4198269.2283299s-.3307203-.0909111-.4198269-.2283299l-2.93372649-2.9337265c-.19526215-.1952622-.19526215-.5118446 0-.7071068.19526215-.1952621.51184463-.1952621.70710678 0l2.14644661 2.1464466v-6.7928932c0-.27614237.2238576-.5.5-.5s.5.22385763.5.5z"/></svg>
+                        </a>
+
+                        <a
+                        href="#"
+                        data-toggle="tooltip"
+                        title="Upload"
+                        data-placement="bottom"
+                    >
+                    <svg height="19" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="m20 6.52897986v12.97202254c0 1.3807119-1.1192881 2.5-2.5 2.5h-11c-1.38071187 0-2.5-1.1192881-2.5-2.5v-15.00000002c0-1.38071188 1.11928813-2.5 2.5-2.5h8.9720225c.1327463-.00841947.2709238.03583949.3815309.14644661l4 4c.1106071.11060712.1548661.24878464.1464466.38153087zm-5-3.52797748h-8.5c-.82842712 0-1.5.67157287-1.5 1.5v15.00000002c0 .8284271.67157288 1.5 1.5 1.5h11c.8284271 0 1.5-.6715729 1.5-1.5v-12.50000002h-3.5c-.2761424 0-.5-.22385763-.5-.5zm1 .70710678v2.29289322h2.2928932zm-4 6.99899764v6.7928932c0 .2761424-.2238576.5-.5.5s-.5-.2238576-.5-.5v-6.7928932l-2.14644661 2.1464466c-.19526215.1952621-.51184463.1952621-.70710678 0-.19526215-.1952622-.19526215-.5118446 0-.7071068l2.99999999-2.99999999c.1952622-.19526215.5118446-.19526215.7071068 0l3 2.99999999c.1952621.1952622.1952621.5118446 0 .7071068-.1952622.1952621-.5118446.1952621-.7071068 0z"/></svg>
+                    </a>
+
+                    <a
                                     href="{{url_for('copyItem', proj_id=item.project.id, item_id=item.id)}}"
                                     data-toggle="tooltip"
                                     title="Copy"
                                     data-placement="bottom"
                                 >
-                                    <i class="fa-solid fa-copy"></i
-                                ></a>
-                            </div>
-                            <div class="col-1">
+                                <svg viewBox="0 0 32 32" width="17" xmlns="http://www.w3.org/2000/svg"><path d="m28 10v18h-18v-18zm0-2h-18a2 2 0 0 0 -2 2v18a2 2 0 0 0 2 2h18a2 2 0 0 0 2-2v-18a2 2 0 0 0 -2-2z"/><path d="m4 18h-2v-14a2 2 0 0 1 2-2h14v2h-14z"/><path d="m0 0h32v32h-32z" fill="none"/></svg></a>
                                 <a
-                                    href="{{url_for('addAlternate', proj_id=item.project.id, item_id=item.id)}}"
-                                    data-toggle="tooltip"
-                                    title="Alternate"
-                                    data-placement="bottom"
-                                >
-                                    <i
-                                        class="fa-regular fa-object-ungroup fa-1x"
-                                        style="color: black"
-                                    ></i
-                                ></a>
+                                href="{{url_for('addAlternate', proj_id=item.project.id, item_id=item.id)}}"
+                                data-toggle="tooltip"
+                                title="Alternate"
+                                data-placement="bottom"
+                            >
+                            <svg viewBox="0 0 448 512" width="12" height="12" xmlns="http://www.w3.org/2000/svg">
+                                <path d="m448 344v112a23.94 23.94 0 0 1 -24 24h-112c-21.39 0-32.09-25.9-17-41l36.2-36.2-107.2-107.2-107.23 107.3 36.23 36.1c15.09 15.1 4.39 41-17 41h-112a23.94 23.94 0 0 1 -24-24v-112c0-21.4 25.89-32.1 41-17l36.19 36.2 107.27-107.2-107.28-107.3-36.18 36.3c-15.1 15.1-41 4.4-41-17v-112a23.94 23.94 0 0 1 24-24h112c21.39 0 32.09 25.9 17 41l-36.2 36.2 107.2 107.2 107.23-107.3-36.23-36.1c-15.09-15.1-4.39-41 17-41h112a23.94 23.94 0 0 1 24 24v112c0 21.4-25.89 32.1-41 17l-36.19-36.2-107.27 107.2 107.28 107.3 36.18-36.2c15.1-15.2 41-4.5 41 16.9z" fill="#353A40"/>
+                              </svg>
+                               </a>
+                                </div>
                             </div>
+                            
                         </div>
                     </div>
 
-                    <div class="col-6 mt-1">
-                        <div class="row justify-content-end">
-                            <div class="col-8">
+                    <div class="col-6 mt-2">
+                        <div class="row ml-1 justify-content-end">
+                            <div class="col-5">
                                 <div class="form-group">
                                     <input
                                         type="text"
                                         name="name"
                                         placeholder="Search........."
-                                        class="form-control"
+                                        class="form-control reference_input"
                                         id="iteminput"
                                     />
                                 </div>
                             </div>
-                            <div class="col-2">
+                            <!-- <div class="col-2">
                                 <button type="button" class="btn btn-primary" id="btn">
                                     <i class="fa-solid fa-magnifying-glass"></i>
                                 </button>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                 </div>
@@ -342,7 +347,11 @@
                             <td class="table2_align2">{{valve_.item.id}}</td>
                             <td  class="table2_print">
                                 <a href="{{url_for('generate_csv_item', proj_id=item.project.id, item_id=item.id)}}">
-                                    <i class="fa-solid fa-print"></i>
+                                    <svg width="14" height="14" stroke-width="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M17 13.01L17.01 12.9989" stroke="black" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M7 17H17M6 10V3.6C6 3.26863 6.26863 3 6.6 3H17.4C17.7314 3 18 3.26863 18 3.6V10M21 20.4V14C21 11.7909 19.2091 10 17 10H7C4.79086 10 3 11.7909 3 14V20.4C3 20.7314 3.26863 21 3.6 21H20.4C20.7314 21 21 20.7314 21 20.4Z" stroke="black" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                        
                                 </a>
                             </td>
                         {%endif%}
