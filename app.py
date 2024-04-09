@@ -36,6 +36,7 @@ from flask_migrate import Migrate
 from dbsetup import db
 from fractions import Fraction
 from decimal import Decimal
+from flask_mail import Mail,Message
 
 # -----------^^^^^^^^^^^^^^----------------- IMPORT STATEMENTS -----------------^^^^^^^^^^^^^------------ #
 
@@ -78,6 +79,15 @@ Bootstrap(app)
 
 # app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL1", "sqlite:///fcc-db-v10-0.db")
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:Qwer1234@localhost/ValveSizingFCC'
+
+app.config['MAIL_SERVER'] = 'smtp.office365.com'
+app.config['MAIL_PORT'] = 587  # Change to 587 for TLS
+app.config['MAIL_USE_TLS'] = True  # Enable TLS
+app.config['MAIL_USE_SSL'] = False  # Disable SSL
+app.config['MAIL_USERNAME'] = 'info@fccommune.com'
+app.config['MAIL_PASSWORD'] = 'nmmbylrkmsqyllyp'
+app.config['MAIL_DEFAULT_SENDER'] = 'info@fccommune.com'
+
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # db = SQLAlchemy(app)
@@ -1210,27 +1220,21 @@ def sendOTP(username):
         otp_1.time = datetime.datetime.now()
         db.session.commit()
     try:
-        # Send email using Hostinger's SMTP server
-        s = smtplib.SMTP('smtp.gmail.com', 587)
-        s.starttls()
-        sender_email = 'info@fccommune.com'  # Replace with your Hostinger email
-        sender_email_password = 'nmmbylrkmsqyllyp'  # Replace with your Hostinger email password
-        # sender_email = 'sizinghelp@valvesizing.fccommune.com'  # Replace with your Hostinger email
-        # sender_email_password = 'Sizing@admin0'  # Replace with your Hostinger email password
-        reciever_email = ['pandi709410@gmail.com', username]
+ 
+ 
 
-        # Login to the SMTP server
-        s.login(sender_email, sender_email_password)
+        s = Mail(app)
 
-        # Construct the email message
-        message = f"Subject: OTP for Create Password\n\n"
-        message += f"OTP for Create Password is {random_int}"
+
+        
+        message = Message('Your otp' , recipients=[username])
+        message.body = f"FCC Sizing Software for Create Password is {random_int}"
         print(random_int)
         # Send the email
-        s.sendmail(sender_email, reciever_email, message)
-        print(reciever_email)
+        s.send(message)
+ 
         # Close the connection to the SMTP server
-        s.quit()
+    
 
         # Set mail_sent flag to indicate successful email sending
         mail_sent = True
@@ -5468,7 +5472,7 @@ def valveSizing(proj_id, item_id):
         html_page = 'valvesizing.html'
     
     return render_template(html_page, item=getDBElementWithId(itemMaster, int(item_id)), user=current_user,
-                           metadata=metadata_, page='valveSizing', valve=valve_element, case_length=range(6), 
+                           metadata=metadata_, page='valveSizing', valve=valve_element, case_length=range(5), 
                            cases=itemCases_1, total_length=len(itemCases_1), constants=constants)
 
 
@@ -6585,14 +6589,15 @@ def slidingStem(proj_id, item_id):
                                         valve_element.seatLeakageClass__, trimType__, balancing__,flowDirection__, 'close', shutOffDelP,packingF,a['seatF'][0])
             v_shutoff, v_shutoff_plus, v_open, v_close = round(vf_shutoff[0]), round(valve_forces[0]), round(
                 vf_open[0]), round(vf_close[0])
+            print(f'BALANCEDCVVVVSS {balancing__.name}')
             
             if balancing__.name == 'Unbalanced':
                 if flowDirection__.name == 'Under':
                     kn = 0
                 elif flowDirection__.name == 'Over':
                     kn = (2 * float(a['ua'][0])) / float(a(['valveTravel'][0]))
-            elif balancing_element.name == 'Balanced':
-
+            
+            elif balancing__.name == 'Balanced':
                 kn_element = db.session.query(knValue)\
                     .filter_by(trimType_=trimType__, flowDirection_=flowDirection__, flowCharacter_=valve_element.flowCharacter__)\
                     .order_by(func.abs(knValue.portDia - seatDia))\

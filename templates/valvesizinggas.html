@@ -3,51 +3,8 @@
 <br><br>
 <form action="{{url_for('valveSizing', item_id=item.id, proj_id=item.project.id, page=page)}}" method="post">
         <div class="row">
-                <div class="col-7 ml-3">
-                        <div class="row column-headers">
-                                <div class="col-4 parameters-units">
-                                        <div class="row">
-                                                <!--------------PARAMETER COLUMN-------------->
-                                                <div class="col-sm-8">
-                                                        <!-- <div class="row sizingtableleft"><p class="sizingp">Parameters</p></div> -->
-                                                </div>
-                                                <div class="col-4">
-                                                        <!-- <div class="row sizingtableleft"><p class="sizingp">Units</p></div> -->
-                                                </div>
-                                        </div>
-                                </div>
-                                <div class="col-8 input-fields">
-                                        <div class="row">
-                                                {% for i in case_length %}
-                                                {% if cases[i] %}
-                                                        <div class="col-2 colborder_bottom case{{i+1}}">
-                                                                <div class="row sizingtableleft">
-                                                                        <p class="case{{i+1}}"  onclick="copyPaste(this)" style="margin-right: 20px;margin-left: 5px;">
-                                                                                <svg height="14" viewBox="0 0 20 20" width="14" xmlns="http://www.w3.org/2000/svg"><g fill="none" stroke="#000"><path d="m3.5 2.5h12v16h-12z"/><path d="m5 .5h12.5v16.5"/></g></svg>
-                                                                        </p>
-                                                                        <p class="case{{i+1}}" onclick="paste(this)">
-                                                                                <svg height="16" viewBox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg"><path d="m4.00029246 4.08524952-.00029246 6.41475048c0 1.3254834 1.03153594 2.4100387 2.33562431 2.4946823l.16437569.0053177 4.4143985.000703c-.2061166.5822289-.7615518.999297-1.4143985.999297h-3.5c-1.65685425 0-3-1.3431458-3-3v-5.5c0-.65321869.41754351-1.20891488 1.00029246-1.41475048zm7.49970754-2.08524952c.8284271 0 1.5.67157288 1.5 1.5v7c0 .8284271-.6715729 1.5-1.5 1.5h-5c-.82842712 0-1.5-.6715729-1.5-1.5v-7c0-.82842712.67157288-1.5 1.5-1.5z" fill="#3d4646"/></svg>   
-                                                                        </p>
-                                                                        
-                                                                </div>
-                                                        </div>
-                                                {% else %}
-                                                        <div class="col-2 colborder_bottom case{{i+1}}">
-                                                                <div class="row sizingtableleft">
-                                                                        <p class="case{{i+1}}"  onclick="copyPaste(this)" style="margin-right: 20px;margin-left: 5px;">
-                                                                                <svg height="14" viewBox="0 0 20 20" width="14" xmlns="http://www.w3.org/2000/svg"><g fill="none" stroke="#000"><path d="m3.5 2.5h12v16h-12z"/><path d="m5 .5h12.5v16.5"/></g></svg>
-                                                                        </p>
-                                                                        <p class="case{{i+1}}" onclick="paste(this)">
-                                                                                <svg height="16" viewBox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg"><path d="m4.00029246 4.08524952-.00029246 6.41475048c0 1.3254834 1.03153594 2.4100387 2.33562431 2.4946823l.16437569.0053177 4.4143985.000703c-.2061166.5822289-.7615518.999297-1.4143985.999297h-3.5c-1.65685425 0-3-1.3431458-3-3v-5.5c0-.65321869.41754351-1.20891488 1.00029246-1.41475048zm7.49970754-2.08524952c.8284271 0 1.5.67157288 1.5 1.5v7c0 .8284271-.6715729 1.5-1.5 1.5h-5c-.82842712 0-1.5-.6715729-1.5-1.5v-7c0-.82842712.67157288-1.5 1.5-1.5z" fill="#3d4646"/></svg>   
-                                                                        </p>
-                                                                        
-                                                                </div>
-                                                        </div>
-                                                {% endif %}
-                                                {% endfor %}
-                                        </div>
-                                </div>
-                        </div>
+                <div class="col-8 cvsizing">
+                       
                         <div class="row column-headers">
                                 <div class="col-4 parameters-units">
                                         <div class="row">
@@ -67,12 +24,7 @@
                                                         <div class="col-2 colborder_bottom case{{i+1}}">
                                                                 <div class="row sizingtableleft" style="justify-content: space-around; ">
                                                                         <p class="sizingp ml-1" >Case {{i+1}}</p>
-                                                                        <p class="case{{i+1}}" onclick="clearData(this)" style="margin-bottom:2px">
-                                                                                <svg height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path  d="m19 6.3422181v-2.8422181c0-.27614237.2238576-.5.5-.5s.5.22385763.5.5v4c0 .27614237-.2238576.5-.5.5h-4c-.2761424 0-.5-.22385763-.5-.5s.2238576-.5.5-.5h2.7457493c-1.4997008-1.87286748-3.7763294-3-6.2457493-3-4.418278 0-8 3.581722-8 8s3.581722 8 8 8c4.2349934 0 7.7298815-3.3009292 7.9851052-7.5075176.0167235-.2756355.2537273-.4855252.5293628-.4688018.2756355.0167235.4855252.2537273.4688017.5293628-.2871996 4.7336127-4.2187354 8.4469566-8.9832697 8.4469566-4.97056275 0-9-4.0294373-9-9 0-4.97056275 4.02943725-9 9-9 2.7632657 0 5.3130274 1.25541041 7 3.3422181z"/></svg>
-                                                                        </p>
-                                                                        <a href="{{url_for('itemCaseDelete', item_id=item.id, proj_id=item.project.id, case_id=cases[i].id)}}" data-id="case{{i+1}}" class="clear-case">
-                                                                                <svg height="15" viewBox="0 0 24 24" width="15" xmlns="http://www.w3.org/2000/svg"><g fill="none" stroke="#000" stroke-width="1.5"><path d="m16 16-12-12"/><path d="m16 4-12 12"/></g></svg>
-                                                                        </a>
+                                                                       
                                                                       
                                                                         
                                                                 </div>
@@ -81,12 +33,7 @@
                                                         <div class="col-2 colborder_bottom case{{i+1}}">
                                                                 <div class="row sizingtableleft" style="justify-content: space-around; ">
                                                                         <p class="sizingp ml-1">Case {{i+1}}</p>
-                                                                        <p class="case{{i+1}}" onclick="clearData(this)"  style="margin-bottom:2px">
-                                                                                <svg viewBox="0 0 24 24" width="13" height="13" xmlns="http://www.w3.org/2000/svg"><path  d="m19.875 8.5h-4.5a1 1 0 0 1 0-2h3.5v-3.5a1 1 0 0 1 2 0v4.5a.99974.99974 0 0 1 -1 1z"/><path d="m12 22a10 10 0 1 1 8.65137-15.001.99981.99981 0 0 1 -1.73047 1.002 7.98928 7.98928 0 1 0 1.0791 3.999 1 1 0 0 1 2 0 10.01146 10.01146 0 0 1 -10 10z"/></svg>
-                                                                        </p>
-                                                                        <a href="" data-id="case{{i+1}}" class="clear-case">
-                                                                                <svg height="15" viewBox="0 0 24 24" width="15" xmlns="http://www.w3.org/2000/svg"><g fill="none" stroke="#000" stroke-width="1.5"><path d="m16 16-12-12"/><path d="m16 4-12 12"/></g></svg>
-                                                                        </a>
+                                                                        
                                                                         
                                                                 </div>
                                                         </div>
@@ -204,6 +151,7 @@
                                                         <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="xt" class="sizingtable_inputs" value="{{cases[i].xt}}"></div>
                                                         <div class="row sizingtable_header"></div>
                                                 </div>
+                                        
                                                 {% else %}
                                                 <div class="col-2 colborder_bottom case{{i+1}}">
                                                         <div class="row sizingtable_header"></div>
@@ -222,6 +170,40 @@
                                                 </div>
                                                 {% endif %}
                                                 {% endfor %}
+
+                                                
+                                                <div class="sizingicons_container">
+                                                        <div class="col-2 mt-4">
+                                                            <p onclick="copyPaste(this)" >
+                                                                <svg height="16" viewBox="0 0 20 20" width="16" xmlns="http://www.w3.org/2000/svg">
+                                                                    <g fill="none" stroke="#000">
+                                                                        <path d="m3.5 2.5h12v16h-12z"/>
+                                                                        <path d="m5 .5h12.5v16.5"/>
+                                                                    </g>
+                                                                </svg>
+                                                            </p>
+                                                            <p onclick="paste(this)">
+                                                                <svg height="20" viewBox="0 0 16 16" width="20" xmlns="http://www.w3.org/2000/svg">
+                                                                    <path d="m4.00029246 4.08524952-.00029246 6.41475048c0 1.3254834 1.03153594 2.4100387 2.33562431 2.4946823l.16437569.0053177 4.4143985.000703c-.2061166.5822289-.7615518.999297-1.4143985.999297h-3.5c-1.65685425 0-3-1.3431458-3-3v-5.5c0-.65321869.41754351-1.20891488 1.00029246-1.41475048zm7.49970754-2.08524952c.8284271 0 1.5.67157288 1.5 1.5v7c0 .8284271-.6715729 1.5-1.5 1.5h-5c-.82842712 0-1.5-.6715729-1.5-1.5v-7c0-.82842712.67157288-1.5 1.5-1.5z" fill="#3d4646"/>
+                                                                </svg>   
+                                                            </p>
+                                                            <p onclick="clearData(this)">
+                                                                <svg viewBox="0 0 24 24" width="18" height="18" xmlns="http://www.w3.org/2000/svg">
+                                                                    <path d="m19.875 8.5h-4.5a1 1 0 0 1 0-2h3.5v-3.5a1 1 0 0 1 2 0v4.5a.99974.99974 0 0 1 -1 1z"/>
+                                                                    <path d="m12 22a10 10 0 1 1 8.65137-15.001a.99981.99981 0 0 1 -1.73047 1.002a7.98928 7.98928 0 1 0 1.0791 3.999a1 1 0 0 1 2 0a10.01146 10.01146 0 0 1 -10 10z"/>
+                                                                </svg>
+                                                            </p>
+                                                            <p> 
+                                                                <svg height="20" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg">
+                                                                    <g fill="none" stroke="#000" stroke-width="1.5">
+                                                                        <path d="m16 16-12-12"/>
+                                                                        <path d="m16 4-12 12"/>
+                                                                    </g>
+                                                                </svg>
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                              
                                                 
                                         </div>
                                 </div>
@@ -440,8 +422,8 @@
                         </div>
                 </div>
 
-                <div class="col-4 ml-5">
-                        <div class="pipedate shadow p-3">
+                <div class="col-4 cvsizing2">
+                        <div class="pipedate shadow " >
                                 <div class="row">
                                         <div class="col-4">
                                                 <label>Fluid State</label>
@@ -507,7 +489,7 @@
                                         </div>
                                 </div>
 
-                                <h6 class="valvesizing_heading"><b>Fluid Data</b></h6>
+                                <h6 class="valvesizing_heading">Fluid Data</h6>
 
                                 <div class="row">
                                         <div class="col-4">
@@ -557,7 +539,7 @@
                                         </div>
                                 </div>
 
-                                <h6 class="valvesizing_heading"><b>Pipe Data</b></h6>
+                                <h6 class="valvesizing_heading">Pipe Data</h6>
                                 <div class="row">
                                         <div class="col-4">
                                               <label>Inlet Pipe Size</label>  
@@ -645,7 +627,7 @@
                                         </div>
                                 </div>
 
-                                <h6 class="valvesizing_heading"><b>Valve Data</b></h6>
+                                <h6 class="valvesizing_heading">Valve Data</h6>
                                 <div class="row">
                                         <div class="col-4">
                                               <label>Valve Size</label>  
