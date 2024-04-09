@@ -6589,13 +6589,13 @@ def slidingStem(proj_id, item_id):
                                         valve_element.seatLeakageClass__, trimType__, balancing__,flowDirection__, 'close', shutOffDelP,packingF,a['seatF'][0])
             v_shutoff, v_shutoff_plus, v_open, v_close = round(vf_shutoff[0]), round(valve_forces[0]), round(
                 vf_open[0]), round(vf_close[0])
-            print(f'BALANCEDCVVVVSS {balancing__.name}')
+            print(f'BALANCEDCVVVVSS {balancing__.name}, {a['valveTravel'][0]}, {a['ua'][0]}')
             
             if balancing__.name == 'Unbalanced':
                 if flowDirection__.name == 'Under':
                     kn = 0
                 elif flowDirection__.name == 'Over':
-                    kn = (2 * float(a['ua'][0])) / float(a(['valveTravel'][0]))
+                    kn = (2 * float(a['ua'][0])) / float(a['valveTravel'][0])
             
             elif balancing__.name == 'Balanced':
                 kn_element = db.session.query(knValue)\
