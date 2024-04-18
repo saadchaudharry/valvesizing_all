@@ -2,14 +2,14 @@
 {% include "header.html" %}
 <style>
     .delete-actcase{
-  display: flex;
-  align-items: center; /* Center items vertically */
-  justify-content: center; /* Center items horizontally */
-  width: 30px; /* Set width of the box */
+
+  width: 20px; /* Set width of the box */
   height: 30px; /* Set height of the box */
-  background-color: rgb(192, 191, 191);
-  border: 1px solid black;
-  margin-left:20px;
+  background-color: #e7e7e7;
+  border-radius:4px;
+  justify-content: center;
+  align-items: center;
+
 }
 </style>
 <br><br>
@@ -17,7 +17,7 @@
                 <div class="row mt-0">
                     <div class="col-3">
                         <div class="actuator shadow p-2">
-                            <h6 class="actuator_heading"><b>Actuator Selection</b></h6>
+                            <h6 class="actuator_heading">Actuator Selection</h6>
                             <hr>
                             <div class="row">
                                 <div class="col-6">
@@ -254,13 +254,15 @@
 
                         <div class="row">
                             <div class="col-5">
-                                <div class="row">
-                                    <div class="col-10">
-                                        <h6 class="sliding_heading"><b>Input</b></h6>
+                                <div class="row justify-content-between" >
+                                    <div class="col-10" >
+                                        <h6 class="sliding_heading">Input</h6>
                                     </div>
                                
-                                    <a href="{{url_for('slidingStemDelete', item_id=item.id, proj_id=item.project.id, act_id=act.id)}}" data-id="" class="col-1 delete-actcase">
-                                        <i class="fa-solid fa-close fa-1x closeicon " data-toggle="tooltip" title="Delete Actuator Case"></i>
+                                    <a href="{{url_for('slidingStemDelete', item_id=item.id, proj_id=item.project.id, act_id=act.id)}}" data-id="" class="col-1 delete-actcase ">
+                                        <svg id="i-close" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="11" height="11" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M2 30 L30 2 M30 30 L2 2" />
+                                        </svg>
                                     </a>
                                  
                                    
@@ -268,7 +270,7 @@
 
 
                                 <div class="row " style="margin-left: 1px;">
-                                    <div class="col-6" style="border-bottom:  1px solid #607274;">
+                                    <div class="col-6" style="border-bottom: 1px solid #dadada" >
                                         <div class="row sizingtableleft">
                                             <p class="sizingp">Description</p>
                                         </div>
@@ -313,7 +315,7 @@
                                             <p class="sizingp" name="">ΔP Flowing </p>
                                         </div>
                                     </div>
-                                    <div class="col-3" style="border-bottom:  1px solid #607274;">
+                                    <div class="col-3" style="border-bottom: 1px solid #dadada">
                                         <div class="row sizingtableleft">
                                             <p class="sizingp">Unit</p>
                                         </div>
@@ -420,7 +422,7 @@
                                         </div>
 
                                     </div>
-                                    <div class="col-3" style="border-bottom:  1px solid #607274;">
+                                    <div class="col-3" style="border-bottom: 1px solid #dadada">
                                         <div class="row sizingtableleft">
                                             <p class="sizingp">Values</p>
                                         </div>
@@ -463,7 +465,7 @@
                             </div>
 
                             <div class="col-6 ml-3">
-                                <h5 class="sliding_heading ml-1"><b>Calculated Results</b></h5>
+                                <h6 class="sliding_heading ml-1">Calculated Results</h6>
                                 <div class="row ml-1">
                                     <div class="col-6" style="border-bottom:  1px solid #607274;">
                                         <div class="row sizingtableleft">

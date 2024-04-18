@@ -1,13 +1,21 @@
 /* ----------------------------------------------------------------------style.css file-------------------------------------------------------- */
 
+  
+
 body {
     background-color: #fffefe;
     overflow:hidden;
+    letter-spacing: 0.3px;
+   
+    
 }
 
 .nav-pills .nav-link.active {
-    background-color: white;
+    background-color: white;                                
     color: black;
+
+
+
     border-radius: 0%;
 }
 
@@ -75,7 +83,7 @@ label {
 }
 
 .topicons {
-    margin-top: 2%;
+    margin-top: 1%;
     width: 97%;
     height: 30px;
 }
@@ -131,37 +139,37 @@ label {
 }
 
 input{
-    border: 0.4px solid #9ba7a7 !important; 
+    border:1px solid #dadada !important; 
    
-    color: #2b2b2b;
-    border-radius:2px;  
-    padding-left:4px;
-    padding-top:1px;
-    padding-bottom:1px; 
+    color: #3d3d3d;
+    border-radius:4px;  
+    padding-left:6px;
+    padding-top:2px;
+    padding-bottom:2px; 
     font-size:11px !important;   
 }
 textarea{
-    border: 0.4px solid #9ba7a7 !important; 
-    color: #2b2b2b;
-    border-radius:2px;  
-    font-size:12px;
+    border:1px solid #dadada !important; 
+    color: #3d3d3d;
+    border-radius:4px;  
+    font-size:12px; 
    
 
 }
 select {
-    border: 0.4px solid #9ba7a7 !important; 
-    color: #2b2b2b;
+    border:1px solid #dadada !important; 
+    color: #3d3d3d;
    
     font-size:11px !important;
-    border-radius: 2px;  
-    padding-left:4px;
-    padding-top:1px;
-    padding-bottom:1px;
+    border-radius: 4px;  
+    padding-left:6px;
+    padding-top:2px;
+    padding-bottom:2px;
     appearance: none; /* Remove default appearance */
     -moz-appearance: none; /* Firefox */
     -webkit-appearance: none; /* Webkit browsers */
-    background-image: url('data:image/svg+xml;utf8,<svg fill="none" height="11" viewBox="0 0 24 24" width="11" xmlns="http://www.w3.org/2000/svg"><path d="m4 8 8 8 8-8" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>'); /* Use CSS variable for dropdown icon color */
-    background-repeat: no-repeat;
+    /* background-image: url('data:image/svg+xml;utf8,<svg fill="none" height="11" viewBox="0 0 24 24" width="11" xmlns="http://www.w3.org/2000/svg"><path d="m4 8 8 8 8-8" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>'); /* Use CSS variable for dropdown icon color */
+    /* background-repeat: no-repeat; */
     
     padding-right: 20px; /* Adjust padding for the icon */
     background-position: calc(100% - 3px) center;
@@ -284,15 +292,31 @@ select {
     width: 100%;
 }
 /* -------------------------------------valvesizing page------------------------------------------------------------------------ */
+
+
+
+
 .cvsizing {
-    height: 100vh;
-    width: 100vh;
-    overflow: auto;
+    height: calc(100vh - 100px);
+    width: 300px;
+    overflow-x: auto;
+    overflow-y: auto; /* Enable vertical scrollbar */
+  
     scrollbar-width: thin;
 }
 .cvsizing2{
     height: 100vh;
     overflow: auto;
+}
+.col-7-5 {
+    flex: 0 0 calc(100% * 7.8 / 12);
+    padding: 0px 15px;
+    box-shadow: 0 5px 5px -5px rgba(0, 0, 0, 0.1)
+}
+
+.col-3-5 {
+    flex: 0 0 calc(100% * 3.8 / 12);
+    padding: 0px 8px;
 }
 .pipedate{
     padding: 0rem 1rem 1rem 1rem;
@@ -302,8 +326,8 @@ select {
 
 .sizingtable {
     height: 25px;
-    border-top: 1px solid #9ba7a7;
-    border-right: 1px solid #9ba7a7;
+    border-top: 1px solid #dadada;
+    border-right: 1px solid #dadada;
 
 
     /* width: 100%; */
@@ -312,18 +336,18 @@ select {
 
 .sizingtableleft {
     height: 25px;
-    border-top: 1px solid #9ba7a7;
-    border-right: 1px solid #9ba7a7;
-    border-left: 1px solid #9ba7a7;
-    background-color: #e5e5e5;
+    border-top: 1px solid #dadada;
+    border-right: 1px solid #dadada;
+    border-left: 1px solid #dadada;
+    background-color: #f0efef;
     /* border:1px solid #607274; */
 }
 
 .sizingtableleft_warning {
     height: 25px;
-    border-top: 1px solid #9ba7a7;
+    border-top: 1px solid #dadada;
     border-right: white;
-    border-left: 1px solid #9ba7a7;
+    border-left: 1px solid #dadada;
     background-color: #ffffff;
     /* border:1px solid #607274; */
 
@@ -331,17 +355,22 @@ select {
 
 .sizingtable_header {
     height: 25px;
-    border-top: 1px solid #9ba7a7;
+    border-top: 1px solid #dadada;
     border-right: white;
 
+}
+.sizingtable_header_last{
+    height: 25px;
+    border-right: 1px solid #dadada ;
+    border-top: 1px solid #dadada;
 }
 
 .sizingtablebottom {
     height: 21px;
-    border-top: 1px solid #9ba7a7;
-    border-right: 1px solid #9ba7a7;
-    border-left: 1px solid #9ba7a7;
-    border-bottom: 1px solid #9ba7a7;
+    border-top: 1px solid #dadada;
+    border-right: 1px solid #dadada;
+    border-left: 1px solid #dadada;
+    border-bottom: 1px solid #dadada;
     /* border:1px solid #607274; */
 }
 
@@ -707,14 +736,14 @@ a:link {
     font-size: 12px;
     width: 100%;
     background-color: white;
-    border: 0px solid;
+    border: 0px solid !important;
 }
 
 .sliding_input {
     height: 100%;
     font-size: 12px;
     width: 100%;
-    border: 0px solid;
+    border: 0px solid !important;
 }
 
 .slidingtop_input {
