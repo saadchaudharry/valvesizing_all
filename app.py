@@ -83,7 +83,7 @@ Bootstrap(app)
 # app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///fcc-db-v6-0.db"
 
 # app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL1", "sqlite:///fcc-db-v10-0.db")
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:FccSizing@localhost/ValveSizingFCC'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:Qwer1234@localhost/ValveSizingFCC'
 
 app.config['MAIL_SERVER'] = 'smtp.office365.com'
 app.config['MAIL_PORT'] = 587  # Change to 587 for TLS
@@ -8185,7 +8185,7 @@ def generate_csv_project(item_id, proj_id):
                                         v_details.disc__.name,
                                         v_details.seatLeakageClass__.name, v_details.endConnection__.name, v_details.endFinish__.name, v_model_lower, model_str, v_details.bonnet__.name,
                                         v_details.bonnetExtDimension, v_details.studNut__.name, cases[0].ratedCv, v_details.balanceSeal__.name, acc_list, v_details.application, spec_fluid_name, 
-                                        f"{v_details.maxPressure} {v_details.maxPressureUnit}", f"{v_details.maxTemp} {v_details.maxTempUnit}", f"{v_details.minTemp} {v_details.minTempUnit}", None, None, v_details.packing__.name,
+                                        f"{v_details.maxPressure} {v_details.maxPressureUnit}", f"/ {v_details.maxTemp} {v_details.maxTempUnit}", f"{v_details.minTemp} {v_details.minTempUnit}", None, None, v_details.packing__.name,
                                         seat_bore, travel_, v_details.flowDirection__.name, v_details.flowCharacter__.name, v_details.shaft__.name, item_notes_list,
                                         f"{item.itemNumber} ({v_details.quantity})"]
                         print(f'otherssss {len(other_val_list)}')
@@ -8324,7 +8324,7 @@ def generate_csv_project(item_id, proj_id):
                 print(f'PROPERTIES {itemCase[0]}')
                 for valve in valve_element:
 
-                               project_element.projectRef,
+                    header = [project_element.projectRef,
                                f"{enduser__.address.company.name} ({enduser__.address.address})",
                                f"{project_element.enquiryRef} dt. {project_element.enquiryReceivedDate.strftime("%d-%B-%Y")}", 
                                project_element.custPoNo,
@@ -8335,7 +8335,7 @@ def generate_csv_project(item_id, proj_id):
                                f"{items[valve_element.index(valve)].itemNumber} ({valve.quantity})", 
                                valve.application, 
                                f"{valve.state.name} / {itemCase[valve_element.index(valve)][0].fluid.fluidName}",
-                               f"{critical_pres} {critical_pres_unit}",
+                            
                                f"{valve.shutOffDelP} {valve.shutOffDelPUnit}",
                                valve.style.name,
                                valve.trimType__.name,
@@ -8372,7 +8372,7 @@ def generate_csv_project(item_id, proj_id):
         
         print(f'EXCELFILE {files_excel}')
         # Create a zip file containing all Excel files
-        zip_file_path = os.path.join(r'E:\Reports', 'project_reports')
+        zip_file_path = os.path.join(r'E:\Reports')
         with zipfile.ZipFile(zip_file_path, 'w') as zipf:
             for file in files_excel:
                 zipf.write(file, os.path.basename(file))
