@@ -84,21 +84,59 @@
     </form>
 <script>
 
-    function preference(event){
+    var itemId = "{{item.id}}"
+    function preference(event) {
         event.preventDefault();
-        Swal.fire({
-        title: "All cases for this item will be deleted?",
-        showDenyButton: true,
-        confirmButtonText: "Delete",
-        denyButtonText: "Cancel"
-        }).then((result) => {
-        
-        if (result.isConfirmed) {               
-            $('#preference').submit();
-        } 
-        });
+            $.ajax({
+                type: "GET",
+                url: "/checkCaseExists",
+                data: {
+                    itemId : itemId,
+                },
+                success: function(data) {
+                    console.log('data',data);
+                    if(data == "yes"){
+                        Swal.fire({
+                        title: "All the cases for this item will be deleted?",
+                        showDenyButton: true,
+                        confirmButtonText: "Delete",
+                        denyButtonText: "Cancel"
+                        }).then((result) => {
+                        
+                        if (result.isConfirmed) {               
+                            $('#preference').submit();
+                        } 
+                        });
 
-    }
+                    }
+                    else if(data == "no"){
+                        $('#preference').submit();
+                    }
+
+                },
+                error: function(xhr, status, error) {
+                    alert(data);
+                }
+            });
+}
+
+
+
+    // function preference(event){
+    //     event.preventDefault();
+    //     Swal.fire({
+    //     title: itemId,
+    //     showDenyButton: true,
+    //     confirmButtonText: "Delete",
+    //     denyButtonText: "Cancel"
+    //     }).then((result) => {
+        
+    //     if (result.isConfirmed) {               
+    //         $('#preference').submit();
+    //     } 
+    //     });
+
+    // }
 </script>
 
 {% include "footer.html" %}
