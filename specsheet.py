@@ -1921,8 +1921,8 @@ def createSpecSheet(case_data, units, other, act_):
                 worksheet.write(f'{k[0]}{j + 11}', case_data[i][k[1]][j], cell_format1)
         # for j in range(14):
         #     worksheet.write(f'D{j + 11}', units[i][j], cell_format1)
-        worksheet.write(f'E27', str(other[i][33]), cell_format1)
-        worksheet.write(f'E28', str(other[i][34]), cell_format1)
+        worksheet.write(f'E27', '', cell_format1)
+        worksheet.write(f'E28', '', cell_format1)
 
         # other[i] values input
         worksheet.write(f'J5', other[i][0], cell_format1)

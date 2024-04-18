@@ -1385,7 +1385,10 @@ class caseMaster(db.Model):
     outletPipeSize = Column(Float)
     valveSize = Column(Float)
     seatDia = Column(Float)
-    ratedCv = Column(Float)
+    ratedCv = Column(Float) 
+    iSch = Column(String)
+    oSch = Column(String)
+    
 
     # rel as child
     inletPipeSchId = Column(Integer, ForeignKey("pipeArea.id"))

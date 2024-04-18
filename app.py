@@ -8185,7 +8185,7 @@ def generate_csv_project(item_id, proj_id):
                                         v_details.disc__.name,
                                         v_details.seatLeakageClass__.name, v_details.endConnection__.name, v_details.endFinish__.name, v_model_lower, model_str, v_details.bonnet__.name,
                                         v_details.bonnetExtDimension, v_details.studNut__.name, cases[0].ratedCv, v_details.balanceSeal__.name, acc_list, v_details.application, spec_fluid_name, 
-                                        f"{v_details.maxPressure} {v_details.maxPressureUnit}", f"{v_details.maxTemp} {v_details.maxTempUnit}", f"{v_details.minTemp} {v_details.minTempUnit}", None, None, v_details.packing__.name,
+                                        f"{v_details.maxPressure} {v_details.maxPressureUnit}", f"/ {v_details.maxTemp} {v_details.maxTempUnit}", f"{v_details.minTemp} {v_details.minTempUnit}", None, None, v_details.packing__.name,
                                         seat_bore, travel_, v_details.flowDirection__.name, v_details.flowCharacter__.name, v_details.shaft__.name, item_notes_list,
                                         f"{item.itemNumber} ({v_details.quantity})"]
                         print(f'otherssss {len(other_val_list)}')
