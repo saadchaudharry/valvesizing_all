@@ -1,6 +1,7 @@
 {% block content %}
 {% include "header.html" %}
 
+
                 <div class="row mt-5 ml-3">
                     <div class="col-12">
                         <form action="{{url_for('selectValve', item_id=item.id, proj_id=item.project.id)}}" method="post">
@@ -9,7 +10,8 @@
                                     <div class="row">
                                         <div class="col-2">
                                             <div class="row">
-                                                <select id="" class="form-control-sm-sm" name="style">
+                                                <input readonly value="{{valve.style.name}}" style="width:88px;padding: 2px 2px 3px 6px" name="style">
+                                                <!-- <select id="" class="form-control-sm-sm" name="style" >
                                                     {% for valveStyle in metadata['valveStyle'] %}
                                                     {% if valveStyle.name == valve.style.name %}
                                                         <option value="{{valveStyle.id}}" selected>{{valveStyle.name}}</option>
@@ -17,19 +19,21 @@
                                                         <option value="{{valveStyle.id}}" >{{valveStyle.name}}</option>
                                                     {% endif %}
                                                     {% endfor %}
-                                                </select>
+                                                </select> -->
                                             </div>
                                         </div>
                                         <div class="col-2 ml-2">
                                             <div class="row">
                                                 <select id="" class="form-control-sm-sm" name="trimType">
-                                                    {% for trimtype in metadata['trimtype'] %}
+                                                 
+                                                    {% for trimtype in valve.style.name|checkValvetype(metadata['trimtype']) %}
+                                                        
+                                                       
                                                         {%if trimtype.valveStyleId == metadata['globeStyleId'] or trimtype.valveStyleId == metadata['butterflyStyleId'] %}
-                                                            {% if trimtype.name == valve.trimType__.name %}
-                                                                <option value="{{trimtype.id}}" selected>{{trimtype.name}}</option>
-                                                            {% else %} 
-                                                                <option value="{{trimtype.id}}" >{{trimtype.name}}</option>
-                                                            {% endif %}
+                                                            
+                                                            
+                                                                <option value="{{trimtype.id}}" {% if trimtype.name == valve.trimType__.name %} selected {% endif %}>{{trimtype.name}}</option>
+                                                          
                                                         {%endif%}
                                                     {% endfor %}
                                                 </select>
@@ -38,7 +42,7 @@
                                         <div class="col-2 ml-2">
                                             <div class="row">
                                                 <select id="" class="form-control-sm-sm" name="flowcharacter">
-                                                    {% for flowcharacter in metadata['flowcharacter'] %}
+                                                    {% for flowcharacter in valve.style.name|checkflowChar(metadata['flowcharacter']) %}
                                                     {% if flowcharacter.name == valve.flowCharacter__.name %}
                                                         <option value="{{flowcharacter.id}}" selected>{{flowcharacter.name}}</option>
                                                     {% else %}
@@ -51,7 +55,8 @@
                                         <div class="col-2 ml-2">
                                             <div class="row">
                                                 <select id="" class="form-control-sm-sm" name="flowdirection">
-                                                    {% for flowdirection in metadata['flowdirection'] %}
+                                                    {% for flowdirection in valve.style.name|checkflowDirection(metadata['flowdirection']) %}
+                                                   
                                                     {% if flowdirection.name == valve.flowDirection__.name %}
                                                         <option value="{{flowdirection.id}}" selected>{{flowdirection.name}}</option>
                                                     {% else %}
@@ -79,7 +84,7 @@
                                 <div class="col-4">
                                     <div class="row">
                                         <div class="col-7">
-                                            <input type="submit" class="btn btn-info valve_btn" value="Get Valves" name="getv" style="width: 90px;">
+                                            <input type="submit" class="btn btn-info valve_btn" value="Get Valve" name="getv" style="width: 90px;">
                                         </div>
                                     </div>
                                 </div>

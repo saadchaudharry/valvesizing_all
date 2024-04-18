@@ -3,7 +3,7 @@
 <br><br>
 <form action="{{url_for('valveSizing', item_id=item.id, proj_id=item.project.id, page=page)}}" method="post">
         <div class="row">
-                <div class="col-8 cvsizing">
+                <div class="col-7-5 cvsizing ml-3">
                        
                         <div class="row column-headers">
                                 <div class="col-4 parameters-units">
@@ -136,25 +136,42 @@
                                         <div class="row">
                                                 {% for i in case_length %}
                                                 {% if cases[i] %}
-                                                <div class="col-2 colborder_bottom case{{i+1}}">
+                                                <div class="col-2 colborder_bottom case{{i+1}}_ip">
+                                                        {% if i==length-1 %}    
+                                                        <div class="row sizingtable_header_last"></div>
+                                                        {% else %}
                                                         <div class="row sizingtable_header"></div>
-                                                        <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="flowrate" class="sizingtable_inputs sizingvalue_flowrate" value="{{cases[i].flowrate}}"></div>
-                                                        <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="inletPressure" class="sizingtable_inputs sizingvalue_inpres" value="{{cases[i].inletPressure}}"></div>
-                                                        <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="outletPressure" class="sizingtable_inputs sizingvalue_outpres" value="{{cases[i].outletPressure}}"></div>
-                                                        <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="inletTemp" class="sizingtable_inputs sizingvalue_temperature" value="{{cases[i].inletTemp}}"></div>
-                                                        <div class="row sizingtable "><input type="text" {% if i == 0 %} required {% endif %} name="specificHeatRatio" class="sizingtable_inputs" value="{{cases[i].specificHeatRatio}}"></div>
+                                                        {% endif %}
+                                                        
+                                                        <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="flowrate" class="sizingtable_inputs sizingvalue_flowrate " value="{{cases[i].flowrate}}"></div>
+                                                        <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="inletPressure" class="sizingtable_inputs sizingvalue_inpres " value="{{cases[i].inletPressure}}"></div>
+                                                        <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="outletPressure" class="sizingtable_inputs sizingvalue_outpres " value="{{cases[i].outletPressure}}"></div>
+                                                        <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="inletTemp" class="sizingtable_inputs sizingvalue_temperature " value="{{cases[i].inletTemp}}"></div>
+                                                        <div class="row sizingtable "><input type="text" {% if i == 0 %} required {% endif %} name="specificHeatRatio" class="sizingtable_inputs " value="{{cases[i].specificHeatRatio}}"></div>
                                                         <!-- <div class="row sizingtable "><input type="text" name="specificGravity" class="sizingtable_inputs" value="{{cases[i].specificHeatRatio}}"></div> -->
-                                                        <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="molecularWeight" class="sizingtable_inputs" value="{{cases[i].molecularWeight}}"></div>
-                                                        <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="compressibility" class="sizingtable_inputs" value="{{cases[i].compressibility}}"></div>
-                                                        <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="fl" class="sizingtable_inputs" value="{{cases[i].fl}}"></div>
-                                                        <div class="row sizingtable"><input type="text"  name="fd" class="sizingtable_inputs" value="{{cases[i].fd}}"></div>
-                                                        <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="xt" class="sizingtable_inputs" value="{{cases[i].xt}}"></div>
+                                                        <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="molecularWeight" class="sizingtable_inputs " value="{{cases[i].molecularWeight}}"></div>
+                                                        <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="compressibility" class="sizingtable_inputs " value="{{cases[i].compressibility}}"></div>
+                                                        <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="fl" class="sizingtable_inputs " value="{{cases[i].fl}}"></div>
+                                                        <div class="row sizingtable"><input type="text"  name="fd" class="sizingtable_inputs " value="{{cases[i].fd}}"></div>
+                                                        <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="xt" class="sizingtable_inputs " value="{{cases[i].xt}}"></div>
+                                                        <!-- <p>{{i}}</p> -->
+                                                        {% if i==length-1 %}    
+                                                        <div class="row sizingtable_header_last"></div>
+                                                        {% else %}
                                                         <div class="row sizingtable_header"></div>
+                                                        {% endif %}
                                                 </div>
                                         
                                                 {% else %}
-                                                <div class="col-2 colborder_bottom case{{i+1}}">
+                                                <div class="col-2 colborder_bottom case{{i+1}}_ip">
+                                                        {% if i==length-1 %}    
+                                                        <div class="row sizingtable_header_last"></div>
+                                                        {% else %}
                                                         <div class="row sizingtable_header"></div>
+                                                        {% endif %}
+
+                                                        
+                                                        
                                                         <div class="row sizingtable"><input type="text" name="flowrate" class="sizingtable_inputs sizingvalue_flowrate"></div>
                                                         <div class="row sizingtable"><input type="text" name="inletPressure" class="sizingtable_inputs sizingvalue_inpres"></div>
                                                         <div class="row sizingtable"><input type="text" name="outletPressure" class="sizingtable_inputs sizingvalue_outpres"></div>
@@ -166,7 +183,11 @@
                                                         <div class="row sizingtable"><input type="text" name="fl" value="{{constants['fl']}}" class="sizingtable_inputs"></div>
                                                         <div class="row sizingtable"><input type="text" name="fd" class="sizingtable_inputs"></div>
                                                         <div class="row sizingtable"><input type="text" name="xt" value="{{constants['xt']}}" class="sizingtable_inputs"></div>
+                                                        {% if i==length-1 %}    
+                                                        <div class="row sizingtable_header_last"></div>
+                                                        {% else %}
                                                         <div class="row sizingtable_header"></div>
+                                                        {% endif %}
                                                 </div>
                                                 {% endif %}
                                                 {% endfor %}
@@ -174,35 +195,37 @@
                                                 
                                                 <div class="sizingicons_container">
                                                         <div class="col-2 mt-4">
-                                                            <p onclick="copyPaste(this)" >
-                                                                <svg height="16" viewBox="0 0 20 20" width="16" xmlns="http://www.w3.org/2000/svg">
+                                                            <p onclick="copyFunc()" style="cursor:pointer" >
+                                                                <svg height="14" viewBox="0 0 20 20" width="14" xmlns="http://www.w3.org/2000/svg">
                                                                     <g fill="none" stroke="#000">
                                                                         <path d="m3.5 2.5h12v16h-12z"/>
                                                                         <path d="m5 .5h12.5v16.5"/>
                                                                     </g>
                                                                 </svg>
                                                             </p>
-                                                            <p onclick="paste(this)">
-                                                                <svg height="20" viewBox="0 0 16 16" width="20" xmlns="http://www.w3.org/2000/svg">
+                                                            
+                                                            <p onclick="pasteFunc()" style="cursor:pointer">
+                                                                <svg height="18" viewBox="0 0 16 16" width="18" xmlns="http://www.w3.org/2000/svg">
                                                                     <path d="m4.00029246 4.08524952-.00029246 6.41475048c0 1.3254834 1.03153594 2.4100387 2.33562431 2.4946823l.16437569.0053177 4.4143985.000703c-.2061166.5822289-.7615518.999297-1.4143985.999297h-3.5c-1.65685425 0-3-1.3431458-3-3v-5.5c0-.65321869.41754351-1.20891488 1.00029246-1.41475048zm7.49970754-2.08524952c.8284271 0 1.5.67157288 1.5 1.5v7c0 .8284271-.6715729 1.5-1.5 1.5h-5c-.82842712 0-1.5-.6715729-1.5-1.5v-7c0-.82842712.67157288-1.5 1.5-1.5z" fill="#3d4646"/>
                                                                 </svg>   
                                                             </p>
-                                                            <p onclick="clearData(this)">
-                                                                <svg viewBox="0 0 24 24" width="18" height="18" xmlns="http://www.w3.org/2000/svg">
-                                                                    <path d="m19.875 8.5h-4.5a1 1 0 0 1 0-2h3.5v-3.5a1 1 0 0 1 2 0v4.5a.99974.99974 0 0 1 -1 1z"/>
-                                                                    <path d="m12 22a10 10 0 1 1 8.65137-15.001a.99981.99981 0 0 1 -1.73047 1.002a7.98928 7.98928 0 1 0 1.0791 3.999a1 1 0 0 1 2 0a10.01146 10.01146 0 0 1 -10 10z"/>
-                                                                </svg>
+                                                            <p onclick="clearData()" style="cursor:pointer">
+                                                                <svg width="16" height="16" stroke-width="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                        <path d="M21.8883 13.5C21.1645 18.3113 17.013 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C16.1006 2 19.6248 4.46819 21.1679 8" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+                                                                        <path d="M17 8H21.4C21.7314 8 22 7.73137 22 7.4V3" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+                                                                        </svg>
                                                             </p>
-                                                            <p> 
-                                                                <svg height="20" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg">
-                                                                    <g fill="none" stroke="#000" stroke-width="1.5">
+                                                            <p class="redirect-delete" style="cursor:pointer"> 
+                                                               
+                                                                <svg height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg">
+                                                                    <g fill="none" stroke="#000" stroke-width="1">
                                                                         <path d="m16 16-12-12"/>
                                                                         <path d="m16 4-12 12"/>
                                                                     </g>
                                                                 </svg>
                                                             </p>
                                                         </div>
-                                                    </div>
+                                                </div>
                                               
                                                 
                                         </div>
@@ -262,7 +285,7 @@
                                         <div class="row">
                                                 {% for i in case_length %}
                                                 {% if cases[i] %}
-                                                <div class="col-2 colborder_bottom case{{i+1}}">
+                                                <div class="col-2 colborder_bottom case{{i+1}}_op">
                                                         <div class="row sizingtable"><input type="text" class="calculatedcv_row" value="{{cases[i].calculatedCv}}"></div>
                                                         <div class="row sizingtable"><input type="text" class="sizingtable_inputs" value="{{cases[i].openingPercentage}}"></div>
                                                         <div class="row sizingtable"><input type="text" class="sizingtable_inputs" value="{{(cases[i].inletPressure - cases[i].outletPressure)/cases[i].inletPressure}}"></div>
@@ -278,10 +301,14 @@
                                                         <div class="row sizingtable"><input type="text" class="sizingtable_inputs" value="{{cases[i].reNumber}}"></div>
                                                         <div class="row sizingtable"><input type="text" class="sizingtable_inputs" value="{{cases[i].spl}}"></div>
                                                         <div class="row sizingtable"><input type="text" class="sizingtable_inputs" value="{{cases[i].valveSize}}"></div>
+                                                        {% if i==length-1 %}    
+                                                        <div class="row sizingtable_header_last"></div>
+                                                        {% else %}
                                                         <div class="row sizingtable_header"></div>
+                                                        {% endif %}
                                                 </div>
                                                 {% else %}
-                                                <div class="col-2 colborder_bottom case{{i+1}}">
+                                                <div class="col-2 colborder_bottom case{{i+1}}_op">
                                                         <div class="row sizingtable"><input type="text" class="calculatedcv_row"></div>
                                                         <div class="row sizingtable"><input type="text" class="sizingtable_inputs"></div>
                                                         <div class="row sizingtable"><input type="text" class="sizingtable_inputs"></div>
@@ -297,7 +324,11 @@
                                                         <div class="row sizingtable"><input type="text" class="sizingtable_inputs"></div>
                                                         <div class="row sizingtable"><input type="text" class="sizingtable_inputs"></div>
                                                         <div class="row sizingtable"><input type="text" class="sizingtable_inputs"></div>
+                                                        {% if i==length-1 %}    
+                                                        <div class="row sizingtable_header_last"></div>
+                                                        {% else %}
                                                         <div class="row sizingtable_header"></div>
+                                                        {% endif %}
                                                 </div>
                                                 {% endif %}
                                                 {% endfor %}
@@ -384,7 +415,7 @@
                                         <div class="row">
                                                 {% for i in case_length %}
                                                 {% if cases[i] %}
-                                                <div class="col-2 colborder_bottom case{{i+1}}">
+                                                <div class="col-2 colborder_bottom case{{i+1}}_op">
                                                         <div class="row sizingtable"><input type="text" class="sizingtable_inputs" value="{{cases[i].pipeInVel}}"></div>
                                                         <div class="row sizingtable"><input type="text" class="sizingtable_inputs" value="{{cases[i].pipeOutVel}}"></div>
                                                         <div class="row sizingtable"><input type="text" class="sizingtable_inputs" value="{{cases[i].valveVel}}"></div>
@@ -400,7 +431,7 @@
                                                         <div class="row sizingtable"><input type="text" class="sizingtable_inputs" value="{{cases[i].requiredStages}}"></div>
                                                 </div>
                                                 {% else %}
-                                                <div class="col-2 colborder_bottom case{{i+1}}">
+                                                <div class="col-2 colborder_bottom case{{i+1}}_op">
                                                         <div class="row sizingtable"><input type="text" class="sizingtable_inputs"></div>
                                                         <div class="row sizingtable"><input type="text" class="sizingtable_inputs"></div>
                                                         <div class="row sizingtable"><input type="text" class="sizingtable_inputs"></div>
@@ -422,7 +453,7 @@
                         </div>
                 </div>
 
-                <div class="col-4 cvsizing2">
+                <div class="col-3-5 cvsizing2 ml-2">
                         <div class="pipedate shadow " >
                                 <div class="row">
                                         <div class="col-4">
@@ -1072,7 +1103,79 @@
 </script>
 
 
+<script>
+        var lastClass;
+        var copiedClass;
+        $("input").focus(function(){
+                var parent_ = $(this).parent().parent();
+                parentclass = parent_.attr('class').split(' ');
+                lastClass = parentclass[parentclass.length - 1];
+                console.log('parentclass',lastClass);
 
+    });
+    function copyFunc(){
+       
+        var class_hide = "." + lastClass;
+        copiedClass = class_hide
+        console.log('input',class_hide)
+       
+        let res = $(class_hide + ' input').map(function(){
+                $(this).css('background-color', '#d2e9d2');
+                return $(this).val();
+        }).get();
+        console.log('res',res);
+        copiedOuptput.value = res
+        
+
+
+    }
+    function pasteFunc(){
+
+        var class_hide = "." + lastClass;
+        $(copiedClass + ' input').css('background-color', '');
+        let res2 = $(class_hide + ' input');
+        
+        copiedOuptput.value.map((value, index) => {
+                res2[index].value = value;
+        }); 
+
+    }
+    function clearData(){
+        var class_hide = "." + lastClass;
+        let res = $(class_hide + ' input').map(function(){
+              
+                return $(this).val('');
+        });
+    }
+    $('.redirect-delete').click(function(e){
+        var number = parseInt(lastClass.substring(4, 5)) -1;
+        var item_id =  "{{ item.id }}"
+        var project_id = "{{ item.project.id }}"
+        console.log(number, item_id, project_id)
+        e.preventDefault(); 
+        alert(number);
+        $.ajax({
+        type: "POST",
+        url: "/itemCaseDelete",
+        data: {
+            item_id: item_id,
+            proj_id: project_id,
+            case_id: number
+        },
+        success: function(response) {
+            // Handle success response
+            
+            console.log("Redirected successfully.");
+        },
+        error: function(xhr, status, error) {
+            // Handle error
+            console.error("Error:", error);
+        }
+    });
+       
+      
+    })
+</script>
                 
 
 {% include "footer.html" %}

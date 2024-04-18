@@ -65,7 +65,7 @@ def createcvOpening_gas(itemCase_list,fluid_types,items,header_details):
             cell_formatL = workbook.add_format({'bottom': 1, 'top': 1, 'font': 'Arial', 'font_size': 9,  'right': 1,'border': 7, 'left': 0 })
             cell_format = workbook.add_format(
                 {'bold': 0, 'font_color': 'black', 'font': 'Arial', 'font_size': 9, 'bottom': 1, 'top': 1, 'right': 1, 'left': 1,
-                'border': 7})
+                'border': 7,'align': 'left'})
 
             cell_format2 = workbook.add_format(
                 {'bold': 0, 'align': 'center', 'font_color': 'black', 'font': 'Arial', 'font_size': 9, 'bottom': 1, 'top': 1,
@@ -102,7 +102,7 @@ def createcvOpening_gas(itemCase_list,fluid_types,items,header_details):
             worksheet.merge_range('A3:B7', "", cell_format)
             worksheet.insert_image('A4', 'newlogo.png',{'x_scale': 0.18, 'y_scale': 0.18})
             worksheet.write('A1', '', )
-            worksheet.merge_range('A2:M2', 'Control Valve CV Plot', cell_format3)
+            worksheet.merge_range('A2:M2', 'Control Valve Sizing Calculation Sheet', cell_format3)
             worksheet.merge_range('A8:B8', "Application", cell_format)
             worksheet.write('A9:B9', 'Fluid State / Name', cell_format)
             worksheet.write('A10', 'AA', boldc)
@@ -139,12 +139,12 @@ def createcvOpening_gas(itemCase_list,fluid_types,items,header_details):
                 worksheet.write('A40', '30', cell_format2)
                 worksheet.write('A41', '31', cell_format2)
                 worksheet.write('A42', '32', cell_format2)
-                worksheet.write('A43', '33', cell_format2)
-                worksheet.write('A44', '34', cell_format2)
-                worksheet.write('A45', '35', cell_format2)
-                worksheet.write('A46', '36', cell_format2)
-                worksheet.write('A47', '37', cell_format2)
-                worksheet.write('A48', '38', cell_format2)
+                # worksheet.write('A43', '33', cell_format2)
+                # worksheet.write('A44', '34', cell_format2)
+                # worksheet.write('A45', '35', cell_format2)
+                # worksheet.write('A46', '36', cell_format2)
+                # worksheet.write('A47', '37', cell_format2)
+                # worksheet.write('A48', '38', cell_format2)
 
 
 
@@ -159,37 +159,34 @@ def createcvOpening_gas(itemCase_list,fluid_types,items,header_details):
                 worksheet.merge_range("B15:C15", 'Molecular Weight', cell_format)
                 worksheet.merge_range("B16:C16", 'Spec. Heat Ratio', cell_format)
                 worksheet.merge_range("B17:C17", 'Inlet compressibility factor', cell_format)
-                worksheet.merge_range("B18:C18", 'Pressure drop ratio factor (XT)', cell_format)
+                worksheet.merge_range("B18:C18", 'Pressure drop ratio factor', cell_format)
                 worksheet.merge_range("B19:C19", 'Calculated Cv', cell_format)
                 worksheet.merge_range("B20:C20", 'Percentage opening / Degree', cell_format)
                 worksheet.merge_range("B21:C21", 'Noise level at 1m distance', cell_format)
-                worksheet.merge_range("B22:C22", 'x (delP/P)', cell_format)
+                worksheet.merge_range("B22:C22", 'Ratio of Pressure drop (dp/P1)', cell_format)
                 worksheet.merge_range("B23:C23", 'Choked pressure drop', cell_format)
-                worksheet.merge_range("B24:C24", 'Expansion Ratio Y', cell_format)
-                worksheet.merge_range("B25:C25", 'Xtp', cell_format)
-                worksheet.merge_range("B26:C26", 'Fk', cell_format)
-                worksheet.merge_range("B27:C27", 'Ff', cell_format1)
-                worksheet.merge_range("B28:C28", 'Fp', cell_format1)
-                worksheet.merge_range("B29:C29", 'FLp', cell_format1)
-                worksheet.merge_range("B30:C30", 'Kc', cell_format1)
-                worksheet.merge_range("B31:C31", 'Ar', cell_format1)
-                worksheet.merge_range("B32:C32", 'Re', cell_format1)
+                worksheet.merge_range("B24:C24", 'Expansion Ratio ', cell_format)
+                worksheet.merge_range("B25:C25", 'Pressure drop ratio factor', cell_format)
+                worksheet.merge_range("B26:C26", 'Ratio of specific heat factor', cell_format)
+                worksheet.merge_range("B27:C27", 'Piping Geometry factor', cell_format1)
+                worksheet.merge_range("B28:C28", 'Application Ratio', cell_format1)
+                worksheet.merge_range("B29:C29", "Reynold's Number", cell_format1)
+                # worksheet.merge_range("B30:C30", 'Kc', cell_format1)
+                worksheet.merge_range("B30:C30", 'Valve Diameter', cell_format1)
+                worksheet.merge_range("B31:C31", 'Inlet Pipe Velocity', cell_format1)
                 # worksheet.merge_range("B33:C33", 'Noise level at 1m distance', cell_format1)
-                worksheet.merge_range("B33:C33", 'Valve Diameter', cell_format1)
-                worksheet.merge_range("B34:C34", 'Inlet pipe velocity', cell_format1)
-                worksheet.merge_range("B35:C35", 'Outlet pipe velocity', cell_format1)
-                worksheet.merge_range("B36:C36", 'Valve Outlet Velocity', cell_format1)
-                worksheet.merge_range("B37:C37", 'Mach No. Upstream', cell_format1)
-                worksheet.merge_range("B38:C38", 'Mach No. Downstream', cell_format1)
-                worksheet.merge_range("B39:C39", 'Mach No. Valve Outlet', cell_format1)
-                worksheet.merge_range("B40:C40", 'Sonic Velocity Upstream', cell_format1)
-                worksheet.merge_range("B41:C41", 'Sonic Velocity Downstream', cell_format1)
-                worksheet.merge_range("B42:C42", 'Sonic velocity Valve Outlet', cell_format1)
-                worksheet.merge_range("B43:C43", 'Outlet Density', cell_format1)
-                worksheet.merge_range("B44:C44", 'Trim Exit velocity', cell_format1)
-                worksheet.merge_range("B45:C45", 'Power Lvl(kw)', cell_format1)
-                worksheet.merge_range("B46:C46", 'Required Stages', cell_format1)
-                worksheet.merge_range("B47:C47", 'Warnings!!', cell_format1)
+                worksheet.merge_range("B32:C32", 'Mach No. Upstream', cell_format1)
+                worksheet.merge_range("B33:C33", 'Mach No. Downstream', cell_format1)
+                worksheet.merge_range("B34:C34", 'Mach No. Valve Outlet', cell_format1)
+                worksheet.merge_range("B35:C35", 'Sonic Velocity Upstream', cell_format1)
+                worksheet.merge_range("B36:C36", 'Sonic Velocity Downstream', cell_format1)
+                worksheet.merge_range("B37:C37", 'Sonic velocity Valve Outlet', cell_format1)
+                worksheet.merge_range("B38:C38", 'Outlet Density', cell_format1)
+                worksheet.merge_range("B39:C39", 'Trim Exit Velocity', cell_format1)
+                worksheet.merge_range("B40:C40", 'Power Lvl(kw)', cell_format1) 
+                worksheet.merge_range("B41:C41", 'Required Stages', cell_format1)
+                worksheet.merge_range("B42:C42", 'Warnings!!', cell_format1)
+           
             elif fluid_type == 'Liquid':
                 worksheet.merge_range("B10:C10", 'Valve Sizing Calculation', bold)
                 worksheet.merge_range("B11:C11", 'Flow Rate', cell_format)
@@ -211,7 +208,7 @@ def createcvOpening_gas(itemCase_list,fluid_types,items,header_details):
                 worksheet.merge_range("B27:C27", 'Kc', cell_format1)
                 worksheet.merge_range("B28:C28", 'Ar', cell_format1)
                 worksheet.merge_range("B29:C29", 'Re', cell_format1)
-                worksheet.merge_range("B30:C30", 'Valve Diameter', cell_format1)
+                worksheet.merge_range("B30:C30", 'Valve Diameter', cell_format1)        
                 worksheet.merge_range("B31:C31", 'Inlet pipe velocity', cell_format1)
                 worksheet.merge_range("B32:C32", 'Outlet pipe velocity', cell_format1)
                 worksheet.merge_range("B33:C33", 'Valve Velocity', cell_format1)
@@ -273,11 +270,11 @@ def createcvOpening_gas(itemCase_list,fluid_types,items,header_details):
             worksheet.write('D40', '', cell_format)
             worksheet.write('D41', '', cell_format)
             worksheet.write('D42', '', cell_format)
-            worksheet.write('D43', '', cell_format)
-            worksheet.write('D44', '', cell_format)
-            worksheet.write('D45', '', cell_format)
-            worksheet.write('D46', '', cell_format)
-            worksheet.write('D47', '', cell_format)
+            # worksheet.write('D43', '', cell_format)
+            # worksheet.write('D44', '', cell_format)
+            # worksheet.write('D45', '', cell_format)
+            # worksheet.write('D46', '', cell_format)
+            # worksheet.write('D47', '', cell_format)
 
 
             if fluid_type == 'Liquid':
@@ -292,11 +289,33 @@ def createcvOpening_gas(itemCase_list,fluid_types,items,header_details):
                 worksheet.write('D12', item.inpres_unit, cell_format)
                 worksheet.write('D13', item.outpres_unit, cell_format)
                 worksheet.write('D14', item.intemp_unit, cell_format)
-                worksheet.write('D33', item.valvesize_unit, cell_format)
+                worksheet.write('D17', 'Z', cell_format)
+                worksheet.write('D18', 'XT', cell_format)
+                worksheet.write('D19', 'Cv', cell_format)
+                worksheet.write('D20', '%', cell_format)
+                worksheet.write('D21', 'dBA', cell_format)
+                worksheet.write('D22', 'x', cell_format)
+                worksheet.write('D24', 'Y', cell_format)
+                worksheet.write('D25', 'Xtp', cell_format)
+                worksheet.write('D26', 'Fk', cell_format)
+                worksheet.write('D27', 'Fp', cell_format)
+                worksheet.write('D28', 'Ar', cell_format)
+                worksheet.write('D29', 'Re', cell_format)
+                worksheet.write('D30', item.valvesize_unit, cell_format)
+                worksheet.write('D31', 'm/s', cell_format)
+                worksheet.write('D32', 'Mach', cell_format)
+                worksheet.write('D33', 'Mach', cell_format)
+                worksheet.write('D34', 'Mach', cell_format)
+                worksheet.write('D35', 'm/s', cell_format)
+                worksheet.write('D36', 'm/s', cell_format)
+                worksheet.write('D37', 'm/s', cell_format)
+                worksheet.write('D38', 'kg/m3', cell_format)
+                worksheet.write('D39', 'kW', cell_format)   
 
 
 
 
+            print(f'HEADER DETAILS, {header_details}')
             worksheet.write('D3', header_details[f_cnt][0], cell_format1)
             worksheet.write('D4', header_details[f_cnt][1], cell_format1)
             worksheet.write('D5', header_details[f_cnt][2], cell_format1)
@@ -348,33 +367,30 @@ def createcvOpening_gas(itemCase_list,fluid_types,items,header_details):
                             worksheet.write(f"{st_cell}{18}:", item_case.xt, cell_format)
                             worksheet.write(f"{st_cell}{19}:", item_case.calculatedCv, cell_format)
                             worksheet.write(f"{st_cell}{20}:", item_case.openingPercentage, cell_format)
-                            worksheet.write(f"{st_cell}{21}:", '', cell_format)
+                            worksheet.write(f"{st_cell}{21}:", item_case.spl, cell_format)
                             worksheet.write(f"{st_cell}{22}:", item_case.x_delp, cell_format)
                             worksheet.write(f"{st_cell}{23}:", item_case.chokedDrop, cell_format)
                             worksheet.write(f"{st_cell}{24}:", item_case.y_expansion, cell_format)
                             worksheet.write(f"{st_cell}{25}:", item_case.xtp, cell_format)
                             worksheet.write(f"{st_cell}{26}:", item_case.fk, cell_format)
-                            worksheet.write(f"{st_cell}{27}:", item_case.Ff, cell_format)
-                            worksheet.write(f"{st_cell}{28}:", item_case.Fp, cell_format)
-                            worksheet.write(f"{st_cell}{29}:", item_case.Flp, cell_format)
-                            worksheet.write(f"{st_cell}{30}:", item_case.kc, cell_format)
-                            worksheet.write(f"{st_cell}{31}:", item_case.ar, cell_format)
-                            worksheet.write(f"{st_cell}{32}:", item_case.reNumber, cell_format)
-                            worksheet.write(f"{st_cell}{33}:", item_case.valveSize, cell_format)
-                            worksheet.write(f"{st_cell}{34}:", item_case.pipeInVel, cell_format)
-                            worksheet.write(f"{st_cell}{35}:", item_case.pipeOutVel, cell_format)
-                            worksheet.write(f"{st_cell}{36}:", item_case.valveVel, cell_format)
-                            worksheet.write(f"{st_cell}{37}:", item_case.machNoUp, cell_format)
-                            worksheet.write(f"{st_cell}{38}:", item_case.machNoDown, cell_format)
-                            worksheet.write(f"{st_cell}{39}:", item_case.machNoValve, cell_format)
-                            worksheet.write(f"{st_cell}{40}:", item_case.sonicVelUp, cell_format)
-                            worksheet.write(f"{st_cell}{41}:", item_case.sonicVelDown, cell_format)
-                            worksheet.write(f"{st_cell}{42}:", item_case.sonicVelValve, cell_format)
-                            worksheet.write(f"{st_cell}{43}:", item_case.outletDensity, cell_format)
-                            worksheet.write(f"{st_cell}{44}:", item_case.tex, cell_format)
-                            worksheet.write(f"{st_cell}{45}:", item_case.powerLevel, cell_format)
-                            worksheet.write(f"{st_cell}{46}:", item_case.requiredStages, cell_format)
-                            worksheet.write(f"{st_cell}{47}:", '', cell_format)           
+                            worksheet.write(f"{st_cell}{27}:", item_case.Fp, cell_format)
+                            worksheet.write(f"{st_cell}{28}:", item_case.ar, cell_format)
+                            worksheet.write(f"{st_cell}{29}:", item_case.reNumber, cell_format)
+                            worksheet.write(f"{st_cell}{30}:", item_case.valveSize, cell_format)
+                            worksheet.write(f"{st_cell}{31}:", item_case.pipeInVel, cell_format)
+                            worksheet.write(f"{st_cell}{32}:", item_case.machNoUp, cell_format)
+                            worksheet.write(f"{st_cell}{33}:", item_case.machNoDown, cell_format)
+                            worksheet.write(f"{st_cell}{34}:", item_case.machNoValve, cell_format)
+                            worksheet.write(f"{st_cell}{35}:", item_case.sonicVelUp, cell_format)
+                            worksheet.write(f"{st_cell}{36}:", item_case.sonicVelDown, cell_format)
+                            worksheet.write(f"{st_cell}{37}:", item_case.sonicVelValve, cell_format)
+                            worksheet.write(f"{st_cell}{38}:", item_case.outletDensity, cell_format)
+                            worksheet.write(f"{st_cell}{39}:", item_case.tex, cell_format)
+                            worksheet.write(f"{st_cell}{40}:", item_case.powerLevel, cell_format)
+                            worksheet.write(f"{st_cell}{41}:", item_case.requiredStages, cell_format)
+                            worksheet.write(f"{st_cell}{42}:", '', cell_format)
+                           
+                                 
 
                         else:               
                             worksheet.merge_range(f"{st_cell}{11}:{end_cell}{11}", item_case.flowrate, cell_format)
@@ -387,33 +403,29 @@ def createcvOpening_gas(itemCase_list,fluid_types,items,header_details):
                             worksheet.merge_range(f"{st_cell}{18}:{end_cell}{18}", item_case.xt, cell_format)
                             worksheet.merge_range(f"{st_cell}{19}:{end_cell}{19}", item_case.calculatedCv, cell_format)
                             worksheet.merge_range(f"{st_cell}{20}:{end_cell}{20}", item_case.openingPercentage, cell_format)
-                            worksheet.merge_range(f"{st_cell}{21}:{end_cell}{21}", '', cell_format)
+                            worksheet.merge_range(f"{st_cell}{21}:{end_cell}{21}", item_case.spl, cell_format)
                             worksheet.merge_range(f"{st_cell}{22}:{end_cell}{22}", item_case.x_delp, cell_format)
                             worksheet.merge_range(f"{st_cell}{23}:{end_cell}{23}", item_case.chokedDrop, cell_format)
                             worksheet.merge_range(f"{st_cell}{24}:{end_cell}{24}", item_case.y_expansion, cell_format)
                             worksheet.merge_range(f"{st_cell}{25}:{end_cell}{25}", item_case.xtp, cell_format)
                             worksheet.merge_range(f"{st_cell}{26}:{end_cell}{26}", item_case.fk, cell_format)
-                            worksheet.merge_range(f"{st_cell}{27}:{end_cell}{27}", item_case.Ff, cell_format)
-                            worksheet.merge_range(f"{st_cell}{28}:{end_cell}{28}", item_case.Fp, cell_format)
-                            worksheet.merge_range(f"{st_cell}{29}:{end_cell}{29}", item_case.Flp, cell_format)
-                            worksheet.merge_range(f"{st_cell}{30}:{end_cell}{30}", item_case.kc, cell_format)
-                            worksheet.merge_range(f"{st_cell}{31}:{end_cell}{31}", item_case.ar, cell_format)
-                            worksheet.merge_range(f"{st_cell}{32}:{end_cell}{32}", item_case.reNumber, cell_format)
-                            worksheet.merge_range(f"{st_cell}{33}:{end_cell}{33}", item_case.valveSize, cell_format)
-                            worksheet.merge_range(f"{st_cell}{34}:{end_cell}{34}", item_case.pipeInVel, cell_format)
-                            worksheet.merge_range(f"{st_cell}{35}:{end_cell}{35}", item_case.pipeOutVel, cell_format)
-                            worksheet.merge_range(f"{st_cell}{36}:{end_cell}{36}", item_case.valveVel, cell_format)
-                            worksheet.merge_range(f"{st_cell}{37}:{end_cell}{37}", item_case.machNoUp, cell_format)
-                            worksheet.merge_range(f"{st_cell}{38}:{end_cell}{38}", item_case.machNoDown, cell_format)
-                            worksheet.merge_range(f"{st_cell}{39}:{end_cell}{39}", item_case.machNoValve, cell_format)
-                            worksheet.merge_range(f"{st_cell}{40}:{end_cell}{40}", item_case.sonicVelUp, cell_format)
-                            worksheet.merge_range(f"{st_cell}{41}:{end_cell}{41}", item_case.sonicVelDown, cell_format)
-                            worksheet.merge_range(f"{st_cell}{42}:{end_cell}{42}", item_case.sonicVelValve, cell_format)
-                            worksheet.merge_range(f"{st_cell}{43}:{end_cell}{43}", item_case.outletDensity, cell_format)
-                            worksheet.merge_range(f"{st_cell}{44}:{end_cell}{44}", item_case.tex, cell_format)
-                            worksheet.merge_range(f"{st_cell}{45}:{end_cell}{45}", item_case.powerLevel, cell_format)
-                            worksheet.merge_range(f"{st_cell}{46}:{end_cell}{46}", item_case.requiredStages, cell_format)
-                            worksheet.merge_range(f"{st_cell}{47}:{end_cell}{47}", '', cell_format)           
+                            worksheet.merge_range(f"{st_cell}{27}:{end_cell}{27}", item_case.Fp, cell_format)
+                            worksheet.merge_range(f"{st_cell}{28}:{end_cell}{28}", item_case.ar, cell_format)
+                            worksheet.merge_range(f"{st_cell}{29}:{end_cell}{29}", item_case.reNumber, cell_format)
+                            worksheet.merge_range(f"{st_cell}{30}:{end_cell}{30}", item_case.valveSize, cell_format)
+                            worksheet.merge_range(f"{st_cell}{31}:{end_cell}{31}", item_case.pipeInVel, cell_format)
+                            worksheet.merge_range(f"{st_cell}{32}:{end_cell}{32}", item_case.machNoUp, cell_format)
+                            worksheet.merge_range(f"{st_cell}{33}:{end_cell}{33}", item_case.machNoDown, cell_format)
+                            worksheet.merge_range(f"{st_cell}{34}:{end_cell}{34}", item_case.machNoValve, cell_format)
+                            worksheet.merge_range(f"{st_cell}{35}:{end_cell}{35}", item_case.sonicVelUp, cell_format)
+                            worksheet.merge_range(f"{st_cell}{36}:{end_cell}{36}", item_case.sonicVelDown, cell_format)
+                            worksheet.merge_range(f"{st_cell}{37}:{end_cell}{37}", item_case.sonicVelValve, cell_format)
+                            worksheet.merge_range(f"{st_cell}{38}:{end_cell}{38}", item_case.outletDensity, cell_format)
+                            worksheet.merge_range(f"{st_cell}{39}:{end_cell}{39}", item_case.tex, cell_format)
+                            worksheet.merge_range(f"{st_cell}{40}:{end_cell}{40}", item_case.powerLevel, cell_format)
+                            worksheet.merge_range(f"{st_cell}{41}:{end_cell}{41}", item_case.requiredStages, cell_format)
+                            worksheet.merge_range(f"{st_cell}{42}:{end_cell}{42}", '', cell_format)
+       
 
                     else:
                         if i==2:
@@ -449,11 +461,11 @@ def createcvOpening_gas(itemCase_list,fluid_types,items,header_details):
                             worksheet.write(f"{st_cell}{40}", '', cell_format)
                             worksheet.write(f"{st_cell}{41}", '', cell_format)
                             worksheet.write(f"{st_cell}{42}", '', cell_format)
-                            worksheet.write(f"{st_cell}{43}", '', cell_format)
-                            worksheet.write(f"{st_cell}{44}", '', cell_format)
-                            worksheet.write(f"{st_cell}{45}", '', cell_format)
-                            worksheet.write(f"{st_cell}{46}", '', cell_format)
-                            worksheet.write(f"{st_cell}{47}", '', cell_format)
+                            # worksheet.write(f"{st_cell}{43}", '', cell_format)
+                            # worksheet.write(f"{st_cell}{44}", '', cell_format)
+                            # worksheet.write(f"{st_cell}{45}", '', cell_format)
+                            # worksheet.write(f"{st_cell}{46}", '', cell_format)
+                            # worksheet.write(f"{st_cell}{47}", '', cell_format)
                         else:
                             worksheet.merge_range(f"{st_cell}{11}:{end_cell}{11}", '', cell_format)
                             worksheet.merge_range(f"{st_cell}{12}:{end_cell}{12}", '', cell_format)
@@ -487,11 +499,11 @@ def createcvOpening_gas(itemCase_list,fluid_types,items,header_details):
                             worksheet.merge_range(f"{st_cell}{40}:{end_cell}{40}", '', cell_format)
                             worksheet.merge_range(f"{st_cell}{41}:{end_cell}{41}", '', cell_format)
                             worksheet.merge_range(f"{st_cell}{42}:{end_cell}{42}", '', cell_format)
-                            worksheet.merge_range(f"{st_cell}{43}:{end_cell}{43}", '', cell_format)
-                            worksheet.merge_range(f"{st_cell}{44}:{end_cell}{44}", '', cell_format)
-                            worksheet.merge_range(f"{st_cell}{45}:{end_cell}{45}", '', cell_format)
-                            worksheet.merge_range(f"{st_cell}{46}:{end_cell}{46}", '', cell_format)
-                            worksheet.merge_range(f"{st_cell}{47}:{end_cell}{47}", '', cell_format)
+                            # worksheet.merge_range(f"{st_cell}{43}:{end_cell}{43}", '', cell_format)
+                            # worksheet.merge_range(f"{st_cell}{44}:{end_cell}{44}", '', cell_format)
+                            # worksheet.merge_range(f"{st_cell}{45}:{end_cell}{45}", '', cell_format)
+                            # worksheet.merge_range(f"{st_cell}{46}:{end_cell}{46}", '', cell_format)
+                            # worksheet.merge_range(f"{st_cell}{47}:{end_cell}{47}", '', cell_format)
 
             elif fluid_type == 'Liquid':
                 case_cv_values = 0
@@ -577,15 +589,15 @@ def createcvOpening_gas(itemCase_list,fluid_types,items,header_details):
                             worksheet.write(f"{st_cell}{11}", '', cell_format)
                             worksheet.write(f"{st_cell}{12}", '', cell_format)
                             worksheet.write(f"{st_cell}{13}", '', cell_format)
-                            worksheet.write(f"{st_cell}{14}", '',cell_format)
+                            worksheet.write(f"{st_cell}{14}", '', cell_format)
                             worksheet.write(f"{st_cell}{15}", '', cell_format)
-                            worksheet.write(f"{st_cell}{16}", '',cell_format)
+                            worksheet.write(f"{st_cell}{16}", '', cell_format)
                             worksheet.write(f"{st_cell}{17}", '', cell_format)
-                            worksheet.write(f"{st_cell}{18}", '',cell_format)
+                            worksheet.write(f"{st_cell}{18}", '', cell_format)
                             worksheet.write(f"{st_cell}{19}", '', cell_format)
                             worksheet.write(f"{st_cell}{20}", '', cell_format)
                             worksheet.write(f"{st_cell}{21}", '', cell_format)
-                            worksheet.write(f"{st_cell}{22}", '',cell_format)
+                            worksheet.write(f"{st_cell}{22}", '', cell_format)
                             worksheet.write(f"{st_cell}{23}", '', cell_format)
                             worksheet.write(f"{st_cell}{24}", '', cell_format)
                             worksheet.write(f"{st_cell}{25}", '', cell_format)
@@ -637,6 +649,15 @@ def createcvOpening_gas(itemCase_list,fluid_types,items,header_details):
                 
 
             if fluid_type == 'Gas':
+                # worksheet.write("F44", 'Cv')
+                print('header___',header_details)
+                worksheet.merge_range("D60:E60", 'Valve Style', cell_format)
+                worksheet.merge_range("D61:E61", 'Trim Type', cell_format)
+                worksheet.merge_range("D62:E62", 'Trim Characteristics', cell_format)
+
+                worksheet.merge_range("F60:H60",  header_details[f_cnt][14], cell_format)
+                worksheet.merge_range("F61:H61", header_details[f_cnt][15], cell_format)
+                worksheet.merge_range("F62:H62", header_details[f_cnt][16], cell_format)
 
                 def getCVplotchart(opencv_final, cv_values, calc_opencv, calc_cvvalues):
                     cnt = 0
@@ -674,9 +695,9 @@ def createcvOpening_gas(itemCase_list,fluid_types,items,header_details):
                 print(f'LLSJSJJSJSJJ {final_values}')
              
                 # Write the data to the worksheet
-                worksheet.write_column('C49', final_values['y_values'])
-                worksheet.write_column('D49', final_values['x_values'])
-                worksheet.write_column('E49', final_values['y1_values'])
+                worksheet.write_column('C44', final_values['y_values'])
+                worksheet.write_column('D44', final_values['x_values'])
+                worksheet.write_column('E44', final_values['y1_values'])    
 
 
                 # Add a line chart
@@ -684,9 +705,9 @@ def createcvOpening_gas(itemCase_list,fluid_types,items,header_details):
 
                 # Add the scatter series to the chart
                 scatter_series = {
-                    'categories': f'=Sheet{sheet_number}!$D$49:$D$58',  # X-axis data for scatter plot
-                    'values': f'=Sheet{sheet_number}!$E$49:$E$58',       # Y-axis data for scatter plot
-                    'marker': {'type': 'circle', 'size': 10, 'fill': {'color': 'blue'}}, 
+                    'categories': f'=Sheet{sheet_number}!$D$44:$D$57',  # X-axis data for scatter plot
+                    'values': f'=Sheet{sheet_number}!$E$44:$E$57',       # Y-axis data for scatter plot
+                    'marker': {'type': 'circle', 'size': 5, 'fill': {'color': 'blue'}}, 
                     # Marker style for scatter plot
                 }
                 scatter_chart.add_series(scatter_series)
@@ -695,12 +716,22 @@ def createcvOpening_gas(itemCase_list,fluid_types,items,header_details):
 
                 # Add a line series to the scatter chart
                 line_series = {
-                    'categories': f'=Sheet{sheet_number}!$D$49:$D$58',  # X-axis data for line plot
-                    'values': f'=Sheet{sheet_number}!$C$49:$C$58',
+                    'categories': f'=Sheet{sheet_number}!$D$44:$D$57',  # X-axis data for line plot
+                    'values': f'=Sheet{sheet_number}!$C$44:$C$57',
                     'marker': {'type': 'none'},
-                    'line': {'none': False},     # Y-axis data for line plot
+                    'line': {'width': 1 },     # Y-axis data for line plot
                 }
                 scatter_chart.add_series(line_series)
+
+                scatter_chart.set_y_axis({
+                    'min': 0 ,           # Minimum X-axis value
+                    'max': cv_graph_values[-1],          # Maximum X-axis value
+                    'major_unit': cv_graph_values[-1] / 10,        # Interval between major ticks
+                    'minor_unit': 1,     # Interval between minor ticks
+                    'minor_unit_type': 'num',  # Set minor unit type to number
+                    'num_font': {'size': 10},  # Font size for tick labels
+                    'name': 'Flow Coefficient, Cv'  # Name of the X-axis
+                })
 
                 
          
@@ -713,21 +744,19 @@ def createcvOpening_gas(itemCase_list,fluid_types,items,header_details):
                     'minor_unit': 1,     # Interval between minor ticks
                     'minor_unit_type': 'num',  # Set minor unit type to number
                     'num_font': {'size': 10},  # Font size for tick labels
-                    'name': 'Percentage Openings / Degree'  # Name of the X-axis
+                    'name': '% Opening'  # Name of the X-axis
                 })
 
 
                
 
-                worksheet.insert_chart('C49', scatter_chart)
-                worksheet.write('A71', 'FLOW CONTROL COMMUNE', )
+                worksheet.insert_chart('C44', scatter_chart)
+                worksheet.write('A71', 'FLOW CONTROL COMMUNE')
                 worksheet.write('M71', 'FR/AE/004', f1)
 
 
             
             elif fluid_type == 'Liquid':
-
-
                 def getCVplotchart(opencv_final, cv_values, calc_opencv, calc_cvvalues):
                     cnt = 0
                     for i in calc_opencv:
@@ -753,7 +782,7 @@ def createcvOpening_gas(itemCase_list,fluid_types,items,header_details):
                     }
                     return final_xy
 
-
+                print(f'cv_grphvalues {cv_graph_values}')
                 cv_values = cv_graph_values
                 open_cv = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
                 calc_opencv = case_cv_finalPercent
@@ -770,16 +799,17 @@ def createcvOpening_gas(itemCase_list,fluid_types,items,header_details):
 
 
                 # Add a line chart
-                scatter_chart = workbook.add_chart({"type": "scatter", "name": "Scatter Chart", "embedded": True})
+                scatter_chart = workbook.add_chart({"type": "scatter", "name": "Scatter Chart", "subtype": "straight", "embedded": True})
 
                 # Add the scatter series to the chart
                 scatter_series = {
                     'categories': f'=Sheet{sheet_number}!$D$39:$D$53',  # X-axis data for scatter plot
                     'values': f'=Sheet{sheet_number}!$E$39:$E$53',       # Y-axis data for scatter plot
-                    'marker': {'type': 'circle', 'size': 10, 'fill': {'color': 'blue'}}, 
+                    'marker': {'type': 'circle', 'size': 5, 'fill': {'color': 'blue'}}, 
                     # Marker style for scatter plot
                 }
                 scatter_chart.add_series(scatter_series)
+
 
 
 
@@ -787,15 +817,17 @@ def createcvOpening_gas(itemCase_list,fluid_types,items,header_details):
                 line_series = {
                     'categories': f'=Sheet{sheet_number}!$D$39:$D$53',  # X-axis data for line plot
                     'values': f'=Sheet{sheet_number}!$C$39:$C$53',
-                    'marker': {'type': 'none'},
-                    'line': {'none': False},     # Y-axis data for line plot
+                    'marker': {'type': 'none'}, 
+                    'line':  {'width': 1},     # Y-axis data for line plot
                 }
                 scatter_chart.add_series(line_series)
 
+                # add_vertical_lines(worksheet, scatter_chart, sheet_number)
+
                 scatter_chart.set_y_axis({
-                    'min': cv_graph_values[0],           # Minimum X-axis value
+                    'min': 0 ,           # Minimum X-axis value
                     'max': cv_graph_values[-1],          # Maximum X-axis value
-                    'major_unit': cv_graph_values[0],    # Interval between major ticks
+                    'major_unit': cv_graph_values[-1] / 10,        # Interval between major ticks
                     'minor_unit': 1,     # Interval between minor ticks
                     'minor_unit_type': 'num',  # Set minor unit type to number
                     'num_font': {'size': 10},  # Font size for tick labels
@@ -1149,6 +1181,7 @@ def createcvOpening_gas(itemCase_list,fluid_types,items,header_details):
             
 
 def createSpecSheet(case_data, units, other, act_):
+    print('INSIDE FUNNC')
     workbook = xlsxwriter.Workbook('specsheet.xlsx')
     for i in range(len(case_data)):
         print(i)
@@ -1158,8 +1191,8 @@ def createSpecSheet(case_data, units, other, act_):
         if fluid_state.lower() == 'liquid':
             data_valve = ['Specific Gravity', 'Kinematic Viscosity', 'Vapor Pressure', 'Liquid Pr. Recovery Factor, Fl']
         else:
-            data_valve = ['Molecular Weight', 'Specific Heat Ratio', 'Compressibility Factor',
-                          'Pressure Drop Ratio (Xt)']
+            data_valve = ['Molecular Weight', 'Specific Heat Ratio', 'Inlet compressibility Factor',
+                          'Pressure drop ratio factor']
 
         if other[i][21] == 'globe':
             data_trim = ['CV/Characteristic', 'Balancing', 'Stem Material', 'Plug Material', 'Seat Material', 'Cage or Clamp Material',"Percentage Opening", '%', 'm/s']
@@ -1190,18 +1223,18 @@ def createSpecSheet(case_data, units, other, act_):
         h3 = workbook.add_format({'bold': 0, 'font_size': 9, 'font': 'Arial'})
         f1 = workbook.add_format({'bold': 0, 'font_size': 9, 'font': 'Arial', 'align': 'right'})
 
-        cell_format1 = workbook.add_format({'bottom': 1, 'top': 1, 'font': 'Arial', 'font_size': 9, 'border': 7, 'right': 0, 'left': 0})
+        cell_format1 = workbook.add_format({'bottom': 1, 'top': 1, 'font': 'Arial', 'font_size': 9, 'border': 7, 'right': 0, 'left': 0, 'align':'left'})
         cell_formatL = workbook.add_format({'bottom': 1, 'top': 1, 'font': 'Arial', 'font_size': 9,  'right': 1,'border': 7, 'left': 0 })
         cell_format = workbook.add_format(
             {'bold': 0, 'font_color': 'black', 'font': 'Arial', 'font_size': 9, 'bottom': 1, 'top': 1, 'right': 1, 'left': 1,
-            'border': 7})
+            'border': 7,'align':'left'})
 
         cell_format2 = workbook.add_format(
             {'bold': 0, 'align': 'center', 'font_color': 'black', 'font': 'Arial', 'font_size': 9, 'bottom': 1, 'top': 1,
             'right': 1, 'left': 1, 'border': 7})
 
         cell_format3 = workbook.add_format(
-        {'bold': True, 'align': 'center', 'font_color': 'black', 'font': 'Arial', 'font_size': 12, 'bottom': 1, 'top': 1,
+        {'bold': True, 'align': 'center', 'font_color': 'black', 'font': 'Arial', 'font_size': 9, 'bottom': 1, 'top': 1,
             'right': 1, 'left': 1, 'border': 7})
 
         column_width = [{'name': 'A1:A73', 'size': 5}, {'name': 'B1:B73', 'size': 16.57}, {'name': 'C1:C73', 'size': 11},
@@ -1236,7 +1269,7 @@ def createSpecSheet(case_data, units, other, act_):
         #     image_data = image_file.read()
 
         # Insert the image into cell A3
-        worksheet.insert_image('A4', 'newlogo.png',{'x_scale': 0.18, 'y_scale': 0.18})
+        worksheet.insert_image('A4', 'newlogo.png',{'x_scale': 0.16, 'y_scale': 0.16})
 
         worksheet.write('A1', '', )
         worksheet.merge_range('A2:M2', 'Control Valve Specification Sheet', cell_format3)
@@ -1323,9 +1356,9 @@ def createSpecSheet(case_data, units, other, act_):
         worksheet.merge_range("B20:C20", data_trim[6], cell_format)
         worksheet.merge_range("B21:C21", 'Noise level at 1m distance', cell_format)
         worksheet.merge_range("B22:C22", 'Inlet Pipe Velocity', cell_format)
-        worksheet.merge_range("B23:C23", 'Outlet Pipe Velocity', cell_format)
-        worksheet.merge_range("B24:C24", 'Trim Exit Velocity', cell_format)
-        worksheet.merge_range("B25:C25", 'Warnings!!', cell_format)
+        worksheet.merge_range("B23:C23", 'Outlet Valve Velocity', cell_format)
+        # worksheet.merge_range("B24:C24", 'Trim Exit Velocity', cell_format)
+        worksheet.merge_range("B24:C24", 'Warnings!!', cell_format)
 
         worksheet.merge_range("B26:F26", 'Pipe Line Data', bold)
         worksheet.merge_range("B27:C27", 'Size / Schedule Inlet', cell_format1)
@@ -1395,19 +1428,19 @@ def createSpecSheet(case_data, units, other, act_):
         worksheet.merge_range('D7:H7', '', cell_format)
 
         worksheet.write('D10', 'Units', bold)
-        worksheet.write('D11', '', cell_format)
-        worksheet.write('D12', '', cell_format)
-        worksheet.write('D13', '', cell_format)
-        worksheet.write('D14', '', cell_format)
+        worksheet.write('D11', units[i][0], cell_format)
+        worksheet.write('D12', units[i][1], cell_format)
+        worksheet.write('D13', units[i][2], cell_format)
+        worksheet.write('D14', units[i][3], cell_format)
         worksheet.write('D15', '', cell_format)
         worksheet.write('D16', '', cell_format)
         worksheet.write('D17', '', cell_format)
-        worksheet.write('D18', '', cell_format)
-        worksheet.write('D19', '', cell_format)
-        worksheet.write('D20', '', cell_format)
-        worksheet.write('D21', '', cell_format)
-        worksheet.write('D22', '', cell_format)
-        worksheet.write('D23', '', cell_format)
+        worksheet.write('D18', units[i][4], cell_format)
+        worksheet.write('D19', units[i][5], cell_format)
+        worksheet.write('D20', units[i][6], cell_format)
+        worksheet.write('D21', units[i][7], cell_format)
+        worksheet.write('D22', units[i][8], cell_format)
+        worksheet.write('D23', units[i][9], cell_format)
         worksheet.write('D24', '', cell_format)
         worksheet.merge_range("D25:M25", '', cell_format)
         # worksheet.write('D26', '', cell_format)
@@ -1545,7 +1578,7 @@ def createSpecSheet(case_data, units, other, act_):
         worksheet.merge_range("G23:H23", '', cell_format)
         worksheet.merge_range("G24:H24", '', cell_format)
         # worksheet.write('G25', '',)
-        worksheet.write('G26', 'BB', boldc)
+        worksheet.write('G26', 'DD', boldc)
         worksheet.write('G27', '44', cell_format2)
         worksheet.write('G28', '45', cell_format2)
         worksheet.write('G29', '46', cell_format2)
@@ -1700,7 +1733,7 @@ def createSpecSheet(case_data, units, other, act_):
         worksheet.merge_range("J4:M4", '', cell_format)
         worksheet.merge_range("J5:M5", '', cell_format)
         worksheet.merge_range("J6:M6", '', cell_format)
-        # worksheet.merge_range("J7:M7", '', cell_format)
+        worksheet.merge_range("J7:M7", '', cell_format)
         worksheet.merge_range("J9:K9", 'Shutoff Pressure.', cell_format)
         worksheet.merge_range("J10:K10", 'Case 4', bold)
         worksheet.merge_range("J11:K11", '', cell_format)
@@ -1793,6 +1826,7 @@ def createSpecSheet(case_data, units, other, act_):
         worksheet.merge_range("L22:M22", '', cell_format)
         worksheet.merge_range("L23:M23", '', cell_format)
         worksheet.merge_range("L24:M24", '', cell_format)
+        
 
         worksheet.merge_range("K57:M57", 'Revision Control', bold)
         worksheet.write('J57', '', cell_format)
@@ -1866,14 +1900,17 @@ def createSpecSheet(case_data, units, other, act_):
         worksheet.write('M72', 'FR/AE/004', f1)
 
         # add data
-        worksheet.write('D3', str(case_data[i][0][-1]), cell_format1)
-        worksheet.write('C9', f"{str(case_data[i][0][16])}/{other[i][30]}")
+        worksheet.write('D3', str(case_data[i][0][24]), cell_format1)
+        worksheet.write('D5', str(case_data[i][0][25]), cell_format1)
+        worksheet.write('D6', str(case_data[i][0][26]), cell_format1)
+        worksheet.write('D7', str(case_data[i][0][27]), cell_format1)
+        worksheet.write('C9', f"{str(case_data[i][0][16])} / {other[i][30]}",cell_format1)
         worksheet.write('J3', str(case_data[i][0][22]), cell_format1)
         worksheet.write('J4', str(case_data[i][0][23]), cell_format1)
         worksheet.write('J6', str(case_data[i][0][14]), cell_format1)
-        worksheet.write('J7', str(case_data[i][0][15]), cell_format1)
-        worksheet.write('D27', f"{str(case_data[i][0][18])} {units[i][-2]}", cell_format1)
-        worksheet.write('D28', f"{str(case_data[i][0][19])} {units[i][-1]}", cell_format1)
+        
+        worksheet.write('D27', f"{str(case_data[i][0][18])} {units[i][10]}", cell_format1)
+        worksheet.write('D28', f"{str(case_data[i][0][19])} {units[i][11]}", cell_format1)
 
         column_dict_tuple = [('E', 0), ('G', 1), ('I', 2), ('J', 3), ('L', 4)]
         len_cases = len(case_data[i])
@@ -1881,9 +1918,9 @@ def createSpecSheet(case_data, units, other, act_):
             len_cases = 5
         for k in column_dict_tuple[:len_cases]:
             for j in range(14):
-                worksheet.write(f'{k[0]}{j + 11}', case_data[i][k[1]][j], cell_format)
-        for j in range(14):
-            worksheet.write(f'D{j + 11}', units[i][j], cell_format)
+                worksheet.write(f'{k[0]}{j + 11}', case_data[i][k[1]][j], cell_format1)
+        # for j in range(14):
+        #     worksheet.write(f'D{j + 11}', units[i][j], cell_format1)
         worksheet.write(f'E27', str(other[i][33]), cell_format1)
         worksheet.write(f'E28', str(other[i][34]), cell_format1)
 
@@ -1891,12 +1928,12 @@ def createSpecSheet(case_data, units, other, act_):
         worksheet.write(f'J5', other[i][0], cell_format1)
         worksheet.write(f'H8', str(other[i][1]), cell_format1)
         worksheet.write(f'D4', str(other[i][2]), cell_format)
-        worksheet.write(f'I9', f"{other[i][3]} {other[i][4]}")
+        worksheet.write(f'I9', f"{other[i][3]}",cell_format1)
         # worksheet.write(f'J11', other[i][4], f1)
-        worksheet.write(f'L9', other[i][5])
-        worksheet.write(f'D34', f"{other[i][6]} {other[i][7]}")
+        worksheet.write(f'L9', other[i][5],cell_format1)
+        worksheet.write(f'D34', f"{other[i][6]} {other[i][7]}",cell_format1)
         # worksheet.write(f'D38', other[i][7], cell_format1)
-        worksheet.write(f'E34', f"ASME {other[i][8]}")
+        worksheet.write(f'E34', f"ASME {other[i][8]}",cell_format1)
         worksheet.write(f'D36', other[i][9], cell_format1)
         worksheet.write(f'D40', other[i][10], cell_format1)
         worksheet.write(f'D43', other[i][11], cell_format1)
@@ -1906,7 +1943,7 @@ def createSpecSheet(case_data, units, other, act_):
         worksheet.write(f'D50', other[i][15], cell_format1)
         worksheet.write(f'D53', other[i][16], cell_format1)
         worksheet.write(f'D52', other[i][17], cell_format1)
-        worksheet.write(f'D55', other[i][18], cell_format1)
+        worksheet.write(f'D55', other[i][18], cell_format1) 
         worksheet.write(f'D37', other[i][19], cell_format1)
         worksheet.write(f'D38', other[i][20], cell_format1)
         worksheet.write(f'D35', other[i][21], cell_format1)
@@ -1931,6 +1968,8 @@ def createSpecSheet(case_data, units, other, act_):
         worksheet.write(f'D50', other[i][39], cell_format1)
         worksheet.write(f'E49', other[i][40], cell_format1)
         worksheet.write(f'D51', other[i][41], cell_format1)
+        worksheet.write(f'J7', other[i][43], cell_format1)
+        
 
         # Adding Item Notes
         if len(other[i][42]) > 0:

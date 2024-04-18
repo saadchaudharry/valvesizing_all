@@ -12,6 +12,12 @@
 } */
 body {
     background-color: #fffefe;
+    overflow:hidden;
+    
+ 
+    
+  
+  
 }
 
 .image {
@@ -290,7 +296,7 @@ td {
 
 .topicons {
 
-    margin-top: 2%;
+    margin-top: 1%;
     width: 97%;
     height: 30px;
 }

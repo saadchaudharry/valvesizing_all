@@ -562,6 +562,24 @@
 										</div>
 									</div>
 
+									<div class="row " id="balancing">
+										<div class="col-6">
+											<label for="Balance Seal">Balancing</label>
+
+										</div>
+										<div class="col-6">
+											<select class="form-control-sm-sm valvedata_select" name="balancing">
+
+												{% for balance in metadata['balancing'] %}
+												
+												<option value="{{balance.id}}" {% if balance.name == valve.balancing__.name %} selected {% endif %}>{{balance.name}}</option>
+											
+
+												{% endfor %}
+											</select>
+										</div>
+									</div>
+
 
 
 									<div class="row " id="balanceseal">
@@ -911,11 +929,13 @@
 			var valve_style_text = $("#valvestyle :selected").text()
 			if (valve_style_text == "Globe Straight" || valve_style_text == "Globe Angle") {
 				// alert('Conditon working')
+
 				$("#bonnet").show();
 				$("#stem").show();
 				$("#plug").show();
 				$("#seat").show();
 				$("#trimTypeGlobe").show();
+				$('#balancing').show();
 				$("#cage").show();
 				$('#balanceseal').show();
 				$('#studnut').show();
@@ -927,12 +947,14 @@
 
 			} else if (valve_style_text == "Butterfly Lugged Wafer" || valve_style_text == "Butterfly Double Flanged") {
 				// console.log('Butterfly')
+				
 				$("#bonnet").hide();
 				$("#stem").hide();
 				$("#plug").hide();
 				$("#seat").hide();
 				$("#cage").hide();
 				$("#trimTypeGlobe").hide();
+				$('#balancing').hide();
 				$('#balanceseal').hide()
 				$('#studnut').hide();
 				$("#shaft").show();

@@ -1060,6 +1060,8 @@ class balancing(db.Model):
     id = Column(Integer, primary_key=True)
     name = Column(String(300))
 
+    balancing_ = relationship('valveDetailsMaster', cascade="all,delete", back_populates='balancing__')
+
     balancing_c = relationship('cvTable', cascade="all,delete", back_populates='balancing_')
     actuatorCase = relationship('actuatorCaseData',back_populates='balancing_')
 
@@ -1120,6 +1122,9 @@ class valveDetailsMaster(db.Model):
     fluidStateId = Column(Integer, ForeignKey("fluidState.id"))
     state = relationship("fluidState", back_populates="valve")
 
+    fluidPropertiesId = Column(Integer, ForeignKey("fluidProperties.id"))
+    fluidproperties = relationship("fluidProperties", back_populates="valve")
+
     # rel as child dropdown
     endConnectionId = Column(Integer, ForeignKey("endConnection.id"))
     endConnection__ = relationship('endConnection', back_populates='endConnection_')
@@ -1165,6 +1170,9 @@ class valveDetailsMaster(db.Model):
 
     packingId = Column(Integer, ForeignKey("packing.id"))
     packing__ = relationship('packing', back_populates='packing_')
+
+    balancingId = Column(Integer, ForeignKey("balancing.id"))
+    balancing__ = relationship('balancing', back_populates='balancing_')
 
     balanceSealId = Column(Integer, ForeignKey("balanceSeal.id"))
     balanceSeal__ = relationship('balanceSeal', back_populates='balanceSeal_')
@@ -1307,6 +1315,8 @@ class fluidProperties(db.Model):
 
     # rel as parent
     case = relationship("caseMaster", cascade="all,delete", back_populates="fluid")
+
+    valve = relationship('valveDetailsMaster', cascade="all,delete", back_populates='fluidproperties')
 
     @staticmethod
     def update(new_data, id):

@@ -39,7 +39,7 @@ material_list = ['ASTM A216 WCB', 'ASTM A216 WCC', 'ASTM A352 LCC', 'ASTM A352 L
                   'ASTM A217 C12A', 'ASTM A217 C5', 'ASTM A995 CD3MN (4A)', 'ASTM A995 CE8MN (5A)',
                   'ASTM A995 CD3MWCuN (6A)', 'ASTM A351 CK3MCuN']
 
-balance_seal_list = ['Unbalanced', 'Balanced PTFE', 'Balanced Graphite', 'Metal']
+balance_seal_list = ['PTFE', 'Graphite', 'Metal', 'N/A']
 
 bonnet_list = ['ASTM A216 WCB', 'ASTM A216 WCC', 'ASTM A352 LCC', 'ASTM A352 LCB', 'ASTM A351 CF8M',
                   'ASTM A351 CF3M', 'ASTM A351 CF8', 'ASTM A351 CF3', 'ASTM A217 WC6', 'ASTM A217 WC9',
@@ -140,7 +140,7 @@ def getRowsFromCsvFile(file_path):
 
 
 
-# print(getRowsFromCsvFile("csv/afr.csv"))
+# print(getRowsFromCsvFile("csv/afr.csv"))  
 # print(getRowsFromCsvFile("csv/cvtable.csv")[::6])
 # print(getRowsFromCsvFile("csv/shaft.csv"))
 
