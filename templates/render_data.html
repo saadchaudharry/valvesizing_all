@@ -45,10 +45,10 @@
                                                 <!-- <input type="file" class=""> -->
                                             <button type="button" class="btn btn-info btn-sm refernce_btn"><a href="{{url_for('downloadData', topic=topic, item_id=item.id, proj_id=item.project.id)}}">Download</a></button>
                                             <!-- <button type="button" class="btn btn-info btn-sm refernce_btns">Upload</button> -->
-                                            <form method = "POST" enctype="multipart/form-data" action = "{{url_for('uploadData', topic=topic, item_id=item.id, proj_id=item.project.id)}}">
+                                            <!-- <form method = "POST" enctype="multipart/form-data" action = "{{url_for('uploadData', topic=topic, item_id=item.id, proj_id=item.project.id)}}">
                                                 <input type="file" name="file" accept=".csv" required class="form-control-sm refernce_selectfile" style="height: 35px;">
                                                 <input type = "submit" class="btn btn-info btn-sm refernce_btns" value="Upload" style="height: 35px;">
-                                            </form>
+                                            </form> -->
                                             </div>
                                         </div>
                                     </div>
@@ -76,7 +76,7 @@
                                                         {% for key in all_keys %}
                                                         <td><input type="text" name="{{key}}" value="{{data_[key]}}"></td>
                                                         {% endfor %}
-                                                        <td><input type="submit" value="Update"></td>
+                                                        <!-- <td><input type="submit" value="Update"></td> -->
                                                     </tr>
                                                 </form>
                                                 {% endfor %}
