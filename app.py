@@ -1081,8 +1081,31 @@ def addUserAsEng(name, designation):
 def newUserProjectItem(user):
 # with app.app_context():
     fluid_state = fluidState.query.first()
+    if user.fccUser:
+        
+        users = db.session.query(userMaster).filter_by(fccUser = True).all()
+        if len(users) == 1:
+            year = f"Q{date_today[2:4]}"
+            proj_len = 0
+            proj_id = year + str(proj_len).zfill(5)
+        else:
+            year = f"Q{date_today[2:4]}"
+            user_lists = [user.id for user in users]
+            proj_length = len(db.session.query(projectMaster).filter(projectMaster.createdById.in_(user_lists)).all())
+            proj_id = year + str(proj_length).zfill(5)
+
+            
+       
+        
+    else:
+        proj_id = f"001" 
+    # len_project = len(projectMaster.query.all())
+
+    # data = request.form.to_dict(flat=False)
+    # quote_no = f"Q{date_today[2:4]}0000{len_project}"
+
     new_project = projectMaster(user=user,
-                                projectId=f"Q{date_today[2:4]}0000",
+                                projectId=proj_id,
                                 enquiryReceivedDate=datetime.datetime.today(),
                                 receiptDate=datetime.datetime.today(),
                                 bidDueDate=datetime.datetime.today())
@@ -1663,6 +1686,7 @@ def emailOTP():
 @app.route('/admin-register', methods=["GET", "POST"])
 def register():
     email = session.get('email')
+
     designations_ = designationMaster.query.all()
     
     departments_ = departmentMaster.query.all()
@@ -1683,8 +1707,12 @@ def register():
                                   mobile=request.form['mobile'],
                                   designation=designation_element,
                                   department=department_element,
-                                  fccUser=True
+                                  
                                   )
+            if request.form['email'].split('@')[-1] == 'fccommune.com':
+                new_user.fccUser = True 
+            else:
+                new_user.fccUser = False
             db.session.add(new_user)
             db.session.commit()
 
@@ -1705,6 +1733,7 @@ def login():
     # form = LoginForm()
     if request.method == "POST":
 
+
         user = userMaster.query.filter_by(email=request.form['email']).first()
 
         # email doesn't exist
@@ -1720,8 +1749,17 @@ def login():
         # email exists and password correct
         else:
             login_user(user)
-            project_element = db.session.query(projectMaster).filter_by(user=user).first()
+            if user.fccUser:
+                users = db.session.query(userMaster).filter_by(fccUser = True).all()
+                user_lists = [user.id for user in users]
+                project_element = db.session.query(projectMaster).filter(projectMaster.createdById.in_(user_lists)).first()
+        
+            else:
+                project_element = db.session.query(projectMaster).filter_by(user=current_user).first()
+
+            # project_element = db.session.query(projectMaster).filter_by(user=user).first()
             item_element = db.session.query(itemMaster).filter_by(project=project_element).first()
+            
             return redirect(url_for('home', proj_id=project_element.id, item_id=item_element.id))
 
     return render_template("login.html")
@@ -1787,7 +1825,14 @@ def sendOTPEmail():
 @app.route('/home/proj-<proj_id>/item-<item_id>', methods=['GET'])
 def home(proj_id, item_id):
     item_element = itemMaster.query.get(int(item_id))
-    all_projects = db.session.query(projectMaster).filter_by(user=current_user).all()
+    user = current_user
+    if user.fccUser:
+        users = db.session.query(userMaster).filter_by(fccUser = True).all()
+        user_lists = [user.id for user in users]
+        all_projects = db.session.query(projectMaster).filter(projectMaster.createdById.in_(user_lists)).all()
+        
+    else:
+        all_projects = db.session.query(projectMaster).filter_by(user=current_user).all()
     address_, eng_ = getEngAddrList(all_projects)
     items_list = db.session.query(itemMaster).filter_by(project=projectMaster.query.get(int(proj_id))).order_by(
         itemMaster.itemNumber.asc()).all()
@@ -2033,14 +2078,26 @@ def addProject(proj_id, item_id):
     with app.app_context():
         metadata_ = metadata()
         if request.method == "POST":
-            len_project = len(projectMaster.query.all())
+            user=current_user
+            print(f"ADDPROJECT {user.fccUser}")
+            if user.fccUser:
+                users = db.session.query(userMaster).filter_by(fccUser = True).all()
+                year = f"Q{date_today[2:4]}"
+                user_lists = [user.id for user in users]
+                proj_length = len(db.session.query(projectMaster).filter(projectMaster.createdById.in_(user_lists)).all())
+                proj_id = year + str(proj_length).zfill(5)
+
+            else:
+                proj_length = len(db.session.query(projectMaster).filter_by(user=user).all())+1
+                proj_id = str(proj_length).zfill(3) 
+            
 
             data = request.form.to_dict(flat=False)
-            quote_no = f"Q{date_today[2:4]}0000{len_project}"
+            # quote_no = f"Q{date_today[2:4]}0000{len_project}"
             a = jsonify(data).json
 
             new_project = projectMaster(
-                projectId=quote_no,
+                projectId=proj_id,
                 projectRef=a['projectRef'][0],
                 enquiryRef=a['enquiryRef'][0],
                 enquiryReceivedDate=datetime.datetime.strptime(a['enquiryReceivedDate'][0], '%Y-%m-%d'),
@@ -2060,7 +2117,7 @@ def addProject(proj_id, item_id):
             # add dummy Item 
             add_item = newProjectItem(new_project)
 
-            project_element = db.session.query(projectMaster).filter_by(projectId=quote_no).first()
+            project_element = db.session.query(projectMaster).filter_by(projectId=proj_id).first()
 
             addProjectRels(a['cname'][0], a['cnameE'][0], a['address'][0], a['addressE'][0], a['aEng'][0], a['cEng'][0],
                            project_element, 'create')
@@ -5480,7 +5537,7 @@ def valveSizing(proj_id, item_id):
                                                     seatDia=output['seatDia'], machNoUp=output['machNoUp'], machNoDown=output['machNoDown'], machNoValve=output['machNoVel'],
                                                     sonicVelUp=output['sonicVelUp'], sonicVelDown=output['sonicVelDown'],
                                                     sonicVelValve=output['sonicVelValve'], outletDensity=output['outletDensity'], fluid=fluid_element,
-                                                    item=item_selected, specificHeatRatio=a['specificHeatRatio'][0], compressibility=a['compressibility'][0], iPipe=None)
+                                                    item=item_selected, specificHeatRatio=a['specificHeatRatio'][0], compressibility=a['compressibility'][0], iSch=a['iSch'][0], oSch=a['oSch'][0])
                             
 
                             item_selected.flowrate_unit = output['fl_unit_form']
@@ -5503,7 +5560,7 @@ def valveSizing(proj_id, item_id):
                                                     valveSize=a['vSize'][0], fl=a['fl'][k], xt=a['xt'][k],
                                                     criticalPressure=a['criticalPressure'][0], inletPipeSize=a['inletPipeSize'][0],
                                                     outletPipeSize=a['outletPipeSize'][0], ratedCv=a['ratedCV'][0],
-                                                    item=item_selected, specificHeatRatio=a['specificHeatRatio'][0], compressibility=a['compressibility'][0], iPipe=None)
+                                                    item=item_selected, specificHeatRatio=a['specificHeatRatio'][0], compressibility=a['compressibility'][0], iSch=a['iSch'][0], oSch=a['oSch'][0])
                             # print(fluid_element.fluidName)
                             db.session.add(new_case)
                             db.session.commit()
@@ -6568,7 +6625,12 @@ def slidingStem(proj_id, item_id):
             stemsize_ = getDBElementWithId(stemSize,a['stemDia'][0])
             
             print(f'IIIIIISBBBB {stemsize_}')
-            stem_fraction = float(Fraction(''.join(str(stemsize_.stemDia))))
+            
+            integer_part, fractional_part = str(stemsize_.stemDia).split(' ')
+            numerator, denominator = map(int, fractional_part.split('/'))
+
+            # Perform the addition
+            stem_fraction = float(integer_part) + numerator / denominator
             print(f'HHHHHHHHHHHHHHHHHHHh {stemsize_},{stem_fraction}')
             
             # Inputs conversion
@@ -8136,6 +8198,7 @@ def generate_csv_project(item_id, proj_id):
                     model_str = None
                     v_model_lower = getValveType(v_details.style.name)
                     
+                    
 
                     # material_ = material_updated.name
                     itemCases_1 = db.session.query(caseMaster).filter_by(item=item).all()
@@ -8178,16 +8241,21 @@ def generate_csv_project(item_id, proj_id):
                         else:
                             seat_bore = cv_value_element.seatBore
                             travel_ = cv_value_element.travel
+
+                        if v_details.bonnetExtDimension == 0:
+                            bonnet_ = 'N/A'
+                        else:
+                            bonnet_ = v_details.bonnetExtDimension
                             
 
-                        other_val_list = [v_details.serialNumber, 1, item.project.projectRef, f"{cases[0].criticalPressure} {item.criticalpres_unit}", item.project.pressureUnit, f"{v_details.shutOffDelP} {v_details.shutOffDelPUnit}", cases[0].valveSize, item.project.lengthUnit, v_details.rating.name,
-                                        v_details.material.name, v_details.bonnetType__.name, "See Note 1", "See Note 1", v_details.gasket__.name, v_details.trimType__.name, v_details.flowDirection__.name, v_details.seat__.name,
+                        other_val_list = [v_details.serialNumber, 1, item.project.projectRef, f"{cases[0].criticalPressure} {item.criticalpres_unit}", item.project.pressureUnit, f"{v_details.shutOffDelP} {v_details.shutOffDelPUnit}", f"{cases[0].valveSize} {item.valvesize_unit}", item.project.lengthUnit, v_details.rating.name,
+                                        v_details.material.name, v_details.bonnetType__.name, "See N1", v_details.style.name, v_details.gasket__.name, v_details.trimType__.name, v_details.flowDirection__.name, v_details.seat__.name,
                                         v_details.disc__.name,
                                         v_details.seatLeakageClass__.name, v_details.endConnection__.name, v_details.endFinish__.name, v_model_lower, model_str, v_details.bonnet__.name,
-                                        v_details.bonnetExtDimension, v_details.studNut__.name, cases[0].ratedCv, v_details.balanceSeal__.name, acc_list, v_details.application, spec_fluid_name, 
-                                        f"{v_details.maxPressure} {v_details.maxPressureUnit}", f"/ {v_details.maxTemp} {v_details.maxTempUnit}", f"{v_details.minTemp} {v_details.minTempUnit}", None, None, v_details.packing__.name,
-                                        seat_bore, travel_, v_details.flowDirection__.name, v_details.flowCharacter__.name, v_details.shaft__.name, item_notes_list,
-                                        f"{item.itemNumber} ({v_details.quantity})"]
+                                        bonnet_, v_details.studNut__.name, cases[0].ratedCv, v_details.balanceSeal__.name, acc_list, v_details.application, spec_fluid_name, 
+                                        f"{v_details.maxPressure} {v_details.maxPressureUnit}", f"/ {v_details.maxTemp} {v_details.maxTempUnit}", f"{v_details.minTemp} {v_details.minTempUnit}", v_details.balancing__.name, v_details.cage__.name, v_details.packing__.name,
+                                        f"{seat_bore} inch", travel_, v_details.flowDirection__.name, v_details.flowCharacter__.name, v_details.shaft__.name, item_notes_list,
+                                        f"{item.itemNumber} ({v_details.quantity})"]    
                         print(f'otherssss {len(other_val_list)}')
                         
                         customer__ = db.session.query(addressProject).filter_by(isCompany=True, project=item.project).first()
@@ -8196,7 +8264,7 @@ def generate_csv_project(item_id, proj_id):
                             case_list = [i.flowrate, i.inletPressure, i.outletPressure, i.inletTemp, i.specificGravity, i.kinematicViscosity, i.vaporPressure,
                                         i.xt,
                                         i.calculatedCv, i.openingPercentage, i.spl,
-                                        i.pipeInVel, i.pipeOutVel, '', v_details.tagNumber, 
+                                        i.pipeInVel, i.machNoValve, '', v_details.tagNumber, 
                                         f"{item.itemNumber}",
                                         v_details.state.name, itemCases_1[0].criticalPressure,
                                         itemCases_1[0].inletPipeSize, itemCases_1[0].outletPipeSize, i.valveSize, v_details.rating.name, 
@@ -8206,14 +8274,8 @@ def generate_csv_project(item_id, proj_id):
                                         f"{enduser__.address.company.name} ({enduser__.address.address})",
                                         f"{project_element.enquiryRef} dt. {project_element.enquiryReceivedDate.strftime("%d-%B-%Y")}", 
                                         project_element.custPoNo,
-                                        project_element.projectId,
-                                        project_element.workOderNo,
-                                      
-
-                                     
-
-                                        
-                                        
+                                        f"/ {itemCases_1[0].iSch}",
+                                        f"/ {itemCases_1[0].oSch}"
                                         ]
                             
                             # case_list_dict = {
@@ -8227,76 +8289,36 @@ def generate_csv_project(item_id, proj_id):
                             #                 }
                             rows___.append(case_list)
 
+
+
                         cases__.append(rows___)
                         units__.append(unit_list)
                         others__.append(other_val_list)
-                        try:
-                            act_dict_ = {'v_type': cases[0].ratedCv, 'trim_type': v_details.trimType__.name, 'Balancing': v_details.balanceSeal__.name,
-                                        'fl_direction': v_details.flowDirection__.name, 'v_size': cases[0].valveSize,
-                                        'v_size_unit': item.project.lengthUnit,
-                                        'Seat_Dia': i.seatDia,
-                                        'seat_dia_unit': item.project.lengthUnit, 'unbalance_area': act_valve_data_string[5],
-                                        'unbalance_area_unit': 'inch^2',
-                                        'Stem_size': act_valve_data_string[4], 'Stem_size_unit': 'inch',
-                                        'Travel': act_valve_data_string[1],
-                                        'travel_unit': 'inch', 'Packing_Friction': act_data_string[13],
-                                        'packing_friction_unit': 'mm', 'Seat_Load_Factor': act_data_string[24],
-                                        'Additional_Factor': 0,
-                                        'P1': itemCases_1[-1].iPressure,
-                                        'p1_unit': item.project.pressureUnit,
-                                        'P2': itemCases_1[-1].oPressure, 'p2_unit': item.project.pressureUnit,
-                                        'delP_Shutoff': v_details.shutOffDelP, 'delP_Shutoff_unit': 'bar', 'unbal_force': 0,
-                                        'Kn': act_data_string[15], 'delP_flowing': 0,
-                                        'act_type': act_other[0],
-                                        'fail_action': act_data_string[4], 'act_size': act_data_string[0],
-                                        'act_size_unit': 'inch',
-                                        'act_travel': act_data_string[1], 'act_travel_unit': 'inch',
-                                        'eff_area': act_data_string[0], 'eff_area_unit': 'inch^2',
-                                        'sMin': act_data_string[2], 'sMax': act_data_string[3], 'spring_rate': act_data_string[18],
-                                        'spring_windup': act_data_string[19], 'max_spring_load': act_data_string[20],
-                                        'max_air_supply': act_other[6],
-                                        'set_pressure': act_data_string[5], 'set_pressure_unit': 'bar', 'act_thrust_down': 0,
-                                        'act_thrust_up': 0, 'handwheel': act_other[2],
-                                        'friction_band': act_data_string[21],
-                                        'req_handWheel_thrust': act_data_string[22], 'max_thrust': act_data_string[23],
-                                        'v_thrust_close': 0, 'v_thrust_open': 0, 'seat_load': act_data_string[14],
-                                        'orientation': act_other[3], 'act_model': act_model, 'travel_stops': act_other[8]
-                                        }
-                        except IndexError:
-                            act_dict_ = {'v_type': cases[0].ratedCv, 'trim_type': v_details.trimType__.name, 'Balancing': v_details.balanceSeal__.name,
-                                        'fl_direction':  v_details.flowDirection__.name, 'v_size': cases[0].valveSize,
-                                        'v_size_unit': item.project.lengthUnit,
-                                        'Seat_Dia': i.seatDia,
-                                        'seat_dia_unit': item.project.lengthUnit, 'unbalance_area': None,
-                                        'unbalance_area_unit': 'inch^2',
-                                        'Stem_size': None, 'Stem_size_unit': 'inch',
-                                        'Travel': None,
-                                        'travel_unit': 'inch', 'Packing_Friction': None,
-                                        'packing_friction_unit': 'mm', 'Seat_Load_Factor': None,
-                                        'Additional_Factor': 0,
-                                        'P1': itemCases_1[-1].inletPressure,
-                                        'p1_unit': item.project.pressureUnit,
-                                        'P2': itemCases_1[-1].outletPressure, 'p2_unit': item.project.pressureUnit,
-                                        'delP_Shutoff': v_details.shutOffDelP, 'delP_Shutoff_unit': 'bar', 'unbal_force': 0,
-                                        'Kn': None, 'delP_flowing': 0,
-                                        'act_type': None,
-                                        'fail_action': None, 'act_size': None,
-                                        'act_size_unit': 'inch',
-                                        'act_travel': None, 'act_travel_unit': 'inch',
-                                        'eff_area': None, 'eff_area_unit': 'inch^2',
-                                        'sMin': None, 'sMax': None, 'spring_rate': None,
-                                        'spring_windup': None, 'max_spring_load': None,
-                                        'max_air_supply': None,
-                                        'set_pressure': None, 'set_pressure_unit': 'bar', 'act_thrust_down': 0,
-                                        'act_thrust_up': 0, 'handwheel': None,
-                                        'friction_band': None,
-                                        'req_handWheel_thrust': None, 'max_thrust': None,
-                                        'v_thrust_close': 0, 'v_thrust_open': 0, 'seat_load': None,
-                                        'orientation': None, 'act_model': act_model, 'travel_stops': None
-                                        }
-                        act_dict = act_dict_
 
-                print(act_dict)
+                    act_mas = db.session.query(actuatorMaster).filter_by(item=item).first()
+                    
+                    act_dict_ = {
+                            # 'act_type':  act_mas.actuatorType,
+                            # 'act_model': ,
+                            # 'act_travel': act_mas,
+                            # 'act_size': ,
+                            # 'act_spring': ,
+                            # 'air_fail_action': ,
+                            # 'air_supply': ,
+                            # 'set_pressure': ,
+                            # 'act_orientation': ,
+                            # 'handwheel': ,
+                            # 'travel_stops': ,
+                            # 'tubing_size': ,
+                            # 'fittings': ,
+                            # 'open': ,
+                            # 'close': , 
+                            # 'trip_time': ,
+                        }
+
+                    act_dict = act_dict_
+
+                
                 createSpecSheet(cases__, units__, others__, act_dict)
                 path = "specsheet.xlsx"
                 project_number = item.project.id

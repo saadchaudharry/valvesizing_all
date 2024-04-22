@@ -1196,6 +1196,7 @@ def createSpecSheet(case_data, units, other, act_):
 
         if other[i][21] == 'globe':
             data_trim = ['CV/Characteristic', 'Balancing', 'Stem Material', 'Plug Material', 'Seat Material', 'Cage or Clamp Material',"Percentage Opening", '%', 'm/s']
+            
         else:
             data_trim = ['CV/Characteristic', '', 'Shaft Material', 'Disc Material', 'Seat Material', "", "Degree of Opening", 'degree', 'mach']
         str_current_datetime = str(current_datetime)
@@ -1446,11 +1447,11 @@ def createSpecSheet(case_data, units, other, act_):
         # worksheet.write('D26', '', cell_format)
         worksheet.write('D27', '', cell_format1)
         worksheet.write('D28', '', cell_format1)
-        worksheet.write('D29', '', cell_format1)
+        worksheet.write('D29', 'N/A', cell_format1)
         worksheet.write('D30', '', cell_format1)
         worksheet.write('D31', '', cell_format1)
         # worksheet.write('D32', '', cell_format1)
-        worksheet.write('D33', '', cell_format1)
+        worksheet.write('D33', 'FCC', cell_format1)
         worksheet.write('D34', '', cell_format1)
         worksheet.write('D35', '', cell_format1)
         worksheet.write('D36', '', cell_format1)
@@ -1473,7 +1474,7 @@ def createSpecSheet(case_data, units, other, act_):
         worksheet.write('D53', '', cell_format1)
         worksheet.write('D54', '', cell_format1)
         worksheet.write('D55', '', cell_format1)
-        # worksheet.write('D56', '', cell_format1)
+        worksheet.write('D56', 'N/A', cell_format1)
 
 
 
@@ -1921,8 +1922,8 @@ def createSpecSheet(case_data, units, other, act_):
                 worksheet.write(f'{k[0]}{j + 11}', case_data[i][k[1]][j], cell_format1)
         # for j in range(14):
         #     worksheet.write(f'D{j + 11}', units[i][j], cell_format1)
-        worksheet.write(f'E27', '', cell_format1)
-        worksheet.write(f'E28', '', cell_format1)
+        worksheet.write(f'E27', case_data[i][0][28], cell_format1)
+        worksheet.write(f'E28', case_data[i][0][29], cell_format1)
 
         # other[i] values input
         worksheet.write(f'J5', other[i][0], cell_format1)
@@ -1931,22 +1932,22 @@ def createSpecSheet(case_data, units, other, act_):
         worksheet.write(f'I9', f"{other[i][3]}",cell_format1)
         # worksheet.write(f'J11', other[i][4], f1)
         worksheet.write(f'L9', other[i][5],cell_format1)
-        worksheet.write(f'D34', f"{other[i][6]} {other[i][7]}",cell_format1)
+        worksheet.write(f'D34', f"{other[i][6]} ",cell_format1)
         # worksheet.write(f'D38', other[i][7], cell_format1)
-        worksheet.write(f'E34', f"ASME {other[i][8]}",cell_format1)
+        worksheet.write(f'E34', f"/ {other[i][8]}",cell_format1)
         worksheet.write(f'D36', other[i][9], cell_format1)
         worksheet.write(f'D40', other[i][10], cell_format1)
         worksheet.write(f'D43', other[i][11], cell_format1)
-        worksheet.write(f'E43', other[i][12], cell_format1)
+        # worksheet.write(f'E43', other[i][12], cell_format1)
         worksheet.write(f'D45', other[i][13], cell_format1)
-        worksheet.write(f'E48', other[i][14], cell_format1)
+        worksheet.write(f'E48', f"/ {other[i][14]}", cell_format1)
         worksheet.write(f'D50', other[i][15], cell_format1)
         worksheet.write(f'D53', other[i][16], cell_format1)
         worksheet.write(f'D52', other[i][17], cell_format1)
         worksheet.write(f'D55', other[i][18], cell_format1) 
         worksheet.write(f'D37', other[i][19], cell_format1)
         worksheet.write(f'D38', other[i][20], cell_format1)
-        worksheet.write(f'D35', other[i][21], cell_format1)
+        worksheet.write(f'D35', other[i][11], cell_format1)
 
         # other data
         worksheet.write(f'C34', case_data[i][0][1], cell_format1)
@@ -1956,7 +1957,7 @@ def createSpecSheet(case_data, units, other, act_):
         worksheet.write(f'D42', other[i][24], cell_format1)
         worksheet.write(f'D44', other[i][25], cell_format1)
         worksheet.write(f'D49', other[i][26], cell_format1)
-        worksheet.write(f'E50', other[i][27], cell_format1)
+        worksheet.write(f'E50', f"/ {other[i][34]}", cell_format1)
         worksheet.write(f'C8', other[i][29], cell_format1)
         worksheet.write(f'D30', str(other[i][31]), cell_format1)
         worksheet.write(f'D31', str(other[i][33]), cell_format1)
@@ -1966,8 +1967,9 @@ def createSpecSheet(case_data, units, other, act_):
         worksheet.write(f'D48', other[i][37], cell_format1)
         worksheet.write(f'L28', other[i][38], cell_format1)
         worksheet.write(f'D50', other[i][39], cell_format1)
-        worksheet.write(f'E49', other[i][40], cell_format1)
+        worksheet.write(f'E49', f"/ {other[i][40]}", cell_format1)
         worksheet.write(f'D51', other[i][41], cell_format1)
+        worksheet.write(f'D54', other[i][35], cell_format1)
         worksheet.write(f'J7', other[i][43], cell_format1)
         
 
