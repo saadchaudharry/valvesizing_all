@@ -802,8 +802,33 @@
     var itemId = "{{item.id}}";
 
     $(document).ready(function() {
+        
+        //onload plugdia and ua
+        var itemId = "{{item.id}}";
+        var seatDia = $('.seatDia').val();
+        $.ajax({
+            type: "GET",
+            url: "/getUaElement",
+            data: {
+                seatDia: seatDia,
+                itemId: itemId
+            },  
+            success: function(data) {
+                console.log(data);
+                $('.plugDia').val(data.plugDia);
+                $('.ua').val(data.ua);
+
+            },
+
+            error: function(xhr, status, error) {
+                alert(data.message);
+            }
+        });  
+
+
 
         $('.delp').val(iPres-oPres);
+        //onload packingFriction
         $.ajax({
             type: "GET",    
             url: "/getpackingfriction",
@@ -822,7 +847,7 @@
         });
 
 
-        
+        //onload getseatload
         $.ajax({
             type: "GET",
             url: "/getseatload",
@@ -843,7 +868,7 @@
 
 
 
-
+        //onload unbal
         $.ajax({
             type: "GET",
             url: "/getunbalforce",

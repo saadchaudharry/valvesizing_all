@@ -1245,8 +1245,8 @@ class cvTable(db.Model):
 
     # rel as parent
     value = relationship("cvValues", cascade="all,delete", back_populates="cv")
-    case = relationship("caseMaster", cascade="all,delete", back_populates="cv")
-    torque = relationship("packingTorque", cascade="all,delete", back_populates="cv")
+    case = relationship("caseMaster", back_populates="cv")
+    torque = relationship("packingTorque", back_populates="cv")
 
     # rel as child
 
