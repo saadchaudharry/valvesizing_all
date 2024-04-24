@@ -37,6 +37,7 @@ from dbsetup import db
 from fractions import Fraction
 from decimal import Decimal
 from flask_mail import Mail,Message
+from sqlalchemy.orm import joinedload
 
 
 
@@ -541,21 +542,28 @@ def knValue_upload(data_list):
         flowchar_ = db.session.query(flowCharacter).filter_by(name=data_list[i]['flowCharac']).first()
         if(data_list[i]['trimType'] == 'except noise and cavity'):
             trim_elements = db.session.query(trimType)\
-                .filter_by(valveStyleId=1)\
+                .join(trimType.style)\
+                .options(joinedload(trimType.style))\
+                .filter(valveStyle.name == 'Globe Straight')\
                 .filter(~trimType.name.like('Low%') & ~trimType.name.like('Anti%'))\
                 .all()
             print(f'trim {trim_elements}')
 
         elif (data_list[i]['trimType'] == 'Low Noise Trim'):
             trim_elements = db.session.query(trimType)\
-                .filter_by(valveStyleId=1)\
+                .join(trimType.style)\
+                .options(joinedload(trimType.style))\
+                .filter(valveStyle.name == 'Globe Straight')\
                 .filter(trimType.name.like('Low%'))\
                 .all()
         else:
             trim_elements = db.session.query(trimType)\
-                .filter_by(valveStyleId=1)\
-                .filter_by(name = data_list[i]['trimType'])\
-                .all() 
+                .join(trimType.style)\
+                .options(joinedload(trimType.style))\
+                .filter(valveStyle.name == 'Globe Straight')\
+                .filter_by(name=data_list[i]['trimType'])\
+                .all()
+
         for trim_ in trim_elements:
             cnt += 1
             knvalue_ = knValue(
@@ -583,9 +591,15 @@ def unbalanceArea_upload(data_list):
         # print(f'TRIMTYPE {trim_type_element} , {data_list[i]['trimType']}')
         if data_list[i]['trimType'] == 'Low Noise Trim A1':
             low_trim_elements = db.session.query(trimType)\
-                .filter_by(valveStyleId = 1)\
+                .join(trimType.style)\
+                .options(joinedload(trimType.style))\
                 .filter(trimType.name.like('Low%'))\
+                .filter_by(name='Globe Straight')\
                 .all()
+            # low_trim_elements = db.session.query(trimType)\
+            #     .filter(trimType.style.name.like('Globe%'))\
+            #     .filter(trimType.name.like('Low%'))\
+            #     .all()
             print(f'TRIMTYPE {trim_type_element} , {low_trim_elements}')
         else:
             print(f'TRIMTYPE {trim_type_element} , {data_list[i]['trimType']}')
@@ -1732,9 +1746,12 @@ def register():
 def login():
     # form = LoginForm()
     if request.method == "POST":
-
+        
 
         user = userMaster.query.filter_by(email=request.form['email']).first()
+        # user_ = db.session.query(userMaster).filter_by(email='devayani172000@gmail.com').first()
+        # db.session.delete(user_)
+        # db.session.commit()
 
         # email doesn't exist
         if not user:
@@ -5282,11 +5299,15 @@ def getunbalforce():
     p1 = request.args.get('iPres')
     stemDia_id = request.args.get('stemDia')
     stemDia_element = getDBElementWithId(stemSize,stemDia_id)
-    print(f'packingB4 {stemDia_element.stemDia}')
-    a3 = Decimal(float(Fraction(stemDia_element.stemDia)))
+    integer_part, fractional_part = str(stemDia_element.stemDia).split(' ')
+    numerator, denominator = map(int, fractional_part.split('/'))
+
+    # Perform the addition
+    a3 = float(integer_part) + numerator / denominator
+    
     print(f'unbal {p1},{a3}')
     res = str(float(p1)*float(a3))
-    return res
+    return str(round(float(res),3))
 
 
 
@@ -5313,13 +5334,24 @@ def getpackingfriction():
     stemDia_id = request.args.get('stemDia')
     stemDia_element = getDBElementWithId(stemSize,stemDia_id)
     print(f'packingB4 {stemDia_element.stemDia}')
-    decimal_stemdia = Decimal(float(Fraction(stemDia_element.stemDia)))
+
+    integer_part, fractional_part = str(stemDia_element.stemDia).split(' ')
+    numerator, denominator = map(int, fractional_part.split('/'))
+
+    # Perform the addition
+    decimal_stemdia = float(integer_part) + numerator / denominator
+    print(f'HHHHHHHHHHHHHHHHHHHh {decimal_stemdia}')
+    
+  
     
     itemId = request.args.get('itemId')
     valveElement = db.session.query(valveDetailsMaster).filter_by(itemId=itemId).first()
     rating_ = getDBElementWithId(ratingMaster,valveElement.ratingId)
     packing_ = getDBElementWithId(packing,valveElement.packingId)
-    packingFrictionData = db.session.query(packingFriction).filter_by(stemDia=decimal_stemdia,rating=rating_,packing_=packing_).first()
+    packingFrictionData = db.session.query(packingFriction)\
+        .filter_by(rating=rating_,packing_=packing_)\
+        .order_by(func.abs(packingFriction.stemDia - decimal_stemdia))\
+        .first()
     print(f'packingAF {decimal_stemdia},{rating_},{packing_}')
     value = packingFrictionData.value
     print(f'getpacking {packingFrictionData}')
@@ -6029,7 +6061,7 @@ def selectValve(proj_id, item_id):
                                     last_case.kinematicViscosity, seat_bore, 'inch', sosPipe, densityPipe, rw_noise,
                                     item_selected,
                                     fl_unit, iPresUnit, oPresUnit, vPresUnit, cPresUnit, iPipeUnit, oPipeUnit, 'inch',
-                                    'std', iPipeSchUnit, 'std', oPipeSchUnit, iTempUnit,
+                                    last_case.iSch, iPipeSchUnit, last_case.oSch, oPipeSchUnit, iTempUnit,
                                     o_percent, fd, travel, rated_cv_tex, fluidName_, valve_d_id.cv, i_pipearea_element, 
                                     valve_element, port_area_, valvearea_element)
                             new_case = caseMaster(flowrate=output['flowrate'], inletPressure=output['inletPressure'],
@@ -6062,8 +6094,8 @@ def selectValve(proj_id, item_id):
                                     fl_unit,
                                     iPresUnit,
                                     oPresUnit, vPresUnit, iPipeUnit, oPipeUnit, 'inch',
-                                    'std',
-                                    iPipeSchUnit, 'std', oPipeSchUnit, iTempUnit, xt, last_case.molecularWeight,
+                                    last_case.iSch,
+                                    iPipeSchUnit, last_case.oSch, oPipeSchUnit, iTempUnit, xt, last_case.molecularWeight,
                                     sg_choice, o_percent, fd, travel, rated_cv_tex,fluidName_, valve_d_id.cv, i_pipearea_element, 
                                     valve_element, port_area_, trimtype, flow_character)
                             db.session.commit()
@@ -6085,7 +6117,7 @@ def selectValve(proj_id, item_id):
                                 machNoUp=result_dict['machNoUp'], machNoDown=result_dict['machNoDown'], machNoValve=result_dict['machNoVel'],
                                 sonicVelUp=result_dict['sonicVelUp'], sonicVelDown=result_dict['sonicVelDown'],
                                 sonicVelValve=result_dict['sonicVelValve'], outletDensity=result_dict['outletDensity'],x_delp=round(result_dict['x_delp'],1),
-                                cv=valve_d_id.cv, iPipe=None, valveSize=v_size, compressibility=last_case.compressibility, fluid=cases_new[0].fluid)
+                                cv=valve_d_id.cv, iPipe=None, valveSize=v_size, compressibility=last_case.compressibility, fluid=cases_new[0].fluid,iSch=last_case.iSch, oSch=last_case.oSch)
                             # new_case = caseMaster()
                             db.session.add(new_case)
                             db.session.commit()
@@ -6308,7 +6340,7 @@ def getUaElement():
     .order_by(func.abs(unbalanceAreaTb.seatDia - seatDia))\
     .first()
 
-    print(f'getUA {valve_element.trimType__},{valve_element.seatLeakageClass__},{seatDia}')
+    print(f'getUAPLUG {ua_element},{valve_element.trimType__},{valve_element.seatLeakageClass__},{seatDia}')
     data = {
         'plugDia':ua_element.plugDia,
         'ua':ua_element.Ua
@@ -6830,9 +6862,17 @@ def slidingStem(proj_id, item_id):
             valveTravel = a['valveTravel'][0]
             
             stemsize_ = getDBElementWithId(stemSize,a['stemDia'][0])
-            stem_fraction = float(Fraction(''.join(str(stemsize_.stemDia))))
+            integer_part, fractional_part = str(stemsize_.stemDia).split(' ')
+            numerator, denominator = map(int, fractional_part.split('/'))
+
+            # Perform the addition
+            stem_fraction = float(integer_part) + numerator / denominator
+            # stem_fraction = float(Fraction(''.join(str(stemsize_.stemDia))))
             print(f'DAATASSII {a['failAction'][0]},{stem_fraction},{a['actType'][0]}')
-            actuator_data = db.session.query(slidingActuatorData).filter_by(failAction=a['failAction'][0],stemDia=stem_fraction,actType=a['actType'][0]).all()
+            actuator_data = db.session.query(slidingActuatorData)\
+                .filter_by(failAction=a['failAction'][0],actType=a['actType'][0])\
+                .order_by(func.abs(slidingActuatorData.stemDia - stem_fraction))\
+                .all()
 
             
             # print(f"actuator data lenght: {setPressure},{shutoff_plus},{valveTravel}")
@@ -6891,7 +6931,12 @@ def slidingStem(proj_id, item_id):
             act_element_sliding = getDBElementWithId(slidingActuatorData,act_id)
             act_master = db.session.query(actuatorMaster).filter_by(itemId=item_id).first()
             stemsize_ = getDBElementWithId(stemSize,act_case_data.stemDia)
-            stem_fraction = float(Fraction(''.join(str(stemsize_.stemDia))))
+            # stem_fraction = float(Fraction(''.join(str(stemsize_.stemDia))))
+            integer_part, fractional_part = str(stemsize_.stemDia).split(' ')
+            numerator, denominator = map(int, fractional_part.split('/'))
+
+            # Perform the addition
+            stem_fraction = float(integer_part) + numerator / denominator
             iPressure = meta_convert_P_T_FR_L('P', act_case_data.iPressure, act_case_data.inletPressureUnit,
                                         'psia (g)', 1.0 * 1000)
             oPressure = meta_convert_P_T_FR_L('P', act_case_data.oPressure, act_case_data.outletPressureUnit,
@@ -8181,8 +8226,8 @@ def generate_csv_project(item_id, proj_id):
                 for item in all_items:
                     v_details = db.session.query(valveDetailsMaster).filter_by(item=item).first()
                     acc_details = db.session.query(accessoriesData).filter_by(item=item).first()
-                    acc_list = [acc_details.manufacturer, acc_details.model, acc_details.action, acc_details.afr,
-                                acc_details.afr,
+                    acc_list = [acc_details.manufacturer, acc_details.model, acc_details.action, str(acc_details.afr).split('/')[0],
+                                '',
                                 acc_details.transmitter, acc_details.limit, acc_details.proximity, acc_details.booster,
                                 acc_details.pilot_valve,
                                 acc_details.air_lock, acc_details.ip_make, acc_details.ip_model, acc_details.solenoid_make,
@@ -8296,24 +8341,38 @@ def generate_csv_project(item_id, proj_id):
                         others__.append(other_val_list)
 
                     act_mas = db.session.query(actuatorMaster).filter_by(item=item).first()
+                    access_ = db.session.query(accessoriesData).filter_by(item=item).first()
+                    act_case = db.session.query(actuatorCaseData).filter_by(actuator_=act_mas).first()
+                    stroke_case = db.session.query(strokeCase).filter_by(actuatorCase_=act_case).first()
+                    if act_mas.springAction == 'AFC':
+                        open_time = f"{stroke_case.totalfillTime} {stroke_case.totalFillUnit}"
+                        close_time = f"{stroke_case.totalExhaustTime} {stroke_case.totalExhaustUnit}"
+                    elif act_mas.springAction == 'AFO':
+                        open_time = f"{stroke_case.totalExhaustTime} {stroke_case.totalExhaustUnit}"
+                        close_time = f"{stroke_case.totalfillTime} {stroke_case.totalFillUnit}"
                     
                     act_dict_ = {
-                            # 'act_type':  act_mas.actuatorType,
-                            # 'act_model': ,
-                            # 'act_travel': act_mas,
-                            # 'act_size': ,
-                            # 'act_spring': ,
-                            # 'air_fail_action': ,
+                            'act_type':  act_mas.actuatorType,
+                            'set_pressure': f"{act_mas.availableAirSupplyMax} {act_mas.setPressureUnit}",
+                            'air_supply_pressure': f"{act_mas.availableAirSupplyMin} {act_mas.availableAirSupplyMaxUnit}",
+                            'fail_action': f"{act_mas.springAction}",
+                            'orientation': f"{act_mas.orientation}",
+                            'act_travel':f"{act_case.act_travel} {act_case.actuatorTravelUnit}",
+                            'spring':f"{act_case.lower_benchset} - {act_case.upper_benchset}",
+                            'act_size':act_case.act_size,
+                            'cleaning':access_.cleaning,
+                            'paint_finish':access_.paint_finish,
+                            'product_certs':access_.paint_cert,
                             # 'air_supply': ,
                             # 'set_pressure': ,
                             # 'act_orientation': ,
-                            # 'handwheel': ,
-                            # 'travel_stops': ,
-                            # 'tubing_size': ,
-                            # 'fittings': ,
-                            # 'open': ,
-                            # 'close': , 
-                            # 'trip_time': ,
+                            'handwheel': f"{act_mas.handWheel}",    
+                            'travel_stops': f"{act_mas.travelStops}",
+                            'tubing': access_.tubing,
+                            'fittings': access_.fittings,
+                            'open': open_time,
+                            'close': f"/ {close_time}", 
+                            'trip_time': '',
                         }
 
                     act_dict = act_dict_
