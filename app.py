@@ -5354,8 +5354,8 @@ def getunbalforce():
     p1 = request.args.get('iPres')
     stemDia_id = request.args.get('stemDia')
     stemDia_element = getDBElementWithId(stemSize,stemDia_id)
-    print('kkkkkkjdhdhdd')
-    if len(''.join(str(stemDia_element.stemDia))) == 3:
+    print('kkkkkkjdhdhdd',len(''.join(str(stemDia_element.stemDia))))
+    if len(''.join(str(stemDia_element.stemDia)).strip()) == 3:
         a3 = float(Fraction(''.join(str(stemDia_element.stemDia))))
 
     else:
@@ -5395,7 +5395,7 @@ def getpackingfriction():
     stemDia_id = request.args.get('stemDia')
     stemDia_element = getDBElementWithId(stemSize,stemDia_id)
     print(f'packingB4 {stemDia_element.stemDia}')
-    if len(''.join(str(stemDia_element.stemDia))) == 3:
+    if len(''.join(str(stemDia_element.stemDia)).strip()) == 3:
         decimal_stemdia = float(Fraction(''.join(str(stemDia_element.stemDia))))
 
     else:
@@ -6724,7 +6724,7 @@ def slidingStem(proj_id, item_id):
             stemsize_ = getDBElementWithId(stemSize,a['stemDia'][0])
             
             print(f'IIIIIISBBBB {stemsize_}')
-            if len(''.join(str(stemsize_.stemDia))) == 3:
+            if len(''.join(str(stemsize_.stemDia)).strip()) == 3:
                 stem_fraction = float(Fraction(''.join(str(stemsize_.stemDia))))
 
             else:
@@ -6937,7 +6937,7 @@ def slidingStem(proj_id, item_id):
             
             stemsize_ = getDBElementWithId(stemSize,a['stemDia'][0])
 
-            if len(''.join(str(stemsize_.stemDia))) == 3:
+            if len(''.join(str(stemsize_.stemDia)).strip()) == 3:
                 stem_fraction = float(Fraction(''.join(str(stemsize_.stemDia))))
 
             else:
@@ -7013,7 +7013,7 @@ def slidingStem(proj_id, item_id):
             act_master = db.session.query(actuatorMaster).filter_by(itemId=item_id).first()
             stemsize_ = getDBElementWithId(stemSize,act_case_data.stemDia)
             # stem_fraction = float(Fraction(''.join(str(stemsize_.stemDia))))
-            if len(''.join(str(stemsize_.stemDia))) == 3:
+            if len(''.join(str(stemsize_.stemDia)).strip()) == 3:
                 stem_fraction = float(Fraction(''.join(str(stemsize_.stemDia))))
 
             else:
