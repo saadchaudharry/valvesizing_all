@@ -58,6 +58,7 @@ class userMaster(UserMixin, db.Model):
     fccUser = Column(Boolean)
 
     # relationships
+    address = relationship('addressMaster', cascade="all,delete",  back_populates='user')
     # TODO 1 - Project Master
     project = relationship("projectMaster", cascade="all,delete", back_populates="user")
 
@@ -177,10 +178,17 @@ class addressMaster(db.Model):
     customerCode = Column(String(15))  # to add as A001 to A999 and B001 to B999 and so on.
     isActive = Column(Boolean)
 
+    createdById = Column(Integer, ForeignKey("userMaster.id"))
+    user = relationship("userMaster", back_populates="address")
+    
+
+
+
     # relationship as parent
     # projectCompany = relationship('projectMaster',uselist=False, backref='address_company')
     # projectEnduser = relationship('projectMaster',uselist=False, backref='address_enduser')
     address_project = relationship('addressProject', cascade="all,delete", back_populates='address')
+    
 
     # relationship as child
     companyId = Column(Integer, ForeignKey("companyMaster.id"))

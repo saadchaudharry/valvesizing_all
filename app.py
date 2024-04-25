@@ -5,6 +5,7 @@ import os
 import ast
 import io
 import zipfile
+from sqlalchemy import desc
 from flask_sqlalchemy import SQLAlchemy  # Create DB with Flask
 from flask import Flask, render_template, redirect, url_for, flash, request, jsonify, send_file, session, Response  # Package for Routing
 from sqlalchemy import Column, Integer, ForeignKey, String, Boolean, DateTime, inspect, Float, func, or_, \
@@ -1434,10 +1435,32 @@ def metadata():
             valveSeries.append(notes_.series)
 
         notes_dict = {}
-        for nnn in companies:
-            contents = db.session.query(addressMaster).filter_by(company=nnn, isActive=True).all()
+        if current_user.fccUser:
+            users = db.session.query(userMaster).filter_by(fccUser = True).all()
+            user_lists = [user.id for user in users]
+            addresses = db.session.query(addressMaster)\
+                .filter(addressMaster.createdById.in_(user_lists))\
+                .all()
+            company_ids = [address.company.id for address in addresses]
+            all_company = db.session.query(companyMaster).filter(companyMaster.id.in_(company_ids)).all()
+        else:
+            addresses = db.session.query(addressMaster).filter(addressMaster.createdById == current_user.id).all()
+            print(f'ADDRESSES {addresses},{current_user.id}')
+            company_ids = [address.company.id for address in addresses]
+            all_company = db.session.query(companyMaster).filter(companyMaster.id.in_(company_ids)).all()
+
+            
+        for company in all_company:
+            contents = db.session.query(addressMaster).filter_by(company=company, isActive=True).all()
             content_list = [cont.address for cont in contents]
-            notes_dict[nnn.name] = content_list
+            notes_dict[company.name] = content_list
+            print(f'allCompany {all_company}')
+
+        # for nnn in companies:
+        #     contents = db.session.query(addressMaster).filter_by(company=nnn, isActive=True).all()
+        #     content_list = [cont.address for cont in contents]
+        #     notes_dict[nnn.name] = content_list 
+        print(f'NOTESLOST {notes_dict}')
 
         data_dict = {
             "companies": companies,
@@ -1755,7 +1778,7 @@ def login():
 
         # email doesn't exist
         if not user:
-            flash("That email does not exist, please try again.")
+            flash("Email does not exist, please try again.")
             return redirect(url_for('login'))
 
         # Password incorrect
@@ -1792,13 +1815,18 @@ def logout():
 def resetPassword():
     if request.method == 'POST':
         email_ = request.form.get('email')
-        is_mail_sent = sendOTP(email_)
-        if is_mail_sent:
-            session['reset-email'] = email_
-            return redirect(url_for('sendOTPEmail'))
+        if userMaster.query.filter_by(email=email_).first():
+            is_mail_sent = sendOTP(email_)
+            if is_mail_sent:
+                session['reset-email'] = email_
+                return redirect(url_for('sendOTPEmail'))
+            else:
+                flash('Something went wrong')
+                return redirect(url_for('resetPassword'))
         else:
-            flash('Something went wrong')
-            return redirect(url_for('resetPassword'))
+            flash('Email is not recognized')
+
+
     return render_template('send-email-otp.html')
 
 
@@ -1987,8 +2015,32 @@ def updatePreferences(proj_id, item_id, page):
 
 @app.route('/company-master/proj-<proj_id>/item-<item_id>', methods=['GET', 'POST'])
 def addCompany(proj_id, item_id):
-    all_company = companyMaster.query.all()
-    addresses = addressMaster.query.all()
+    # addresses = db.session.query(addressProject)\
+    # .join(addressProject.project)\
+    # .filter(projectMaster.user == current_user)\
+    # .options(joinedload(addressProject.project))\
+    # .all()
+    # print(f'ADDRESSES {addresses}')
+
+    # db.session.query(addressProject).filter_by(addressProject.project.user=current_user)
+    # all_company = companyMaster.query.all()
+    # addresses = addressMaster.query.all()
+    if current_user.fccUser:
+        users = db.session.query(userMaster).filter_by(fccUser = True).all()
+        user_lists = [user.id for user in users]
+        addresses = db.session.query(addressMaster).filter(addressMaster.createdById.in_(user_lists)).all()
+        company_ids = [address.company.id for address in addresses]
+        all_company = db.session.query(companyMaster).filter(companyMaster.id.in_(company_ids)).all()
+        print(f'ALLCOMPANY {all_company}')
+    else:
+        addresses = db.session.query(addressMaster).filter(addressMaster.createdById == current_user.id).all()
+        print(f'ADDRESSES {addresses},{current_user.id}')
+        company_ids = [address.company.id for address in addresses]
+        all_company = db.session.query(companyMaster).filter(companyMaster.id.in_(company_ids)).all()
+        print(f'allCompany {all_company}')
+  
+        # all_company = companyMaster.query.all()
+        # addresses = addressMaster.query.all()
     len_all_addr = len(addresses)
     company_names = [company.name for company in all_company]
     if request.method == "POST":
@@ -2004,7 +2056,7 @@ def addCompany(proj_id, item_id):
                 db.session.commit()
                 # Add Address
                 new_address = addressMaster(address=request.form.get('address'), company=new_company,
-                                        customerCode=full_format(len_all_addr), isActive=True)
+                                        customerCode=full_format(len_all_addr), isActive=True, user=current_user)
                 db.session.add(new_address)
                 db.session.commit()
 
@@ -2017,7 +2069,7 @@ def addCompany(proj_id, item_id):
             address = request.form.get('addressAdd')
             company_element = db.session.query(companyMaster).filter_by(name=company_id).first()
             new_address = addressMaster(address=address, company=company_element,
-                                            customerCode=full_format(len_all_addr), isActive=True)
+                                            customerCode=full_format(len_all_addr), isActive=True, user=current_user)
             db.session.add(new_address)
             db.session.commit()
             flash('Address added successfully')
@@ -2101,12 +2153,15 @@ def addProject(proj_id, item_id):
                 users = db.session.query(userMaster).filter_by(fccUser = True).all()
                 year = f"Q{date_today[2:4]}"
                 user_lists = [user.id for user in users]
-                proj_length = len(db.session.query(projectMaster).filter(projectMaster.createdById.in_(user_lists)).all())
-                proj_id = year + str(proj_length).zfill(5)
+                last_project = db.session.query(projectMaster).filter(projectMaster.createdById.in_(user_lists)).order_by(desc(projectMaster.id)).first()
+                last_quote = int(last_project.projectId[3:]) + 1
+                print(f'last_QUOTE {last_quote}')
+                proj_id = year + str(last_quote).zfill(5)
 
             else:
-                proj_length = len(db.session.query(projectMaster).filter_by(user=user).all())+1
-                proj_id = str(proj_length).zfill(3) 
+                last_project = db.session.query(projectMaster).filter_by(user=user).order_by(desc(projectMaster.id)).first()
+                last_quote  = int(last_project.projectId) + 1
+                proj_id = str(last_quote).zfill(3)
             
 
             data = request.form.to_dict(flat=False)
@@ -8094,7 +8149,7 @@ def generate_csv_item(item_id, proj_id):
                 itemCase = [db.session.query(caseMaster).filter_by(item=item).all() for item in items]
                 
                 valve_element = [db.session.query(valveDetailsMaster).filter_by(item=item).first() for item in items]
-                fluid_types = [fluid.state.name for fluid in valve_element]
+                fluid_types = [fluid.state.name for fluid in valve_element] 
                 project_element = getDBElementWithId(projectMaster,proj_id)
                 customer__ = db.session.query(addressProject).filter_by(isCompany=True, project=project_element).first()
                 enduser__ = db.session.query(addressProject).filter_by(isCompany=False, project=project_element).first()
@@ -8350,6 +8405,7 @@ def generate_csv_project(item_id, proj_id):
                     elif act_mas.springAction == 'AFO':
                         open_time = f"{stroke_case.totalExhaustTime} {stroke_case.totalExhaustUnit}"
                         close_time = f"{stroke_case.totalfillTime} {stroke_case.totalFillUnit}"
+                    print(f'OPENCLOSE {open_time},{close_time}')
                     
                     act_dict_ = {
                             'act_type':  act_mas.actuatorType,
@@ -9322,11 +9378,11 @@ def DATA_UPLOAD_BULK():
 
     with app.app_context():
         # data_upload(valve_style_list, valveStyle)
-        butterfly_element_1 = db.session.query(valveStyle).filter_by(name="Butterfly Lugged Wafer").first()
-        butterfly_element_2 = db.session.query(valveStyle).filter_by(name="Butterfly Double Flanged").first()
-        globe_element_1 = db.session.query(valveStyle).filter_by(name="Globe Straight").first()
-        globe_element_2 = db.session.query(valveStyle).filter_by(name="Globe Angle").first()
-        v_style_list = [butterfly_element_1, butterfly_element_2, globe_element_1, globe_element_2]   
+        # butterfly_element_1 = db.session.query(valveStyle).filter_by(name="Butterfly Lugged Wafer").first()
+        # butterfly_element_2 = db.session.query(valveStyle).filter_by(name="Butterfly Double Flanged").first()
+        # globe_element_1 = db.session.query(valveStyle).filter_by(name="Globe Straight").first()
+        # globe_element_2 = db.session.query(valveStyle).filter_by(name="Globe Angle").first()
+        # v_style_list = [butterfly_element_1, butterfly_element_2, globe_element_1, globe_element_2]   
         # data_upload(industry_list, industryMaster)
         # data_upload(region_list, regionMaster)
         # data_upload(f_state_list, fluidState)
@@ -9348,7 +9404,7 @@ def DATA_UPLOAD_BULK():
         # data_upload(flow_charac_list, flowCharacter)
         # data_upload(balancing_list, balancing)
         # # cv_upload(getRowsFromCsvFile("csv/cvtable_small.csv"))
-        cv_upload(getRowsFromCsvFile("csv/cvtable.csv"))
+        # cv_upload(getRowsFromCsvFile("csv/cvtable.csv"))
         # data_upload_disc_seat_packing([disc_material_list_butterfly, disc_material_list_butterfly, plug_material_list_globe, plug_material_list_globe], v_style_list, disc)
         # data_upload_disc_seat_packing([seat_material_list_butterfly, seat_material_list_butterfly, seat_material_list_globe, seat_material_list_globe], v_style_list, seat)
         # data_upload_disc_seat_packing([trim_type_list_butterfly, trim_type_list_butterfly, trim_type_list_globe, trim_type_list_globe], v_style_list, trimType)

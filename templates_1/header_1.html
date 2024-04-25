@@ -124,7 +124,7 @@
                                         </a>
                                         <input type="text" style="text-align: center;" class="input-box"
                                             name="name" readonly
-                                            value="Q240000{{item.project.id}}-00{{item.itemNumber}}-{{item.alternate}}">
+                                            value="{{item.project.projectId}}-{{item.itemNumber}}-{{item.alternate}}">
                                         <a
                                             href="{{url_for('nextItem', control='next', page=page, proj_id=item.project.id, item_id=item.id)}}">
                                             <svg height="18" width="18" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="m23.707 16-14-14-.707.707 13.293 13.293-13.293 13.293.707.707z" fill="black"/></svg>
