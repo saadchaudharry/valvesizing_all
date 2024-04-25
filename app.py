@@ -1449,7 +1449,7 @@ def metadata():
             company_ids = [address.company.id for address in addresses]
             all_company = db.session.query(companyMaster).filter(companyMaster.id.in_(company_ids)).all()
 
-            
+
         for company in all_company:
             contents = db.session.query(addressMaster).filter_by(company=company, isActive=True).all()
             content_list = [cont.address for cont in contents]
@@ -5354,11 +5354,16 @@ def getunbalforce():
     p1 = request.args.get('iPres')
     stemDia_id = request.args.get('stemDia')
     stemDia_element = getDBElementWithId(stemSize,stemDia_id)
-    integer_part, fractional_part = str(stemDia_element.stemDia).split(' ')
-    numerator, denominator = map(int, fractional_part.split('/'))
+    if len(str(stemDia_element.stemDia)) == 3:
+        a3 = float(Fraction(''.join(str(stemDia_element.stemDia))))
 
-    # Perform the addition
-    a3 = float(integer_part) + numerator / denominator
+    else:
+        print(f'LENGTHUNBAL {len(str(stemDia_element.stemDia))}')
+        integer_part, fractional_part = str(stemDia_element.stemDia).split(' ')
+        numerator, denominator = map(int, fractional_part.split('/'))
+
+        # Perform the addition
+        a3 = float(integer_part) + numerator / denominator
     
     print(f'unbal {p1},{a3}')
     res = str(float(p1)*float(a3))
@@ -5389,12 +5394,18 @@ def getpackingfriction():
     stemDia_id = request.args.get('stemDia')
     stemDia_element = getDBElementWithId(stemSize,stemDia_id)
     print(f'packingB4 {stemDia_element.stemDia}')
+    if len(str(stemDia_element.stemDia)) == 3:
+        decimal_stemdia = float(Fraction(''.join(str(stemDia_element.stemDia))))
 
-    integer_part, fractional_part = str(stemDia_element.stemDia).split(' ')
-    numerator, denominator = map(int, fractional_part.split('/'))
+    else:
+        print(f'LENGTHUNBAL {len(str(stemDia_element.stemDia))}')
+        integer_part, fractional_part = str(stemDia_element.stemDia).split(' ')
+        numerator, denominator = map(int, fractional_part.split('/'))
 
-    # Perform the addition
-    decimal_stemdia = float(integer_part) + numerator / denominator
+        # Perform the addition
+        decimal_stemdia = float(integer_part) + numerator / denominator
+
+
     print(f'HHHHHHHHHHHHHHHHHHHh {decimal_stemdia}')
     
   
@@ -6712,12 +6723,18 @@ def slidingStem(proj_id, item_id):
             stemsize_ = getDBElementWithId(stemSize,a['stemDia'][0])
             
             print(f'IIIIIISBBBB {stemsize_}')
-            
-            integer_part, fractional_part = str(stemsize_.stemDia).split(' ')
-            numerator, denominator = map(int, fractional_part.split('/'))
+            if len(str(stemsize_.stemDia)) == 3:
+                stem_fraction = float(Fraction(''.join(str(stemsize_.stemDia))))
 
-            # Perform the addition
-            stem_fraction = float(integer_part) + numerator / denominator
+            else:
+                print(f'LENGTHUNBAL {len(str(stemsize_.stemDia))}')
+                integer_part, fractional_part = str(stemsize_.stemDia).split(' ')
+                numerator, denominator = map(int, fractional_part.split('/'))
+
+                # Perform the addition
+                stem_fraction = float(integer_part) + numerator / denominator
+            
+
             print(f'HHHHHHHHHHHHHHHHHHHh {stemsize_},{stem_fraction}')
             
             # Inputs conversion
@@ -6915,13 +6932,21 @@ def slidingStem(proj_id, item_id):
             #                                                             failAction=fail_action_prev,
             #                                                             SFMin=act_type).all()
             valveTravel = a['valveTravel'][0]
+
             
             stemsize_ = getDBElementWithId(stemSize,a['stemDia'][0])
-            integer_part, fractional_part = str(stemsize_.stemDia).split(' ')
-            numerator, denominator = map(int, fractional_part.split('/'))
 
-            # Perform the addition
-            stem_fraction = float(integer_part) + numerator / denominator
+            if len(str(stemsize_.stemDia)) == 3:
+                stem_fraction = float(Fraction(''.join(str(stemsize_.stemDia))))
+
+            else:
+                print(f'LENGTHUNBAL {len(str(stemsize_.stemDia))}')
+                integer_part, fractional_part = str(stemsize_.stemDia).split(' ')
+                numerator, denominator = map(int, fractional_part.split('/'))
+
+                # Perform the addition
+                stem_fraction = float(integer_part) + numerator / denominator
+
             # stem_fraction = float(Fraction(''.join(str(stemsize_.stemDia))))
             print(f'DAATASSII {a['failAction'][0]},{stem_fraction},{a['actType'][0]}')
             actuator_data = db.session.query(slidingActuatorData)\
@@ -6987,11 +7012,17 @@ def slidingStem(proj_id, item_id):
             act_master = db.session.query(actuatorMaster).filter_by(itemId=item_id).first()
             stemsize_ = getDBElementWithId(stemSize,act_case_data.stemDia)
             # stem_fraction = float(Fraction(''.join(str(stemsize_.stemDia))))
-            integer_part, fractional_part = str(stemsize_.stemDia).split(' ')
-            numerator, denominator = map(int, fractional_part.split('/'))
+            if len(str(stemsize_.stemDia)) == 3:
+                stem_fraction = float(Fraction(''.join(str(stemsize_.stemDia))))
 
-            # Perform the addition
-            stem_fraction = float(integer_part) + numerator / denominator
+            else:
+                print(f'LENGTHUNBAL {len(str(stemsize_.stemDia))}')
+                integer_part, fractional_part = str(stemsize_.stemDia).split(' ')
+                numerator, denominator = map(int, fractional_part.split('/'))
+
+                # Perform the addition
+                stem_fraction = float(integer_part) + numerator / denominator
+
             iPressure = meta_convert_P_T_FR_L('P', act_case_data.iPressure, act_case_data.inletPressureUnit,
                                         'psia (g)', 1.0 * 1000)
             oPressure = meta_convert_P_T_FR_L('P', act_case_data.oPressure, act_case_data.outletPressureUnit,
