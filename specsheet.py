@@ -1997,8 +1997,8 @@ def createSpecSheet(case_data, units, other, act_):
         worksheet.write(f'J34', act_['travel_stops'], cell_format1)
         worksheet.write(f'J35', act_['tubing'], cell_format1)
         worksheet.write(f'J36', act_['fittings'], cell_format1)
-        worksheet.write(f'J37', act_['open'], cell_format1)
-        worksheet.write(f'J38', act_['close'], cell_format1)
+        worksheet.write(f'J37', round(act_['open'],2), cell_format1)
+        worksheet.write(f'L37', round(act_['close'],2), cell_format1)
         # worksheet.write(f'J39', act_[''], cell_format1)
 
         # Accessories data
