@@ -1844,7 +1844,7 @@ class actuatorCaseData(db.Model):
     rotaryActuator = relationship('rotaryActuatorData', back_populates='actuatorCase')
 
 
-    strokeCase_ = relationship('strokeCase', back_populates='actuatorCase_')
+    strokeCase_ = relationship('strokeCase', cascade="all,delete",back_populates='actuatorCase_')
 
     @staticmethod
     def update(new_data, id):
