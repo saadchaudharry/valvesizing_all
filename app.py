@@ -5354,6 +5354,7 @@ def getunbalforce():
     p1 = request.args.get('iPres')
     stemDia_id = request.args.get('stemDia')
     stemDia_element = getDBElementWithId(stemSize,stemDia_id)
+    print('kkkkkkjdhdhdd')
     if len(''.join(str(stemDia_element.stemDia))) == 3:
         a3 = float(Fraction(''.join(str(stemDia_element.stemDia))))
 
