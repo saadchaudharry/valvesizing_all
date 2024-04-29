@@ -8478,7 +8478,7 @@ def generate_csv_project(item_id, proj_id):
 
                 
                 createSpecSheet(cases__, units__, others__, act_dict)
-                path = "specsheet.xlsx"
+                path = "controlvalve_specsheet.xlsx"
                 project_number = item.project.id
                 current_datetime = datetime.datetime.today().date().timetuple()
 
@@ -8533,7 +8533,7 @@ def generate_csv_project(item_id, proj_id):
                 createcvOpening_gas(itemCase,fluid_types,items,header_details)
 
 
-                path = "specsheet1.xlsx"
+                path = "cvsizingcalculation.xlsx"
                 a__ = datetime.datetime.now()
                 a_ = a__.strftime("%a, %d %b %Y %H-%M-%S")
                 spec_sheet_name = f'CVPlot_{a_}.xlsx'
@@ -8716,19 +8716,31 @@ def generate_csv_project(item_id, proj_id):
             files_excel.append(file[0])
         
         print(f'EXCELFILE {files_excel}')
+        current_datetime = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        zip_file_name = f"report_files_{current_datetime}.zip"
         # Create a zip file containing all Excel files
-        zip_file_path = os.path.join(r'E:\Reports')
-        with zipfile.ZipFile(zip_file_path, 'w') as zipf:
-            for file in files_excel:
-                zipf.write(file, os.path.basename(file))
+        zip_file_path = os.path.join('E:/', zip_file_name)
 
-       
+        try:
+            with zipfile.ZipFile(zip_file_path, 'w') as zipf:
+                for file in files_excel:
+                    zipf.write(file, arcname=os.path.basename(file))
+            
+            print("Zip file created successfully at:", zip_file_path)
+            
+        except Exception as e:
+            print("Error:", e)
+        # with zipfile.ZipFile(zip_file_path, 'w') as zipf:
+        #     for file in files_excel:
+        #         zipf.write(file, os.path.basename(file))
+
+        print(f'FILES EXCEL {files_excel}')
         if len(files_excel) == 1:
             print(f'PPPPPPPPPPPPPPPPPPP {files_excel[0]}')
             report_sheet = {'specsheet.xlsx':'ControlValveSizingSheet.xlsx', 'specsheet1.xlsx':'CVPlot.xlsx','act_specsheet.xlsx':'ActuatorSizingSheet.xlsx'}
             return send_file(files_excel[0], as_attachment=True, download_name=report_sheet[files_excel[0]])
         else:
-            return send_file('excel_files.zip', as_attachment=True)
+            return send_file(zip_file_path, as_attachment=True, download_name=zip_file_name)
 
 
 

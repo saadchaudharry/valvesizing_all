@@ -24,7 +24,7 @@ def createcvOpening_gas(itemCase_list,fluid_types,items,header_details):
     
 
     data = [10,20,30,40,50,60,70,80,90,100]
-    workbook = xlsxwriter.Workbook(f'specsheet1.xlsx')
+    workbook = xlsxwriter.Workbook(f'cvsizingcalculation.xlsx')
     print(f'itemCasessssssssss',itemCase_list)
     count = 1;f_cnt = 0
     print(f'FLUID {fluid_types}')
@@ -1195,7 +1195,7 @@ def createcvOpening_gas(itemCase_list,fluid_types,items,header_details):
 
 def createSpecSheet(case_data, units, other, act_):
     print('INSIDE FUNNC')
-    workbook = xlsxwriter.Workbook('specsheet.xlsx')
+    workbook = xlsxwriter.Workbook('controlvalve_specsheet.xlsx')
     for i in range(len(case_data)):
         print(i)
         current_datetime = datetime.today().date().timetuple()
