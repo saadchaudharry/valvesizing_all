@@ -5524,7 +5524,7 @@ def valveSizing(proj_id, item_id):
                                                     chokedDrop=output['chokedDrop'], valveVel=output['valveVel'],
                                                     fl=output['fl'], tex=output['tex'], powerLevel=output['powerLevel'],
                                                     criticalPressure=output['criticalPressure'], inletPipeSize=output['inletPipeSize'],
-                                                    outletPipeSize=output['outletPipeSize'], item=item_selected, iPipe=None
+                                                    outletPipeSize=output['outletPipeSize'], item=item_selected, iPipe=None,iSch=a['iSch'][0], oSch=a['oSch'][0]
                                                     )
                             item_selected.flowrate_unit = output['fl_unit_form']
                             item_selected.inpres_unit = output['iPresUnit_form']
@@ -6143,7 +6143,7 @@ def selectValve(proj_id, item_id):
                                         chokedDrop=output['chokedDrop'],
                                         fl=output['fl'], tex=output['tex'], powerLevel=output['powerLevel'], fluid=cases_new[0].fluid,
                                         criticalPressure=output['criticalPressure'], inletPipeSize=output['inletPipeSize'],
-                                        outletPipeSize=output['outletPipeSize'], item=item_selected, cv=cv_element, iPipe=None)
+                                        outletPipeSize=output['outletPipeSize'], item=item_selected, cv=cv_element, iPipe=None,iSch=last_case.iSch, oSch=last_case.oSch,seatDia=valve_d_id.seatBore)
 
                             db.session.add(new_case)
                             db.session.commit()
@@ -8504,7 +8504,8 @@ def generate_csv_project(item_id, proj_id):
                 print(f'PROPERTIES {itemCase[0]}')
                 for valve in valve_element:
 
-                    header = [project_element.projectRef,
+                    header = [f"{customer__.address.company.name} ({customer__.address.address})",
+                               project_element.projectRef,
                                f"{enduser__.address.company.name} ({enduser__.address.address})",
                                f"{project_element.enquiryRef} dt. {project_element.enquiryReceivedDate.strftime("%d-%B-%Y")}", 
                                project_element.custPoNo,
@@ -8515,8 +8516,9 @@ def generate_csv_project(item_id, proj_id):
                                f"{items[valve_element.index(valve)].itemNumber} ({valve.quantity})", 
                                valve.application, 
                                f"{valve.state.name} / {itemCase[valve_element.index(valve)][0].fluid.fluidName}",
-                            
+                            f"{itemCase[valve_element.index(valve)][0].criticalPressure} {items[valve_element.index(valve)].criticalpres_unit}",
                                f"{valve.shutOffDelP} {valve.shutOffDelPUnit}",
+                               
                                valve.style.name,
                                valve.trimType__.name,
                                valve.flowCharacter__.name
@@ -8667,7 +8669,7 @@ def generate_csv_project(item_id, proj_id):
                         act_case.inletPressureUnit,
                         act_case.outletPressureUnit,
                         act_case.delPShutoffUnit,
-                        act_case.unbalForceOpenUnit,
+                        act_case.unbalForceOpenUnit,    
                         act_case.negativeGradientUnit,
                         act_case.delPFlowingUnit,
                         act_case.valveThrustCloseUnit,

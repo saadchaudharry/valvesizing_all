@@ -653,13 +653,13 @@ def createcvOpening_gas(itemCase_list,fluid_types,items,header_details):
             if fluid_type == 'Gas':
                 # worksheet.write("F44", 'Cv')
                 print('header___',header_details)
-                worksheet.merge_range("D60:E60", 'Valve Style', cell_format)
-                worksheet.merge_range("D61:E61", 'Trim Type', cell_format)
-                worksheet.merge_range("D62:E62", 'Trim Characteristics', cell_format)
+                worksheet.merge_range("D61:E61", 'Valve Style', cell_format)
+                worksheet.merge_range("D62:E62", 'Trim Type', cell_format)
+                worksheet.merge_range("D63:E63", 'Trim Characteristics', cell_format)
 
-                worksheet.merge_range("F60:H60",  header_details[f_cnt][14], cell_format)
-                worksheet.merge_range("F61:H61", header_details[f_cnt][15], cell_format)
-                worksheet.merge_range("F62:H62", header_details[f_cnt][16], cell_format)
+                worksheet.merge_range("F61:H61",  header_details[f_cnt][14], cell_format)
+                worksheet.merge_range("F62:H62", header_details[f_cnt][15], cell_format)
+                worksheet.merge_range("F63:H63", header_details[f_cnt][16], cell_format)
 
                 def getCVplotchart(opencv_final, cv_values, calc_opencv, calc_cvvalues):
                     cnt = 0
@@ -697,9 +697,9 @@ def createcvOpening_gas(itemCase_list,fluid_types,items,header_details):
                 print(f'LLSJSJJSJSJJ {final_values}')
              
                 # Write the data to the worksheet
-                worksheet.write_column('C44', final_values['y_values'])
-                worksheet.write_column('D44', final_values['x_values'])
-                worksheet.write_column('E44', final_values['y1_values'])    
+                worksheet.write_column('C45', final_values['y_values'])
+                worksheet.write_column('D45', final_values['x_values'])
+                worksheet.write_column('E45', final_values['y1_values'])    
 
 
                 # Add a line chart
@@ -707,8 +707,8 @@ def createcvOpening_gas(itemCase_list,fluid_types,items,header_details):
 
                 # Add the scatter series to the chart
                 scatter_series = {
-                    'categories': f'=Sheet{sheet_number}!$D$44:$D$57',  # X-axis data for scatter plot
-                    'values': f'=Sheet{sheet_number}!$E$44:$E$57',       # Y-axis data for scatter plot
+                    'categories': f'=Sheet{sheet_number}!$D$45:$D$58',  # X-axis data for scatter plot
+                    'values': f'=Sheet{sheet_number}!$E$45:$E$58',       # Y-axis data for scatter plot
                     'marker': {'type': 'circle', 'size': 5, 'fill': {'color': 'blue'}}, 
                     # Marker style for scatter plot
                 }
@@ -718,8 +718,8 @@ def createcvOpening_gas(itemCase_list,fluid_types,items,header_details):
 
                 # Add a line series to the scatter chart
                 line_series = {
-                    'categories': f'=Sheet{sheet_number}!$D$44:$D$57',  # X-axis data for line plot
-                    'values': f'=Sheet{sheet_number}!$C$44:$C$57',
+                    'categories': f'=Sheet{sheet_number}!$D$45:$D$58',  # X-axis data for line plot
+                    'values': f'=Sheet{sheet_number}!$C$45:$C$58',
                     'marker': {'type': 'none'},
                     'line': {'width': 1 },     # Y-axis data for line plot
                 }
@@ -752,13 +752,21 @@ def createcvOpening_gas(itemCase_list,fluid_types,items,header_details):
 
                
 
-                worksheet.insert_chart('C44', scatter_chart)
+                worksheet.insert_chart('C45', scatter_chart)
                 worksheet.write('A71', 'FLOW CONTROL COMMUNE',h3)
-                worksheet.write('L72', 'FR/AE/004/B Iss.01', f1)
+                worksheet.write('L71', 'FR/AE/004/B Iss.01', f1)
 
 
             
             elif fluid_type == 'Liquid':
+                print('header___',header_details)
+                worksheet.merge_range("D55:E55", 'Valve Style', cell_format)
+                worksheet.merge_range("D56:E56", 'Trim Type', cell_format)
+                worksheet.merge_range("D57:E57", 'Trim Characteristics', cell_format)
+
+                worksheet.merge_range("F55:H55",  header_details[f_cnt][14], cell_format)
+                worksheet.merge_range("F56:H56", header_details[f_cnt][15], cell_format)
+                worksheet.merge_range("F57:H57", header_details[f_cnt][16], cell_format)
                 def getCVplotchart(opencv_final, cv_values, calc_opencv, calc_cvvalues):
                     cnt = 0
                     for i in calc_opencv:
@@ -795,9 +803,9 @@ def createcvOpening_gas(itemCase_list,fluid_types,items,header_details):
                 print(f'LLSJSJJSJSJJ {final_values}')
              
                 # Write the data to the worksheet
-                worksheet.write_column('C39', final_values['y_values'])
-                worksheet.write_column('D39', final_values['x_values'])
-                worksheet.write_column('E39', final_values['y1_values'])
+                worksheet.write_column('C40', final_values['y_values'])
+                worksheet.write_column('D40', final_values['x_values'])
+                worksheet.write_column('E40', final_values['y1_values'])
 
 
                 # Add a line chart
@@ -805,8 +813,8 @@ def createcvOpening_gas(itemCase_list,fluid_types,items,header_details):
 
                 # Add the scatter series to the chart
                 scatter_series = {
-                    'categories': f'=Sheet{sheet_number}!$D$39:$D$53',  # X-axis data for scatter plot
-                    'values': f'=Sheet{sheet_number}!$E$39:$E$53',       # Y-axis data for scatter plot
+                    'categories': f'=Sheet{sheet_number}!$D$40:$D$54',  # X-axis data for scatter plot
+                    'values': f'=Sheet{sheet_number}!$E$40:$E$54',       # Y-axis data for scatter plot
                     'marker': {'type': 'circle', 'size': 5, 'fill': {'color': 'blue'}}, 
                     # Marker style for scatter plot
                 }
@@ -817,8 +825,8 @@ def createcvOpening_gas(itemCase_list,fluid_types,items,header_details):
 
                 # Add a line series to the scatter chart
                 line_series = {
-                    'categories': f'=Sheet{sheet_number}!$D$39:$D$53',  # X-axis data for line plot
-                    'values': f'=Sheet{sheet_number}!$C$39:$C$53',
+                    'categories': f'=Sheet{sheet_number}!$D$40:$D$54',  # X-axis data for line plot
+                    'values': f'=Sheet{sheet_number}!$C$40:$C$54',
                     'marker': {'type': 'none'}, 
                     'line':  {'width': 1},     # Y-axis data for line plot
                 }
@@ -855,9 +863,9 @@ def createcvOpening_gas(itemCase_list,fluid_types,items,header_details):
 
                
 
-                worksheet.insert_chart('C39', scatter_chart)
-                worksheet.write('A61', 'FLOW CONTROL COMMUNE', h3)
-                worksheet.write('L72', 'FR/AE/004/B Iss.01', f1)
+                worksheet.insert_chart('C40', scatter_chart)
+                # worksheet.write('A61', 'FLOW CONTROL COMMUNE', h3)
+                # worksheet.write('L72', 'FR/AE/004/B Iss.01', f1)
                 # Continue for other fields
             # if item_case1:
             #     worksheet.merge_range("E11:F11", item_case1.flowrate, cell_format)
@@ -1098,7 +1106,8 @@ def createcvOpening_gas(itemCase_list,fluid_types,items,header_details):
 
 
             if fluid_type == 'Gas':
-                worksheet.write('A65', 'HH', boldc)
+                worksheet.write("A43", 'BB',boldc)
+                worksheet.write('A65', 'CC', boldc)
                 worksheet.write('A66', '41', cell_format2)
                 worksheet.write('A67', '42', cell_format2)
                 worksheet.write('A68', '43', cell_format2)
@@ -1106,10 +1115,11 @@ def createcvOpening_gas(itemCase_list,fluid_types,items,header_details):
                 worksheet.write('A70', '45', cell_format2)
 
 
+                worksheet.merge_range("B43:M43", 'CV Plot', bold)
                 worksheet.merge_range("B65:J65", 'Notes', bold)
-                worksheet.merge_range("B66:J66", 'N1- MPI-Body/Bnt Castings/Forgings to ASME B16.34 at Foundry/Forge', cell_format)
+                worksheet.merge_range("B66:J66", '', cell_format)
                 worksheet.merge_range("B67:J67", '', cell_format)
-                worksheet.merge_range("B68:J68", '', cell_format)
+                worksheet.merge_range("B68:J68", '', cell_format)   
                 worksheet.merge_range("B69:J69", '', cell_format)
                 worksheet.merge_range("B70:J70", '', cell_format)
 
@@ -1135,41 +1145,42 @@ def createcvOpening_gas(itemCase_list,fluid_types,items,header_details):
                 worksheet.write('M70', '', cell_format2)
 
             elif fluid_type == 'Liquid':
-                worksheet.write('A55', 'HH', boldc)
-                worksheet.write('A56', '41', cell_format2)
-                worksheet.write('A57', '42', cell_format2)
-                worksheet.write('A58', '43', cell_format2)
-                worksheet.write('A59', '44', cell_format2)
-                worksheet.write('A60', '45', cell_format2)
+                worksheet.write('A38', 'BB', boldc)
+                worksheet.write('A59', 'CC', boldc)
+                worksheet.write('A60', '41', cell_format2)
+                worksheet.write('A61', '42', cell_format2)
+                worksheet.write('A62', '43', cell_format2)
+                worksheet.write('A63', '44', cell_format2)
+                worksheet.write('A64', '45', cell_format2)
 
-
-                worksheet.merge_range("B55:J55", 'Notes', bold)
-                worksheet.merge_range("B56:J56", 'N1- MPI-Body/Bnt Castings/Forgings to ASME B16.34 at Foundry/Forge', cell_format)
-                worksheet.merge_range("B57:J57", '', cell_format)
-                worksheet.merge_range("B58:J58", '', cell_format)
-                worksheet.merge_range("B59:J59", '', cell_format)
+                worksheet.merge_range("B38:M38", 'CV Plot', bold)
+                worksheet.merge_range("B59:J59", 'Notes', bold)
                 worksheet.merge_range("B60:J60", '', cell_format)
+                worksheet.merge_range("B61:J61", '', cell_format)
+                worksheet.merge_range("B62:J62", '', cell_format)
+                worksheet.merge_range("B63:J63", '', cell_format)
+                worksheet.merge_range("B64:J64", '', cell_format)
 
 
-                worksheet.merge_range("K55:M55", 'Revision Control', bold)
-                worksheet.write('K56', 'Rev.', cell_format)
-                worksheet.write('L56', 'By.', cell_format)
-                worksheet.write('M56', 'Date.', cell_format)
+                worksheet.merge_range("K59:M59", 'Revision Control', bold)
+                worksheet.write('K60', 'Rev.', cell_format)
+                worksheet.write('L60', 'By.', cell_format)
+                worksheet.write('M60', 'Date.', cell_format)
 
-                worksheet.write('K57', '', cell_format2)
-                worksheet.write('K58', '', cell_format2)
-                worksheet.write('K59', '', cell_format2)
-                worksheet.write('K60', '', cell_format2)
+                worksheet.write('K61', '', cell_format2)
+                worksheet.write('K62', '', cell_format2)
+                worksheet.write('K63', '', cell_format2)
+                worksheet.write('K64', '', cell_format2)
 
-                worksheet.write('L57', '', cell_format2)
-                worksheet.write('L58', '', cell_format2)
-                worksheet.write('L59', '', cell_format2)
-                worksheet.write('L60', '', cell_format2)
+                worksheet.write('L61', '', cell_format2)
+                worksheet.write('L62', '', cell_format2)
+                worksheet.write('L63', '', cell_format2)
+                worksheet.write('L64', '', cell_format2)
 
-                worksheet.write('M57', '', cell_format2)
-                worksheet.write('M58', '', cell_format2)
-                worksheet.write('M59', '', cell_format2)
-                worksheet.write('M60', '', cell_format2)
+                worksheet.write('M61', '', cell_format2)
+                worksheet.write('M62', '', cell_format2)
+                worksheet.write('M63', '', cell_format2)
+                worksheet.write('M64', '', cell_format2)
 
             
 
