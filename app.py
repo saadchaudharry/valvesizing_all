@@ -8716,10 +8716,10 @@ def generate_csv_project(item_id, proj_id):
             files_excel.append(file[0])
         
         print(f'EXCELFILE {files_excel}')
-        
+        # current_datetime = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         zip_file_name = f"report_files.zip"
         # Create a zip file containing all Excel files
-        zip_file_path = os.path.join('E:/', zip_file_name)
+        zip_file_path = os.path.join('E:/Sizing_Reports', zip_file_name)
 
         try:
             with zipfile.ZipFile(zip_file_path, 'w') as zipf:
