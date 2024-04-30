@@ -8737,7 +8737,7 @@ def generate_csv_project(item_id, proj_id):
         print(f'FILES EXCEL {files_excel}')
         if len(files_excel) == 1:
             print(f'PPPPPPPPPPPPPPPPPPP {files_excel[0]}')
-            report_sheet = {'specsheet.xlsx':'ControlValveSizingSheet.xlsx', 'specsheet1.xlsx':'CVPlot.xlsx','act_specsheet.xlsx':'ActuatorSizingSheet.xlsx'}
+            report_sheet = {'controlvalve_specsheet.xlsx':'ControlValveSizingSheet.xlsx', 'cvsizingcalculation.xlsx':'CVPlot.xlsx','act_specsheet.xlsx':'ActuatorSizingSheet.xlsx'}
             return send_file(files_excel[0], as_attachment=True, download_name=report_sheet[files_excel[0]])
         else:
             return send_file(zip_file_path, as_attachment=True, download_name=zip_file_name)
