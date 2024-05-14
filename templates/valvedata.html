@@ -364,12 +364,12 @@
 											<select class="form-control-sm-sm valvedata_select flowDirection__" name="flowDirection__">
 
 												{% for flowdirection in metadata['flowdirection'] %}
-												{% if flowdirection.name == valve.flowDirection__.name %}
+												<!-- {% if flowdirection.name == valve.flowDirection__.name %}
 												<option value="{{flowdirection.id}}" selected>{{flowdirection.name}}
 												</option>
-												{% else %}
+												{% else %} -->
 												<option value="{{flowdirection.id}}">{{flowdirection.name}}</option>
-												{% endif %}
+												<!-- {% endif %} -->
 												{% endfor %}
 											</select>
 										</div>
@@ -805,6 +805,7 @@
 		$("#plug").hide();
 		$("#seat").hide();
 		$("#cage").hide();
+		$('#balancing').hide();
 		$("#trimTypeGlobe").hide();
 		$('#balanceseal').hide();
 		$('#studnut').hide();
@@ -815,8 +816,15 @@
 		$("#gasket").text("Seal Gasket");
 	}
 	function trimvalidations() {
-		var trim = $('.trimtypeG').val();
+
 		var series = $('.valveSeries').val();
+		if(series == '10' || series == '11'){
+			var trim = $('.trimtypeG').val();
+		}
+		else{
+			var trim = $('.trimtypeB').val();
+		}
+		
 		$.ajax({
 			type:'GET',
 			url:'/trim_validation',
@@ -866,6 +874,8 @@
 				console.log('seriesvalid',data)
 				$('.valveStyle').empty();
 				$('.flowDirection__').empty();
+
+				
 
                     
 			$.each(data[1], function(key, value) {

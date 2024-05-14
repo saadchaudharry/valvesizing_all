@@ -2424,6 +2424,9 @@ def trim_validation():
     print(f'TTTTTTTRRRRRRRIIIII',trim,series)
     trim_element = getDBElementWithId(trimType, trim)
     v_list = {};v_dir = {};v_bal = {}
+
+    print(f'TRIMVALID {trim_element.name}')
+
     if trim_element.name in ['Microspline','Contour']:
         flowdirection = db.session.query(flowDirection).filter_by(name='Under').first()
         balancing_ = db.session.query(balancing).filter_by(name='Unbalanced').first()
@@ -2432,8 +2435,10 @@ def trim_validation():
 
     else:
         if series in ['10','11']:
+            print('YESSSSSSS')
             flowdirection = db.session.query(flowDirection).filter(flowDirection.name.in_(['Over', 'Under'])).all()
         else:
+            print('NOOOOOOOO')
             flowdirection = db.session.query(flowDirection).filter(~flowDirection.name.in_(['Over', 'Under'])).all()
         balancing_ = db.session.query(balancing).all()  
         for flow in flowdirection:
@@ -2443,7 +2448,7 @@ def trim_validation():
     
     v_list[0] = v_dir
     v_list[1] = v_bal
-    print(f'TIMVALID {v_list}')
+    print(f'TIMVALID {flowdirection},{v_list}')
     return jsonify(v_list)
 
 
@@ -5602,8 +5607,8 @@ def valveSizing(proj_id, item_id):
                     .filter_by(schedule=a['oSch'][0])\
                     .order_by(func.abs(pipeArea.nominalPipeSize - a['outletPipeSize'][0]))\
                     .first()
-            in_thickness = i_pipearea_element.thickness
-            out_thickness = o_pipearea_element.thickness
+            in_thickness = a['ipipeStatus'][0]
+            out_thickness = a['opipeStatus'][0]
         
         
         print(f'PIPEELEMENT {i_pipearea_element},{o_pipearea_element},{a['inletPipeSize'][0]}')
@@ -6864,20 +6869,14 @@ def slidingStem(proj_id, item_id):
     stemDiaDrop = db.session.query(stemSize).filter_by(valveSize=cases[0].valveSize).all()
     seatBore = cases[0].seatDia
     try:
-        
-        
         cv_element = db.session.query(cvValues).filter_by(cv=cases[0].cv).first()
         selected_sized_valve_element = db.session.query(cvTable).filter_by(id=cases[0].cv.id).first()
         # balancing_element = db.session.query(balancing).filter_by(id=selected_sized_valve_element.balancingId).first() 
-       
-        
-        
         print(len(cases))
         print(f'KSKKSKS {cv_element}')
         print(cv_element.seatBore)
     except:
         cv_element = None
-        
         selected_sized_valve_element = None
         balancing_element = None
 
@@ -7369,7 +7368,25 @@ def slidingStem(proj_id, item_id):
             print(f'AAAACYTTTTTTID  {act_id}')
  
             
+        elif request.form.get('saveop'):
+            data = request.form.to_dict(flat=False)
+            print(f'SAVE RESULT {data}')
+            valvecloseunit_start_index = None
+            for index, key in enumerate(data.keys()):
+                if key.startswith('valveThrustCloseUnit'):
+                    valvecloseunit_start_index = index
+                    break
 
+            if valvecloseunit_start_index is not None:
+                results_ = {}
+                for i, (key, value) in enumerate(data.items()):
+                    if i >= valvecloseunit_start_index:
+                        results_[key] = value[0]
+            results_.pop('saveop')
+            print(f'CALC RESULTS ACTSD {results_}')
+            return redirect(url_for('accessories', item_id=item_id, proj_id=proj_id))
+
+            
         
         else:
             pass
@@ -7420,15 +7437,16 @@ def getpipe_sch():
                 .filter_by(schedule=Sch)\
                 .order_by(func.abs(pipeArea.nominalDia - pipesize))\
                 .first()
-            
-            thickness = meta_convert_P_T_FR_L('L', i_pipearea_element.thickness, 'inch',
-            'mm', 1.0 * 1000)
+            thickness = i_pipearea_element.thickness
+
         elif pipeunit == "inch":
             i_pipearea_element = db.session.query(pipeArea)\
                 .filter_by(schedule=Sch)\
                 .order_by(func.abs(pipeArea.nominalPipeSize - pipesize))\
                 .first()
-            thickness = i_pipearea_element.thickness
+            thickness = meta_convert_P_T_FR_L('L', i_pipearea_element.thickness, 'mm',
+            'inch', 1.0 * 1000)
+            
         print(f'ANSINPUTTHICK {thickness},{i_pipearea_element}')
         return str(thickness)
    
