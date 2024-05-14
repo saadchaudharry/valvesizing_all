@@ -55,9 +55,9 @@
                                                         <!-- <div class="row sizingtableleft"><p class="sizingp">Specific Gravity</p></div> -->
                                                         <div class="row sizingtableleft"><p class="sizingp">MW/SG</p></div>
                                                         <div class="row sizingtableleft"><p class="sizingp">Compressibility Factor</p></div>
-                                                        <div class="row sizingtableleft"><p class="sizingp">Fl</p></div>
-                                                        <div class="row sizingtableleft"><p class="sizingp">Fd</p></div>
-                                                        <div class="row sizingtableleft"><p class="sizingp">Xt</p></div>
+                                                        <div class="row sizingtableleft"><p class="sizingp">Liquid Pr. Recovery</p></div>
+                                                        <div class="row sizingtableleft"><p class="sizingp">Valve Style Modifier</p></div>
+                                                        <div class="row sizingtableleft"><p class="sizingp">Pressure Drop Ratio</p></div>
                                                         <div class="row sizingtableleft_warning"><p class="sizingp">Output</p></div>
                                                 </div>
                                                 <div class="col-4 colborder_bottom">
@@ -124,10 +124,10 @@
                                                                     <option value="sg">Specific Gravity</option>
                                                             </select>
                                                         </div>
-                                                        <div class="row sizingtable"><input type="text" class="sizingtable_inputs"></div>
-                                                        <div class="row sizingtable"><input type="text" class="sizingtable_inputs"></div>
-                                                        <div class="row sizingtable"><input type="text" class="sizingtable_inputs"></div>
-                                                        <div class="row sizingtable"><input type="text" class="sizingtable_inputs"></div>
+                                                        <div class="row sizingtable"><input type="text" class="sizingtable_inputs" value="Z" readonly></div>
+                                                        <div class="row sizingtable"><input type="text" class="sizingtable_inputs" value="Fl" readonly></div>
+                                                        <div class="row sizingtable"><input type="text" class="sizingtable_inputs" value="Fd" readonly></div>
+                                                        <div class="row sizingtable"><input type="text" class="sizingtable_inputs" value="Xt" readonly></div>
                                                         <div class="row sizingtable_header"></div>
                                                 </div>
                                         </div>
@@ -238,20 +238,21 @@
                                                 <div class="col-8 colborder_bottom">
                                                         <div class="row sizingtableleft"><p class="sizingp">Calculated CV</p></div>
                                                         <div class="row sizingtableleft"><p class="sizingp">Open percentage</p></div>
+                                                        <div class="row sizingtableleft"><p class="sizingp">Pressure Drop</p></div>
                                                         <div class="row sizingtableleft"><p class="sizingp">x (delP/P)</p></div>
                                                         <div class="row sizingtableleft"><p class="sizingp">Choked pressure drop</p></div>
-                                                        <div class="row sizingtableleft"><p class="sizingp">Y</p></div>
-                                                        <div class="row sizingtableleft"><p class="sizingp">Xtp</p></div>
-                                                        <div class="row sizingtableleft"><p class="sizingp">Fk</p></div>
-                                                        <div class="row sizingtableleft"><p class="sizingp">Ff</p></div>
-                                                        <div class="row sizingtableleft"><p class="sizingp">Fp</p></div>
-                                                        <div class="row sizingtableleft"><p class="sizingp">FLp</p></div>
-                                                        <div class="row sizingtableleft"><p class="sizingp">Kc</p></div>
-                                                        <div class="row sizingtableleft"><p class="sizingp">Ar</p></div>
-                                                        <div class="row sizingtableleft"><p class="sizingp">Re</p></div>
+                                                        <div class="row sizingtableleft"><p class="sizingp">Expansion Factor</p></div>
+                                                        <div class="row sizingtableleft"><p class="sizingp">Pressure Drop at Choked</p></div>
+                                                        <div class="row sizingtableleft"><p class="sizingp">Specific Heat Ratio </p></div>
+                                                        <div class="row sizingtableleft"><p class="sizingp">Liq.Critical Pr.Ratio</p></div>
+                                                        <div class="row sizingtableleft"><p class="sizingp">Piping Geometry Factor</p></div>
+                                                        <div class="row sizingtableleft"><p class="sizingp">Combined Pr.Recovery</p></div>
+                                                        <div class="row sizingtableleft"><p class="sizingp">Cavitation Coefficient</p></div>
+                                                        <div class="row sizingtableleft"><p class="sizingp">Application Ratio</p></div>
+                                                        <div class="row sizingtableleft"><p class="sizingp">Reynolds Number</p></div>
                                                         <div class="row sizingtableleft"><p class="sizingp">Valve SPL</p></div>
                                                         <div class="row sizingtableleft"><p class="sizingp">Valve Dia</p></div>
-                                                        <div class="row sizingtableleft_warning"><p class="sizingp"> Velocity</p></div>                      
+                                                        <div class="row sizingtableleft_warning"><p class="sizingp"> Velocity</p></div>                           
                                                 </div>
                                                 <div class="col-4 colborder_bottom">
                                                         <div class="row sizingtable"><input type="text" class="sizingtable_inputs"></div>
@@ -260,17 +261,27 @@
                                                                         <option value="%">%</option>
                                                                 </select>
                                                         </div>
-                                                        <div class="row sizingtable"><input type="text" class="sizingtable_inputs"></div>
-                                                        <div class="row sizingtable"><input type="text" class="sizingtable_inputs"></div>
-                                                        <div class="row sizingtable"><input type="text" class="sizingtable_inputs"></div>
-                                                        <div class="row sizingtable"><input type="text" class="sizingtable_inputs"></div>
-                                                        <div class="row sizingtable"><input type="text" class="sizingtable_inputs"></div>
-                                                        <div class="row sizingtable"><input type="text" class="sizingtable_inputs"></div>
-                                                        <div class="row sizingtable"><input type="text" class="sizingtable_inputs"></div>
-                                                        <div class="row sizingtable"><input type="text" class="sizingtable_inputs"></div>
-                                                        <div class="row sizingtable"><input type="text" class="sizingtable_inputs"></div>
-                                                        <div class="row sizingtable"><input type="text" class="sizingtable_inputs"></div>
-                                                        <div class="row sizingtable"><input type="text" class="sizingtable_inputs"></div>
+                                                        <div class="row sizingtable">
+                                                                <select id="#"
+                                                                        class="sizingtable_inputs ">
+                                                                        {% for presunit in metadata['units_dict']['pressure'] %}
+                                                                                {% if presunit.id == item.inpres_unit %}
+                                                                                <option value="{{presunit.id}}" selected>{{presunit.name.split(' ')[0]}}</option>
+                                                                                {% endif %}
+                                                                        {% endfor %}
+                                                                </select>
+                                                        </div>
+                                                        <div class="row sizingtable"><input type="text" class="sizingtable_inputs" value="X" readonly></div>
+                                                        <div class="row sizingtable"><input type="text" class="sizingtable_inputs" ></div>
+                                                        <div class="row sizingtable"><input type="text" class="sizingtable_inputs" value="Y" readonly></div>
+                                                        <div class="row sizingtable"><input type="text" class="sizingtable_inputs" value="Xtp" readonly></div>
+                                                        <div class="row sizingtable"><input type="text" class="sizingtable_inputs" value="Fk" readonly></div>
+                                                        <div class="row sizingtable"><input type="text" class="sizingtable_inputs" value="Ff" readonly></div>
+                                                        <div class="row sizingtable"><input type="text" class="sizingtable_inputs" value="Fp" readonly></div>
+                                                        <div class="row sizingtable"><input type="text" class="sizingtable_inputs" value="Flp" readonly></div>
+                                                        <div class="row sizingtable"><input type="text" class="sizingtable_inputs" value="Kc" readonly></div>
+                                                        <div class="row sizingtable"><input type="text" class="sizingtable_inputs" value="Ar" readonly></div>
+                                                        <div class="row sizingtable"><input type="text" class="sizingtable_inputs" value="Re" readonly></div>
                                                         <div class="row sizingtable">
                                                                 <select name="" id="" class="sizingtable_inputs">
                                                                         <option value="dBA">dBA</option>
@@ -288,6 +299,7 @@
                                                 <div class="col-2 colborder_bottom case{{i+1}}_op">
                                                         <div class="row sizingtable"><input type="text" class="calculatedcv_row" value="{{cases[i].calculatedCv}}"></div>
                                                         <div class="row sizingtable"><input type="text" class="sizingtable_inputs" value="{{cases[i].openingPercentage}}"></div>
+                                                        <div class="row sizingtable"><input type="text" class="sizingtable_inputs" value="{{cases[i].pressuredrop}}"></div>
                                                         <div class="row sizingtable"><input type="text" class="sizingtable_inputs" value="{{(cases[i].inletPressure - cases[i].outletPressure)/cases[i].inletPressure}}"></div>
                                                         <div class="row sizingtable"><input type="text" class="sizingtable_inputs" value="{{cases[i].chokedDrop}}"></div>
                                                         <div class="row sizingtable"><input type="text" class="sizingtable_inputs" value="{{cases[i].y_expansion}}"></div>
@@ -310,6 +322,7 @@
                                                 {% else %}
                                                 <div class="col-2 colborder_bottom case{{i+1}}_op">
                                                         <div class="row sizingtable"><input type="text" class="calculatedcv_row"></div>
+                                                        <div class="row sizingtable"><input type="text" class="sizingtable_inputs"></div>
                                                         <div class="row sizingtable"><input type="text" class="sizingtable_inputs"></div>
                                                         <div class="row sizingtable"><input type="text" class="sizingtable_inputs"></div>
                                                         <div class="row sizingtable"><input type="text" class="sizingtable_inputs"></div>

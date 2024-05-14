@@ -1683,7 +1683,7 @@ def createSpecSheet(case_data, units, other, act_):
         # worksheet.write('I25', '', cell_format)
 
         worksheet.write('J27', '', cell_format1)
-        worksheet.write('J28', '', cell_format1)
+        # worksheet.write('J28', '', cell_format1)
         worksheet.write('J29', '', cell_format1)
         worksheet.write('J30', '', cell_format1)
         worksheet.write('J31', '', cell_format1)
@@ -1998,6 +1998,7 @@ def createSpecSheet(case_data, units, other, act_):
 
         # Actuator Data
         worksheet.write(f'J27', act_['act_type'], cell_format1)
+       
         worksheet.write(f'L28', f"/ {act_['act_travel']}", cell_format1)
         worksheet.write(f'J29', act_['act_size'], cell_format1)
         worksheet.write(f'J30', act_["fail_action"], cell_format1)
@@ -2005,7 +2006,8 @@ def createSpecSheet(case_data, units, other, act_):
         worksheet.write(f'L31', f'/ {act_["set_pressure"]}', cell_format1)
         worksheet.write(f'J32', act_['orientation'], cell_format1)
         worksheet.write(f'J33', act_['handwheel'], cell_format1)
-        worksheet.write(f'J28', '', cell_format1)
+        worksheet.write(f'J28',act_['actmodelno'],cell_format1)
+        
         worksheet.write(f'L29', f'/ {act_['spring']}', cell_format1)
         worksheet.write(f'J34', act_['travel_stops'], cell_format1)
         worksheet.write(f'J35', act_['tubing'], cell_format1)

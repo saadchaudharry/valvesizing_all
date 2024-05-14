@@ -24,6 +24,7 @@
 <!-- Java Script Link Resize Table -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script type="text/javascript" src="{{url_for('static', filename='js/resizetable.js')}}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
     
@@ -54,8 +55,8 @@
                     <!-- <img src="https://fccommune.com/assets/img/Logo-flow%20control%20commune.png" width="60%" alt="fcc" class="image"> -->
                     <ul class="nav flex-column vh-100">
                       
-                        <li class="nav-item mt-4">
-                            <p><a class="nav-link" href="{{url_for('home', proj_id=item.project.id, item_id=item.id)}}">
+                        <li class="nav-item mt-4 ">
+                            <p><a class="nav-link {% if request.path | url_path == 'home' %}active-sidebar{% endif %}" href="{{url_for('home', proj_id=item.project.id, item_id=item.id)}}">
                                     Dashboard</a></p>
                         </li>
                         <li class="nav-item">

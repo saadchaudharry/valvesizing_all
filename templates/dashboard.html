@@ -22,10 +22,11 @@
                             </svg></a>
 
                             <a
-                            href="{{url_for('projectDelete', proj_id=item.project.id, item_id=item.id)}}"
+                            style="cursor:pointer"
                             data-toggle="tooltip"
                             title="Delete"
                             data-placement="bottom"
+                            onclick="projectDelete('{{item.project.id}}')"
                         >
                            
                         <svg id="i-close" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="11" height="11" fill="none" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
@@ -201,16 +202,19 @@
                                 <svg id="i-plus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="15" height="14" fill="none" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
                                     <path d="M16 2 L16 30 M2 16 L30 16" />
                                 </svg>
-
-                                <a
-                                href="{{url_for('itemDelete', proj_id=item.project.id, item_id=item.id)}}"
-                                data-toggle="tooltip"
-                                title="Delete"
-                                data-placement="bottom"
-                            >
-                            <svg id="i-close" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="11" height="11" fill="none" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-                                <path d="M2 30 L30 2 M30 30 L2 2" />
-                            </svg>
+                                
+                                    <a
+                                    style="cursor:pointer"  
+                                    data-toggle="tooltip"
+                                    title="Delete"
+                                    data-placement="bottom" 
+                                    onclick="itemDelete('{{item.id}}')"
+                                >
+                                <svg id="i-close" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="11" height="11" fill="none" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                                    <path d="M2 30 L30 2 M30 30 L2 2" />
+                                </svg>
+                                
+                                
                             <a
                             href="{{url_for('exportItem', proj_id=item.project.id, item_id=item.id)}}"
                             data-toggle="tooltip"
@@ -371,6 +375,93 @@
                     </div>
                 </div>
                 <script>
+
+function itemDelete (itemId) {
+var proj_id = "{{item.project.id}}";
+var item_id = "{{f_itemId.id}}";
+
+console.log(itemId,'kksjsj')
+if(itemId){
+Swal.fire({
+  title: "Do you want to delete the item?",
+  showDenyButton: true,
+  confirmButtonText: "Delete",
+  denyButtonText: "Cancel"
+}).then((result) => {
+  
+  if (result.isConfirmed) {
+                   
+    $.ajax({
+        type: 'POST',
+        url: '/item-delete',
+        data: {
+            item_id : itemId
+        },
+        success: function(response) {
+            var data = $.parseJSON(response)
+            ItemsData = data;
+            console.log('ss',ItemsData);
+            Swal.fire('Deleted!', response.message, 'success');
+            window.location.href = "/home/proj-"+proj_id+'/item-'+item_id;  
+        },
+        error: function(xhr, status, error) {
+            Swal.fire('Error!', 'An error occurred while deleting the item', 'error');
+        }
+    });
+            
+
+  } 
+});
+}
+else{
+    Swal.fire({
+  title: "Select an item to delete",
+  
+  confirmButtonText: "Ok",
+  
+}).then((result) => {
+  
+
+});
+}
+
+}
+function projectDelete (projectId) {
+  var proj_id = "{{f_projId.id}}"
+  var item_id = "{{f_itemId.id}}"
+  Swal.fire({
+  title: "Do you want to delete the project?",
+  showDenyButton: true,
+  confirmButtonText: "Delete",
+  denyButtonText: "Cancel"
+}).then((result) => {
+  
+  if (result.isConfirmed) {
+                   
+    $.ajax({
+        type: 'POST',
+        url: '/project-delete',
+        data: {
+            projectId : projectId
+        },
+        success: function(response) {
+            var data = response
+            console.log('prj del',data)
+            window.location.href = "/home/proj-"+proj_id+'/item-'+item_id; 
+
+        },
+        error: function(xhr, status, error) {
+            Swal.fire('Error!', 'An error occurred while deleting the item', 'error');
+        }
+    });
+            
+
+  } 
+});
+
+
+
+}
                     // $(document).ready(function() {
                     //     $('input[type="radio"][name="project"]').click(function() {
                     //         $('input[type="radio"][name="project"]').not(this).prop('checked', false);

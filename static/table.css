@@ -462,3 +462,9 @@ img {
     z-index: 2000;
     font-family: Verdana sans-serif;
 }
+.active-sidebar{
+    background-color: white;
+    color:black !important;
+    border-radius: 0%;
+   
+}

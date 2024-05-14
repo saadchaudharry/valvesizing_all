@@ -22,6 +22,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script type="text/javascript" src="{{url_for('static', filename='js/resizetable.js')}}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+  
     
     <script>
         $(document).ready(function() {
@@ -41,54 +42,56 @@
                     <ul class="nav flex-column vh-100">
                     
                         <li  class="nav-item mt-4">
-                            <p><a class="nav-link" href="{{url_for('home', proj_id=item.project.id, item_id=item.id)}}">
+                            <p><a class="nav-link {% if request.path | url_path == 'home' %}active-sidebar{% endif %}" href="{{url_for('home', proj_id=item.project.id, item_id=item.id)}}">
                             Dashboard</a></p>
                         </li>
                         <li class="nav-item">
-                            <p><a class="nav-link" href="{{url_for('editProject', proj_id=item.project.id, item_id=item.id)}}">
+                            <p><a class="nav-link {% if request.path | url_path == 'edit-project' %}active-sidebar{% endif %}" href="{{url_for('editProject', proj_id=item.project.id, item_id=item.id)}}">
                                 Project Details</a></p>
                         </li>
                         <li class="nav-item">
-                            <p><a class="nav-link" href="{{url_for('valveData', proj_id=item.project.id, item_id=item.id)}}">	
+                            <p><a class="nav-link  {% if request.path | url_path == 'valve-data' %}active-sidebar{% endif %}" href="{{url_for('valveData', proj_id=item.project.id, item_id=item.id)}}">	
                                 Valve Data</a></p>
                         </li>
                         <li class="nav-item">
                             <p>
-                                <a class="nav-link" href="{{url_for('valveSizing', proj_id=item.project.id, item_id=item.id)}}">
+                                <a class="nav-link {% if request.path | url_path == 'valve-sizing' %}active-sidebar{% endif %}" href="{{url_for('valveSizing', proj_id=item.project.id, item_id=item.id)}}">
                                      Valve Sizing</a>
                             </p>
                         </li>
                         <li class="nav-item">
-                            <p><a class="nav-link" href="{{url_for('actuatorSizing', proj_id=item.project.id, item_id=item.id)}}">
+                            <p><a class="nav-link {% if request.path | url_path == 'actuator-sizing' %}active-sidebar{% endif %}" href="{{url_for('actuatorSizing', proj_id=item.project.id, item_id=item.id)}}">
                                 Actuator Sizing</a></p>
                         </li>
                         <li class="nav-item">
-                            <p><a class="nav-link" href="{{url_for('accessories', proj_id=item.project.id, item_id=item.id)}}">
+                            <p><a class="nav-link {% if request.path | url_path == 'accessories' %}active-sidebar{% endif %}" href="{{url_for('accessories', proj_id=item.project.id, item_id=item.id)}}">
                                 Accessories</a></p>
                         </li>
                         <li class="nav-item">
-                            <p><a class="nav-link" href="{{url_for('itemNotes', proj_id=item.project.id, item_id=item.id)}}">
+                            <p><a class="nav-link {% if request.path | url_path == 'item-notes' %}active-sidebar{% endif %}" href="{{url_for('itemNotes', proj_id=item.project.id, item_id=item.id)}}">
                                Orders, Item Notes</a></p>
                         </li>
                         <li class="nav-item">
-                            <p><a class="nav-link" href="{{url_for('project_notes', proj_id=item.project.id, item_id=item.id)}}">
+                            <p><a class="nav-link {% if request.path | url_path == 'project-notes' %}active-sidebar{% endif %}" href="{{url_for('project_notes', proj_id=item.project.id, item_id=item.id)}}">
                                 </i> Project Notes</a></p>
                         </li>
                         <li class="nav-item">
-                            <p><a class="nav-link" href="{{url_for('viewData', proj_id=item.project.id, item_id=item.id)}}">
+                            <p><a class="nav-link {% if request.path | url_path == 'view-data' %}active-sidebar{% endif %}" href="{{url_for('viewData', proj_id=item.project.id, item_id=item.id)}}">
                                 Reference Tables
                             </a></p>
                         </li>
                         <li class="nav-item">
-                            <p><a class="nav-link" href="{{url_for('addCompany', proj_id=item.project.id, item_id=item.id)}}">
-                                Customer Master</a></p>
+                            <p>
+                                <a class="nav-link {% if request.path | url_path == 'company-master' %}active-sidebar{% endif %}"
+                                   href="{{url_for('addCompany', proj_id=item.project.id, item_id=item.id)}}">Customer Master</a>
+                            </p>
                         </li>
                         <li class="nav-item">
-                            <p><a class="nav-link" href="{{url_for('adminPanel', proj_id=item.project.id, item_id=item.id)}}">
+                            <p><a class="nav-link {% if request.path | url_path == 'admin-panel' %}active-sidebar{% endif %}" href="{{url_for('adminPanel', proj_id=item.project.id, item_id=item.id)}}">
                                 Admin</a></p>
                         </li>
                         <li class="nav-item">
-                            <p><a class="nav-link" href="{{url_for('logout')}}">
+                            <p><a class="nav-link {% if request.path | url_path == 'logout' %}active-sidebar{% endif %} " href="{{url_for('logout')}}">
                                 <!-- <i class="fa-solid fa-arrow-right-from-bracket" style="color: white;"></i> -->
                                  Logout</a></p>
                         </li>
@@ -109,11 +112,13 @@
                             <div class="row">
                                 <div class="col-6">
                                     <div class="icons-container icon mt-2 ml-3">
-                                        <a
-                                            href="{{url_for('nextItem', control='first', page=page, proj_id=item.project.id, item_id=item.id)}}">
-                                            <svg fill="none" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg"><g fill="black"><path clip-rule="evenodd" d="m6.5 12 14.5 9v-18zm13.5-7.20234-11.60377 7.20234 11.60377 7.2023z" fill-rule="evenodd"/><path d="m3 3h1v18h-1z"/></g></svg>
+                                        <a     
+                                       
+                                        href="{{url_for('nextItem', control='first', page=page, proj_id=item.project.id, item_id=item.id)}}" 
+                                        >
+                                        <svg fill="none" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg"><g fill="black"><path clip-rule="evenodd" d="m6.5 12 14.5 9v-18zm13.5-7.20234-11.60377 7.20234 11.60377 7.2023z" fill-rule="evenodd"/><path d="m3 3h1v18h-1z"/></g></svg>
                                         </a>
-                                        <a
+                                        <a 
                                             href="{{url_for('nextItem', control='prev', page=page, proj_id=item.project.id, item_id=item.id)}}">
                                             <svg height="18" width="18" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="m8.293 16 14 14 .707-.707-13.293-13.293 13.293-13.293-.707-.707z" fill="black"/></svg>
                                         </a>
@@ -129,7 +134,7 @@
                                         </a>
 
                                       
-                                        <a
+                                        <a 
                                             href="{{url_for('preferences', proj_id=item.project.id, item_id=item.id, page=page)}}"><svg height="18" viewBox="0 0 20 20" width="18" xmlns="http://www.w3.org/2000/svg"><g fill="none" stroke="#000"><ellipse cx="6.11" cy="3.55" rx="2.11" ry="2.15"/><ellipse cx="6.11" cy="15.55" rx="2.11" ry="2.15"/><circle cx="13.15" cy="9.55" r="2.15"/></g><path d="m1 3h3v1h-3z"/><path d="m10 3h8v1h-8z"/><path d="m1 9h8v1h-8z"/><path d="m15 9h3v1h-3z"/><path d="m1 15h3v1h-3z"/><path d="m10 15h8v1h-8z"/></svg></a>
                                                 <a>
                                                     <svg height="19" preserveAspectRatio="xMidYMid meet" viewBox="0 0 36 36" width="19" xmlns="http://www.w3.org/2000/svg"><path d="m18 2a16 16 0 1 0 16 16 16 16 0 0 0 -16-16zm0 30a14 14 0 1 1 14-14 14 14 0 0 1 -14 14z"/><path d="m18.29 8.92a7.38 7.38 0 0 0 -5.72 2.57 1 1 0 0 0 -.32.71.92.92 0 0 0 .95.92 1.08 1.08 0 0 0 .71-.29 5.7 5.7 0 0 1 4.33-2c2.36 0 3.83 1.52 3.83 3.41v.05c0 2.21-1.76 3.44-4.54 3.65a.8.8 0 0 0 -.76.92s0 2.32 0 2.75a1 1 0 0 0 1 .9h.11a1 1 0 0 0 .9-1v-2.06c3-.42 5.43-2 5.43-5.28v-.05c-.03-3-2.37-5.2-5.92-5.2z"/><circle cx="17.78" cy="26.2" r="1.25"/><path d="m0 0h36v36h-36z" fill="none"/></svg></i>

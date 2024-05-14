@@ -77,7 +77,7 @@ plug_material_list_globe = ['316SS', '304SS', '304SS / Stellite FC', '304SS / St
                              'Monel / Col / LG2', 'Super Duplex SS', 'Super Duplex SS / Stellite FC', 'Super Duplex SS / Stellite SA', 'Tungsten. Co / 17-4PH',
                              'Tungsten. Co / 316SS']
 
-seat_material_list_globe = ['S41000', 'S31600 w/CoCr-A SA', 'S316 w/CoCr-A FC', 'CA6NM HT', '2205 Duplex w/CoCr-A', 
+seat_material_list_globe = ['S41000', 'S31600 w/CoCr-A SA', 'S316L w/CoCr-A FC', 'CA6NM HT', '2205 Duplex w/CoCr-A', 
                             '2507 Super Duplex w/CoCr-A', 'PTFE']
 
 seat_material_list_butterfly = ['PTFE', '316SS', 'S32760', 'Alloy 625', 'Laminated 316L + Graphite', 'Laminated 625 + Graphite']
@@ -109,7 +109,7 @@ gasket_material_list = ['Standard for Service', 'PTFE', 'PCTFE (KEL-F)', 'Spiral
                         'Spiral Wond 32760 / Graph.', 'Spiral Wond 32760 / PTFE', 'Spiral Wond 625 / Graph.', 
                         'Spiral Wond 625 / PTFE', 'Graphite', 'Metal Seal', 'Double ABS (cryo)']
 
-cage_clamp_material_list = ["316", "17-4PH", "17-4PH (H900)", "316 Cr Plated", 
+cage_clamp_material_list = ["316L", "17-4PH", "17-4PH (H900)", "316 Cr Plated", 
                              "32760 (Super Duplex)",  "31803 Duplex", "410"]
 
 
