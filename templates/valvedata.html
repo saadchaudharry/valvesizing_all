@@ -68,7 +68,7 @@
 								</div>
 								<div class="col-6">
 									<select class="form-control-sm-sm valvedata_select1 style=" width: 120%;"
-										name="rating" id="ratingId" onchange="handleChange()">
+										name="rating" id="ratingId" onchange="handleChange();ratingValidation()">
 										{% for rating in metadata['ratings'] %}
 										{% if valve.rating.name == rating.name %}
 										<option value="{{rating.id}}" selected>{{rating.name}}</option>
@@ -195,10 +195,17 @@
 
 										</div>
 										<div class="col-6 mr-0">
-											<select class="form-control-sm-sm valvedata_select" name="valveSeries"
-												id="Valve Series" name="valve series">
+											<select class="form-control-sm-sm valvedata_select valveSeries" name="valveSeries"
+												id="valveSeries" name="valve series" onchange="seriesValidation()">
 												{% for valveSeries in metadata['valveSeries'] %}
-												<option value="{{valveSeries}}">{{valveSeries}}</option>
+											
+												<option {% if valveSeries == valve.valveSeries %}
+												selected 
+												{% endif %}
+												 value="{{valveSeries}}" 
+												
+												
+												>{{valveSeries}}</option>
 												{% endfor %}
 											</select>
 
@@ -295,8 +302,8 @@
 
 										</div>
 										<div class="col-6">
-											<select class="form-control-sm-sm valvedata_select" name="trimtypeG"
-												id="trimtype_onselect">
+											<select class="form-control-sm-sm valvedata_select trimtypeG" name="trimtypeG"
+												id="trimtype_onselect"  >
 												{% for trimtype in metadata['trimtype'] %}
 												{% if trimtype.valveStyleId == metadata['globeStyleId'] %}
 												{% if trimtype.name == valve.trimType__.name %}
@@ -354,7 +361,7 @@
 
 										</div>
 										<div class="col-6">
-											<select class="form-control-sm-sm valvedata_select" name="flowDirection__">
+											<select class="form-control-sm-sm valvedata_select flowDirection__" name="flowDirection__">
 
 												{% for flowdirection in metadata['flowdirection'] %}
 												{% if flowdirection.name == valve.flowDirection__.name %}
@@ -568,7 +575,7 @@
 
 										</div>
 										<div class="col-6">
-											<select class="form-control-sm-sm valvedata_select" name="balancing">
+											<select class="form-control-sm-sm valvedata_select balancing" name="balancing">
 
 												{% for balance in metadata['balancing'] %}
 												
@@ -688,7 +695,7 @@
 
 							</div>
 							<div class="col-6">
-								<select class="form-control-sm-sm valvedata_select" name="valvestyle" id="valvestyle">
+								<select class="form-control-sm-sm valvedata_select valveStyle" name="valvestyle" id="valvestyle">
 									{% for valveStyle in metadata['valveStyle'] %}
 									{% if valveStyle.name == valve.style.name %}
 									<option value="{{valveStyle.id}}" selected>{{valveStyle.name}}</option>
@@ -744,6 +751,8 @@
 
 
 <script>
+
+
 	$('#valvedata').submit(function(event) {
 
 	var warning_msg = $('#warningArea').val();
@@ -774,7 +783,155 @@
 	})
 </script>
 <script>
+	function globe_materials(){
+		$("#bonnet").show();
+		$("#stem").show();
+		$("#plug").show();
+		$("#seat").show();
+		$("#trimTypeGlobe").show();
+		$('#balancing').show();
+		$("#cage").show();
+		$('#balanceseal').show();
+		$('#studnut').show();
+		$("#shaft").hide();
+		$("#disc").hide();
+		$("#seal").hide();
+		$("#trimTypeButtefly").hide();
+		$("#gasket").text("Gasket");
+	}
+	function butterfly_materials() {
+		$("#bonnet").hide();
+		$("#stem").hide();
+		$("#plug").hide();
+		$("#seat").hide();
+		$("#cage").hide();
+		$("#trimTypeGlobe").hide();
+		$('#balanceseal').hide();
+		$('#studnut').hide();
+		$("#shaft").show();
+		$("#disc").show();
+		$("#seal").show();
+		$("#trimTypeButtefly").show();
+		$("#gasket").text("Seal Gasket");
+	}
+	function trimvalidations() {
+		var trim = $('.trimtypeG').val();
+		var series = $('.valveSeries').val();
+		$.ajax({
+			type:'GET',
+			url:'/trim_validation',
+			data:{
+				trimValue: trim,
+				series: series
+			},
+			success: function(data){
+				console.log('trimvalid',data)	
+				
+				$('.flowDirection__').empty();
+				$('.balancing').empty();
+
+				$.each(data[0], function(key, value) {
+				
+					$('.flowDirection__').append($('<option>', {
+					value: key,
+					text: value
+				}));
+				});
+				
+				$.each(data[1], function(key, value) {
+					$('.balancing').append($('<option>', {
+					value: key,
+					text: value
+				}));
+			
+				});
+				
+				
+
+			}
+
+		})
 	
+	}
+	function seriesValidation() {
+		
+		var series = $('.valveSeries').val();
+		$.ajax({
+			type:'GET',
+			url:'/series_validation',
+			data: {
+				seriesValue: series	
+			},
+			success: function(data){
+				console.log('seriesvalid',data)
+				$('.valveStyle').empty();
+				$('.flowDirection__').empty();
+
+                    
+			$.each(data[1], function(key, value) {
+				if(key != 0){
+					$('.valveStyle').append($('<option>', {
+					value: key,
+					text: value
+				}));
+				}
+			});
+			$.each(data[2], function(key, value) {
+				if(key != 0){
+					$('.flowDirection__').append($('<option>', {
+					value: key,
+					text: value
+				}));
+				}
+			});
+			if(data[0] == 'globe'){
+				globe_materials();
+			}
+			else if(data[0] == 'butterfly'){
+				butterfly_materials();
+			}
+			trimvalidations();
+			},        
+			error: function(xhr, status, error) {
+            console.error("Error:", error);
+        	}
+			
+
+		})
+	}
+	function ratingValidation() {
+		var rating = $('#ratingId').val();
+		var valveSeries = "{{valve.valveSeries}}"
+		
+		$.ajax({
+        type: "GET",
+        url: "/rating_validation",
+        data: {
+            ratingValue: rating,	
+        },
+        success: function(data) {
+			
+            console.log(data);
+			$('.valveSeries').empty();
+                    
+			$.each(data, function(index, value) {
+				console.log('value',value)
+				$('.valveSeries').append($('<option>', {
+					value: value,
+					text: value,
+					selected: (value === valveSeries) 
+				}));
+			});
+			seriesValidation();
+			
+			
+        },
+        error: function(xhr, status, error) {
+            console.error("Error:", error);
+        }
+
+	}) 
+}
 	function handleChange() {
 		
 	var materialValue = $('#materialId').val();
@@ -823,7 +980,10 @@
 }
 
 
+
 	$(document).ready(function () {
+		ratingValidation();
+
 		
 		var prev_unit;
                 $('.sizingunits').on('focus', function(){
@@ -969,13 +1129,16 @@
 
 		trimType.onchange = function () {
 			var trim_type = $('#trimtype_onselect :selected').val()
-			// alert(trim_type)
+
+			
 
 			if (trim_type == 5 || trim_type == 6) {
 				$("#cage-clamp").text("Clamp");
 			} else {
 				$("#cage-clamp").text("Cage");
 			}
+
+			trimvalidations();
 		}
 	};
 

@@ -117,7 +117,7 @@ del_p_unit_list = [{'id': 'bar', 'name': 'bar'},
 force_unit_list = [{'id': 'lbf', 'name': 'lbf'}, {'id': 'kgf', 'name': 'kgf'}, {'id': 'N', 'name': 'N'}]
 torque_unit_list = [{'id': 'lbf.inch', 'name': 'lbf.inch'}, {'id':'kgf.m', 'name':'kgf.m'}, {'id':'N.m', 'name':'N.m'}]
 
-pipe_schedule = ['std', 10, 20, 30, 40, 80, 120, 160, 'xs', 'xxs']
+pipe_schedule = ['select --','std', '10', '20', '30', '40', '80', '120', '160', 'xs', 'xxs']
 
 pipe_shedule_list = [{"id": item, "name": item} for item in pipe_schedule]
 

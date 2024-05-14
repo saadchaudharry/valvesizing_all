@@ -377,6 +377,7 @@ class itemMaster(db.Model):
     flowrate_unit = Column(String(20))
     inpres_unit = Column(String(20))
     outpres_unit = Column(String(20))
+ 
     intemp_unit = Column(String(20))
     vaporpres_unit = Column(String(20))
     criticalpres_unit = Column(String(20))
@@ -1109,6 +1110,7 @@ class valveDetailsMaster(db.Model):
     minTempUnit = Column(String(50))
     bonnetExtDimension = Column(Float)
     application = Column(String(150))
+    valveSeries = Column(String(30))
 
     # one-to-one relationship with itemMaser
     itemId = Column(Integer, ForeignKey("itemMaster.id"))
@@ -1364,6 +1366,8 @@ class caseMaster(db.Model):
     kc = Column(Float)
     ar = Column(Float)
     spl = Column(Float)
+    pressuredrop = Column(Float)
+    
     reNumber = Column(Float)
     pipeInVel = Column(Float)
     pipeOutVel = Column(Float)
@@ -1396,6 +1400,8 @@ class caseMaster(db.Model):
     ratedCv = Column(Float) 
     iSch = Column(String)
     oSch = Column(String)
+    ipipeStatus = Column(Float)
+    opipeStatus = Column(Float)
     
 
     # rel as child
@@ -1485,11 +1491,18 @@ class slidingActuatorData(db.Model):
     actSize = Column(String(100))
     effectiveArea = Column(Float)
     travel = Column(Float)
-    sMin = Column(Float)
-    sMax = Column(Float)
-    springRate = Column(Float)
+    Spring = Column(String(100))
+    sMin = Column(String(100))
+    sMax = Column(String(100))
+    springRate = Column(String(100))
+    MinSF = Column(String(100))
+    MaxSF = Column(String(100))
+    MinNAT = Column(Float)
+    MaxNAT = Column(Float)
     VO = Column(Float)
     VM = Column(Float)
+    
+
 
     # rel as parent
     actuatorCase = relationship('actuatorCaseData', cascade="all,delete", back_populates='slidingActuator')
@@ -1522,7 +1535,7 @@ class strokeCase(db.Model):
     
     #input
     id = Column(Integer, primary_key=True) 
-    act_size = Column(Float)
+    act_size = Column(String(100))
     act_travel = Column(Float)
     diaphragm_ea = Column(Float)
     lower_benchset = Column(Float)
@@ -1735,7 +1748,7 @@ class actuatorCaseData(db.Model):
     frictionBand = Column(Float)
     reqHandwheelThrust = Column(Float)
     thrust = Column(Float)
-    act_size = Column(Float)
+    act_size = Column(String(100))
     act_travel = Column(Float)
     diaphragm_ea = Column(Float)
     lower_benchset = Column(Float)

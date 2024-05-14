@@ -55,9 +55,9 @@
                                                         <div class="row sizingtableleft"><p class="sizingp">Vapor Pressure</p></div>
                                                         <div class="row sizingtableleft"><p class="sizingp">Specific Gravity</p></div>
                                                         <div class="row sizingtableleft"><p class="sizingp">Viscosity</p></div>
-                                                        <div class="row sizingtableleft"><p class="sizingp">Fl</p></div>
-                                                        <div class="row sizingtableleft"><p class="sizingp">Fd</p></div>
-                                                        <div class="row sizingtableleft"><p class="sizingp">Xt</p></div>
+                                                        <div class="row sizingtableleft"><p class="sizingp">Liquid Pr. Recovery</p></div>
+                                                        <div class="row sizingtableleft"><p class="sizingp">Valve Style Modifier</p></div>
+                                                        <div class="row sizingtableleft"><p class="sizingp">Pressure Drop Ratio</p></div>
                                                         <div class="row sizingtableleft_warning"><p class="sizingp">Output</p></div>
                                                 </div>
                                                 <div class="col-4 colborder_bottom">
@@ -130,9 +130,9 @@
                                                                         <option value="centipose">Centipose</option>
                                                                 </select>
                                                         </div>
-                                                        <div class="row sizingtable"><input type="text" class="sizingtable_inputs"></div>
-                                                        <div class="row sizingtable"><input type="text" class="sizingtable_inputs"></div>
-                                                        <div class="row sizingtable"><input type="text" class="sizingtable_inputs"></div>
+                                                        <div class="row sizingtable"><input type="text" class="sizingtable_inputs" value="Fl" readonly></div>
+                                                        <div class="row sizingtable"><input type="text" class="sizingtable_inputs" value="Fd" readonly></div>
+                                                        <div class="row sizingtable"><input type="text" class="sizingtable_inputs" value="Xt" readonly></div>
                                                         <div class="row sizingtable_header"></div>
                                                 </div>
                                         </div>
@@ -232,13 +232,14 @@
                                                 <div class="col-8 colborder_bottom">
                                                         <div class="row sizingtableleft"><p class="sizingp">Calculated CV</p></div>
                                                         <div class="row sizingtableleft"><p class="sizingp">Open percentage</p></div>
+                                                        <div class="row sizingtableleft"><p class="sizingp">Pressure Drop</p></div>
                                                         <div class="row sizingtableleft"><p class="sizingp">Choked pressure drop</p></div>
-                                                        <div class="row sizingtableleft"><p class="sizingp">Ff</p></div>
-                                                        <div class="row sizingtableleft"><p class="sizingp">Fp</p></div>
-                                                        <div class="row sizingtableleft"><p class="sizingp">FLp</p></div>
-                                                        <div class="row sizingtableleft"><p class="sizingp">Kc</p></div>
-                                                        <div class="row sizingtableleft"><p class="sizingp">Ar</p></div>
-                                                        <div class="row sizingtableleft"><p class="sizingp">Re</p></div>
+                                                        <div class="row sizingtableleft"><p class="sizingp">Liq.Critical Pr.Ratio</p></div>
+                                                        <div class="row sizingtableleft"><p class="sizingp">Piping Geometry Factor</p></div>
+                                                        <div class="row sizingtableleft"><p class="sizingp">Combined Pr.Recovery</p></div>
+                                                        <div class="row sizingtableleft"><p class="sizingp">Cavitation Coefficient</p></div>
+                                                        <div class="row sizingtableleft"><p class="sizingp">Application Ratio</p></div>
+                                                        <div class="row sizingtableleft"><p class="sizingp">Reynolds Number</p></div>
                                                         <div class="row sizingtableleft"><p class="sizingp">Valve SPL</p></div>
                                                         <div class="row sizingtableleft"><p class="sizingp">Valve Dia</p></div>
                                                         <div class="row sizingtableleft_warning"><p class="sizingp"> Velocity</p></div>                      
@@ -250,13 +251,25 @@
                                                                         <option value="%">%</option>
                                                                 </select>
                                                         </div>
-                                                        <div class="row sizingtable"><input type="text" class="sizingtable_inputs"></div>
-                                                        <div class="row sizingtable"><input type="text" class="sizingtable_inputs"></div>
-                                                        <div class="row sizingtable"><input type="text" class="sizingtable_inputs"></div>
-                                                        <div class="row sizingtable"><input type="text" class="sizingtable_inputs"></div>
-                                                        <div class="row sizingtable"><input type="text" class="sizingtable_inputs"></div>
-                                                        <div class="row sizingtable"><input type="text" class="sizingtable_inputs"></div>
-                                                        <div class="row sizingtable"><input type="text" class="sizingtable_inputs"></div>
+                                                        <div class="row sizingtable">
+                                                                <select id="#"
+                                                                        class="sizingtable_inputs ">
+                                                                        {% for presunit in metadata['units_dict']['pressure'] %}
+                                                                                {% if presunit.id == item.inpres_unit %}
+                                                                                <option value="{{presunit.id}}" selected>{{presunit.name.split(' ')[0]}}</option>
+                                                                                
+                                                                              
+                                                                                {% endif %}
+                                                                        {% endfor %}
+                                                                </select>
+                                                        </div>
+                                                        <div class="row sizingtable"><input type="text" class="sizingtable_inputs" ></div>
+                                                        <div class="row sizingtable"><input type="text" class="sizingtable_inputs" value="Ff" readonly></div>
+                                                        <div class="row sizingtable"><input type="text" class="sizingtable_inputs" value="Fp" readonly></div>
+                                                        <div class="row sizingtable"><input type="text" class="sizingtable_inputs" value="Flp" readonly></div>
+                                                        <div class="row sizingtable"><input type="text" class="sizingtable_inputs" value="Kc" readonly></div>
+                                                        <div class="row sizingtable"><input type="text" class="sizingtable_inputs" value="Ar" readonly></div>
+                                                        <div class="row sizingtable"><input type="text" class="sizingtable_inputs" value="Re" readonly></div>
                                                         <div class="row sizingtable">
                                                                 <select name="" id="" class="sizingtable_inputs">
                                                                         <option value="dBA">dBA</option>
@@ -274,6 +287,7 @@
                                                 <div class="col-2 colborder_bottom case{{i+1}}_op">
                                                         <div class="row sizingtable"><input type="text" class="calculatedcv_row" value="{{cases[i].calculatedCv}}"></div>
                                                         <div class="row sizingtable"><input type="text" class="sizingtable_inputs" value="{{cases[i].openingPercentage}}"></div>
+                                                        <div class="row sizingtable"><input type="text" class="sizingtable_inputs" value="{{cases[i].pressuredrop}}"></div>
                                                         <div class="row sizingtable"><input type="text" class="sizingtable_inputs" value="{{cases[i].chokedDrop}}"></div>
                                                         <div class="row sizingtable"><input type="text" class="sizingtable_inputs" value="{{cases[i].Ff}}"></div>
                                                         <div class="row sizingtable"><input type="text" class="sizingtable_inputs" value="{{cases[i].Fp}}"></div>
@@ -292,6 +306,7 @@
                                                 {% else %}
                                                 <div class="col-2 colborder_bottom case{{i+1}}_op">
                                                         <div class="row sizingtable"><input type="text" class="calculatedcv_row"></div>
+                                                        <div class="row sizingtable"><input type="text" class="sizingtable_inputs"></div>
                                                         <div class="row sizingtable"><input type="text" class="sizingtable_inputs"></div>
                                                         <div class="row sizingtable"><input type="text" class="sizingtable_inputs"></div>
                                                         <div class="row sizingtable"><input type="text" class="sizingtable_inputs"></div>
@@ -433,12 +448,12 @@
                                               <label>Pipe Data</label>  
                                         </div>
                                         <div class="col-3 form-check form-check-inline ml-3">
-                                                <input type="radio" value="Standard" name="pipeData" {% if item.pipeDataStatus %} checked="checked" {%endif%}
+                                                <input type="radio" value="Standard" name="pipeData" class="stdpipe" {% if item.pipeDataStatus %} checked="checked" {%endif%}
                                                         class="form-control-sm-sm valvesizing_radio">
                                                 <label class="ml-1 mt-2">Standard</label>
                                         </div>
                                         <div class="col-3 form-check form-check-inline">
-                                                <input type="radio" value="Custom" name="pipeData" {% if not item.pipeDataStatus %} checked="checked" {%endif%}
+                                                <input type="radio" value="Custom" name="pipeData" class="cuspipe" {% if not item.pipeDataStatus %} checked="checked" {%endif%}
                                                         class="form-control-sm-sm valvesizing_radio">
                                                 <label class="ml-1 mt-2">Custom</label>
 
@@ -502,14 +517,14 @@
                                         </div>
                                         <div class="col-4">
                                                 {% if cases[0] %}
-                                                <input type="text" name="inletPipeSize" required value="{{cases[0].inletPipeSize}}" class="form-control-sm-sm valvesizing_fluid_data valvesizing_inputbox sizingvalue_inletlength">
+                                                <input type="text" name="inletPipeSize" required value="{{cases[0].inletPipeSize}}" class="form-control-sm-sm valvesizing_fluid_data valvesizing_inputbox sizingvalue_inletlength ipipesize">
                                                 {% else %}
                                                 <input type="text" name="inletPipeSize" required value="" class="form-control-sm-sm valvesizing_fluid_data valvesizing_inputbox sizingvalue_inletlength">
                                                 {% endif %}
                                         </div>
                                         <div class="col-3">
                                                 <select id="#"
-                                                        class="form-control-sm-sm valvesizing_select sizingunits" data-desc="inletlength" name="inpipe_unit">
+                                                        class="form-control-sm-sm valvesizing_select sizingunits ipipeunit" data-desc="inletlength" name="inpipe_unit">
                                                         {% for length in metadata['units_dict']['length'] %}
                                                                 {% if length.id == item.inpipe_unit %}
                                                                 <option value="{{length.id}}" selected>{{length.name}}</option>
@@ -527,10 +542,10 @@
                                         <div class="col-4">
                                                 {% if cases[0] %}
                                                 <select id="#"
-                                                        class="form-control-sm-sm valvesizing_select " name="iSch">
+                                                        class="form-control-sm-sm valvesizing_select iSch" name="iSch">
 
                                                         {% for pipe_schedule in metadata['units_dict']['pipe_schedule'] %}
-                                                        {% if cases[0].iPipe.schedule == pipe_schedule %}
+                                                        {% if cases[0].iSch == pipe_schedule.name %}
                                                                 <option value="{{pipe_schedule.id}}" selected>{{pipe_schedule.name}}</option>
                                                         {% else %}
                                                                 <option value="{{pipe_schedule.id}}">{{pipe_schedule.name}}</option>
@@ -539,7 +554,7 @@
                                                 </select>
                                                 {% else %}
                                                 <select id="#"
-                                                        class="form-control-sm-sm valvesizing_select " name="iSch" >
+                                                        class="form-control-sm-sm valvesizing_select iSch" name="iSch" >
 
                                                         {% for pipe_schedule in metadata['units_dict']['pipe_schedule'] %}
                                                                 <option value="{{pipe_schedule.id}}">{{pipe_schedule.name}}</option>
@@ -550,7 +565,7 @@
                                                 {% endif %}
                                         </div>
                                         <div class="col-3">
-                                                <input type="text" class="form-control-sm-sm valvesizing_inputbox">
+                                                <input type="text" class="form-control-sm-sm valvesizing_inputbox ipipeStatus sizingvalue_inletlength"   name="ipipeStatus" value="{% if cases[0] %} {{cases[0].ipipeStatus}} {% endif %}" required>
                                         </div>
                                 </div>
                                 <div class="row">
@@ -561,17 +576,17 @@
                                                 {% if cases[0] %}
                                                 <input type="text"
                                                         name="outletPipeSize" required value="{{cases[0].outletPipeSize}}"
-                                                        class="form-control-sm-sm valvesizing_fluid_data valvesizing_inputbox sizingvalue_outletlength">
+                                                        class="form-control-sm-sm valvesizing_fluid_data valvesizing_inputbox sizingvalue_outletlength opipesize">
                                                 {% else %}
                                                 <input type="text"
                                                         name="outletPipeSize" required value=""
-                                                        class="form-control-sm-sm valvesizing_fluid_data valvesizing_inputbox sizingvalue_outletlength">
+                                                        class="form-control-sm-sm valvesizing_fluid_data valvesizing_inputbox sizingvalue_outletlength opipesize">
                                                 {% endif %}
                                                 
                                         </div>
                                         <div class="col-3">
                                                 <select id="#"
-                                                        class="form-control-sm-sm valvesizing_select sizingunits" data-desc="outletlength" name="outpipe_unit">
+                                                        class="form-control-sm-sm valvesizing_select sizingunits opipeunit" data-desc="outletlength" name="outpipe_unit">
                                                         {% for length in metadata['units_dict']['length'] %}
                                                                 {% if length.id == item.outpipe_unit %}
                                                                 <option value="{{length.id}}" selected>{{length.name}}</option>
@@ -584,15 +599,15 @@
                                 </div>
                                 <div class="row">
                                         <div class="col-4">
-                                              <label>Out. Pipe Sch.</label>  
+                                              <label>Out. Pipe Sch.  </label>  
                                         </div>
                                         <div class="col-4">
                                                 {% if cases[0] %}
-                                                <select id="#"
-                                                        class="form-control-sm-sm valvesizing_select" name="oSch" >
+                                                <select
+                                                        class="form-control-sm-sm valvesizing_select oSch" name="oSch" >
 
                                                         {% for pipe_schedule in metadata['units_dict']['pipe_schedule'] %}
-                                                        {% if cases[0].iPipe.schedule == pipe_schedule %}
+                                                        {% if cases[0].oSch == pipe_schedule.name %}
                                                                 <option value="{{pipe_schedule.id}}" selected>{{pipe_schedule.name}}</option>
                                                         {% else %}
                                                                 <option value="{{pipe_schedule.id}}">{{pipe_schedule.name}}</option>
@@ -600,8 +615,8 @@
                                                         {% endfor %}
                                                 </select>
                                                 {% else %}
-                                                <select id="#"
-                                                        class="form-control-sm-sm valvesizing_select" name="oSch">
+                                                <select 
+                                                        class="form-control-sm-sm valvesizing_select oSch " name="oSch">
 
                                                         {% for pipe_schedule in metadata['units_dict']['pipe_schedule'] %}
                                                                 <option value="{{pipe_schedule.id}}">{{pipe_schedule.name}}</option>
@@ -612,14 +627,14 @@
                                                 {% endif %}
                                         </div>
                                         <div class="col-3">
-                                                <input type="text" class="form-control-sm-sm valvesizing_inputbox">
+                                                <input type="text" class="form-control-sm-sm valvesizing_inputbox opipeStatus sizingvalue_outletlength" name="opipeStatus" required value="{% if cases[0] %} {{cases[0].opipeStatus}} {% endif %}">
                                         </div>
                                 </div>
 
                                 <h6>Valve Data</h6>
                                 <div class="row">
                                         <div class="col-4">
-                                              <label>Valve Size</label>  
+                                              <label>Valve Size </label></label>  
                                         </div>
                                         <div class="col-4">
                                                 {% if cases[0] %}
@@ -959,6 +974,100 @@
 <script>
         var lastClass;
         var copiedClass;
+        $(document).ready(function(){
+                if ($(".stdpipe").prop("checked")){
+                               
+                                $('.ipipeStatus').prop('readonly', true);
+                                
+                                $('.opipeStatus').prop('readonly', true);
+                                $('.iSch').prop('disabled', false);
+                                $('.oSch').prop('disabled', false);
+                        }
+                        else if($('.cuspipe').prop("checked")){
+                                $('.ipipeStatus').prop('readonly', false);
+                                $('.opipeStatus').prop('readonly', false);
+                               
+                                $('.iSch').prop('disabled', true);
+                                $('.oSch').prop('disabled', true);
+                                
+                               
+                            
+                        }
+                $(".stdpipe, .cuspipe").change(function(){
+                       
+                        if ($(".stdpipe").prop("checked")){
+                              
+                                $('.ipipeStatus').prop('readonly', true);
+                                
+                                $('.opipeStatus').prop('readonly', true);
+                                $('.iSch').prop('disabled', false);
+                                $('.oSch').prop('disabled', false);
+                        }
+                        else if($('.cuspipe').prop("checked")){
+                                $('.ipipeStatus').prop('readonly', false);
+                                $('.opipeStatus').prop('readonly', false);
+                               
+                                $('.iSch').prop('disabled', true);
+                                $('.oSch').prop('disabled', true);
+                                
+                               
+                            
+                        }
+                })
+
+                $(".iSch").change(function() {
+                       
+                        ipipesize = $('.ipipesize').val()
+                        ipipeunit = $('.ipipeunit').val()
+                        value = $('.iSch').val()
+                        console.log('ksksksksksk',ipipesize,ipipeunit,value)
+                        $.ajax({
+                                type: "GET",
+                                url: "/getpipe_sch",
+                                data: {
+                                        pipesize: ipipesize,
+                                        pipeunit: ipipeunit,
+                                        Sch: value,     
+                                },
+                                success: function(response) {
+                                        $('.ipipeStatus').val(response)
+                                        console.log('ans',response)
+                                      					
+									
+                                },
+                                error: function(xhr, status, error) {
+                                console.error("Error:", error);
+                                }
+                        });
+                })
+                $(".oSch").change(function() {
+                        opipesize = $('.opipesize').val()
+                        opipeunit = $('.opipeunit').val()
+                        value = $('.oSch').val()
+                        console.log('ksksksksksk',ipipesize,ipipeunit,value)
+                        $.ajax({
+                                type: "GET",
+                                url: "/getpipe_sch",
+                                data: {
+                                        pipesize: opipesize,
+                                        pipeunit: opipeunit,
+                                        Sch: value,     
+                                },
+                                success: function(response) {
+                                        $('.opipeStatus').val(response)
+                                        console.log('ans',response)
+                                      					
+									
+                                },
+                                error: function(xhr, status, error) {
+                                console.error("Error:", error);
+                                }
+                        });
+                })
+
+        })
+
+        
         $("input").focus(function(){
                 var parent_ = $(this).parent().parent();
                 parentclass = parent_.attr('class').split(' ');
