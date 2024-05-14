@@ -237,7 +237,7 @@
                                         <label for="flow direction">Flow Direction</label>
                                     </div>
                                     <div class="col-6">
-                                        <select id="" class="form-control-sm-sm flowDirection" name="flowDirection">
+                                        <select id="" class="form-control-sm-sm valvedata_select flowDirection" name="flowDirection">
                                         
                                             {% for flowdirection in metadata['flowdirection'] %}
                                                 <option value="{{flowdirection.id}}" 
@@ -460,7 +460,7 @@
                                 <div class="button mt-3 ml-3">
                                     <div class="row">
                                         <input type="submit" class="btn btn-info input_btn1" name="submit1" value="Calculate">
-                                        <input type="submit" class="btn btn-info ml-3 input_btn2" name="select-actuator-sliding" value="Select Actuators">
+                                        <input type="submit" class="btn btn-info ml-3 input_btn2" name="select-actuator-sliding" value="Select Actuator">
                                         <input type="submit" class="btn btn-info actuator_button3 mt-2"  name="stroketime" value="Stroketime">
                                         <!-- <button type="button" class="btn btn-info input_btn1">Calculate</button> -->
                                         <!-- <a href="Selectacuator(rotary).html"><button type="button" class="btn btn-info ml-3 input_btn2">Select Actuator</button></a> -->
@@ -544,7 +544,7 @@
                                             <p class="sizingp">Unit</p>
                                         </div>
                                         <div class="row sizingtable">
-                                            <select name="valvecloseUnit" class="form-control-sm-sm sliding_select actuatorUnits" data-desc="valveThrustClose"
+                                            <select name="valveThrustCloseUnit" class="form-control-sm-sm sliding_select actuatorUnits" data-desc="valveThrustClose"
                                             >
                                             {% for length in metadata['units_dict']['force'] %}
                                                 <option value="{{length.id}}" 
@@ -557,7 +557,7 @@
                                         </select>
                                         </div>
                                         <div class="row sizingtable">
-                                            <select name="valveopenUnit" class="form-control-sm-sm sliding_select actuatorUnits" data-desc="valveThrustOpen"
+                                            <select name="valveThrustOpenUnit" class="form-control-sm-sm sliding_select actuatorUnits" data-desc="valveThrustOpen"
                                             >
                                             {% for length in metadata['units_dict']['force'] %}
                                                 <option value="{{length.id}}" 
@@ -569,7 +569,7 @@
                                         </select>
                                         </div>
                                         <div class="row sizingtable">
-                                            <select name="shutoffUnit" class="form-control-sm-sm sliding_select actuatorUnits" data-desc="shutOffForce"
+                                            <select name="shutOffForceUnit" class="form-control-sm-sm sliding_select actuatorUnits" data-desc="shutOffForce"
                                             >
                                             {% for length in metadata['units_dict']['force'] %}
                                                 <option value="{{length.id}}" 
@@ -604,7 +604,7 @@
                                             
                                         </div>
                                         <div class="row sizingtable">
-                                            <select name="actTravel" class="form-control-sm-sm sliding_select actuatorUnits" data-desc="actTravel"
+                                            <select name="actuatorTravelUnit" class="form-control-sm-sm sliding_select actuatorUnits" data-desc="actTravel"
                                             >
                                             {% for length in metadata['units_dict']['length'] %}
                                                 <option value="{{length.id}}"
@@ -616,7 +616,7 @@
                                             </select>
                                         </div>
                                         <div class="row sizingtable">
-                                            <select name="diaphragm_ea" class="form-control-sm-sm sliding_select actuatorUnits" data-desc="diaphragm_ea"
+                                            <select name="effectiveAreaUnit" class="form-control-sm-sm sliding_select actuatorUnits" data-desc="diaphragm_ea"
                                             >
                                             {% for length in metadata['units_dict']['area'] %}
                                                 <option value="{{length.id}}" 
@@ -629,7 +629,7 @@
                                         </div>
                                         <div class="row sizingtable">
                                
-                                            <select id="" class="form-control-sm-sm sliding_select actuatorUnits" name="" data-desc="lowBenchSet">
+                                            <select id="" class="form-control-sm-sm sliding_select actuatorUnits" name="lowerBenchsetUnit" data-desc="lowBenchSet">
                                                 {% for pressure in metadata['units_dict']['pressure'] %}
                                                 <option value="{{pressure.id}}" 
                                                 {% if act_case.lowerBenchsetUnit == pressure.id %}
@@ -640,7 +640,7 @@
                                             </select>
                                         </div>
                                         <div class="row sizingtable">
-                                            <select id="" class="form-control-sm-sm sliding_select actuatorUnits" name="" data-desc="UpBenchSet">
+                                            <select id="" class="form-control-sm-sm sliding_select actuatorUnits" name="upperBenchSetUnit" data-desc="UpBenchSet">
                                                 {% for pressure in metadata['units_dict']['pressure'] %}
                                                 <option value="{{pressure.id}}" 
                                                 {% if act_case.upperBenchSetUnit == pressure.id %}
@@ -651,12 +651,12 @@
                                             </select>
                                         </div>
                                         <div class="row sizingtable">
-                                            <select id="" class="form-control-sm-sm sliding_select actuatorUnits" name="" data-desc="springRate">
+                                            <select id="" class="form-control-sm-sm sliding_select actuatorUnits"  data-desc="springRate">
                                                 <option></option>
                                             </select>
                                         </div>
                                         <div class="row sizingtable">
-                                            <select id="" class="form-control-sm-sm sliding_select actuatorUnits" name="" data-desc="springWindup">
+                                            <select id="" class="form-control-sm-sm sliding_select actuatorUnits" name="springWindupUnit" data-desc="springWindup">
                                                 {% for length in metadata['units_dict']['length'] %}
                                                 <option value="{{length.id}}" 
                                                 {% if act_case.springWindupUnit == length.id %}
@@ -667,7 +667,7 @@
                                             </select>
                                         </div>
                                         <div class="row sizingtable">
-                                            <select id="" class="form-control-sm-sm sliding_select actuatorUnits" name="" data-desc="maxSpringLoad">
+                                            <select id="" class="form-control-sm-sm sliding_select actuatorUnits" name="maximumSpringLoadUnit" data-desc="maxSpringLoad">
                                                 {% for length in metadata['units_dict']['force'] %}
                                                 <option value="{{length.id}}" 
                                                 {% if act_case.maximumSpringLoadUnit == length.id %}
@@ -678,7 +678,7 @@
                                             </select>
                                         </div>
                                         <div class="row sizingtable">
-                                            <select id="" class="form-control-sm-sm sliding_select actuatorUnits" name="" data-desc="maxAirSupply" >
+                                            <select id="" class="form-control-sm-sm sliding_select actuatorUnits" name="maximumAirSupplyUnit" data-desc="maxAirSupply" >
                                                 {% for pressure in metadata['units_dict']['pressure'] %}
                                                 <option value="{{pressure.id}}" 
                                                 {% if act_case.maximumAirSupplyUnit == pressure.id %}
@@ -690,7 +690,7 @@
                                             </select>
                                         </div>
                                         <div class="row sizingtable">
-                                            <select id="" class="form-control-sm-sm sliding_select actuatorUnits" name="" data-desc="setPressure">
+                                            <select id="" class="form-control-sm-sm sliding_select actuatorUnits" name="setPressureUnit" data-desc="setPressure">
                                                 {% for pressure in metadata['units_dict']['pressure'] %}
                                                 <option value="{{pressure.id}}" 
                                                 {% if act_case.setPressureUnit == pressure.id %}
@@ -701,7 +701,7 @@
                                             </select>
                                         </div>
                                         <div class="row sizingtable">
-                                            <select name="actThrustClose" class="form-control-sm-sm sliding_select actuatorUnits" data-desc="actThrustClose"
+                                            <select class="form-control-sm-sm sliding_select actuatorUnits" name="actuatorThrustValveCloseUnit" data-desc="actThrustClose"
                                             >
                                             {% for length in metadata['units_dict']['force'] %}
                                                 <option value="{{length.id}}" 
@@ -713,7 +713,7 @@
                                         </select>
                                         </div>
                                         <div class="row sizingtable">
-                                            <select name="actThrustOpen" class="form-control-sm-sm sliding_select actuatorUnits" data-desc="actThrustOpen"
+                                            <select name="actuatorThrustValveOpenUnit" class="form-control-sm-sm sliding_select actuatorUnits" data-desc="actThrustOpen"
                                             >
                                             {% for length in metadata['units_dict']['force'] %}
                                                 <option value="{{length.id}}" 
@@ -725,7 +725,7 @@
                                         </select>
                                         </div>
                                         <div class="row sizingtable">
-                                            <select id="" class="form-control-sm-sm sliding_select actuatorUnits" name="" data-desc="frictionBand">
+                                            <select id="" class="form-control-sm-sm sliding_select actuatorUnits" name="frictionBandUnit" data-desc="frictionBand">
                                                 {% for pressure in metadata['units_dict']['pressure'] %}
                                                 <option value="{{pressure.id}}" 
                                                 {% if act_case.frictionBandUnit == pressure.id %}
@@ -736,7 +736,7 @@
                                             </select>
                                         </div>
                                         <div class="row sizingtable">
-                                            <select id="" class="form-control-sm-sm sliding_select actuatorUnits" name="" data-desc="reqHandWheel">
+                                            <select id="" class="form-control-sm-sm sliding_select actuatorUnits" name="reqHandwheelUnit" data-desc="reqHandWheel">
                                                 {% for length in metadata['units_dict']['force'] %}
                                                 <option value="{{length.id}}" >{{length.name}}</option>
                                                 {% endfor %}
@@ -758,23 +758,23 @@
                                         <div class="row sizingtable"><input type="text" class="form-control-sm-sm sliding_input actuatorvalue_valveThrustClose" name="valveThrustClose" {% if act_case.valveThrustClose %} value="{{act_case.valveThrustClose}}"{% else %} value="" {% endif %}></div>
                                         <div class="row sizingtable"><input type="text" class="form-control-sm-sm sliding_input actuatorvalue_valveThrustOpen" name="valveThrustOpen" {% if act_case.valveThrustOpen %} value="{{act_case.valveThrustOpen}}"{% else %} value="" {% endif %}></div>
                                         <div class="row sizingtable"><input type="text" class="form-control-sm-sm sliding_input actuatorvalue_shutOffForce" name="shutOffForce" {% if act_case.shutOffForce %} value="{{act_case.shutOffForce}}"{% else %} value="" {% endif %}></div>
-                                        <div class="row sizingtable"><input type="text" class="form-control-sm-sm sliding_input actuatorvalue_stemArea" name="" {% if act_case.stemArea %} value="{{act_case.stemArea}}" {% endif %}></div>
-                                        <div class="row sizingtable"><input type="text" name="negGrad" class="form-control-sm-sm sliding_input actuatorvalue_negGrad neg_grad" {% if act_case.knValue is defined %} value="{{act_case.knValue}}"{% endif %}></div>
-                                        <div class="row sizingtable"><input type="text" class="form-control-sm-sm sliding_input " name="" {% if act_case.act_size %} value="{{act_case.act_size}}" {% endif %}></div>
-                                        <div class="row sizingtable"><input type="text" class="form-control-sm-sm sliding_input actuatorvalue_actTravel" name="" {% if act_case.act_travel %} value="{{act_case.act_travel}}" {% endif %}></div>
-                                        <div class="row sizingtable"><input type="text" class="form-control-sm-sm sliding_input actuatorvalue_diaphragm_ea" name="" {% if act_case.diaphragm_ea %} value="{{act_case.diaphragm_ea}}" {% endif %}></div>
-                                        <div class="row sizingtable"><input type="text" class="form-control-sm-sm sliding_input actuatorvalue_lowBenchSet" name="" {% if act_case.lower_benchset %} value="{{act_case.lower_benchset}}" {% endif %}></div>
-                                        <div class="row sizingtable"><input type="text" class="form-control-sm-sm sliding_input actuatorvalue_UpBenchSet" name="" {% if act_case.upper_benchset %} value="{{act_case.upper_benchset}}" {% endif %}></div>
-                                        <div class="row sizingtable"><input type="text" class="form-control-sm-sm sliding_input" name="" {% if act_case.spring_rate %} value="{{act_case.spring_rate}}" {% endif %}></div>
-                                        <div class="row sizingtable"><input type="text" class="form-control-sm-sm sliding_input actuatorvalue_springWindup" name="" {% if act_case.springWindUp %} value="{{act_case.springWindUp}}" {% endif %}></div>
+                                        <div class="row sizingtable"><input type="text" class="form-control-sm-sm sliding_input actuatorvalue_stemArea" name="stemArea" {% if act_case.stemArea %} value="{{act_case.stemArea}}" {% endif %}></div>
+                                        <div class="row sizingtable"><input type="text" name="negGrad" class="form-control-sm-sm sliding_input actuatorvalue_negGrad neg_grad" name="knValue" {% if act_case.knValue is defined %} value="{{act_case.knValue}}"{% endif %}></div>
+                                        <div class="row sizingtable"><input type="text" class="form-control-sm-sm sliding_input " name="act_size" {% if act_case.act_size %} value="{{act_case.act_size}}" {% endif %}></div>
+                                        <div class="row sizingtable"><input type="text" class="form-control-sm-sm sliding_input actuatorvalue_actTravel" name="act_travel" {% if act_case.act_travel %} value="{{act_case.act_travel}}" {% endif %}></div>
+                                        <div class="row sizingtable"><input type="text" class="form-control-sm-sm sliding_input actuatorvalue_diaphragm_ea" name="diaphragm_ea" {% if act_case.diaphragm_ea %} value="{{act_case.diaphragm_ea}}" {% endif %}></div>
+                                        <div class="row sizingtable"><input type="text" class="form-control-sm-sm sliding_input actuatorvalue_lowBenchSet" name="lower_benchset" {% if act_case.lower_benchset %} value="{{act_case.lower_benchset}}" {% endif %}></div>
+                                        <div class="row sizingtable"><input type="text" class="form-control-sm-sm sliding_input actuatorvalue_UpBenchSet" name="upper_benchset" {% if act_case.upper_benchset %} value="{{act_case.upper_benchset}}" {% endif %}></div>
+                                        <div class="row sizingtable"><input type="text" class="form-control-sm-sm sliding_input" name="spring_rate" {% if act_case.spring_rate %} value="{{act_case.spring_rate}}" {% endif %}></div>
+                                        <div class="row sizingtable"><input type="text" class="form-control-sm-sm sliding_input actuatorvalue_springWindup" name="springWindUp" {% if act_case.springWindUp %} value="{{act_case.springWindUp}}" {% endif %}></div>
                                         <div class="row sizingtable">
-                                        <input type="text" class="form-control-sm-sm sliding_input actuatorvalue_maxSpringLoad" name="" {% if act_case.maxSpringLoad %} value="{{act_case.maxSpringLoad}}" {% endif %}></div>
-                                <div class="row sizingtable"><input type="text" class="form-control-sm-sm sliding_input actuatorvalue_maxAirSupply" name="" {% if act_case.airsupply_min %} value="{{act_case.airsupply_min}}" {% endif %}></div>
-                                        <div class="row sizingtable"><input type="text" class="form-control-sm-sm sliding_input actuatorvalue_setPressure" name="" {% if act_case.airsupply_max %} value="{{act_case.airsupply_max}}" {% endif %}></div>
-                                        <div class="row sizingtable"><input type="text" class="form-control-sm-sm sliding_input actuatorvalue_actThrustClose" name="" {% if act.springAction == 'AFO' %} value="{{act_case.natMin}}" {% elif act.springAction == 'AFC'%} value="{{act_case.sfMin}}" {% endif %}></div>
-                                        <div class="row sizingtable"><input type="text" class="form-control-sm-sm sliding_input actuatorvalue_actThrustOpen" name="" {% if act.springAction == 'AFO' %} value="{{act_case.sfMin}}" {% elif act.springAction == 'AFC'%} value="{{act_case.natMin}}" {% endif %}></div>
-                                        <div class="row sizingtable"><input type="text" class="form-control-sm-sm sliding_input actuatorvalue_frictionBand" name="" {% if act_case.frictionBand %} value="{{act_case.frictionBand}}" {% endif %}></div>
-                                        <div class="row sizingtable"><input type="text" class="form-control-sm-sm sliding_input actuatorvalue_reqHandWheel" name="" {% if act_case.reqHandwheelThrust %} value="{{act_case.reqHandwheelThrust}}" {% endif %}></div>
+                                        <input type="text" class="form-control-sm-sm sliding_input actuatorvalue_maxSpringLoad" name="maxSpringLoad" {% if act_case.maxSpringLoad %} value="{{act_case.maxSpringLoad}}" {% endif %}></div>
+                                <div class="row sizingtable"><input type="text" class="form-control-sm-sm sliding_input actuatorvalue_maxAirSupply" name="airsupply_min" {% if act_case.airsupply_min %} value="{{act_case.airsupply_min}}" {% endif %}></div>
+                                        <div class="row sizingtable"><input type="text" class="form-control-sm-sm sliding_input actuatorvalue_setPressure" name="airsupply_max" {% if act_case.airsupply_max %} value="{{act_case.airsupply_max}}" {% endif %}></div>
+                                        <div class="row sizingtable"><input type="text" class="form-control-sm-sm sliding_input actuatorvalue_actThrustClose" name="sfMin" {% if act.springAction == 'AFO' %} value="{{act_case.natMin}}" {% elif act.springAction == 'AFC'%} value="{{act_case.sfMin}}" {% endif %}></div>
+                                        <div class="row sizingtable"><input type="text" class="form-control-sm-sm sliding_input actuatorvalue_actThrustOpen" name="natMin" {% if act.springAction == 'AFO' %} value="{{act_case.sfMin}}" {% elif act.springAction == 'AFC'%} value="{{act_case.natMin}}" {% endif %}></div>
+                                        <div class="row sizingtable"><input type="text" class="form-control-sm-sm sliding_input actuatorvalue_frictionBand" name="frictionBand" {% if act_case.frictionBand %} value="{{act_case.frictionBand}}" {% endif %}></div>
+                                        <div class="row sizingtable"><input type="text" class="form-control-sm-sm sliding_input actuatorvalue_reqHandWheel" name="reqHandwheelThrust" {% if act_case.reqHandwheelThrust %} value="{{act_case.reqHandwheelThrust}}" {% endif %}></div>
                                         <div class="row sizingtable"><input type="text" class="form-control-sm-sm sliding_input" name="" ></div>
                                       
                                     </div>
@@ -787,7 +787,7 @@
 
                 <div class="row justify-content-end mt-2">
                     <div class="col-3"> 
-                        <button type="button" class="btn btn-info mt-1 savebtn">Save Next</button>
+                        <input type="submit" class="btn btn-info mt-1 savebtn"name="saveop" value="Save & Next">
                     </div>
                 </div>
         </form>
