@@ -3702,7 +3702,7 @@ def getOutputsGas(flowrate_form, fl_unit_form, inletPressure_form, iPresUnit_for
                   sosPipe,
                   valveSize_form, vSizeUnit_form,
                   seatDia, seatDiaUnit, ratedCV, rw_noise, item_selected, sg_choice, z_factor, sg_vale, 
-                  fluidName, i_pipearea_element, valve_element, port_area_):
+                  fluidName, i_pipearea_element, valve_element, port_area_,o_pipearea_element,i_thickness_pipe,o_thickness_pipe):
     flowrate_form, fl_unit_form, inletPressure_form, iPresUnit_form, outletPressure_form, oPresUnit_form, inletTemp_form, iTempUnit_form, vaporPressure, vPresUnit_form, specificGravity, viscosity, xt_fl, criticalPressure_form, cPresUnit_form, inletPipeDia_form, iPipeUnit_form, iSch, outletPipeDia_form, oPipeUnit_form, oSch, densityPipe, sosPipe, valveSize_form, vSizeUnit_form, seatDia, seatDiaUnit, ratedCV, rw_noise, item_selected, z_factor, sg_vale = float(
         flowrate_form), fl_unit_form, float(inletPressure_form), iPresUnit_form, float(
         outletPressure_form), oPresUnit_form, float(inletTemp_form), iTempUnit_form, float(
@@ -3733,14 +3733,10 @@ def getOutputsGas(flowrate_form, fl_unit_form, inletPressure_form, iPresUnit_for
 
     inletPipeDia_v = round(meta_convert_P_T_FR_L('L', inletPipeDia_form, iPipeUnit_form, 'inch',
                                                  1000))
-    try:
 
-        i_pipearea_element = i_pipearea_element
-        thickness_pipe = float(i_pipearea_element.thickness)
-    except:
-        thickness_pipe = 1.24
 
-    thickness_in = meta_convert_P_T_FR_L('L', thickness_pipe, 'mm', 'inch', 1000)
+    thickness_in = meta_convert_P_T_FR_L('L', i_thickness_pipe, 'mm', 'inch', 1000)
+    thickness_out = meta_convert_P_T_FR_L('L', o_thickness_pipe, 'mm', 'inch', 1000)
     print(f'SGG {sg__}')
     if sg__ == 1:
         # to be converted to scfh, psi, R, in
@@ -3756,7 +3752,7 @@ def getOutputsGas(flowrate_form, fl_unit_form, inletPressure_form, iPresUnit_for
                                              1000) - 2 * thickness_in
         outletPipeDia = meta_convert_P_T_FR_L('L', outletPipeDia_form, oPipeUnit_form,
                                               'inch',
-                                              1000) - 2 * thickness_in
+                                              1000) - 2 * thickness_out
         vSize = meta_convert_P_T_FR_L('L', valveSize_form, vSizeUnit_form,
                                       'inch', specificGravity * 1000)
         # 1. Flowrate
@@ -3778,7 +3774,7 @@ def getOutputsGas(flowrate_form, fl_unit_form, inletPressure_form, iPresUnit_for
                                              1000) - 2 * thickness_in
         outletPipeDia = meta_convert_P_T_FR_L('L', outletPipeDia_form, oPipeUnit_form,
                                               'inch',
-                                              1000) - 2 * thickness_in
+                                              1000) - 2 * thickness_out
         vSize = meta_convert_P_T_FR_L('L', valveSize_form, vSizeUnit_form,
                                       'inch', specificGravity * 1000)
         # 1. Flowrate
@@ -3802,7 +3798,7 @@ def getOutputsGas(flowrate_form, fl_unit_form, inletPressure_form, iPresUnit_for
         # print(iPipeUnit_form)
         outletPipeDia = meta_convert_P_T_FR_L('L', outletPipeDia_form, oPipeUnit_form,
                                               'inch',
-                                              1000) - 2 * thickness_in
+                                              1000) - 2 * thickness_out
         vSize = meta_convert_P_T_FR_L('L', valveSize_form, vSizeUnit_form,
                                       'inch', specificGravity * 1000)
         # 1. Flowrate
@@ -3826,7 +3822,7 @@ def getOutputsGas(flowrate_form, fl_unit_form, inletPressure_form, iPresUnit_for
                                              1000) - 2 * thickness_in
         outletPipeDia = meta_convert_P_T_FR_L('L', outletPipeDia_form, oPipeUnit_form,
                                               'inch',
-                                              1000) - 2 * thickness_in
+                                              1000) - 2 * thickness_out
         vSize = meta_convert_P_T_FR_L('L', valveSize_form, vSizeUnit_form,
                                       'inch', specificGravity * 1000)
         # 1. Flowrate
@@ -4654,7 +4650,7 @@ def gasSizing(inletPressure_form, outletPressure_form, inletPipeDia_form, outlet
               oPresUnit_form, vPresUnit_form, iPipeUnit_form, oPipeUnit_form, vSizeUnit_form, iSch,
               iPipeSchUnit_form, oSch, oPipeSchUnit_form, iTempUnit_form, xt_fl, sg_vale, sg_choice,
               open_percent, fd, travel, rated_cv_tex, fluidName, cv_table, i_pipearea_element, 
-              valve_element, port_area_, trimtype, flow_character):
+              valve_element, port_area_, trimtype, flow_character,o_pipearea_element,i_thickness_pipe,o_thickness_pipe):
     # Unit Conversion
     # 1. Flowrate
 
@@ -4664,13 +4660,9 @@ def gasSizing(inletPressure_form, outletPressure_form, inletPipeDia_form, outlet
     inletPipeDia_v = round(meta_convert_P_T_FR_L('L', inletPipeDia_form, iPipeUnit_form, 'inch',
                                                  1000))
 
-    try:
-
-        i_pipearea_element = i_pipearea_element
-        thickness_pipe = float(i_pipearea_element.thickness)
-    except:
-        thickness_pipe = 1.24
-    thickness_in = meta_convert_P_T_FR_L('L', thickness_pipe, 'mm', 'inch', 1000)
+    thickness_in = meta_convert_P_T_FR_L('L', i_thickness_pipe, 'mm', 'inch', 1000)
+    thickness_out = meta_convert_P_T_FR_L('L', o_thickness_pipe, 'mm', 'inch', 1000)
+   
     fl_unit = fl_unit_form
     if fl_unit in ['m3/hr', 'scfh', 'gpm']:
         fl_bin = 1
@@ -4703,7 +4695,7 @@ def gasSizing(inletPressure_form, outletPressure_form, inletPipeDia_form, outlet
                                              1000) - 2 * thickness_in
         outletPipeDia = meta_convert_P_T_FR_L('L', outletPipeDia_form, oPipeUnit_form,
                                               'inch',
-                                              1000) - 2 * thickness_in
+                                              1000) - 2 * thickness_out
         vSize = meta_convert_P_T_FR_L('L', valveSize_form, vSizeUnit_form,
                                       'inch', specificGravity * 1000)
         # 1. Flowrate
@@ -4725,7 +4717,7 @@ def gasSizing(inletPressure_form, outletPressure_form, inletPipeDia_form, outlet
                                              1000) - 2 * thickness_in
         outletPipeDia = meta_convert_P_T_FR_L('L', outletPipeDia_form, oPipeUnit_form,
                                               'inch',
-                                              1000) - 2 * thickness_in
+                                              1000) - 2 * thickness_out
         vSize = meta_convert_P_T_FR_L('L', valveSize_form, vSizeUnit_form,
                                       'inch', specificGravity * 1000)
         # 1. Flowrate
@@ -4749,7 +4741,7 @@ def gasSizing(inletPressure_form, outletPressure_form, inletPipeDia_form, outlet
         # print(iPipeUnit_form)
         outletPipeDia = meta_convert_P_T_FR_L('L', outletPipeDia_form, oPipeUnit_form,
                                               'inch',
-                                              1000) - 2 * thickness_in
+                                              1000) - 2 * thickness_out
         vSize = meta_convert_P_T_FR_L('L', valveSize_form, vSizeUnit_form,
                                       'inch', specificGravity * 1000)
         # 1. Flowrate
@@ -4771,7 +4763,7 @@ def gasSizing(inletPressure_form, outletPressure_form, inletPipeDia_form, outlet
                                              1000) - 2 * thickness_in
         outletPipeDia = meta_convert_P_T_FR_L('L', outletPipeDia_form, oPipeUnit_form,
                                               'inch',
-                                              1000) - 2 * thickness_in
+                                              1000) - 2 * thickness_out
         vSize = meta_convert_P_T_FR_L('L', valveSize_form, vSizeUnit_form,
                                       'inch', specificGravity * 1000)
         # 1. Flowrate
@@ -5580,8 +5572,6 @@ def valveSizing(proj_id, item_id):
         if a['pipeData'][0] == 'Custom':
             iSch = 'None'
             oSch = 'None'
-            in_thickness = a['ipipeStatus'][0]
-            out_thickness = a['opipeStatus'][0]
         else:
             iSch = a['iSch'][0]
             oSch = a['oSch'][0]
@@ -5607,8 +5597,11 @@ def valveSizing(proj_id, item_id):
                     .filter_by(schedule=a['oSch'][0])\
                     .order_by(func.abs(pipeArea.nominalPipeSize - a['outletPipeSize'][0]))\
                     .first()
-            in_thickness = a['ipipeStatus'][0]
-            out_thickness = a['opipeStatus'][0]
+        in_thickness = meta_convert_P_T_FR_L('L', float(a['ipipeStatus'][0]), a['inpipe_unit'][0],
+                        'mm', 1.0 * 1000)
+       
+        out_thickness = meta_convert_P_T_FR_L('L', float(a['opipeStatus'][0]), a['outpipe_unit'][0],
+                        'mm', 1.0 * 1000)
         
         
         print(f'PIPEELEMENT {i_pipearea_element},{o_pipearea_element},{a['inletPipeSize'][0]}')
@@ -5616,7 +5609,6 @@ def valveSizing(proj_id, item_id):
 
         if f_state == 'Liquid':
                 len_cases_input = len(a['inletPressure'])
-                
                 try:
                     for k in range(len_cases_input):
                         try:
@@ -5742,7 +5734,7 @@ def valveSizing(proj_id, item_id):
                                                     5000, a['vSize'][0],
                                                     a['valvesize_unit'][0], a['vSize'][0], a['valvesize_unit'][0], a['ratedCV'][0],
                                                     rw_noise, item_selected, a['mw_sg'][0], a['compressibility'][k], a['molecularWeight'][k], 
-                                                    fluid_element.fluidName, i_pipearea_element, valve_element, port_area_)
+                                                    fluid_element.fluidName, i_pipearea_element, valve_element, port_area_,o_pipearea_element,in_thickness,out_thickness)
                             sch_element = db.session.query(pipeArea).filter_by(schedule=a['iSch'][0], nominalPipeSize=float(output['inletPipeSize'])).first()
                             new_case = caseMaster(flowrate=output['flowrate'], inletPressure=output['inletPressure'],
                                                     outletPressure=output['outletPressure'],
@@ -5762,7 +5754,7 @@ def valveSizing(proj_id, item_id):
                                                     seatDia=output['seatDia'], machNoUp=output['machNoUp'], machNoDown=output['machNoDown'], machNoValve=output['machNoVel'],
                                                     sonicVelUp=output['sonicVelUp'], sonicVelDown=output['sonicVelDown'],
                                                     sonicVelValve=output['sonicVelValve'], outletDensity=output['outletDensity'], fluid=fluid_element,
-                                                    item=item_selected, specificHeatRatio=a['specificHeatRatio'][0], compressibility=a['compressibility'][0], iSch=a['iSch'][0], oSch=a['oSch'][0],pressuredrop=output['pressuredrop'])
+                                                    item=item_selected, specificHeatRatio=a['specificHeatRatio'][0], compressibility=a['compressibility'][0], iSch=iSch, oSch=oSch,ipipeStatus=a['ipipeStatus'][0],opipeStatus=a['opipeStatus'][0],pressuredrop=output['pressuredrop'])
                             
 
                             item_selected.flowrate_unit = output['fl_unit_form']
@@ -6379,7 +6371,7 @@ def selectValve(proj_id, item_id):
                                     last_case.iSch,
                                     iPipeSchUnit, last_case.oSch, oPipeSchUnit, iTempUnit, xt, last_case.molecularWeight,
                                     sg_choice, o_percent, fd, travel, rated_cv_tex,fluidName_, valve_d_id.cv, i_pipearea_element, 
-                                    valve_element, port_area_, trimtype, flow_character)
+                                    valve_element, port_area_, trimtype, flow_character,o_pipearea_element, in_thickness,out_thickness)
                             db.session.commit()
                             new_case = caseMaster(flowrate=result_dict['flowrate'], inletPressure=result_dict['inletPressure'],
                                 outletPressure=result_dict['outletPressure'],
@@ -6399,7 +6391,8 @@ def selectValve(proj_id, item_id):
                                 machNoUp=result_dict['machNoUp'], machNoDown=result_dict['machNoDown'], machNoValve=result_dict['machNoVel'],
                                 sonicVelUp=result_dict['sonicVelUp'], sonicVelDown=result_dict['sonicVelDown'],
                                 sonicVelValve=result_dict['sonicVelValve'], outletDensity=result_dict['outletDensity'],x_delp=round(result_dict['x_delp'],1),
-                                cv=valve_d_id.cv, iPipe=None, valveSize=v_size, compressibility=last_case.compressibility, fluid=cases_new[0].fluid,iSch=last_case.iSch, oSch=last_case.oSch,seatDia=valve_d_id.seatBore)
+                                cv=valve_d_id.cv, iPipe=None, valveSize=v_size, compressibility=last_case.compressibility, fluid=cases_new[0].fluid,iSch=last_case.iSch, 
+                                oSch=last_case.oSch,seatDia=valve_d_id.seatBore,ipipeStatus=last_case.ipipeStatus,opipeStatus=last_case.opipeStatus)
                             # new_case = caseMaster()
                             db.session.add(new_case)
                             db.session.commit()
