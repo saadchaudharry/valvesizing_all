@@ -3601,7 +3601,9 @@ def Cv_gas(inletPressure, outletPressure, gamma, C, valveDia, inletDia, outletDi
     # sg_ = int(input("Which value do you want to give? \nVolumetric Flow - Specific Gravity (1) \nVolumetric Flow - "
     #                 "Molecular Weight (2)\nMass Flow - Specific Weight (3)\nMass Flow - Molecular Weight (4)\nSelect "
     #                 "1 0r 2 0r 3 or 4: "))
-
+    print('CV INTERMEDIATE GAS HSSHSH') 
+    print(inletPressure, outletPressure, gamma, C, valveDia, inletDia, outletDia, xT, temp, compressibilityFactor,
+           flowRate, sg, sg_, N2_value)
     sg_ = sg_
 
     # if sg_ == 1:
@@ -3662,13 +3664,17 @@ def Cv_gas(inletPressure, outletPressure, gamma, C, valveDia, inletDia, outletDi
         print(f"flowrate, nx_kghr_bar_K, a_, x__, sg, b_")
         print(flowRate, N8_kghr_bar_K, a_, x__, sg, b_)
         A = flowRate / (N8_kghr_bar_K * a_ * math.sqrt((x__ * sg) / b_))
+        print(f'CV RESULT A {A}')
         # return A
+    
+
     fk = F_Gamma_gas(gamma)
     x_choked = xChoked_gas(gamma, C, valveDia, inletDia, outletDia, xT, N2_value)
     y = Y_gas(inletPressure, outletPressure, gamma, C, valveDia, inletDia, outletDia, xT, N2_value)
     xtp = xTP_gas(xT, C, valveDia, inletDia, outletDia, N2_value)
     fp__ = fP_gas(C, valveDia, inletDia, outletDia, N2_value)
     output_list = [round(A, 3), x_, fk, x_choked, y, xT, xtp, fp__]
+    print(f'OUTPUT CV SHHSHSHHS {output_list}')
     return output_list
 
 # flowrate in kg/hr, pressure in pa, density in kg/m3
@@ -4054,6 +4060,7 @@ def getOutputsGas(flowrate_form, fl_unit_form, inletPressure_form, iPresUnit_for
             'iVelocity': round(iVelocity, 3),
             'oVelocity': round(oVelocity, 3), 'pVelocity': round(pVelocity, 3), 'choked': round(xChoked, 4),
             'texVelocity': round(tEX, 3)}
+    print(f'CV RESULT GASS {data}')
 
     units_string = f"{seatDia}+{seatDiaUnit}+{sosPipe}+{densityPipe}+{z_factor}+{fl_unit_form}+{iPresUnit_form}+{oPresUnit_form}+{oPresUnit_form}+{oPresUnit_form}+{iPipeUnit_form}+{oPipeUnit_form}+{vSizeUnit_form}+mm+mm+{iTempUnit_form}+{sg_choice}"
     # update valve size in item
@@ -5555,11 +5562,6 @@ def valveSizing(proj_id, item_id):
         else:
             rw_noise = 0.5
          
-        
-
-        
-        
-
         port_area_ = db.session.query(portArea).filter_by(v_size=a['vSize'][0], trim_type="contour",
                                         flow_char="equal").first()
         valvearea_element = db.session.query(valveArea).filter_by(rating=valve_element.rating.name[5:],
@@ -6106,7 +6108,7 @@ def selectValve(proj_id, item_id):
                     db.session.commit()
                     return_globe_data = []
                     cv__lists = db.session.query(cvTable).filter_by(trimType_=trimType_, flowCharacter_=flowChara, flowDirection_=flowDirec, rating_c=rating_v, style=vType).all()
-                    print(f'CVLIST {cv__lists}')
+                    print(f'CVLIST {len(cv__lists)}')
                     cv_id_lists = [cv_.id for cv_ in cv__lists]
                     print(cv_id_lists)
                     cv_lists = cvValues.query.filter(cvValues.cvId.in_(cv_id_lists)).all()
@@ -6391,8 +6393,7 @@ def selectValve(proj_id, item_id):
                                 machNoUp=result_dict['machNoUp'], machNoDown=result_dict['machNoDown'], machNoValve=result_dict['machNoVel'],
                                 sonicVelUp=result_dict['sonicVelUp'], sonicVelDown=result_dict['sonicVelDown'],
                                 sonicVelValve=result_dict['sonicVelValve'], outletDensity=result_dict['outletDensity'],x_delp=round(result_dict['x_delp'],1),
-                                cv=valve_d_id.cv, iPipe=None, valveSize=v_size, compressibility=last_case.compressibility, fluid=cases_new[0].fluid,iSch=last_case.iSch, 
-                                oSch=last_case.oSch,seatDia=valve_d_id.seatBore,ipipeStatus=last_case.ipipeStatus,opipeStatus=last_case.opipeStatus)
+                                cv=valve_d_id.cv, iPipe=None, valveSize=v_size, compressibility=last_case.compressibility, fluid=cases_new[0].fluid,iSch=last_case.iSch, oSch=last_case.oSch,seatDia=valve_d_id.seatBore,ipipeStatus=last_case.ipipeStatus,opipeStatus=last_case.opipeStatus)
                             # new_case = caseMaster()
                             db.session.add(new_case)
                             db.session.commit()
