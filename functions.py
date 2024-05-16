@@ -94,9 +94,10 @@ pressure_unit_list = [{'id': 'bar (a)', 'name': 'bar (a)'}, {'id': 'bar (g)', 'n
                           {'id': 'psia (a)', 'name': 'psi (a)'}, {'id': 'psia (g)', 'name': 'psi (g)'},
                           {'id': 'atm (a)', 'name': 'atm (a)'}, {'id': 'atm (g)', 'name': 'atm (g)'},
                           {'id': 'torr (a)', 'name': 'torr (a)'}, {'id': 'torr (g)', 'name': 'torr (g)'}]
+
 flowrate_unit_list = [{'id': 'm3/hr', 'name': 'm3/hr'}, {'id': 'scfh', 'name': 'scfh'},
-                          {'id': 'gpm', 'name': 'gpm'},
-                          {'id': 'lb/hr', 'name': 'lb/hr'}, {'id': 'kg/hr', 'name': 'kg/hr'}]
+                      {'id': 'gpm', 'name': 'gpm'},{'id':'kg/s', 'name': 'kg/s'},{'id':'kg/m', 'name':'kg/m'},
+                      {'id':'kg/hr', 'name':'kg/hr'}, {'id':'lb/s', 'name':'lb/s'},{'id':'lb/hr','name':'lb/hr'}]
 
 area_unit_list = [{'id': 'inch2', 'name': 'inch²'}, {'id': 'mm2', 'name': 'mm²'}]
 
@@ -191,10 +192,39 @@ def convert_T_SI(val, unit_in, unit_out, density):
     # val_to_c = SI[unit_in](val)
     return SI[unit_out](SI_2[unit_in](val))
 
+def mass_internalconv(val, unit_in, unit_out):
+    SI = {'kg/hr': 1, 
+          'lb/hr': 1 / 0.453592,  # 1 lb/hr = 0.453592 kg/hr
+          'lb/m': 0.453592 * 60,  # 1 lb/m = 0.453592 / 60 kg/hr
+          'kg/m': 60,  # 1 kg/m = 1 / 60 kg/hr
+          'lb/s': 0.453592 * 3600,  # 1 lb/s = 0.453592 / 3600 kg/hr
+          'kg/s': 3600  # 1 kg/s = 1 / 3600 kg/hr
+         }
 
-def conver_FR_SI(val, unit_in, unit_out, density):
-    SI = {'m3/hr': 1, 'scfh': 1 / 35.31, 'gpm': 1 / 4.402868, 'lb/hr': 1 / (2.2 * density), 'kg/hr': 1 / density}
     return val * SI[unit_in] / SI[unit_out]
+def conver_FR_SI(val, unit_in, unit_out, density):
+    print(f'FLOWRATESI {val},{unit_in},{unit_out},{density}')
+    massunits = ['kg/s','kg/m','lb/s','lb/m','lb/hr']
+    if unit_in in massunits:
+        val = mass_internalconv(val,unit_in,'kg/hr')
+        unit_in = 'kg/hr'
+    
+    print(f'VALUESS {val},{unit_in}')
+    SI = {'m3/hr': 1, 
+          'scfh': 1 / 35.31, 
+          'gpm': 1 / 4.402868,  
+          'kg/hr': 1 / density
+         }
+    
+    if unit_out in massunits:
+        val = val * SI[unit_in] / SI['kg/hr']
+        result_ = mass_internalconv(val,'kg/hr',unit_out)
+    else:
+        result_ = val * SI[unit_in] / SI[unit_out]
+
+
+    return result_
+    
 
 def convert_A_SI(val, unit_in, unit_out, density):
     SI = {'inch2': 1, 'mm2': 1 / 645.16}
