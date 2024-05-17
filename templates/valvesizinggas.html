@@ -70,7 +70,7 @@
                                                                         {% for flowrate in metadata['units_dict']['flowrate'] %}
                                                                         {% if flowrate.id == item.flowrate_unit %}
                                                                             <option value="{{ flowrate.id }}" selected>{{ flowrate.name }}</option>
-                                                                        {% elif flowrate.id == 'm3/hr' or flowrate.id == 'scfh' or flowrate.id == 'gpm' %}
+                                                                        {% elif flowrate.id == 'm3/hr' or flowrate.id == 'scfh' or flowrate.id == 'gpm' or flowrate.id == 'm3/m' %}
                                                                             <option value="{{ flowrate.id }}" disabled>{{ flowrate.name }}</option>
                                                                         {% else %}
                                                                             <option value="{{ flowrate.id }}">{{ flowrate.name }}</option>
