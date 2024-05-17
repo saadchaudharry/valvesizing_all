@@ -95,9 +95,9 @@ pressure_unit_list = [{'id': 'bar (a)', 'name': 'bar (a)'}, {'id': 'bar (g)', 'n
                           {'id': 'atm (a)', 'name': 'atm (a)'}, {'id': 'atm (g)', 'name': 'atm (g)'},
                           {'id': 'torr (a)', 'name': 'torr (a)'}, {'id': 'torr (g)', 'name': 'torr (g)'}]
 
-flowrate_unit_list = [{'id': 'm3/hr', 'name': 'm3/hr'}, {'id': 'scfh', 'name': 'scfh'},
+flowrate_unit_list = [{'id': 'm3/hr', 'name': 'm3/hr'},{'id':'m3/m', 'name':'m3/m'}, {'id': 'scfh', 'name': 'scfh'},
                       {'id': 'gpm', 'name': 'gpm'},{'id':'kg/s', 'name': 'kg/s'},{'id':'kg/m', 'name':'kg/m'},
-                      {'id':'kg/hr', 'name':'kg/hr'}, {'id':'lb/s', 'name':'lb/s'},{'id':'lb/hr','name':'lb/hr'}]
+                      {'id':'kg/hr', 'name':'kg/hr'}, {'id':'lb/s', 'name':'lb/s'},{'id':'lb/m','name':'lb/m'},{'id':'lb/hr','name':'lb/hr'}]
 
 area_unit_list = [{'id': 'inch2', 'name': 'inch²'}, {'id': 'mm2', 'name': 'mm²'}]
 
@@ -211,6 +211,7 @@ def conver_FR_SI(val, unit_in, unit_out, density):
     
     print(f'VALUESS {val},{unit_in}')
     SI = {'m3/hr': 1, 
+          'm3/m': 1 / 60,
           'scfh': 1 / 35.31, 
           'gpm': 1 / 4.402868,  
           'kg/hr': 1 / density

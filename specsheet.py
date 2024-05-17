@@ -1208,10 +1208,13 @@ def createSpecSheet(case_data, units, other, act_):
                           'Pressure drop ratio factor']
 
         if other[i][21] == 'globe':
-            data_trim = ['CV/Characteristic', 'Balancing', 'Stem Material', 'Plug Material', 'Seat Material', 'Cage or Clamp Material',"Percentage Opening", '%', 'm/s']
+            data_trim = ['CV/Characteristic', 'Flow Direction/ Balancing', 'Stem Material', 'Plug Material', 'Seat Material', 'Cage or Clamp Material',"Percentage Opening", '%', 'm/s','Seat Leakage Class','Bellows Material']
+            
             
         else:
-            data_trim = ['CV/Characteristic', '', 'Shaft Material', 'Disc Material', 'Seat Material', "", "Degree of Opening", 'degree', 'mach']
+            data_trim = ['CV/Characteristic', 'Flow Direction', 'Shaft Material', 'Disc Material', 'Seat Material', "Seat Leakage Class", "Degree of Opening", 'degree', 'mach','Bellows Material','']
+            
+        
         str_current_datetime = str(current_datetime)
         a__ = datetime.now()
         a_ = a__.strftime("%a, %d %b %Y %H-%M-%S")
@@ -1405,8 +1408,8 @@ def createSpecSheet(case_data, units, other, act_):
         worksheet.merge_range("B52:C52", data_trim[3], cell_format1)
         worksheet.merge_range("B53:C53", data_trim[4], cell_format1)
         worksheet.merge_range("B54:C54", data_trim[5], cell_format1)
-        worksheet.merge_range("B55:C55", 'Seat Leakage Class', cell_format1)
-        worksheet.merge_range("B56:C56", 'Bellows Material', cell_format1)
+        worksheet.merge_range("B55:C55", data_trim[9], cell_format1)
+        worksheet.merge_range("B56:C56", data_trim[10], cell_format1)
         # worksheet.merge_range("B56:J56", 'Bellows Material', cell_format1)
 
 
@@ -1470,7 +1473,7 @@ def createSpecSheet(case_data, units, other, act_):
         worksheet.write('D36', '', cell_format1)
         worksheet.write('D37', '', cell_format1)
         worksheet.write('D38', '', cell_format1)
-        worksheet.write('D39', '', cell_format1)
+        worksheet.write('D39', 'N/A', cell_format1)
         worksheet.write('D40', '', cell_format1)
         worksheet.write('D41', '', cell_format1)
         worksheet.write('D42', '', cell_format1)
@@ -1487,7 +1490,7 @@ def createSpecSheet(case_data, units, other, act_):
         worksheet.write('D53', '', cell_format1)
         worksheet.write('D54', '', cell_format1)
         worksheet.write('D55', '', cell_format1)
-        worksheet.write('D56', 'N/A', cell_format1)
+        worksheet.write('D56', '', cell_format1)
 
 
 
@@ -1957,7 +1960,7 @@ def createSpecSheet(case_data, units, other, act_):
         worksheet.write(f'D50', other[i][15], cell_format1)
         worksheet.write(f'D53', other[i][16], cell_format1)
         worksheet.write(f'D52', other[i][17], cell_format1)
-        worksheet.write(f'D55', other[i][18], cell_format1) 
+        
         worksheet.write(f'D37', other[i][19], cell_format1)
         worksheet.write(f'D38', other[i][20], cell_format1)
         worksheet.write(f'D35', other[i][12], cell_format1)
@@ -1970,7 +1973,7 @@ def createSpecSheet(case_data, units, other, act_):
         worksheet.write(f'D42', other[i][24], cell_format1)
         worksheet.write(f'D44', other[i][25], cell_format1)
         worksheet.write(f'D49', other[i][26], cell_format1)
-        worksheet.write(f'E50', f"/ {other[i][34]}", cell_format1)
+        worksheet.write(f'E50', other[i][34], cell_format1)
         worksheet.write(f'C8', other[i][29], cell_format1)
         worksheet.write(f'D30', str(other[i][31]), cell_format1)
         worksheet.write(f'D31', str(other[i][33]), cell_format1)
@@ -1982,7 +1985,15 @@ def createSpecSheet(case_data, units, other, act_):
         worksheet.write(f'D50', other[i][39], cell_format1)
         worksheet.write(f'E49', f"/ {other[i][40]}", cell_format1)
         worksheet.write(f'D51', other[i][41], cell_format1)
-        worksheet.write(f'D54', other[i][35], cell_format1)
+        if other[i][21] == 'globe':
+            worksheet.write(f'D54', other[i][35], cell_format1) #cage
+            worksheet.write(f'D55', other[i][18], cell_format1) #seatleakage 
+            worksheet.write(f'D56', 'N/A', cell_format1) #bellows 
+        else:
+            worksheet.write(f'D54', other[i][18], cell_format1) #seatleakage
+            worksheet.write(f'D55', 'N/A', cell_format1) #bellows
+           
+ 
         worksheet.write(f'J7', other[i][43], cell_format1)
         
 
