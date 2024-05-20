@@ -272,7 +272,18 @@
                                                                 </select>
                                                         </div>
                                                         <div class="row sizingtable"><input type="text" class="sizingtable_inputs" value="X" readonly></div>
-                                                        <div class="row sizingtable"><input type="text" class="sizingtable_inputs" ></div>
+                                                        <div class="row sizingtable">
+                                                                <select id="#"
+                                                                class="sizingtable_inputs ">
+                                                                {% for presunit in metadata['units_dict']['pressure'] %}
+                                                                        {% if presunit.id == item.inpres_unit %}
+                                                                        <option value="{{presunit.id}}" selected>{{presunit.name.split(' ')[0]}}</option>
+                                                                        
+                                                                      
+                                                                        {% endif %}
+                                                                {% endfor %}
+                                                                </select>
+                                                        </div>
                                                         <div class="row sizingtable"><input type="text" class="sizingtable_inputs" value="Y" readonly></div>
                                                         <div class="row sizingtable"><input type="text" class="sizingtable_inputs" value="Xtp" readonly></div>
                                                         <div class="row sizingtable"><input type="text" class="sizingtable_inputs" value="Fk" readonly></div>

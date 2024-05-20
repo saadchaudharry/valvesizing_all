@@ -1611,6 +1611,7 @@ class rotaryCaseData(db.Model):
     id = Column(Integer, primary_key=True) 
 
     #inputs
+
     v_size = Column(Float)
     disc_dia = Column(Float)
     shaft_dia = Column(Float)
