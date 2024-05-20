@@ -12,12 +12,12 @@
                                     <hr>
                                     <div class="row">
                                         <div class="col-6">
-                                            <label for="actType" >Actuator Type</label>
+                                            <label for="actType" >Actuator Type </label>
                                         </div>
                                         <div class="col-6">
                                             <select class="actuator_select"  name="actType" >
                                                 {% for act_type in metadata['actuatorData']['actType'] %}
-                                                {% if act.actuatorType == act_type.name %}
+                                                {% if act.actuatorType == act_type.id %}
                                                 <option value="{{act_type.id}}" selected>{{act_type.name}}</option>
                                                 {% else %}
                                                 <option value="{{act_type.id}}">{{act_type.name}}</option>

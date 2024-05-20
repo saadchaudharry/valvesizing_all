@@ -124,7 +124,7 @@
                                                                         {% endfor %}
                                                                 </select>
                                                         </div>
-                                                        <div class="row sizingtable"><input type="text" class="sizingtable_inputs"></div>
+                                                        <div class="row sizingtable"><input type="text" class="sizingtable_inputs" value="Sg"></div>
                                                         <div class="row sizingtable">
                                                                 <select name="" id="" class="sizingtable_inputs">
                                                                         <option value="centipose">Centipose</option>
@@ -263,7 +263,18 @@
                                                                         {% endfor %}
                                                                 </select>
                                                         </div>
-                                                        <div class="row sizingtable"><input type="text" class="sizingtable_inputs" ></div>
+                                                        <div class="row sizingtable">
+                                                                <select id="#"
+                                                                class="sizingtable_inputs ">
+                                                                {% for presunit in metadata['units_dict']['pressure'] %}
+                                                                        {% if presunit.id == item.inpres_unit %}
+                                                                        <option value="{{presunit.id}}" selected>{{presunit.name.split(' ')[0]}}</option>
+                                                                        
+                                                                      
+                                                                        {% endif %}
+                                                                {% endfor %}
+                                                                </select>
+                                                        </div>
                                                         <div class="row sizingtable"><input type="text" class="sizingtable_inputs" value="Ff" readonly></div>
                                                         <div class="row sizingtable"><input type="text" class="sizingtable_inputs" value="Fp" readonly></div>
                                                         <div class="row sizingtable"><input type="text" class="sizingtable_inputs" value="Flp" readonly></div>

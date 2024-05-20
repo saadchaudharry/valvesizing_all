@@ -106,7 +106,7 @@
 								<div class="col-3">
 									<select id="" class="form-control-sm-sm valvedata_inputbox sizingunits" name="shutOffDelPUnit" data-desc="shutoffPres">
 										{% for presunit in metadata['units_dict']['delPressure'] %}
-										{% if presunit == valve.shutOffDelPUnit %}
+										{% if presunit.id == valve.shutOffDelPUnit %}
 										<option value="{{presunit.id}}" selected>{{presunit.name}}</option>
 										{% else %}
 										<option value="{{presunit.id}}">{{presunit.name}}</option>
@@ -117,7 +117,7 @@
 							</div>
 							<div class="row ">
 								<div class="col-5 pr-0">
-									<label>Max Pressure</label>
+									<label>Max Pressure </label>
 								</div>
 								<div class="col-3">
 									<input type="number" step="0.01" class="form-control-sm-sm valvedata_inputbox sizingvalue_maxPres"
@@ -126,7 +126,7 @@
 								<div class="col-3">
 									<select id="maxPressureUnit" class="form-control-sm-sm valvedata_selectbox sizingunits" name="maxPressureUnit" data-desc="maxPres">
 										{% for presunit in metadata['units_dict']['pressure'] %}
-										{% if presunit == valve.maxPressureUnit %}
+										{% if presunit.id == valve.maxPressureUnit %}
 										<option value="{{presunit.id}}" selected>{{presunit.name}}</option>
 										{% else %}
 										<option value="{{presunit.id}}">{{presunit.name}}</option>
