@@ -8321,7 +8321,7 @@ def generate_csv_item(item_id, proj_id):
                         unit_list = [item.project.flowrateUnit, item.project.pressureUnit, item.project.pressureUnit, item.project.temperatureUnit, '', 'centipose', item.project.pressureUnit, '', '', percent__,
                                     'dB',
                                     i_pipe_vel,
-                                    o_pipe_vel, t_vel, item.project.lengthUnit, item.project.lengthUnit]
+                                    o_pipe_vel, t_vel, item.project.lengthUnit, item.project.lengthUnit,item.project.vaporpres_unit]
                         
                     
 
@@ -8592,7 +8592,7 @@ def getValveModelNo(series,rating,trimtype,balance,maxTemp,minTemp):
 def getActModelNo(series, size, faction, manualOverride, limitStop):
     print(f'KSRRRRRRRRRRRRRRR {series},{size},{faction},{manualOverride},{limitStop}')
     
-    series_ = {'30': 'Spring &amp; Diaphragm', '31': 'Multi-Spring &amp; Diaphragm', '32': 'Piston with Spring', '33': 'SY', 'X': 'Manual Gearbox'}
+    series_ = {'30': 'Spring & Diaphragm', '31': 'Multi Spring & Diaphragm', '32': 'Piston with Spring', '33': 'SY', 'X': 'Manual Gearbox'}
     size_ = {'1A': '38', '1B': '75', '1C': '150', '1D': '300', '2A': '60', '2B': '100', '2C': '160', '3A': '30', '3B': '50', '3C': '110', '4A': 'P110L', '5A': '110D', '5B': 'P220'}
     faction_ = {'1': 'AFO', '2': 'AFC', '3': 'Stay Put'}
     manualOverride_ = {'T': 'Top Mounted', 'S': 'Side Mounted', 'N': 'None'}
@@ -8922,7 +8922,6 @@ def generate_csv_project(item_id, proj_id):
                 header_ = []; valvedatas_ = []; actdatas_ = []; unitslist_ = []; accessories_ = []; forces_=[]
 
                 for item in items:
-
                     valve = db.session.query(valveDetailsMaster).filter_by(item=item).first()
                     cases = db.session.query(caseMaster).filter_by(item=item).all()
                     act_mas = db.session.query(actuatorMaster).filter_by(item=item).first()
