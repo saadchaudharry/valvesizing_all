@@ -1451,7 +1451,7 @@ def createSpecSheet(case_data, units, other, act_):
         worksheet.write('D14', units[i][3], cell_format)
         worksheet.write('D15', '', cell_format)
         worksheet.write('D16', '', cell_format)
-        worksheet.write('D17', units[i][16], cell_format)
+        worksheet.write('D17', units[i][12], cell_format)
         worksheet.write('D18', units[i][4], cell_format)
         worksheet.write('D19', units[i][5], cell_format)
         worksheet.write('D20', units[i][6], cell_format)
