@@ -8321,7 +8321,7 @@ def generate_csv_item(item_id, proj_id):
                         unit_list = [item.project.flowrateUnit, item.project.pressureUnit, item.project.pressureUnit, item.project.temperatureUnit, '', 'centipose', item.project.pressureUnit, '', '', percent__,
                                     'dB',
                                     i_pipe_vel,
-                                    o_pipe_vel, t_vel, item.project.lengthUnit, item.project.lengthUnit,item.project.vaporpres_unit]
+                                    o_pipe_vel, t_vel, item.project.lengthUnit, item.project.lengthUnit]
                         
                     
 
@@ -8720,7 +8720,7 @@ def generate_csv_project(item_id, proj_id):
                             percent__, i_pipe_vel, o_pipe_vel, t_vel = 'degree', 'Mach', 'Mach', 'Mach'
                             balancing__ = ''
                             cage__ = ''
-                        unit_list = [item.flowrate_unit,item.inpres_unit, item.outpres_unit, item.intemp_unit, 'Xt', 'Cv', '%', 'dBA', i_pipe_vel, 'Mach',item.inpipe_unit,item.outpipe_unit]
+                        unit_list = [item.flowrate_unit,item.inpres_unit, item.outpres_unit, item.intemp_unit, 'Xt', 'Cv', '%', 'dBA', i_pipe_vel, 'Mach',item.inpipe_unit,item.outpipe_unit,item.vaporpres_unit]
                         
                     
 
@@ -9081,7 +9081,7 @@ def generate_csv_project(item_id, proj_id):
                             act_case.actuatorThrustValveOpenUnit,
                             '',
                             '',
-                            '',
+                            '', 
                             '',
                             close_time_unit,
                             open_time_unit
@@ -9170,6 +9170,11 @@ def generate_csv_project(item_id, proj_id):
                             act_case.rtcUnit,
                             act_case.etcUnit,
                             act_case.max_rotUnit,
+                            '',
+                            '',
+                            '',
+                            '',
+                            '',
                             '',
                             '',
                             '',
