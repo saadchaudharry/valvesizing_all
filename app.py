@@ -9043,6 +9043,7 @@ def generate_csv_project(item_id, proj_id):
                         ]
                         units = [
                             '',
+                            '',
                             act_case.valveSizeUnit,
                             act_case.seatDiaUnit,
                             act_case.unbalanceAreaUnit,
@@ -9057,7 +9058,6 @@ def generate_csv_project(item_id, proj_id):
                             act_case.unbalForceOpenUnit,    
                             act_case.negativeGradientUnit,
                             act_case.delPFlowingUnit,
-                            '',
                             '',
                             act_case.valveThrustCloseUnit,
                             act_case.valveThrustOpenUnit,
