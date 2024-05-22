@@ -151,7 +151,7 @@ with app.app_context():
     # rotary_upload(getRowsFromCsvFile("csv/rotaryActuatorData.csv"))
     # yieldStrength_upload(getRowsFromCsvFile("csv/yield_strength.csv"))
     # hwThrust_upload(getRowsFromCsvFile("csv/handwheel.csv"))
-    # unbalanceArea_upload(getRowsFromCsvFile("csv/unbalanceArea.csv"))
+    # unbalanceArea_upload(getRowsFromCsvFile("csv/unbalanceArea.csv")) 
     # knValue_upload(getRowsFromCsvFile("csv/knValue.csv"))
     #   add_many(getRowsFromCsvFile("csv/unbalanceArea.csv"),unbalanceArea)
     #   add_many(getRowsFromCsvFile("csv/stemSize.csv"),stemSize)
