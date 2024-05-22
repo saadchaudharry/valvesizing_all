@@ -6118,7 +6118,11 @@ def selectValve(proj_id, item_id):
                     print(f'CVLIST {len(cv__lists)}')
                     cv_id_lists = [cv_.id for cv_ in cv__lists]
                     print(cv_id_lists)
+                    
+                    
                     cv_lists = cvValues.query.filter(cvValues.cvId.in_(cv_id_lists)).all()
+                    ten_ = [cv.ten for cv in cv_lists]
+                    print(f'TOTAL TEN VALUES {ten_}')
                     for i in cv_lists:
                         seat_bore = i.seatBore
                         travel = i.travel   

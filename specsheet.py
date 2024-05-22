@@ -710,6 +710,8 @@ def createcvOpening_gas(itemCase_list,fluid_types,items,header_details):
                     'categories': f'=Sheet{sheet_number}!$D$45:$D$58',  # X-axis data for scatter plot
                     'values': f'=Sheet{sheet_number}!$E$45:$E$58',       # Y-axis data for scatter plot
                     'marker': {'type': 'circle', 'size': 5, 'fill': {'color': 'blue'}}, 
+                    'line': {'none': True},
+                    
                     # Marker style for scatter plot
                 }
                 scatter_chart.add_series(scatter_series)
@@ -816,6 +818,7 @@ def createcvOpening_gas(itemCase_list,fluid_types,items,header_details):
                     'categories': f'=Sheet{sheet_number}!$D$40:$D$54',  # X-axis data for scatter plot
                     'values': f'=Sheet{sheet_number}!$E$40:$E$54',       # Y-axis data for scatter plot
                     'marker': {'type': 'circle', 'size': 5, 'fill': {'color': 'blue'}}, 
+                    'line': {'none': True},
                     # Marker style for scatter plot
                 }
                 scatter_chart.add_series(scatter_series)
