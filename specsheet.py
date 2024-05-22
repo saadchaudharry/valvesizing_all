@@ -2078,7 +2078,8 @@ proj_details = {'customer': '', 'project': 1, 'quote': '', 'wo': '', 'sNo': '', 
 
 
 def createActSpecSheet(header_,valvedatas_,actdatas_,units_,accessories_,forces_):
-    print(f"ACTUATOR___ SIZING {forces_[0]}")
+
+    print(f"ACTUATOR___ SIZING {header_}")
     current_datetime = datetime.today().date().timetuple()
     str_current_datetime = str(current_datetime)
     a__ = datetime.now()
@@ -2662,4 +2663,4 @@ def createActSpecSheet(header_,valvedatas_,actdatas_,units_,accessories_,forces_
         worksheet.write('A72', 'FLOW CONTROL COMMUNE', h3)
         worksheet.write('L72', 'FR/AE/004/B Iss.01', f1)
 
-        workbook.close()
+    workbook.close()
