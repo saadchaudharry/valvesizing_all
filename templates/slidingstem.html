@@ -186,18 +186,18 @@
                                         <select class="Spring Action actuator_select trimType" name="trimType">
                                             
                                             {% for act_type in metadata['trimtype'] %}
-                                          
+                                            {% if act_type.valveStyleId == 19 %}
                                                     
-                                                        <option value="{{ act_type.id }}" 
-                                                        {% if act_case.trimTypeId == act_type.id %}
-                                                            selected 
-                                                        {% elif trimtType.id == act_type.id %}
-                                                            {% if not act_case.trimTypeId %}
-                                                                selected 
-                                                            {% endif %}
-                                                        {% endif %}>{{ act_type.name }}</option>
+                                                <option value="{{ act_type.id }}" 
+                                                {% if act_case.trimTypeId == act_type.id %}
+                                                    selected 
+                                                {% elif trimtType.id == act_type.id %}
+                                                    {% if not act_case.trimTypeId %}
+                                                        selected 
+                                                    {% endif %}
+                                                {% endif %}>{{ act_type.name }}</option>
                                            
-                                            
+                                            {% endif %}
                                             {% endfor %}
                                         </select>
                                         <!-- <input type="text" value="{{trimtType.name}}" class="form-control-sm-sm slidingtop_input" name="trim"> -->
@@ -208,7 +208,7 @@
                             <div class="col-4">
                                 <div class="row">
                                     <div class="col-4">
-                                        <label for="balancing">Balancing</label>
+                                        <label for="balancing">Balancing </label>
                                     </div>
                                     <div class="col-6">
                                         <select class="form-control-sm-sm valvedata_select balance" name="balancing">
@@ -216,7 +216,7 @@
                                                 <option value="{{ balance.id }}"
                                                     {% if act_case.balancingId == balance.id %}
                                                         selected
-                                                    {% elif balancing.id == balance.id %}
+                                                    {% elif balancing.name == balance.name %}
                                                         {% if not act_case.balancingId %}
                                                             selected
                                                         {% endif %}
@@ -240,14 +240,18 @@
                                         <select id="" class="form-control-sm-sm valvedata_select flowDirection" name="flowDirection">
                                         
                                             {% for flowdirection in metadata['flowdirection'] %}
+                                            {% if flowdirection.name == 'Over' or  flowdirection.name == 'Under' %}
                                                 <option value="{{flowdirection.id}}" 
-                                                    {% if act_case.flowDirectionId == flowdirection.id %}
+                                               
+                                                    {% if act_case.flowDirection_.name == flowdirection.name %}
                                                         selected
-                                                    {% elif flowdirection.id == fl_d_element.id %}
+                                                    {% elif flowdirection.name == fl_d_element.name %}  
                                                         {% if not act_case.flowDirectionId %}
                                                             selected 
                                                         {% endif %}
-                                                    {% endif %}>{{flowdirection.name}}</option>
+                                                    {% endif %}
+                                               >{{flowdirection.name}}</option>
+                                               {% endif %}
                                             {% endfor %}
                                         </select>
                                         <!-- <input type="text" value="{{fl_d_element.name}}" readonly class="form-control-sm-sm slidingtop_input" name="flow direction"> -->
@@ -787,7 +791,7 @@
 
                 <div class="row justify-content-end mt-2">
                     <div class="col-3"> 
-                        <input type="submit" class="btn btn-info mt-1 savebtn"name="saveop" value="Save & Next">
+                        <input type="submit" class="btn btn-info mt-1 savebtn" name="saveop" value="Save & Next">
                     </div>
                 </div>
         </form>

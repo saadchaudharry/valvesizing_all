@@ -86,10 +86,10 @@
                                    href="{{url_for('addCompany', proj_id=item.project.id, item_id=item.id)}}">Customer Master</a>
                             </p>
                         </li>
-                        <li class="nav-item">
+                        <!-- <li class="nav-item">
                             <p><a class="nav-link {% if request.path | url_path == 'admin-panel' %}active-sidebar{% endif %}" href="{{url_for('adminPanel', proj_id=item.project.id, item_id=item.id)}}">
                                 Admin</a></p>
-                        </li>
+                        </li> -->
                         <li class="nav-item">
                             <p><a class="nav-link {% if request.path | url_path == 'logout' %}active-sidebar{% endif %} " href="{{url_for('logout')}}">
                                 <!-- <i class="fa-solid fa-arrow-right-from-bracket" style="color: white;"></i> -->

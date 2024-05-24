@@ -1747,7 +1747,7 @@ class actuatorCaseData(db.Model):
     sfMin = Column(Float)
     natMin = Column(Float)
     frictionBand = Column(Float)
-    reqHandwheelThrust = Column(Float)
+    reqHandwheelThrust = Column(String(100))
     thrust = Column(Float)
     act_size = Column(String(100))
     act_travel = Column(Float)

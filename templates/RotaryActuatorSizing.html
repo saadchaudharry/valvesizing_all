@@ -280,7 +280,7 @@
                                         <div class="row sizingtableleft"><p class="sizingp">Values</p></div>
                                         <div class="row sizingtable"><input type="text" class="form-control-sm-sm Rotary_input rActuator_valveSize v_size" name="v_size"  {% if act_case_data.v_size %} value="{{act_case_data.v_size}}"  {% else %} value="{{cases[0].valveSize}}" {% endif %} ></div>
                                         <div class="row sizingtable"><input type="text" class="form-control-sm-sm Rotary_input rActuator_discDia d_dia" name="disc_dia" {% if act_case_data.disc_dia %} value="{{act_case_data.disc_dia}}" {% else %} value="{{cv_element.seatBore}}" {% endif %}></div>
-                                        <div class="row sizingtable"><input type="text" class="form-control-sm-sm Rotary_input rActuator_shaftDia" name="shaft_dia" {% if act_case_data.shaft_dia %} value="{{act_case_data.shaft_dia}}" {% endif %}></div>
+                                        <div class="row sizingtable"><input type="text" class="form-control-sm-sm Rotary_input rActuator_shaftDia" name="shaft_dia" {% if act_case_data.shaft_dia %} value="{{act_case_data.shaft_dia}}" {% else %} value="{{shaft_dia}}" {% endif %}></div>
                                         <div class="row sizingtable"><input type="text" class="form-control-sm-sm Rotary_input" readonly name="max_rot" value=90></div>
                                         <div class="row sizingtable"><input type="text" class="form-control-sm-sm Rotary_input rActuator_delp" name="delP" {% if act_case_data.delP %} value="{{act_case_data.delP}}" {% else %} value="{{valve.shutOffDelP}}" {% endif %}></div>
                                         <div class="row sizingtable"><input type="text" class="form-control-sm-sm Rotary_input"  name="bush_coeff" {% if act_case_data.bush_coeff %} value="{{act_case_data.bush_coeff}}" {% else %} value=0.15 {% endif %}></div>
@@ -629,7 +629,9 @@ $(document).ready(function () {
     var valveSize = $('.v_size').val()
     var discDia = $('.d_dia').val()
     var seatId = "{{valve.seatId}}"
+   
     console.log(valveSize, discDia, seatId)
+
     $.ajax({
                 type: "GET",
                 url: "/get_radialaxial",
