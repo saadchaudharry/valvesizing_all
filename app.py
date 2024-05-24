@@ -4460,7 +4460,7 @@ def liqSizing(flowrate_form, specificGravity, inletPressure_form, outletPressure
     inletPressure_p = meta_convert_P_T_FR_L('P', inletPressure_form, iPresUnit_form,
                                             'psia (a)', specificGravity * 1000)
     # pLevel = power_level_liquid(inletPressure_p, outletPressure_p, specificGravity, result)
-    pLevel = power_level_liquid(flowrate_form,inletPressure_p, outletPressure_p, specificGravity, result)
+    pLevel = power_level_liquid(inletPressure_p, outletPressure_p, specificGravity, result)
     print(f'PLLLEVELLL {pLevel}')
 
     # convert flowrate and dias for velocities
