@@ -186,7 +186,7 @@
                                         <select class="Spring Action actuator_select trimType" name="trimType">
                                             
                                             {% for act_type in metadata['trimtype'] %}
-                                            {% if act_type.valveStyleId == 19 %}
+                                            
                                                     
                                                 <option value="{{ act_type.id }}" 
                                                 {% if act_case.trimTypeId == act_type.id %}
@@ -197,7 +197,7 @@
                                                     {% endif %}
                                                 {% endif %}>{{ act_type.name }}</option>
                                            
-                                            {% endif %}
+                                            
                                             {% endfor %}
                                         </select>
                                         <!-- <input type="text" value="{{trimtType.name}}" class="form-control-sm-sm slidingtop_input" name="trim"> -->
