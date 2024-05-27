@@ -1197,10 +1197,11 @@ def createcvOpening_gas(itemCase_list,fluid_types,items,header_details):
             
 
 def createSpecSheet(case_data, units, other, act_):
-    print('INSIDE FUNNC')
+    print(f'INSIDE FUNNCSSS {case_data}')
     workbook = xlsxwriter.Workbook('controlvalve_specsheet.xlsx')
+    print(f'LENCASEDATA {len(case_data)}')
     for i in range(len(case_data)):
-        print(i)
+        print(f'INSIDE I {i}')
         current_datetime = datetime.today().date().timetuple()
         fluid_state = case_data[i][0][16]
         print(fluid_state)
@@ -1920,6 +1921,7 @@ def createSpecSheet(case_data, units, other, act_):
         worksheet.write('M72', 'FR/AE/004 Iss.01', f1)
 
         # add data
+        
         worksheet.write('D3', str(case_data[i][0][24]), cell_format1)
         worksheet.write('D5', str(case_data[i][0][25]), cell_format1)
         worksheet.write('D6', str(case_data[i][0][26]), cell_format1)
@@ -1938,6 +1940,7 @@ def createSpecSheet(case_data, units, other, act_):
             len_cases = 5
         for k in column_dict_tuple[:len_cases]:
             for j in range(14):
+                print(f'CASEDATAITEMSPEC {case_data[i][k[1]][j]}')
                 worksheet.write(f'{k[0]}{j + 11}', case_data[i][k[1]][j], cell_format1)
         # for j in range(14):
         #     worksheet.write(f'D{j + 11}', units[i][j], cell_format1)

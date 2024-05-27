@@ -4460,7 +4460,7 @@ def liqSizing(flowrate_form, specificGravity, inletPressure_form, outletPressure
     inletPressure_p = meta_convert_P_T_FR_L('P', inletPressure_form, iPresUnit_form,
                                             'psia (a)', specificGravity * 1000)
     # pLevel = power_level_liquid(inletPressure_p, outletPressure_p, specificGravity, result)
-    pLevel = power_level_liquid(inletPressure_p, outletPressure_p, specificGravity, result)
+    pLevel = power_level_liquid(flowrate_form, inletPressure_p, outletPressure_p, specificGravity, result)
     print(f'PLLLEVELLL {pLevel}')
 
     # convert flowrate and dias for velocities
@@ -8307,12 +8307,16 @@ def generate_csv_item(item_id, proj_id):
     customer__ = db.session.query(addressProject).filter_by(isCompany=True, project=project_element).first()
     enduser__ = db.session.query(addressProject).filter_by(isCompany=False, project=project_element).first()
     if request.method == "POST":
+        items = request.form.getlist('item')
+        print(f'ITEMSCSV {items}')  
+        items_list = [item_id]
         report_list = request.form.getlist('reportname')
         excel_files = []
-        items_list = [item_id]
+        
         for report in report_list:
             if report == 'controlvalve':
                 all_items = [getDBElementWithId(itemMaster, i) for i in items_list]
+                print(f'CONTROLVALVE ITEMS {all_items}')
                 # all_items = db.session.query(itemMaster).filter_by(project=getDBElementWithId(projectMaster, proj_id)).all()
                 
                 cases__ = []
@@ -8321,6 +8325,7 @@ def generate_csv_item(item_id, proj_id):
                 act_dict = []
 
                 for item in all_items:
+                    print(f'ITEMCONTROLS {item},{item.project.projectId}')
                     v_details = db.session.query(valveDetailsMaster).filter_by(item=item).first()
                     acc_details = db.session.query(accessoriesData).filter_by(item=item).first()
                     acc_list = [acc_details.manufacturer, acc_details.model, acc_details.action, acc_details.afr,
@@ -8352,6 +8357,7 @@ def generate_csv_item(item_id, proj_id):
 
                     # material_ = material_updated.name
                     itemCases_1 = db.session.query(caseMaster).filter_by(item=item).all()
+                    print(f'ITEMCASESZERO {itemCases_1[0]}')
                     date = datetime.date.today().strftime("%d-%m-%Y -- %H-%M-%S")
 
                     fields___ = ['Flow Rate', 'Inlet Pressure', 'Outlet Pressure', 'Inlet Temperature', 'Specific Gravity',
@@ -8415,6 +8421,7 @@ def generate_csv_item(item_id, proj_id):
                         customer__ = db.session.query(addressProject).filter_by(isCompany=True, project=item.project).first()
                         
                         for i in itemCases_1[:6]:
+                            print(f'FLOWRATEITEMDET {i.flowrate}')
                             if v_details.state.name == 'Gas':
                                 ind_5,ind_6,ind_7,ind_8 = i.molecularWeight,i.specificHeatRatio,i.compressibility,i.xt 
                             else:
@@ -8496,9 +8503,9 @@ def generate_csv_item(item_id, proj_id):
                         others__.append(other_val_list)
     
 
-                
+                print(f'SHHSHSHSITEM {cases__},{units__},{others__},{act_dict}')
                 createSpecSheet(cases__, units__, others__, act_dict)
-                path = "specsheet.xlsx"
+                path = "controlvalve_specsheet.xlsx"
                 project_number = item.project.id
                 current_datetime = datetime.datetime.today().date().timetuple()
 
@@ -8556,7 +8563,7 @@ def generate_csv_item(item_id, proj_id):
                 createcvOpening_gas(itemCase,fluid_types,items,header_details)
 
 
-                path = "specsheet1.xlsx"
+                path = "cvsizingcalculation.xlsx"
                 a__ = datetime.datetime.now()
                 a_ = a__.strftime("%a, %d %b %Y %H-%M-%S")
                 spec_sheet_name = f'CVPlot_{a_}.xlsx'
@@ -8899,7 +8906,7 @@ def generate_csv_item(item_id, proj_id):
         # Provide the zip file for download
         if len(files_excel) == 1:
             print(f'PPPPPPPPPPPPPPPPPPP {files_excel[0]}')
-            report_sheet = {'specsheet.xlsx':'ControlValveSizingSheetItem.xlsx', 'specsheet1.xlsx':'CVPlotItem.xlsx','act_specsheet.xlsx':'ActuatorSizingItem.xlsx'}
+            report_sheet = {'controlvalve_specsheet.xlsx':'ControlValveSizingSheetItem.xlsx', 'cvsizingcalculation.xlsx':'CVPlotItem.xlsx','act_specsheet.xlsx':'ActuatorSizingItem.xlsx'}
             return send_file(files_excel[0], as_attachment=True, download_name=report_sheet[files_excel[0]])
         else:
             return send_file(zip_file_path, as_attachment=True)
