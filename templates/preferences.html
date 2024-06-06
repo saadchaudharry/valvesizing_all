@@ -4,8 +4,9 @@
     <form action="{{url_for('updatePreferences', proj_id=item.project.id, item_id=item.id, page=page)}}" id="preference" method="post">
         <div class="row mt-2">
             <div class="col-3 shadow p-2" >
-                <h6 class="preference_heading"><b>Preferences</b></h6>
+                <h6 class="preference_heading"><b>Preferences </b></h6>
                 <hr>
+                {% if page == 'valveSizing' %}
                 <div class="row mt-2">
                     <div class="col-6">
                         <label>Pressure unit</label>
@@ -75,6 +76,125 @@
                         <!-- </select> -->
                     </div>
                 </div>
+                {% elif page == 'rotaryActuator' %}
+                <div class="row mt-2">
+                    <div class="col-6">
+                        <label>Pressure unit</label>
+                    </div>
+                    <div class="col-6">
+                        <select id="" class="form-control-sm-sm preference_select" name="pressureUnit">
+                            {% for presunit in metadata['units_dict']['pressure'] %}
+                                {% if presunit.id == item.inpres_unit %}
+                                <option value="{{presunit.id}}" selected>{{presunit.name}}</option>
+                                {% else %}
+                                <option value="{{presunit.id}}">{{presunit.name}}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+               
+
+                <div class="row mt-2">
+                    <div class="col-6">
+                        <label>Length unit</label>
+                    </div>
+                    <div class="col-6">
+                        <select id="" class="form-control-sm-sm preference_select"  name="lengthUnit">
+                            
+                            {% for length in metadata['units_dict']['length'] %}
+                                {% if length.name == item.inpipe_unit %}
+                                <option value="{{length.id}}" selected>{{length.name}}</option>
+                                {% else %}
+                                <option value="{{length.id}}">{{length.name}}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row mt-2">
+                    <div class="col-6">
+                        <label>Force unit</label> 
+                    </div>
+                    <div class="col-6">
+                        <select id="" class="form-control-sm-sm preference_select"  name="forceUnit">
+                            {% for torque in metadata['units_dict']['torque'] %}
+                                <option value="{{torque.id}}">{{torque.name}}</option>
+                            {% endfor %}
+                        </select>
+                        <!-- </select> -->
+                    </div>
+                </div>
+                {% else %}
+                <div class="row mt-2">
+                    <div class="col-6">
+                        <label>Pressure unit</label>
+                    </div>
+                    <div class="col-6">
+                        <select id="" class="form-control-sm-sm preference_select" name="pressureUnit">
+                            {% for presunit in metadata['units_dict']['pressure'] %}
+                                {% if presunit.id == item.inpres_unit %}
+                                <option value="{{presunit.id}}" selected>{{presunit.name}}</option>
+                                {% else %}
+                                <option value="{{presunit.id}}">{{presunit.name}}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+               
+
+                <div class="row mt-2">
+                    <div class="col-6">
+                        <label>Length unit</label>
+                    </div>
+                    <div class="col-6">
+                        <select id="" class="form-control-sm-sm preference_select"  name="lengthUnit">
+                            
+                            {% for length in metadata['units_dict']['length'] %}
+                                {% if length.name == item.inpipe_unit %}
+                                <option value="{{length.id}}" selected>{{length.name}}</option>
+                                {% else %}
+                                <option value="{{length.id}}">{{length.name}}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-6">
+                        <label>Area unit</label>
+                    </div>
+                    <div class="col-6">
+                        <select id="" class="form-control-sm-sm preference_select" name="areaunit">
+                            {% for areaunit in metadata['units_dict']['area'] %}
+                                {% if areaunit.id == item.inpres_unit %}
+                                <option value="{{areaunit.id}}" selected>{{areaunit.name}}</option>
+                                {% else %}
+                                <option value="{{areaunit.id}}">{{areaunit.name}}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row mt-2">
+                    <div class="col-6">
+                        <label>Force unit</label> 
+                    </div>
+                    <div class="col-6">
+                        <select id="" class="form-control-sm-sm preference_select"  name="forceUnit">
+                            {% for torque in metadata['units_dict']['torque'] %}
+                                <option value="{{torque.id}}">{{torque.name}}</option>
+                            {% endfor %}
+                        </select>
+                        <!-- </select> -->
+                    </div>
+                </div>
+                {% endif %}
             </div>
         </div>
 
