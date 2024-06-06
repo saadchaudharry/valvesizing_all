@@ -129,7 +129,7 @@
             <div class="col-10 vh-100">
                 <div class="row">
                     <div class="col-9">
-                        <div class="topicons ">
+                        <!-- <div class="topicons ">
                             <div class="row">
                                 <div class="col-6">
                                     <div class="icons-container icon mt-2 ml-3">
@@ -165,18 +165,19 @@
                                
                             </div>
                             <hr>
-                        </div>
+                        </div> -->
 
                     </div>
                     
-                    <div class="col-3 flash">
-                        {% with messages = get_flashed_messages() %}
+                    <div class="col-3 flash-message-container">
+                        {% with messages = get_flashed_messages(with_categories=True) %}
                             {% if messages %}
-                                
-                                    {% for message in messages %}
-                                        <p class="flashes">{{ message }}</p>
+                                <ul class="flash-messages ">
+                                    {% for category, message in messages %}
+                                        <li class="{{category}}">{{ message }}</li>
                                     {% endfor %}
-                                
+                                </ul>
+                         
                             {% endif %}
                         {% endwith %}
                         {% block body %}{% endblock %}
@@ -186,3 +187,14 @@
                 </div>
 
                 <!-- WRITE YOUR CODE HERE USING NEW ROW -->
+                <script>
+                    document.addEventListener('DOMContentLoaded', (event) => {
+                        const flashMessages = document.querySelector('.flash-messages');
+                        if (flashMessages) {
+                            flashMessages.classList.add('show');
+                            setTimeout(() => {
+                                flashMessages.classList.remove('show');
+                            }, 5000);  // Adjust the time as needed
+                        }
+                    });
+                </script>

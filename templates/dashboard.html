@@ -1,7 +1,7 @@
 {% block content %}
 {% include "header_2.html" %}
 
-    <div class="projectdetails project shadow mt-5">
+    <div class="projectdetails project shadow " style="margin-top: 70px;">
         <!-- <div class="project shadow"> -->
             <div class="row">
                 <div class="col-6 mt-2">
@@ -447,7 +447,7 @@ function projectDelete (projectId) {
         success: function(response) {
             var data = response
             console.log('prj del',data)
-            window.location.href = "/home/proj-"+proj_id+'/item-'+item_id; 
+            window.location.href = "/home/proj-"+response.proj+'/item-'+response.item; 
 
         },
         error: function(xhr, status, error) {

@@ -31,7 +31,7 @@ class unbalanceAreaTb(db.Model):
     trimTypeId = Column(Integer, ForeignKey("trimType.id"))
     trimType_ = relationship('trimType', back_populates='trimType_ua')
 
-    leakageClassId = Column(Integer, ForeignKey("seatLeakageClass.id"))
+    leakageClassId = Column(Integer, ForeignKey("seatLeakageClass.id")) 
     seatLeakageClass__ = relationship('seatLeakageClass', back_populates='leakage_ua')
 
 
@@ -1091,7 +1091,7 @@ class balancing(db.Model):
 # TODO dropdowns end
 
 class valveDetailsMaster(db.Model):
-    __tablename__ = "valveDetailsMaster"
+    __tablename__ = "valveDetailsMaster"    
     __mapper_args__ = {
         'polymorphic_identity': 'valveData',
         'confirm_deleted_rows': False

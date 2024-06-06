@@ -296,7 +296,7 @@ def WM_I(gamma, inletPressure, outletPressure, Flp, Fp, Pi, massflowrate):
     cvc = CVC_I(gamma, inletPressure, outletPressure, Flp, Fp, Pi)
     a_ = (mvc * cvc) ** 2
     a = massflowrate * a_ / 2
-    return round(a, 1)
+    return round(a, 1)  
 
 
 # print(WM_I(sc_initial['specificHeatRatio_gamma'], sc_initial['iPres'], sc_initial['oPres'], sc_initial['FLP'], sc_initial['Fp'], sc_initial['inletDensity'], sc_initial['massFlowrate']))
@@ -348,6 +348,7 @@ def WM_II(gamma, inletPressure, Pi, massflowrate):
 def getPowerLevelGas(inletPressure, outletPressure, gamma, Flp, Fp, Pi, massflowrate):
     try:
         regime_ = getRegime(inletPressure, outletPressure, gamma, Flp, Fp)
+        print(f'REGIME {regime_}')
         if regime_ == 'I':
             wm_ = WM_I(gamma, inletPressure, outletPressure, Flp, Fp, Pi, massflowrate)
         else:

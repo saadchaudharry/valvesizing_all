@@ -267,7 +267,7 @@ def createcvOpening_gas(itemCase_list,fluid_types,items,header_details):
             worksheet.write('D36', '', cell_format)
             worksheet.write('D37', '', cell_format)
             worksheet.write('D38', '', cell_format)
-            worksheet.write('D39', '', cell_format)
+            
             worksheet.write('D40', '', cell_format)
             worksheet.write('D41', '', cell_format)
             worksheet.write('D42', '', cell_format)
@@ -279,6 +279,7 @@ def createcvOpening_gas(itemCase_list,fluid_types,items,header_details):
 
 
             if fluid_type == 'Liquid':
+                
                 worksheet.write('D11', item.flowrate_unit, cell_format)
                 worksheet.write('D12', item.inpres_unit, cell_format)
                 worksheet.write('D13', item.outpres_unit, cell_format)
@@ -286,6 +287,7 @@ def createcvOpening_gas(itemCase_list,fluid_types,items,header_details):
                 worksheet.write('D17', item.vaporpres_unit, cell_format)
                 worksheet.write('D30', item.valvesize_unit, cell_format)
             elif fluid_type == 'Gas':
+                worksheet.write('D39', 'kW',cell_format )
                 worksheet.write('D11', item.flowrate_unit, cell_format)
                 worksheet.write('D12', item.inpres_unit, cell_format)
                 worksheet.write('D13', item.outpres_unit, cell_format)
@@ -756,7 +758,7 @@ def createcvOpening_gas(itemCase_list,fluid_types,items,header_details):
 
                 worksheet.insert_chart('C45', scatter_chart)
                 worksheet.write('A71', 'FLOW CONTROL COMMUNE',h3)
-                worksheet.write('L71', 'FR/AE/004/A Iss.01', f1)
+                worksheet.write('M71', 'FR/AE/004/A Iss.01', f1)
 
 
             
@@ -867,7 +869,8 @@ def createcvOpening_gas(itemCase_list,fluid_types,items,header_details):
                
 
                 worksheet.insert_chart('C40', scatter_chart)
-                # worksheet.write('A61', 'FLOW CONTROL COMMUNE', h3)
+                worksheet.write('A65', 'FLOW CONTROL COMMUNE PVT LTD', h3)
+                worksheet.write('M65', 'FR/AE/004/A Iss.01', f1)
                 # worksheet.write('L72', 'FR/AE/004/B Iss.01', f1)
                 # Continue for other fields
             # if item_case1:
@@ -1111,11 +1114,11 @@ def createcvOpening_gas(itemCase_list,fluid_types,items,header_details):
             if fluid_type == 'Gas':
                 worksheet.write("A43", 'BB',boldc)
                 worksheet.write('A65', 'CC', boldc)
-                worksheet.write('A66', '41', cell_format2)
-                worksheet.write('A67', '42', cell_format2)
-                worksheet.write('A68', '43', cell_format2)
-                worksheet.write('A69', '44', cell_format2)
-                worksheet.write('A70', '45', cell_format2)
+                worksheet.write('A66', '33', cell_format2)
+                worksheet.write('A67', '34', cell_format2)
+                worksheet.write('A68', '35', cell_format2)
+                worksheet.write('A69', '36', cell_format2)
+                worksheet.write('A70', '37', cell_format2)
 
 
                 worksheet.merge_range("B43:M43", 'CV Plot', bold)
@@ -1150,11 +1153,11 @@ def createcvOpening_gas(itemCase_list,fluid_types,items,header_details):
             elif fluid_type == 'Liquid':
                 worksheet.write('A38', 'BB', boldc)
                 worksheet.write('A59', 'CC', boldc)
-                worksheet.write('A60', '41', cell_format2)
-                worksheet.write('A61', '42', cell_format2)
-                worksheet.write('A62', '43', cell_format2)
-                worksheet.write('A63', '44', cell_format2)
-                worksheet.write('A64', '45', cell_format2)
+                worksheet.write('A60', '28', cell_format2)
+                worksheet.write('A61', '29', cell_format2)
+                worksheet.write('A62', '30', cell_format2)
+                worksheet.write('A63', '31', cell_format2)
+                worksheet.write('A64', '32', cell_format2)
 
                 worksheet.merge_range("B38:M38", 'CV Plot', bold)
                 worksheet.merge_range("B59:J59", 'Notes', bold)

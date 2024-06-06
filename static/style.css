@@ -71,12 +71,13 @@ label {
     align-items: center;
     
   }
-  .nav-link-user svg {
+.nav-link-user svg {
     margin-right: 5px; 
-  }
+}
 .icons-container{
     display: flex;
     justify-content: space-between;
+    gap:10px;
 }
 
 
@@ -1573,22 +1574,35 @@ td {
 
 
 
-.flash {
-    justify-content: center;
-    align-items: center;
-    font-weight: 400;
-    font-size: 1.2rem;
-    color: rgb(65, 24, 24);
-    /* background-color: #04AA6D; */
-    /* margin-top: 10px; */
-    /* z-index: 2000; */
-    /* position:absolute; */
-    /* margin: auto; */
+.flash-message-container {
+    
+    position: fixed;
+    top: 10px; 
+    right: 10px;
+    z-index: 1000;
+    width: auto; 
+    max-width: 300px; 
+    text-align: left; 
+}
+.flash-messages {
+    
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+    background-color: rgb(245, 186, 186);/* Example background color for flash messages */
+    color: rgb(145, 2, 2); /* Example text color for flash messages */
+    padding: 4px 25px;
+    border-radius: 5px;
+    /* Prevent line breaks */
+    display: inline-block; /* Ensure it doesn't stretch the full width */
+    margin: 0 auto; /* Center the message within the container */
+    max-width: 100%; /* Ensure it doesn't exceed its parent's width */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.flash p {
-    color: red;
-    margin-top: 20px;
-    z-index: 2000;
-    font-family: Verdana sans-serif;
+.flash-messages.show {
+    opacity: 1;
+}   
+.flash-messages li {
+    list-style-type: none; /* Remove default list styling */
+    margin-bottom: 5px; /* Space out each message */
 }
