@@ -4,7 +4,7 @@
     <form action="{{url_for('updatePreferences', proj_id=item.project.id, item_id=item.id, page=page)}}" id="preference" method="post">
         <div class="row mt-2">
             <div class="col-3 shadow p-2" >
-                <h6 class="preference_heading"><b>Preferences </b></h6>
+                <h6 class="preference_heading"><b>Preferences</b></h6>
                 <hr>
                 {% if page == 'valveSizing' %}
                 <div class="row mt-2">
@@ -135,7 +135,7 @@
                     <div class="col-6">
                         <select id="" class="form-control-sm-sm preference_select" name="pressureUnit">
                             {% for presunit in metadata['units_dict']['pressure'] %}
-                                {% if presunit.id == item.inpres_unit %}
+                                {% if presunit.id == act_case.sliding.inletPressureUnit %}
                                 <option value="{{presunit.id}}" selected>{{presunit.name}}</option>
                                 {% else %}
                                 <option value="{{presunit.id}}">{{presunit.name}}</option>
@@ -155,7 +155,7 @@
                         <select id="" class="form-control-sm-sm preference_select"  name="lengthUnit">
                             
                             {% for length in metadata['units_dict']['length'] %}
-                                {% if length.name == item.inpipe_unit %}
+                                {% if length.name == act_case.sliding.valveSizeUnit  %}
                                 <option value="{{length.id}}" selected>{{length.name}}</option>
                                 {% else %}
                                 <option value="{{length.id}}">{{length.name}}</option>
@@ -171,7 +171,7 @@
                     <div class="col-6">
                         <select id="" class="form-control-sm-sm preference_select" name="areaunit">
                             {% for areaunit in metadata['units_dict']['area'] %}
-                                {% if areaunit.id == item.inpres_unit %}
+                                {% if areaunit.id == act_case.sliding.unbalanceAreaUnit %}
                                 <option value="{{areaunit.id}}" selected>{{areaunit.name}}</option>
                                 {% else %}
                                 <option value="{{areaunit.id}}">{{areaunit.name}}</option>
@@ -183,12 +183,12 @@
 
                 <div class="row mt-2">
                     <div class="col-6">
-                        <label>Force unit</label> 
+                        <label>Force unit {{act_case.sliding.packingFrictionUnit}} </label> 
                     </div>
                     <div class="col-6">
                         <select id="" class="form-control-sm-sm preference_select"  name="forceUnit">
-                            {% for torque in metadata['units_dict']['torque'] %}
-                                <option value="{{torque.id}}">{{torque.name}}</option>
+                            {% for force in metadata['units_dict']['force'] %}
+                                <option value="{{force.id}}" {% if force.id == act_case.sliding.packingFrictionUnit  %}selected{% endif %}>{{force.name}}</option>
                             {% endfor %}
                         </select>
                         <!-- </select> -->
@@ -205,19 +205,29 @@
 <script>
 
     var itemId = "{{item.id}}"
+    var page = "{{page}}"
+    if(page == 'valveSizing'){
+        title = "All cases for this item will be deleted?"
+    }
+    else{
+        title = "Actuator Case for this item will be deleted"
+    }
+
     function preference(event) {
         event.preventDefault();
+     
             $.ajax({
                 type: "GET",
                 url: "/checkCaseExists",
                 data: {
                     itemId : itemId,
+                    page : page
                 },
                 success: function(data) {
                     console.log('data',data);
                     if(data == "yes"){
                         Swal.fire({
-                        title: "All the cases for this item will be deleted?",
+                        title: title,
                         showDenyButton: true,
                         confirmButtonText: "Delete",
                         denyButtonText: "Cancel"
@@ -238,7 +248,10 @@
                     alert(data);
                 }
             });
-}
+        }
+      
+
+
 
 
 

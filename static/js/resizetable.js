@@ -25,6 +25,7 @@ $(function () {
     $(document).ready(function(){
         $("#projectinput").on("keyup", function() {
           var value = $(this).val().toLowerCase();
+          
           $("#projectlist tr").filter(function() {
             $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
           });
@@ -35,6 +36,7 @@ $(function () {
     $(document).ready(function(){
         $("#iteminput").on("keyup", function() {
           var value = $(this).val().toLowerCase();
+          
           $("#itemlist tr").filter(function() {
             $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
           });

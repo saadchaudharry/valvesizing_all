@@ -239,7 +239,7 @@ def convert_V_SI(val, unit_in, unit_out, density):
     return val * SI[unit_in] / SI[unit_out]
 
 def convert_TOR_SI(val, unit_in, unit_out, density):
-    SI = {'lbf.inch': 1, 'kgf.m':0.012, 'N.m':0.1129}
+    SI = {'lbf.inch': 1, 'kgf.m':1 / 0.012, 'N.m': 1 / 0.1129}
     return val * SI[unit_in] / SI[unit_out]
 
 def meta_convert_P_T_FR_L(prop, val, unit_in, unit_out, density):
