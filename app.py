@@ -8744,25 +8744,26 @@ def generate_csv_item(item_id, proj_id):
                             v_type = 'globe'
                             act_case = db.session.query(actuatorCaseData).filter_by(actuator_=act_mas).first()
                             stroke_case = db.session.query(strokeCase).filter_by(actuatorCase_=act_case).first()
+                            if act_mas.springAction == 'AFO':
+                                actThrustClose = act_case.natMin 
+                                actThrustOpen = act_case.sfMin 
+                                open_time = stroke_case.totalExhaustTime
+                                open_time_unit = stroke_case.totalExhaustUnit
+                                close_time = stroke_case.totalfillTime 
+                                close_time_unit = stroke_case.totalFillUnit
+                            elif act_mas.springAction == 'AFC':
+                                actThrustClose = act_case.sfMin
+                                actThrustOpen = act_case.natMin
+                                open_time = stroke_case.totalfillTime
+                                open_time_unit = stroke_case.totalFillUnit
+                                close_time = stroke_case.totalExhaustTime
+                                close_time_unit = stroke_case.totalExhaustUnit
                         else:
                             v_type = 'butterfly'
                             act_case = db.session.query(rotaryCaseData).filter_by(actuator_=act_mas).first()
                         
                         
-                        if act_mas.springAction == 'AFO':
-                            actThrustClose = act_case.natMin 
-                            actThrustOpen = act_case.sfMin
-                            open_time = stroke_case.totalExhaustTime
-                            open_time_unit = stroke_case.totalExhaustUnit
-                            close_time = stroke_case.totalfillTime 
-                            close_time_unit = stroke_case.totalFillUnit
-                        elif act_mas.springAction == 'AFC':
-                            actThrustClose = act_case.sfMin
-                            actThrustOpen = act_case.natMin
-                            open_time = stroke_case.totalfillTime
-                            open_time_unit = stroke_case.totalFillUnit
-                            close_time = stroke_case.totalExhaustTime
-                            close_time_unit = stroke_case.totalExhaustUnit
+
 
                         
                         print(f'ACCESSSSSSSS {access.booster}')
