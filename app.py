@@ -7850,7 +7850,7 @@ def rotaryActuator(proj_id, item_id):
                 print(f'FALLS IN EXCEPTION')
                 flash('No actuator is suitable for this valve. Try changing the actuator selection')
                 return redirect(url_for('rotaryActuator', item_id=item_id, proj_id=proj_id))
-            all_act_data.append(a_dict)
+            all_act_data.append(a_dict) 
 
             print('bt, rt, et')
             
