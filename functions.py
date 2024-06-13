@@ -141,8 +141,9 @@ def conver_P_SI(val, unit_in, unit_out, density):
     if unit_in[-1] == '(g)':
         val = meta_convert_g_to_a(float(val),unit_in[0])
         
-    elif unit_in[-1] == '(a)':
+    else:
         val = val
+    
         
     
 
@@ -155,7 +156,7 @@ def conver_P_SI(val, unit_in, unit_out, density):
     
     if unit_out[-1] == '(g)':
         return_val = meta_convert_a_to_g(final_val,unit_out[0])
-    elif unit_out[-1] == '(a)':
+    else:
         return_val = final_val 
     print(f'FINALVALUES {return_val}')
     
