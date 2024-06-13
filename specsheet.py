@@ -711,8 +711,9 @@ def createcvOpening_gas(itemCase_list,fluid_types,items,header_details):
                 scatter_series = {
                     'categories': f'=Sheet{sheet_number}!$D$45:$D$58',  # X-axis data for scatter plot
                     'values': f'=Sheet{sheet_number}!$E$45:$E$58',       # Y-axis data for scatter plot
-                    'marker': {'type': 'circle', 'size': 5, 'fill': {'color': 'blue'}}, 
+                    'marker': {'type': 'circle', 'size': 5, 'fill': {'color': '#FF0000'}}, 
                     'line': {'none': True},
+                    'name': 'Cases CV'
                     
                     # Marker style for scatter plot
                 }
@@ -725,7 +726,8 @@ def createcvOpening_gas(itemCase_list,fluid_types,items,header_details):
                     'categories': f'=Sheet{sheet_number}!$D$45:$D$58',  # X-axis data for line plot
                     'values': f'=Sheet{sheet_number}!$C$45:$C$58',
                     'marker': {'type': 'none'},
-                    'line': {'width': 1 },     # Y-axis data for line plot
+                    'line': {'width': 1.5 ,'color':'#0070C0'},     # Y-axis data for line plot
+                    'name': 'Std CV'
                 }
                 scatter_chart.add_series(line_series)
 
@@ -736,7 +738,10 @@ def createcvOpening_gas(itemCase_list,fluid_types,items,header_details):
                     'minor_unit': 1,     # Interval between minor ticks
                     'minor_unit_type': 'num',  # Set minor unit type to number
                     'num_font': {'size': 10},  # Font size for tick labels
-                    'name': 'Flow Coefficient, Cv'  # Name of the X-axis
+                    'name': 'Flow Coefficient, Cv',  # Name of the X-axis
+                    'major_gridlines': {'visible': True, 'line': {'color': '#d1d1d1', 'extend': False} },
+                    'num_font':  {'name': 'Arial', 'size': 9, 'color': '#6c757d'},
+                    'name_font' : {'name': 'Arial', 'size': 10, 'color': '#6c757d','bold':False}
                 })
 
                 
@@ -748,10 +753,14 @@ def createcvOpening_gas(itemCase_list,fluid_types,items,header_details):
                     'max': 100,          # Maximum X-axis value
                     'major_unit': 10,    # Interval between major ticks
                     'minor_unit': 1,     # Interval between minor ticks
-                    'minor_unit_type': 'num',  # Set minor unit type to number
-                    'num_font': {'size': 10},  # Font size for tick labels
-                    'name': '% Opening'  # Name of the X-axis
+                    'minor_unit_type': 'num',  # Set minor unit type to number  
+                    'name': '% Opening',  # Name of the X-axis
+                    'major_gridlines': {'visible': True, 'line': {'color': '#d1d1d1', 'extend': False} },
+                    'num_font':  {'name': 'Arial', 'size': 9, 'color': '#6c757d'},
+                    'name_font' : {'name': 'Arial', 'size': 10, 'color': '#6c757d', 'bold':False},
+                    
                 })
+
 
 
                
@@ -819,8 +828,9 @@ def createcvOpening_gas(itemCase_list,fluid_types,items,header_details):
                 scatter_series = {
                     'categories': f'=Sheet{sheet_number}!$D$40:$D$54',  # X-axis data for scatter plot
                     'values': f'=Sheet{sheet_number}!$E$40:$E$54',       # Y-axis data for scatter plot
-                    'marker': {'type': 'circle', 'size': 5, 'fill': {'color': 'blue'}}, 
+                    'marker': {'type': 'circle', 'size': 5, 'fill': {'color': '#FF0000'}}, 
                     'line': {'none': True},
+                    'name': 'Cases CV'
                     # Marker style for scatter plot
                 }
                 scatter_chart.add_series(scatter_series)
@@ -831,9 +841,10 @@ def createcvOpening_gas(itemCase_list,fluid_types,items,header_details):
                 # Add a line series to the scatter chart
                 line_series = {
                     'categories': f'=Sheet{sheet_number}!$D$40:$D$54',  # X-axis data for line plot
-                    'values': f'=Sheet{sheet_number}!$C$40:$C$54',
-                    'marker': {'type': 'none'}, 
-                    'line':  {'width': 1},     # Y-axis data for line plot
+                        'values': f'=Sheet{sheet_number}!$C$40:$C$54',
+                        'marker': {'type': 'none'}, 
+                    'line':  {'width': 1.5, 'color':'#0070C0'},     # Y-axis data for line plot
+                    'name': 'Std CV'
                 }
                 scatter_chart.add_series(line_series)
 
@@ -846,7 +857,10 @@ def createcvOpening_gas(itemCase_list,fluid_types,items,header_details):
                     'minor_unit': 1,     # Interval between minor ticks
                     'minor_unit_type': 'num',  # Set minor unit type to number
                     'num_font': {'size': 10},  # Font size for tick labels
-                    'name': 'Percentage Openings / Degree'  # Name of the X-axis
+                    'name': 'Percentage Openings / Degree',  # Name of the X-axis
+                    'major_gridlines': {'visible': True,'line': {'color': '#d1d1d1', 'extend': False}  },
+                    'num_font':  {'name': 'Arial', 'size': 9, 'color': '#6c757d'},
+                    'name_font' : {'name': 'Arial', 'size': 10, 'color': '#6c757d','bold':False}
                 })
             
            
@@ -861,7 +875,10 @@ def createcvOpening_gas(itemCase_list,fluid_types,items,header_details):
                     'minor_unit': 1,     # Interval between minor ticks
                     'minor_unit_type': 'num',  # Set minor unit type to number
                     'num_font': {'size': 10},  # Font size for tick labels
-                    'name': 'Percentage Openings / Degree'  # Name of the X-axis
+                    'name': 'Percentage Openings / Degree',  # Name of the X-axis
+                    'major_gridlines': {'visible': True,'line': {'color': '#d1d1d1', 'extend': False}  },
+                    'num_font':  {'name': 'Arial', 'size': 9, 'color': '#6c757d', 'line':{'extend': False}},
+                    'name_font' : {'name': 'Arial', 'size': 10, 'color': '#6c757d','bold':False}
                 })
             
 
