@@ -377,6 +377,7 @@ class itemMaster(db.Model):
     flowrate_unit = Column(String(20))
     inpres_unit = Column(String(20))
     outpres_unit = Column(String(20))
+    presdrop_unit = Column(String(20))
  
     intemp_unit = Column(String(20))
     vaporpres_unit = Column(String(20))

@@ -50,6 +50,7 @@
                                                         <div class="row sizingtableleft_warning"><p class="sizingp">Input</p></div>
                                                         <div class="row sizingtableleft"><p class="sizingp">Flowrate</p></div>
                                                         <div class="row sizingtableleft"><p class="sizingp">InletPressure</p></div>
+                                                        <div class="row sizingtableleft"><p class="sizingp">PressureDrop</p></div>
                                                         <div class="row sizingtableleft"><p class="sizingp">Outlet Pressure</p></div>
                                                         <div class="row sizingtableleft"><p class="sizingp">Inlet Temperature</p></div>
                                                         <div class="row sizingtableleft"><p class="sizingp">Vapor Pressure</p></div>
@@ -80,6 +81,18 @@
                                                                 <select id="#"
                                                                         class="sizingtable_inputs sizingunits" data-desc="inpres" name="inpres_unit">
                                                                         {% for presunit in metadata['units_dict']['pressure'] %}
+                                                                                {% if presunit.id == item.inpres_unit %}
+                                                                                <option value="{{presunit.id}}" selected>{{presunit.name}}</option>
+                                                                                {% else %}
+                                                                                <option value="{{presunit.id}}">{{presunit.name}}</option>
+                                                                                {% endif %}
+                                                                        {% endfor %}
+                                                                </select>
+                                                        </div>
+                                                        <div class="row sizingtable">
+                                                                <select id="#"
+                                                                        class="sizingtable_inputs sizingunits" data-desc="presdrop" name="presdrop_unit">
+                                                                        {% for presunit in metadata['units_dict']['delPressure'] %}
                                                                                 {% if presunit.id == item.inpres_unit %}
                                                                                 <option value="{{presunit.id}}" selected>{{presunit.name}}</option>
                                                                                 {% else %}
@@ -148,8 +161,9 @@
                                                         <div class="row sizingtable_header"></div>
                                                         {% endif %}
                                                         <div class="row sizingtable"><input type="text" name="flowrate" class="sizingtable_inputs sizingvalue_flowrate" value="{{cases[i].flowrate}}"></div>
-                                                        <div class="row sizingtable"><input type="text" name="inletPressure" class="sizingtable_inputs sizingvalue_inpres" value="{{cases[i].inletPressure}}"></div>
-                                                        <div class="row sizingtable"><input type="text" name="outletPressure" class="sizingtable_inputs sizingvalue_outpres" value="{{cases[i].outletPressure}}"></div>
+                                                        <div class="row sizingtable"><input type="text" name="inletPressure" class="sizingtable_inputs sizingvalue_inpres" value="{{cases[i].inletPressure}}" data-case="{{i}}"></div>
+                                                        <div class="row sizingtable"><input type="text" name="pressureDrop" class="sizingtable_inputs sizingvalue_presdrop" value="{{cases[i].pressuredrop}}" data-case="{{i}}"></div>
+                                                        <div class="row sizingtable"><input type="text" name="outletPressure" class="sizingtable_inputs sizingvalue_outpres" value="{{cases[i].outletPressure}}" data-case="{{i}}"></div>
                                                         <div class="row sizingtable"><input type="text" name="inletTemp" class="sizingtable_inputs sizingvalue_temperature" value="{{cases[i].inletTemp}}"></div>
                                                         <div class="row sizingtable "><input type="text" name="vaporPressure" class="sizingtable_inputs sizingvalue_vaporPres" value="{{cases[i].vaporPressure}}"></div>
                                                         <div class="row sizingtable"><input type="text" name="specificGravity" class="sizingtable_inputs sizingvalue_sg" value="{{cases[i].specificGravity}}"></div>
@@ -171,8 +185,9 @@
                                                         <div class="row sizingtable_header"></div>
                                                         {% endif %}
                                                         <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="flowrate" class="sizingtable_inputs sizingvalue_flowrate"></div>
-                                                        <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="inletPressure" class="sizingtable_inputs sizingvalue_inpres"></div>
-                                                        <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="outletPressure" class="sizingtable_inputs sizingvalue_outpres"></div>
+                                                        <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="inletPressure" class="sizingtable_inputs sizingvalue_inpres" data-case="{{i}}"></div>
+                                                        <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="pressureDrop" class="sizingtable_inputs sizingvalue_presdrop" data-case="{{i}}"></div>
+                                                        <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="outletPressure" class="sizingtable_inputs sizingvalue_outpres" data-case="{{i}}"></div>
                                                         <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="inletTemp" class="sizingtable_inputs sizingvalue_temperature"></div>
                                                         <div class="row sizingtable "><input type="text" {% if i == 0 %} required {% endif %} name="vaporPressure" class="sizingtable_inputs sizingvalue_vaporPres"></div>
                                                         <div class="row sizingtable"><input type="text" {% if i == 0 %} required {% endif %} name="specificGravity" class="sizingtable_inputs sizingvalue_sg"></div>
@@ -232,7 +247,7 @@
                                                 <div class="col-8 colborder_bottom">
                                                         <div class="row sizingtableleft"><p class="sizingp">Calculated CV</p></div>
                                                         <div class="row sizingtableleft"><p class="sizingp">Open percentage</p></div>
-                                                        <div class="row sizingtableleft"><p class="sizingp">Pressure Drop</p></div>
+                                                        <!-- <div class="row sizingtableleft"><p class="sizingp">Pressure Drop</p></div> -->
                                                         <div class="row sizingtableleft"><p class="sizingp">Choked pressure drop</p></div>
                                                         <div class="row sizingtableleft"><p class="sizingp">Liq.Critical Pr.Ratio</p></div>
                                                         <div class="row sizingtableleft"><p class="sizingp">Piping Geometry Factor</p></div>
@@ -251,7 +266,7 @@
                                                                         <option value="%">%</option>
                                                                 </select>
                                                         </div>
-                                                        <div class="row sizingtable">
+                                                        <!-- <div class="row sizingtable">
                                                                 <select id="#"
                                                                         class="sizingtable_inputs ">
                                                                         {% for presunit in metadata['units_dict']['pressure'] %}
@@ -262,7 +277,7 @@
                                                                                 {% endif %}
                                                                         {% endfor %}
                                                                 </select>
-                                                        </div>
+                                                        </div> -->
                                                         <div class="row sizingtable">
                                                                 <select id="#"
                                                                 class="sizingtable_inputs ">
@@ -298,7 +313,7 @@
                                                 <div class="col-2 colborder_bottom case{{i+1}}_op">
                                                         <div class="row sizingtable"><input type="text" class="calculatedcv_row" value="{{cases[i].calculatedCv}}"></div>
                                                         <div class="row sizingtable"><input type="text" class="sizingtable_inputs" value="{{cases[i].openingPercentage}}"></div>
-                                                        <div class="row sizingtable"><input type="text" class="sizingtable_inputs" value="{{cases[i].pressuredrop}}"></div>
+                                                        <!-- <div class="row sizingtable"><input type="text" class="sizingtable_inputs" value="{{cases[i].pressuredrop}}"></div> -->
                                                         <div class="row sizingtable"><input type="text" class="sizingtable_inputs" value="{{cases[i].chokedDrop}}"></div>
                                                         <div class="row sizingtable"><input type="text" class="sizingtable_inputs" value="{{cases[i].Ff}}"></div>
                                                         <div class="row sizingtable"><input type="text" class="sizingtable_inputs" value="{{cases[i].Fp}}"></div>
@@ -318,7 +333,7 @@
                                                 <div class="col-2 colborder_bottom case{{i+1}}_op">
                                                         <div class="row sizingtable"><input type="text" class="calculatedcv_row"></div>
                                                         <div class="row sizingtable"><input type="text" class="sizingtable_inputs"></div>
-                                                        <div class="row sizingtable"><input type="text" class="sizingtable_inputs"></div>
+                                                        <!-- <div class="row sizingtable"><input type="text" class="sizingtable_inputs"></div> -->
                                                         <div class="row sizingtable"><input type="text" class="sizingtable_inputs"></div>
                                                         <div class="row sizingtable"><input type="text" class="sizingtable_inputs"></div>
                                                         <div class="row sizingtable"><input type="text" class="sizingtable_inputs"></div>
@@ -742,6 +757,51 @@
 
         $(document).ready(function(){
 
+                // var presdrop = $('.sizingvalue_presdrop').val()
+                // var inpres = $('.sizingvalue_inpres').val()
+                // var outpres = $('.sizingvalue_outpres').val()
+                $('.sizingvalue_inpres').on('change',function() {
+                        var caseNumber = $(this).data('case');
+                        
+                        var inpres = parseFloat($(`.sizingvalue_inpres[data-case='${caseNumber}']`).val())
+                        var presdrop = parseFloat($(`.sizingvalue_presdrop[data-case='${caseNumber}']`).val())
+                        if(presdrop){
+                                var outpres = inpres - presdrop
+                                $(`.sizingvalue_outpres[data-case='${caseNumber}']`).val(outpres);
+                        }
+                     
+                });
+                $('.sizingvalue_outpres').on('change',function() {
+                        var caseNumber = $(this).data('case');
+                        var outpres = parseFloat($(`.sizingvalue_outpres[data-case='${caseNumber}']`).val())
+                        var inpres = parseFloat($(`.sizingvalue_inpres[data-case='${caseNumber}']`).val())
+                        var presdrop = parseFloat($(`.sizingvalue_presdrop[data-case='${caseNumber}']`).val())
+                        if(inpres){
+                                var presdrop = inpres - outpres
+                                $(`.sizingvalue_presdrop[data-case='${caseNumber}']`).val(presdrop);
+                        }
+                        else{
+                                alert('Enter inletpressure')
+                        }
+                     
+                });
+                $('.sizingvalue_presdrop').on('change',function() {
+                        var caseNumber = $(this).data('case');
+                        
+                        var inpres = parseFloat($(`.sizingvalue_inpres[data-case='${caseNumber}']`).val())
+                        var presdrop = parseFloat($(`.sizingvalue_presdrop[data-case='${caseNumber}']`).val())
+                        if(inpres){
+                                var outpres = inpres - presdrop
+                                $(`.sizingvalue_outpres[data-case='${caseNumber}']`).val(outpres);
+                        }
+                        else{
+                                alert('Enter inletpressure ')
+                        }
+
+                
+                   
+                });
+
                 const inputs = $('.sizingtable input');
                 inputs.each(function(index) {
                         $(this).keydown(function(event) {
@@ -827,10 +887,11 @@
                 $('.sizingunits').on('change', function(){
 
                         var final_unit = $(this).val();
-                        console.log(prev_unit,final_unit);
+                        console.log('changesizing',prev_unit,final_unit);
                         var params = $(this).data('desc');
                         var param_values = []
                         var specificGravity = []
+                       
 
                         $('.sizingvalue_' + params).each(function() {
                                 param_values.push(this.value);
@@ -986,6 +1047,8 @@
         var lastClass;
         var copiedClass;
         $(document).ready(function(){
+        
+                
                 if ($(".stdpipe").prop("checked")){
                                
                                 $('.ipipeStatus').prop('readonly', true);
