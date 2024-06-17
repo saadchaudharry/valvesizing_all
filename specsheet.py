@@ -741,7 +741,8 @@ def createcvOpening_gas(itemCase_list,fluid_types,items,header_details):
                     'name': 'Flow Coefficient, Cv',  # Name of the X-axis
                     'major_gridlines': {'visible': True, 'line': {'color': '#d1d1d1', 'extend': False} },
                     'num_font':  {'name': 'Arial', 'size': 9, 'color': '#6c757d'},
-                    'name_font' : {'name': 'Arial', 'size': 10, 'color': '#6c757d','bold':False}
+                    'name_font' : {'name': 'Arial', 'size': 10, 'color': '#6c757d','bold':False},
+                    'crossing': 0, 
                 })
 
                 
@@ -749,7 +750,7 @@ def createcvOpening_gas(itemCase_list,fluid_types,items,header_details):
 
                 # Set x-axis range and tick intervals for the combined chart
                 scatter_chart.set_x_axis({
-                    'min': 10,           # Minimum X-axis value
+                    'min': 0,           # Minimum X-axis value
                     'max': 100,          # Maximum X-axis value
                     'major_unit': 10,    # Interval between major ticks
                     'minor_unit': 1,     # Interval between minor ticks
@@ -758,6 +759,7 @@ def createcvOpening_gas(itemCase_list,fluid_types,items,header_details):
                     'major_gridlines': {'visible': True, 'line': {'color': '#d1d1d1', 'extend': False} },
                     'num_font':  {'name': 'Arial', 'size': 9, 'color': '#6c757d'},
                     'name_font' : {'name': 'Arial', 'size': 10, 'color': '#6c757d', 'bold':False},
+                    'crossing': 0, 
                     
                 })
 
@@ -785,9 +787,9 @@ def createcvOpening_gas(itemCase_list,fluid_types,items,header_details):
                     for i in calc_opencv:
                         for j in range(len(opencv_final)):
                             if opencv_final[j] > i:
-                                opencv_final.insert(j,i)
-                                cv_values.insert(j,calc_cvvalues[cnt])
-                                cnt+=1
+                                opencv_final.insert(j, i)
+                                cv_values.insert(j, calc_cvvalues[cnt])
+                                cnt += 1
                                 break
                     calc_finalcv = []
                     for i in cv_values:
@@ -796,12 +798,11 @@ def createcvOpening_gas(itemCase_list,fluid_types,items,header_details):
                         else:
                             calc_finalcv.append(None)
 
-         
                     print(f'openingpercentagedatas {opencv_final},{cv_values},{calc_finalcv}')
                     final_xy = {
-                        'x_values' : opencv_final,
-                        'y_values' : cv_values,
-                        'y1_values' : calc_finalcv
+                        'x_values': opencv_final,
+                        'y_values': cv_values,
+                        'y1_values': calc_finalcv
                     }
                     return final_xy
 
@@ -810,16 +811,15 @@ def createcvOpening_gas(itemCase_list,fluid_types,items,header_details):
                 open_cv = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
                 calc_opencv = case_cv_finalPercent
                 calc_cvvalues = case_cv_final
-                sheet_number = f_cnt+1
+                sheet_number = f_cnt + 1
 
-                final_values = getCVplotchart(open_cv,cv_values,calc_opencv,calc_cvvalues)
+                final_values = getCVplotchart(open_cv, cv_values, calc_opencv, calc_cvvalues)
                 print(f'LLSJSJJSJSJJ {final_values}')
-             
+
                 # Write the data to the worksheet
                 worksheet.write_column('C40', final_values['y_values'])
                 worksheet.write_column('D40', final_values['x_values'])
                 worksheet.write_column('E40', final_values['y1_values'])
-
 
                 # Add a line chart
                 scatter_chart = workbook.add_chart({"type": "scatter", "name": "Scatter Chart", "subtype": "straight", "embedded": True})
@@ -828,64 +828,54 @@ def createcvOpening_gas(itemCase_list,fluid_types,items,header_details):
                 scatter_series = {
                     'categories': f'=Sheet{sheet_number}!$D$40:$D$54',  # X-axis data for scatter plot
                     'values': f'=Sheet{sheet_number}!$E$40:$E$54',       # Y-axis data for scatter plot
-                    'marker': {'type': 'circle', 'size': 5, 'fill': {'color': '#FF0000'}}, 
+                    'marker': {'type': 'circle', 'size': 5, 'fill': {'color': '#FF0000'}},
                     'line': {'none': True},
                     'name': 'Cases CV'
                     # Marker style for scatter plot
                 }
                 scatter_chart.add_series(scatter_series)
 
-
-
-
                 # Add a line series to the scatter chart
                 line_series = {
                     'categories': f'=Sheet{sheet_number}!$D$40:$D$54',  # X-axis data for line plot
-                        'values': f'=Sheet{sheet_number}!$C$40:$C$54',
-                        'marker': {'type': 'none'}, 
-                    'line':  {'width': 1.5, 'color':'#0070C0'},     # Y-axis data for line plot
+                    'values': f'=Sheet{sheet_number}!$C$40:$C$54',
+                    'marker': {'type': 'none'},
+                    'line': {'width': 1.5, 'color': '#0070C0'},     # Y-axis data for line plot
                     'name': 'Std CV'
                 }
                 scatter_chart.add_series(line_series)
 
-                # add_vertical_lines(worksheet, scatter_chart, sheet_number)
-
                 scatter_chart.set_y_axis({
-                    'min': 0 ,           # Minimum X-axis value
+                    'min': 0,           # Minimum X-axis value
                     'max': cv_graph_values[-1],          # Maximum X-axis value
                     'major_unit': cv_graph_values[-1] / 10,        # Interval between major ticks
                     'minor_unit': 1,     # Interval between minor ticks
                     'minor_unit_type': 'num',  # Set minor unit type to number
                     'num_font': {'size': 10},  # Font size for tick labels
                     'name': 'Percentage Openings / Degree',  # Name of the X-axis
-                    'major_gridlines': {'visible': True,'line': {'color': '#d1d1d1', 'extend': False}  },
-                    'num_font':  {'name': 'Arial', 'size': 9, 'color': '#6c757d'},
-                    'name_font' : {'name': 'Arial', 'size': 10, 'color': '#6c757d','bold':False}
+                    'major_gridlines': {'visible': True, 'line': {'color': '#d1d1d1', 'extend': False}},
+                    'num_font': {'name': 'Arial', 'size': 9, 'color': '#6c757d'},
+                    'name_font': {'name': 'Arial', 'size': 10, 'color': '#6c757d', 'bold': False},
+                    'crossing': 0, 
                 })
-            
-           
-                
-         
 
                 # Set x-axis range and tick intervals for the combined chart
                 scatter_chart.set_x_axis({
-                    'min': 10,           # Minimum X-axis value
-                    'max': 100,          # Maximum X-axis value
-                    'major_unit': 10,    # Interval between major ticks
-                    'minor_unit': 1,     # Interval between minor ticks
+                    'min': 0,           # Minimum X-axis value (adjusted from 10 to 0)
+                    'max': 100,         # Maximum X-axis value
+                    'major_unit': 10,   # Interval between major ticks
+                    'minor_unit': 1,    # Interval between minor ticks
                     'minor_unit_type': 'num',  # Set minor unit type to number
                     'num_font': {'size': 10},  # Font size for tick labels
                     'name': 'Percentage Openings / Degree',  # Name of the X-axis
-                    'major_gridlines': {'visible': True,'line': {'color': '#d1d1d1', 'extend': False}  },
-                    'num_font':  {'name': 'Arial', 'size': 9, 'color': '#6c757d', 'line':{'extend': False}},
-                    'name_font' : {'name': 'Arial', 'size': 10, 'color': '#6c757d','bold':False}
+                    'major_gridlines': {'visible': True, 'line': {'color': '#d1d1d1', 'extend': False}},
+                    'num_font': {'name': 'Arial', 'size': 9, 'color': '#6c757d', 'line': {'extend': False}},
+                    'name_font': {'name': 'Arial', 'size': 10, 'color': '#6c757d', 'bold': False},
+                    'crossing': 0, 
                 })
-            
-
-
-               
 
                 worksheet.insert_chart('C40', scatter_chart)
+
                 worksheet.write('A65', 'FLOW CONTROL COMMUNE PVT LTD', h3)
                 worksheet.write('M65', 'FR/AE/004/A Iss.01', f1)
                 # worksheet.write('L72', 'FR/AE/004/B Iss.01', f1)

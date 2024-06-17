@@ -1,5 +1,16 @@
 {% block content %}
 {% include "header.html" %}
+<style>
+    /* Custom styles for SweetAlert2 buttons */
+    .swal2-confirm.custom-confirm-button {
+        background-color: #4CAF50 !important; /* Green */
+        color: white !important;
+    }
+    .swal2-deny.custom-deny-button {
+        background-color: #f44336 !important; /* Red */
+        color: white !important;
+    }
+</style>
 <br>
                         <form action="{{url_for('generate_csv_project', proj_id=item.project.id, item_id=item.id)}}" id="itemForm" method="post">
                             <div class="row mt-2">
@@ -83,7 +94,7 @@
                                                 </div>
                                             </div>
                                         </div>
-            
+                                        <input id="file_type" type="hidden" value="" name="file_type" />
                                         <div class="col-4 ">
                                             <div class="itemselect_table mt-2 shadow p-3">
                                                 <h6 class="sub_heading"><b>Items</b></h6>
@@ -127,10 +138,38 @@
                         </form>
 
                         <script>
+                            var proj_id = "{{item.project.id}}"
+                            var item_id = "{{item.id}}"
                            
-                            // $('.project_download_btn').on('click',function(){
-                                    
-                            // })
+                            $('#itemForm').submit(function(event){
+                                event.preventDefault()
+                                Swal.fire({
+                                title: "Select the report type you want to download",
+                                showDenyButton: true,
+                                confirmButtonText: "Excel",
+                                denyButtonText: "Pdf",
+                                confirmButtonText: '<i class="fas fa-file-excel"></i> Excel',
+                                denyButtonText: '<i class="fas fa-file-pdf"></i> PDF',
+                                customClass: {
+                                    confirmButton: 'custom-confirm-button',
+                                    denyButton: 'custom-deny-button',
+                            
+                                }
+                                }).then((result) => {
+                                
+                                if (result.isConfirmed) {
+                                
+                                $('#file_type').val('excel'); 
+                                $('#itemForm').off('submit').submit();
+                                console.log('setfile',$('#file_type').val())
+                                //   window.location.href = `/generate-csv-project/proj-${proj_id}/item-${item_id}?file_type=excel`;
+                               
+                                }else{
+                                    $('#file_type').val('pdf');
+                                    $('#itemForm').off('submit').submit();
+                                } 
+                                });
+                            })
                             $(document).ready(function() {
                                 
                                 $('.reportname').change(function() {

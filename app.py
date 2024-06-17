@@ -5,7 +5,7 @@ import os
 import ast
 import io
 import zipfile
-from openpyxl import Workbook
+from openpyxl import Workbook, load_workbook
 from openpyxl.styles import Font
 from sqlalchemy import desc
 from flask_sqlalchemy import SQLAlchemy  # Create DB with Flask
@@ -42,7 +42,10 @@ from decimal import Decimal
 from flask_mail import Mail,Message
 from sqlalchemy.orm import joinedload
 from urllib.parse import urlparse
-
+from fpdf import FPDF
+from io import BytesIO
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
 
 
 
@@ -1885,10 +1888,11 @@ def home(proj_id, item_id):
     if user.fccUser:
         users = db.session.query(userMaster).filter_by(fccUser = True).all()
         user_lists = [user.id for user in users]
-        all_projects = db.session.query(projectMaster).filter(projectMaster.createdById.in_(user_lists)).all()
+        all_projects = db.session.query(projectMaster).filter(projectMaster.createdById.in_(user_lists)).order_by(
+        projectMaster.id.desc()).all()
         
     else:
-        all_projects = db.session.query(projectMaster).filter_by(user=current_user).all()
+        all_projects = db.session.query(projectMaster).filter_by(user=current_user).order_by(projectMaster.id.desc()).all()
     address_, eng_ = getEngAddrList(all_projects)
     items_list = db.session.query(itemMaster).filter_by(project=projectMaster.query.get(int(proj_id))).order_by(
         itemMaster.itemNumber.asc()).all()
@@ -6166,7 +6170,7 @@ def interpolate_percent(data, x_db, vtype):
         y_list = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
     else:
         y_list = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
-    if x_list[0] < data < x_list[-1]:
+    if data < x_list[-1]:
         a = 0
         while True:
             # print(f"Cv1, C: {Cv1[a], C}")
@@ -6259,7 +6263,7 @@ def selectValve(proj_id, item_id):
                     # print(cv_dummy)
                     index_to_remove = []
                     for i in return_globe_data:
-                        if i[0] < min_cv < i[9]:
+                        if min_cv < i[9]:
                             a = 0
                             while True:
                                 if i[a] == min_cv:
@@ -6288,7 +6292,7 @@ def selectValve(proj_id, item_id):
                         else:
                             i.append(10)
                             i.append(10)
-                            index_to_remove.append(return_globe_data.index(i))
+                            index_to_remove.append(return_globe_data.index(i))  
                             # print(f"Index to remove: {index_to_remove}")
                             # print('CV not in range')
                     for i in return_globe_data:
@@ -6394,6 +6398,8 @@ def selectValve(proj_id, item_id):
                                                 last_case.molecularWeight)
                         print(final_cv1)
                         o_percent = interpolate_percent(final_cv1, select_dict, valve_type_)
+                        print(f'LIQUIDFLOWRATE {last_case.flowrate}')
+                        print(f'OPENPERCENT {o_percent}')
                         fl = interpolate(final_cv1, select_dict, select_dict_fl, valve_type_)
                         xt = interpolate(final_cv1, select_dict, select_dict_xt, valve_type_)
                         fd = interpolate_fd(final_cv1, select_dict, select_dict_fd, valve_type_)
@@ -9181,6 +9187,8 @@ def getActModelNo(series, size, faction, manualOverride, limitStop):
 
 @app.route('/generate-csv-project/proj-<proj_id>/item-<item_id>', methods=['GET', 'POST'])
 def generate_csv_project(item_id, proj_id):
+    
+    
     print(f'GENERATE_CSV {item_id}')
     items_list = db.session.query(itemMaster).filter_by(project=projectMaster.query.get(int(proj_id))).order_by(
         itemMaster.itemNumber.asc()).all()
@@ -9191,6 +9199,8 @@ def generate_csv_project(item_id, proj_id):
 
         if request.method == "POST":
             items = request.form.getlist('item')
+            file_type = request.form.get('file_type')
+            print(f'FILESTYPES {file_type}')        
             if not items:
                 flash('Select an item to download','error')
                 return redirect(url_for('generate_csv_project', item_id=item_id, proj_id=proj_id))
@@ -9812,19 +9822,55 @@ def generate_csv_project(item_id, proj_id):
             #     for file in files_excel:
             #         zipf.write(file, os.path.basename(file))
 
-            print(f'FILES EXCEL {files_excel}')
+            # print(f'FILES EXCEL {file_type}')
+            if file_type == 'excel':
+                print('Inside Excel')
+                if len(files_excel) == 1:   
+                    print(f'PPPPPPPPPPPPPPPPPPP {files_excel[0]}')
+                    report_sheet = {'controlvalve_specsheet.xlsx':'ControlValveSizingSheet.xlsx', 'cvsizingcalculation.xlsx':'CVPlot.xlsx','act_specsheet.xlsx':'ActuatorSizingSheet.xlsx'}
+                    return send_file(files_excel[0], as_attachment=True, download_name=report_sheet[files_excel[0]])
+                elif len(files_excel) > 1:
+                    return send_file(zip_file_path, as_attachment=True, download_name=zip_file_name)
+                else:
+                    flash('Select category to download','error')
+                    return redirect(url_for('generate_csv_project', item_id=item_id, proj_id=proj_id))
 
-            if len(files_excel) == 1:   
-                print(f'PPPPPPPPPPPPPPPPPPP {files_excel[0]}')
-                report_sheet = {'controlvalve_specsheet.xlsx':'ControlValveSizingSheet.xlsx', 'cvsizingcalculation.xlsx':'CVPlot.xlsx','act_specsheet.xlsx':'ActuatorSizingSheet.xlsx'}
-                return send_file(files_excel[0], as_attachment=True, download_name=report_sheet[files_excel[0]])
-            elif len(files_excel) > 1:
-                return send_file(zip_file_path, as_attachment=True, download_name=zip_file_name)
+            elif file_type == 'pdf':
+                if len(files_excel) == 1:   
+                    print(f'PPPPPPPPPPPPPPPPPPP {files_excel[0]}')
+                    report_sheet = {'controlvalve_specsheet.xlsx':'ControlValveSizingSheet.xlsx', 'cvsizingcalculation.xlsx':'CVPlot.xlsx','act_specsheet.xlsx':'ActuatorSizingSheet.xlsx'}
+                    file = send_file(files_excel[0], as_attachment=True, download_name=report_sheet[files_excel[0]])
+
+
+
+               
+
+                # Check if the file is an Excel file
+                if not file.filename.endswith('.xlsx'):
+                    return "Unsupported file format. Please upload an Excel file."
+
+                # Load the Excel workbook
+                wb = load_workbook(file)
+                ws = wb.active
+
+                # Generate PDF
+                pdf_filename = 'converted_file.pdf'
+                buffer = BytesIO()
+                c = canvas.Canvas(buffer, pagesize=letter)
+                
+                # Example: Writing content to PDF
+                for row in ws.iter_rows():
+                    for cell in row:
+                        c.drawString(100, 100, str(cell.value))
+
+                c.save()
+                buffer.seek(0)
+
+                return send_file(buffer, as_attachment=True, attachment_filename=pdf_filename)
+                    
             else:
-                flash('Select category to download','error')
+                flash('Select category to download', 'error')
                 return redirect(url_for('generate_csv_project', item_id=item_id, proj_id=proj_id))
-
-
 
 
 
