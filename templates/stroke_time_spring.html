@@ -217,9 +217,22 @@
 							
 							</div>
 							<div class="row sizingtable">
+								<select name="packing_frictionUnit" class="form-control-sm-sm spring_input actuatorUnits" data-desc="packingFrictUnit"
+								>
+								{% for length in metadata['units_dict']['force'] %}
+									<option value="{{length.id}}" 
+									{% if stroke_element.packing_frictionUnit == length.id %}
+									selected 
+								{% elif act_case.packingFrictionUnit == length.id %}
+									{% if not stroke_element.packing_frictionUnit %}
+										selected 
+									{% endif %}
+								{% endif %}>{{length.name}}</option>
+								{% endfor %}
+							</select>
 							
 								
-							<input type="text" class="form-control-sm-sm spring_input" {% if act_case.packingFrictionUnit %} value="{{act_case.packingFrictionUnit}}" {% endif %} readonly/>
+							
 							
 							</select>
 								
@@ -262,35 +275,35 @@
 
 							</div>
 							<div class="row sizingtable"><input type="text" class="form-control-sm-sm spring_input"
-									name="act_size" {% if stroke_element.act_size %} value="{{stroke_element.act_size}}" {% else %} value="{{act_case.act_size}}" {% endif %}>
+									name="act_size" {% if stroke_element.act_size %} value="{{stroke_element.act_size}}" {% elif act_case.act_size %} value="{{act_case.act_size}}" {% endif %}>
 							</div>
 							<div class="row sizingtable"><input type="text" class="form-control-sm-sm spring_input actuatorvalue_diaphragmArea"
-									name="diaphragm_ea" {% if stroke_element.diaphragm_ea %} value="{{stroke_element.diaphragm_ea}}" {% else %} value="{{act_case.diaphragm_ea}}" {% endif %}>
+									name="diaphragm_ea" {% if stroke_element.diaphragm_ea %} value="{{stroke_element.diaphragm_ea}}" {% elif act_case.diaphragm_ea %} value="{{act_case.diaphragm_ea}}" {% endif %}>
 							</div>
 							<div class="row sizingtable"><input type="text" class="form-control-sm-sm spring_input actuatorvalue_actTravel"
-									name="act_travel" {% if stroke_element.act_travel %} value="{{stroke_element.act_travel}}" {% else %} value="{{act_case.act_travel}}" {% endif %}>
+									name="act_travel" {% if stroke_element.act_travel %} value="{{stroke_element.act_travel}}" {% elif act_case.act_travel %} value="{{act_case.act_travel}}" {% endif %}>
 							</div>
 							<div class="row sizingtable"><input type="text" class="form-control-sm-sm spring_input actuatorvalue_setPressureUnit"
-									name="airsupply_max" {% if stroke_element.airsupply_max %} value="{{stroke_element.airsupply_max}}" {% else %} value="{{act_case.airsupply_max}}" {% endif %}>
+									name="airsupply_max" {% if stroke_element.airsupply_max %} value="{{stroke_element.airsupply_max}}" {% elif act_case.airsupply_max %} value="{{act_case.airsupply_max}}" {% endif %}>
 							</div>
 							<div class="row sizingtable"><input type="text" class="form-control-sm-sm spring_input actuatorvalue_lower_benchsetUnit"
-									name="lower_benchset" {% if stroke_element.lower_benchset %} value="{{stroke_element.lower_benchset}}" {% else %} value="{{act_case.lower_benchset}}" {% endif %}>
+									name="lower_benchset" {% if stroke_element.lower_benchset %} value="{{stroke_element.lower_benchset}}" {% elif act_case.lower_benchset %} value="{{act_case.lower_benchset}}" {% endif %}>
 							</div>
 							<div class="row sizingtable"><input type="text" class="form-control-sm-sm spring_input actuatorvalue_upper_benchsetUnit"
-									name="upper_benchset" {% if stroke_element.upper_benchset %} value="{{stroke_element.upper_benchset}}" {% else %} value="{{act_case.upper_benchset}}" {% endif %}>
+									name="upper_benchset" {% if stroke_element.upper_benchset %} value="{{stroke_element.upper_benchset}}" {% elif act_case.upper_benchset %} value="{{act_case.upper_benchset}}" {% endif %}>
 							</div>
 							<div class="row sizingtable"><input type="text" class="form-control-sm-sm spring_input actuatorvalue_spring_rateUnit"
-									name="spring_rate" {% if stroke_element.spring_rate %} value="{{stroke_element.spring_rate}}" {% else %} value="{{act_case.spring_rate}}" {% endif %}>
+									name="spring_rate" {% if stroke_element.spring_rate %} value="{{stroke_element.spring_rate}}" {% elif act_case.spring_rate %} value="{{act_case.spring_rate}}" {% endif %}>
 							</div>
-							<div class="row sizingtable"><input type="text" class="form-control-sm-sm spring_input"
-									readonly name="packingF" value="{{act_case.packingFriction}}">
+							<div class="row sizingtable"><input type="text" class="form-control-sm-sm spring_input actuatorvalue_packingFrictUnit"	
+									 name="packing_friction" {% if stroke_element.packing_friction %} value="{{stroke_element.packing_friction}}" {% elif act_case.packingFriction %} value="{{act_case.packingFriction}}" {% endif %}>
 							</div>
 							<div class="row sizingtable"><input type="text" class="form-control-sm-sm spring_input actuatorvalue_clearanceVolUnit"
-									name="clearance_vol" {% if stroke_element.clearance_vol %} value="{{ stroke_element.clearance_vol }}" {% else %} value="{{clearance_vol}}" {% endif %}>
+									name="clearance_vol" {% if stroke_element.clearance_vol %} value="{{ stroke_element.clearance_vol }}" {% elif clearance_vol %} value="{{clearance_vol}}" {% endif %}>
 							</div>
 
 							<div class="row sizingtable">
-								<input type="text" name="swept_vol" class="form-control-sm-sm spring_input actuatorvalue_sweptVolUnit" {% if stroke_element.swept_vol %} value="{{ stroke_element.swept_vol }}" {% else %} value="{{swept_vol}}" {% endif %}>
+								<input type="text" name="swept_vol" class="form-control-sm-sm spring_input actuatorvalue_sweptVolUnit" {% if stroke_element.swept_vol %} value="{{ stroke_element.swept_vol }}" {% elif swept_vol %} value="{{swept_vol}}" {% endif %}>
 							</div>
 
 

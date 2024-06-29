@@ -153,7 +153,7 @@
 										{% endif %}
 										{% endfor %}
 									</select>
-								</div>
+								</div>	
 							</div>
 							<div class="row">
 								<div class="col-5">
@@ -357,19 +357,19 @@
 
 									<div class="row ">
 										<div class="col-6">
-											<label for="Flow Direction">Flow Direction</label>
+											<label for="Flow Direction">Flow Direction  </label>
 
 										</div>
 										<div class="col-6">
 											<select class="form-control-sm-sm valvedata_select flowDirection__" name="flowDirection__">
 
 												{% for flowdirection in metadata['flowdirection'] %}
-												<!-- {% if flowdirection.name == valve.flowDirection__.name %}
+												{% if flowdirection.id == valve.flowDirection__.id %}
 												<option value="{{flowdirection.id}}" selected>{{flowdirection.name}}
 												</option>
-												{% else %} -->
+												{% else %}
 												<option value="{{flowdirection.id}}">{{flowdirection.name}}</option>
-												<!-- {% endif %} -->
+												{% endif %}
 												{% endfor %}
 											</select>
 										</div>
@@ -446,7 +446,7 @@
 											</select>
 										</div>
 									</div>
-									<div class="row " id="stem">
+									<div class="row " id="stem">	
 										<div class="col-6">
 											<label for="stem" id="stemLabel">Stem</label>
 
@@ -475,7 +475,7 @@
 											<select class="form-control-sm-sm valvedata_select" name="disc">
 												{% for disc in metadata['disc'] %}
 												{% if disc.valveStyleId == metadata['butterflyStyleId'] %}
-												<option value="{{disc.id}}">{{disc.name}}</option>
+												<option value="{{disc.id}}" {% if disc.name == valve.disc__.name %} selected {% endif %}>{{disc.name}}</option>
 												{% endif %}
 												{% endfor %}
 											</select>
@@ -491,7 +491,7 @@
 
 												{% for plug in metadata['disc'] %}
 												{% if plug.valveStyleId == metadata['globeStyleId'] %}
-												<option value="{{plug.id}}">{{plug.name}}</option>
+												<option value="{{plug.id}}" {% if plug.name == valve.disc__.name %} selected {% endif %}>{{plug.name}}</option>
 												{% endif %}
 												{% endfor %}
 											</select>
@@ -508,7 +508,7 @@
 
 												{% for seat in metadata['seat'] %}
 												{% if seat.valveStyleId == metadata['globeStyleId'] %}
-												<option value="{{seat.id}}">{{seat.name}}</option>
+												<option value="{{seat.id}}" {% if seat.name == valve.seat__.name %} selected {% endif %}>{{seat.name}}</option>
 												{% endif %}
 												{% endfor %}
 											</select>
@@ -524,7 +524,7 @@
 
 												{% for seat in metadata['seat'] %}
 												{% if seat.valveStyleId == metadata['butterflyStyleId'] %}
-												<option value="{{seat.id}}">{{seat.name}}</option>
+												<option value="{{seat.id}}" {% if seat.name == valve.seat__.name %} selected {% endif %}>{{seat.name}}</option>
 												{% endif %}
 												{% endfor %}
 											</select>
@@ -783,6 +783,7 @@
 	})
 </script>
 <script>
+	
 	function globe_materials(){
 		$("#bonnet").show();
 		$("#stem").show();
@@ -816,7 +817,8 @@
 		$("#gasket").text("Seal Gasket");
 	}
 	function trimvalidations() {
-
+		var flow_dir = "{{valve.flowDirection__.name}}"
+		var bal = "{{valve.balancing__.name}}"
 		var series = $('.valveSeries').val();
 		if(series == '10' || series == '11'){
 			var trim = $('.trimtypeG').val();
@@ -842,14 +844,16 @@
 				
 					$('.flowDirection__').append($('<option>', {
 					value: key,
-					text: value
+					text: value,
+					selected: value == flow_dir
 				}));
 				});
 				
 				$.each(data[1], function(key, value) {
 					$('.balancing').append($('<option>', {
 					value: key,
-					text: value
+					text: value,
+					selected: value == bal
 				}));
 			
 				});
@@ -862,7 +866,8 @@
 	
 	}
 	function seriesValidation() {
-		
+		var flow_dir = "{{valve.flowDirection__.name}}"
+	
 		var series = $('.valveSeries').val();
 		$.ajax({
 			type:'GET',
@@ -890,7 +895,8 @@
 				if(key != 0){
 					$('.flowDirection__').append($('<option>', {
 					value: key,
-					text: value
+					text: value,
+					selected: value == flow_dir
 				}));
 				}
 			});
