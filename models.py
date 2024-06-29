@@ -752,6 +752,7 @@ class flowCharacter(db.Model):  # TODO - Paandi  ............Done
 
     flowCharacter_ = relationship('valveDetailsMaster', cascade="all,delete", back_populates='flowCharacter__')
     flowCharacter_c = relationship('cvTable', cascade="all,delete", back_populates='flowCharacter_')
+    actuatorCase = relationship('actuatorCaseData',back_populates='flowCharacter_')
     kn = relationship('knValue', cascade="all,delete", back_populates='flowCharacter_')
 
     @staticmethod
@@ -896,6 +897,8 @@ class shaft(db.Model):  # Stem in globe
     yield_strength = Column(Float)
 
     shaft_ = relationship('valveDetailsMaster', cascade="all,delete", back_populates='shaft__')
+    rotaryCase = relationship('rotaryCaseData', cascade="all,delete", back_populates='shaft__')
+    
 
     valveStyleId = Column(Integer, ForeignKey("valveStyle.id"))
     style = relationship('valveStyle', back_populates='shaft_')
@@ -1448,11 +1451,14 @@ class actuatorMaster(db.Model):
     adjustableTravelStop = Column(String(100))
     orientation = Column(String(100))
     availableAirSupplyMin = Column(Float)
+    availableAirSupplyMinUnit = Column(String(20))
     availableAirSupplyMax = Column(Float)
     availableAirSupplyMaxUnit = Column(String(20))
     travelStops = Column(String(100))
     setPressure = Column(Float)
     setPressureUnit = Column(String(20))
+    shutoffDelP = Column(Float)
+    shutoffDelPUnit = Column(String(20))
 
 
     # rel as parent
@@ -1545,6 +1551,7 @@ class strokeCase(db.Model):
     airsupply_max = Column(Float)
     clearance_vol = Column(Float)
     swept_vol = Column(Float) 
+    packing_friction = Column(Float)
 
     diaphragm_eaUnit = Column(String(20))
     lower_benchsetUnit = Column(String(20))
@@ -1554,6 +1561,7 @@ class strokeCase(db.Model):
     clearance_volUnit = Column(String(20))
     swept_volUnit = Column(String(20))
     act_travelUnit = Column(String(20))
+    packing_frictionUnit = Column(String(20))
 
     #intermediate results
     piExhaust = Column(Float)
@@ -1626,6 +1634,7 @@ class rotaryCaseData(db.Model):
     pack_coeff = Column(Float)
     radial_coeff = Column(Float)
     Section = Column(Float)
+    
 
     #units 
     valveSizeUnit = Column(String(100))
@@ -1682,6 +1691,10 @@ class rotaryCaseData(db.Model):
 
     actuatorMasterId = Column(Integer, ForeignKey('actuatorMaster.id'))
     actuator_ = relationship('actuatorMaster', back_populates='rotCase')
+
+    shaftId = Column(Integer, ForeignKey("shaft.id"))
+    shaft__ = relationship('shaft', back_populates='rotaryCase')
+    
 
     @staticmethod
     def update(new_data, id):
@@ -1835,6 +1848,9 @@ class actuatorCaseData(db.Model):
 
     flowDirectionId = Column(Integer, ForeignKey("flowDirection.id"))
     flowDirection_ = relationship('flowDirection', back_populates='actuatorCase')
+
+    flowCharacterId = Column(Integer, ForeignKey("flowCharacter.id"))
+    flowCharacter_ = relationship('flowCharacter', back_populates='actuatorCase')
 
 
    

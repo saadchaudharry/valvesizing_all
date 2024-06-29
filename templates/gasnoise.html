@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Noise Calculation - Aerodynamics</title>
+
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous"> -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <style>
+        label {
+            margin-left: 10px;
+        }
+
+        input {
+            border: none;
+            padding: 0px;
+            width: 100%;
+            height: 21px;
+            text-align: left;
+        }
+
+        select{
+            border: none;
+            padding: 0px;
+            width: 100%;
+            height: 21px;
+        }
+
+        table {
+            width: 100%;
+            font-size: 12px;
+            margin-bottom: 0px;
+        }
+
+        tr,
+        th {
+            height: 20px;
+            padding: 0px;
+            margin: 0%;
+            text-align: center;
+        }
+        p{
+            padding-left: 5px;
+        }
+        h4{
+            padding-left: 20px;
+            color: #1f4e79;
+        }
+        h6{
+           color: black;
+        }
+        .description{
+            padding: 0px;
+            height:30px;
+            width:320px;
+            text-align: left;
+            
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="row ">
+        <div class="col-12">
+            <h4 >Gas Noise Calculation</h4>
+        </div>
+    </div>
+    <div class="row  " style="margin-left: 5px">
+        <div class="col-6 ">
+            <h6 >Input Data</h6>
+        </div>
+        <div class="col-6">
+            <h6 style="margin-left: 25px;"> Noise calculations Result</h6>
+        </div>
+    </div>
+    <div class="row " style="margin-left: 10px;margin-top: 0px;">
+        <form action="{{url_for('gasNoise')}}" method="post">
+        <div class="clo-6" style="overflow-x:auto;height:83vh; border: groove; border-radius: 0px;margin-left: 8px; ">
+            <!-- <h6 style="position: fixed;">Input Data</h6> -->
+
+           
+
+            <table class="table table-bordered" style="margin-bottom: 0px;">
+                <tr style="color: black;position: fixed;">
+                    <td style="background-color: rgb(207, 207, 207);padding: 0px;height:30px;width:280px;text-align: left;"><p style="margin-bottom: 0px;margin-top: 4px;font-size:12px;color:black">Description</p></td>
+                    <td style="background-color: rgb(207, 207, 207);padding: 0px;height:30px;width:50px;text-align: left;"><p style="margin-bottom: 0px;margin-top: 4px;font-size:12px;color:black">Symbol</p></td>
+                    <td style="background-color: rgb(207, 207, 207);padding: 0px;height:30px;width:70px;text-align: left;"> <p style="margin-bottom: 0px;margin-top: 4px;font-size:12px;color:black">Inputs</p></td>
+                    <td style="background-color: rgb(207, 207, 207);padding: 0px;height:30px;width:50px;text-align: left;"><p style="margin-bottom: 0px;margin-top: 4px;font-size:12px;color:black">Units</p></td>
+                    <td style="background-color: rgb(207, 207, 207);padding: 0px;height:30px;width:70px;text-align: left;"> <p style="margin-bottom: 0px;margin-top: 4px;font-size:12px;color:black">Std.Data</p></td>
+                    <td style="background-color: rgb(207, 207, 207);padding: 0px;height:30px;width:50px;text-align: left;"><p style="margin-bottom: 0px;margin-top: 4px;font-size:12px;color:black">Std.Units</p></td>
+                    <td style="background-color: rgb(207, 207, 207);padding: 0px;height:30px;width:46px;text-align: left;"><p style="margin-bottom: 0px;margin-top: 4px;font-size:12px;color:black">Eqn.#</p></td>
+                </tr>
+            </table>
+           
+            <table class="table table-bordered" style="margin-bottom: 0px;margin-top: 30px;">
+                <tr>
+                    
+                    <td style="padding: 0px;height:23px;width:50px;background-color: #F2F2F2;text-align: left;"><p style="margin-bottom: 0px;font-size:12px;color:black">Standardised Process Data</p> </td>
+                   
+                </tr>
+            </table>
+            <!-- <div class="row" style="background-color: blue;">
+                <p style="margin-bottom: 0px;font-size:12px;color:aqua">Standardised Process Data</p>
+            </div> -->
+            
+            <table class="table table-bordered" style="margin-bottom: 0px;">
+
+                <tbody>
+
+                    <tr>
+                        <td style="padding: 0px;padding-left: 5px;height:23px;width: 280px;text-align: left;">Mass flow
+                            Rate</td>
+                        <td style="padding: 0px;height:23px;width:50px">W </td>
+                        <td style="padding: 0px;height:23px;width:70px"> <input type="text"></td>
+                        <td style="padding: 0px;height:23px;width:50px">
+                            <select name="" id="">
+                            <option value="" selected>kg/s</option>
+                            <option value="">Pa(a)</option>
+                            <option value="">kg/kmol</option>
+                          </select>
+                        </td>
+                        <td style="padding: 0px;height:23px;width:70px"> <input type="text" name="flowrate" class="flowrate" value=1.19></td>
+                        <td style="padding: 0px;height:23px;width:50px">kg/s</td>
+                        <td style="padding: 0px;height:23px;width:50px">-</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 0px;padding-left: 5px;height:23px;text-align: left;">Inlet absolute pressure
+                        </td>
+                        <td style="padding: 0px;height:23px;">P1</td>
+                        <td style="padding: 0px;height:23px;"><input type="text" ></td>
+                        <td style="padding: 0px;height:23px;width:50px">
+                            <select name="" id="">
+                            <option value="" selected>kg/s</option>
+                            <option value="">Pa(a)</option>
+                            <option value="">kg/kmol</option>
+                          </select>
+                        </td>
+                        <td style="padding: 0px;height:23px;"> <input type="text" name="inpres" class="inpres" value=1000000></td>
+                        <td style="padding: 0px;height:23px;">Pa(a)</td>
+                        <td style="padding: 0px;height:23px;">-</td>
+                    </tr>
+
+                    <tr>
+                        <td style="padding: 0px;padding-left: 5px;height:23px;text-align: left;">Outlet absolute
+                            pressure</td>
+                        <td style="padding: 0px;height:23px;">P2</td>
+                        <td style="padding: 0px;height:23px;"><input type="text"></td>
+                        <td style="padding: 0px;height:23px;width:50px">
+                            <select name="" id="">
+                            <option value="" selected>kg/s</option>
+                            <option value="">Pa(a)</option>
+                            <option value="">kg/kmol</option>
+                          </select>
+                        </td>
+                        <td style="padding: 0px;height:23px;"> <input type="text" name="outpres" class="outpres" value=50000></td>
+                        <td style="padding: 0px;height:23px;">Pa(a)</td>
+                        <td style="padding: 0px;height:23px;">-</td>
+                    </tr>
+
+                    <tr>
+                        <td style="padding: 0px;padding-left: 5px;height:23px;text-align: left;">Inlet absolute
+                            temperature</td>
+                        <td style="padding: 0px;height:23px;">T</td>
+                        <td style="padding: 0px;height:23px;"><input type="text" ></td>
+                        <td style="padding: 0px;height:23px;width:50px">
+                            <select name="" id="">
+                            <option value="" selected>kg/s</option>
+                            <option value="">Pa(a)</option>
+                            <option value="">kg/kmol</option>
+                          </select>
+                        </td>
+                        <td style="padding: 0px;height:23px;"> <input type="text" name="intemp" class="intemp" value=450></td>
+                        <td style="padding: 0px;height:23px;">K</td>
+                        <td style="padding: 0px;height:23px;">-</td>
+                    </tr>
+
+                    <tr>
+                        <td style="padding: 0px;padding-left: 5px;height:23px;text-align: left;">Molecular mass</td>
+                        <td style="padding: 0px;height:23px;">M</td>
+                        <td style="padding: 0px;height:23px;"><input type="text"></td>
+                        <td style="padding: 0px;height:23px;width:50px">
+                            <select name="" id="">
+                            <option value="" selected>kg/s</option>
+                            <option value="">Pa(a)</option>
+                            <option value="">kg/kmol</option>
+                          </select>
+                        </td>
+                        <td style="padding: 0px;height:23px;"> <input type="text" name="molmass" class="molmass" value=19.8></td>
+                        <td style="padding: 0px;height:23px;">kg/kmol</td>
+                        <td style="padding: 0px;height:23px;">-</td>
+                    </tr>
+
+                    <tr>
+                        <td style="padding: 0px;padding-left: 5px;height:23px;text-align: left;">Specific heat ratio
+                        </td>
+                        <td style="padding: 0px;height:23px;">γ</td>
+                        <td style="padding: 0px;height:23px;"><input type="text"></td>
+                        <td style="padding: 0px;height:23px;width:50px">
+                            <select name="" id="">
+                            <option value="" selected>kg/s</option>
+                            <option value="">Pa(a)</option>
+                            <option value="">kg/kmol</option>
+                          </select>
+                        </td>
+                        <td style="padding: 0px;height:23px;"> <input type="text" name="specheat" class="specheat" value=1.22></td>
+                        <td style="padding: 0px;height:23px;">-</td>
+                        <td style="padding: 0px;height:23px;">-</td>
+                    </tr>
+
+                    <tr>
+                        <td style="padding: 0px;padding-left: 5px;height:23px;text-align: left;">Compressibility factor
+                        </td>
+                        <td style="padding: 0px;height:23px;">Z</td>
+                        <td style="padding: 0px;height:23px;"><input type="text"></td>
+                        <td style="padding: 0px;height:23px;width:50px">
+                            <select name="" id="">
+                            <option value="" selected>kg/s</option>
+                            <option value="">Pa(a)</option>
+                            <option value="">kg/kmol</option>
+                          </select>
+                        </td>
+                        <td style="padding: 0px;height:23px;"> <input type="text" name="compfact" class="compfact" value=1></td>
+                        <td style="padding: 0px;height:23px;">-</td>
+                        <td style="padding: 0px;height:23px;">-</td>
+                    </tr>
+
+
+                </tbody>
+            </table>
+
+            <table class="table table-bordered" style="margin-bottom: 0px;">
+                <tr>
+                    <td style="padding: 0px;height:23px;width:50px;background-color: #F2F2F2;text-align: left;"><p style="margin-bottom: 0px;font-size:12px;color:black">Pipe Data</p> </td>                   
+                </tr>
+            </table>
+            
+            <table class="table table-bordered" style="margin-bottom: 0px;">
+
+                <tbody>
+                    <tr>
+                        <td style="padding: 0px;padding-left: 5px;height:23px;width:280px;text-align: left;">Inlet
+                            nominal pipe size</td>
+                        <td style="padding: 0px;height:23px;width:50px">- </td>
+                        <td style="padding: 0px;height:23px;width:70px"> <input type="text"></td>
+                        <td style="padding: 0px;height:23px;width:50px">
+                            <select name="" id="">
+                            <option value="" selected>kg/s</option>
+                            <option value="">Pa(a)</option>
+                            <option value="">kg/kmol</option>
+                          </select>
+                        </td>
+                        <td style="padding: 0px;height:23px;width:70px"> <input type="text" name="inpipesize" class="inpipesize" value=8></td>
+                        <td style="padding: 0px;height:23px;width:50px">inch</td>
+                        <td style="padding: 0px;height:23px;width:50px">-</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 0px;padding-left: 5px;height:23px;text-align: left;">Outlet nominal pipe
+                            size</td>
+                        <td style="padding: 0px;height:23px;">-</td>
+                        <td style="padding: 0px;height:23px;"><input type="text"></td>
+                        <td style="padding: 0px;height:23px;width:50px">
+                            <select name="" id="">
+                            <option value="" selected>kg/s</option>
+                            <option value="">Pa(a)</option>
+                            <option value="">kg/kmol</option>
+                          </select>
+                        </td>
+                        <td style="padding: 0px;height:23px;"> <input type="text" name="outpipesize" class="outpipesize" value=8></td>
+                        <td style="padding: 0px;height:23px;">inch</td>
+                        <td style="padding: 0px;height:23px;">-</td>
+                    </tr>
+
+                    <tr>
+                        <td style="padding: 0px;padding-left: 5px;height:23px;text-align: left;">Pipe wall thickness
+                        </td>
+                        <td style="padding: 0px;height:23px;">ts</td>
+                        <td style="padding: 0px;height:23px;"><input type="text"></td>
+                        <td style="padding: 0px;height:23px;width:50px">
+                            <select name="" id="">
+                            <option value="" selected>kg/s</option>
+                            <option value="">Pa(a)</option>
+                            <option value="">kg/kmol</option>
+                          </select>
+                        </td>
+                        <td style="padding: 0px;height:23px;"> <input type="text" name="pipethick" class="pipethick" value=0.008></td>
+                        <td style="padding: 0px;height:23px;">inch</td>
+                        <td style="padding: 0px;height:23px;">-</td>
+                    </tr>
+
+                    <tr>
+                        <td style="padding: 0px;padding-left: 5px;height:23px;text-align: left;">Internal pipe diameter
+                        </td>
+                        <td style="padding: 0px;height:23px;">D</td>
+                        <td style="padding: 0px;height:23px;"><input type="text"></td>
+                        <td style="padding: 0px;height:23px;width:50px">
+                            <select name="" id="">
+                            <option value="" selected>kg/s</option>
+                            <option value="">Pa(a)</option>
+                            <option value="">kg/kmol</option>
+                          </select>
+                        </td>
+                        <td style="padding: 0px;height:23px;"> <input type="text" name="pipedia" class="pipedia" value=0.2031 ></td>
+                        <td style="padding: 0px;height:23px;">m</td>
+                        <td style="padding: 0px;height:23px;">-</td>
+                    </tr>
+
+                    <tr>
+                        <td style="padding: 0px;padding-left: 5px;height:23px;text-align: left;">Speed of sound in pipe
+                        </td>
+                        <td style="padding: 0px;height:23px;">Cs</td>
+                        <td style="padding: 0px;height:23px;"><input type="text" ></td>
+                        <td style="padding: 0px;height:23px;width:50px">
+                            <select name="" id="">
+                            <option value="" selected>kg/s</option>
+                            <option value="">Pa(a)</option>
+                            <option value="">kg/kmol</option>
+                          </select>
+                        </td>
+                        <td style="padding: 0px;height:23px;"> <input type="text" name="soundpipe" class="soundpipe" value=5000></td>
+                        <td style="padding: 0px;height:23px;">m/s</td>
+                        <td style="padding: 0px;height:23px;">-</td>
+                    </tr>
+
+                    <tr>
+                        <td style="padding: 0px;padding-left: 5px;height:23px;text-align: left;">Density of pipe
+                            material</td>
+                        <td style="padding: 0px;height:23px;">ρs</td>
+                        <td style="padding: 0px;height:23px;"><input type="text"></td>
+                        <td style="padding: 0px;height:23px;width:50px">
+                            <select name="" id="">
+                            <option value="" selected>kg/s</option>
+                            <option value="">Pa(a)</option>
+                            <option value="">kg/kmol</option>
+                          </select>
+                        </td>
+                        <td style="padding: 0px;height:23px;"> <input type="text" name="densitypipe" class="densitypipe"></td>
+                        <td style="padding: 0px;height:23px;">kg/m3</td>
+                        <td style="padding: 0px;height:23px;">-</td>
+                    </tr>
+
+
+                </tbody>
+            </table>
+
+            <table class="table table-bordered" style="margin-bottom: 0px;">
+                <tr>
+                    <td style="padding: 0px;height:23px;width:50px;background-color: #F2F2F2;text-align: left;"><p style="margin-bottom: 0px;font-size:12px;color:black">Constants</p> </td>                   
+                </tr>
+            </table>
+
+            <table class="table table-bordered" style="margin-bottom: 0px;">
+
+                <tbody>
+                    <tr>
+                        <td style="padding: 0px;padding-left: 5px;height:23px;width:280px;text-align: left;">Speed of
+                            sound in air</td>
+                        <td style="padding: 0px;height:23px;width:50px">co</td>
+                        <td style="padding: 0px;height:23px;width:70px"> <input type="text"></td>
+                        <td style="padding: 0px;height:23px;width:50px">
+                            <select name="" id="">
+                            <option value="" selected>kg/s</option>
+                            <option value="">Pa(a)</option>
+                            <option value="">kg/kmol</option>
+                          </select>
+                        </td>
+                        <td style="padding: 0px;height:23px;width:70px"> <input type="text" name="soundair" class="soundair" value=343></td>
+                        <td style="padding: 0px;height:23px;width:50px">m/s</td>
+                        <td style="padding: 0px;height:23px;width:50px">-</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 0px;padding-left: 5px;height:23px;text-align: left;">Density of air</td>
+                        <td style="padding: 0px;height:23px;">ρo</td>
+                        <td style="padding: 0px;height:23px;"><input type="text"></td>
+                        <td style="padding: 0px;height:23px;width:50px">
+                            <select name="" id="">
+                            <option value="" selected>kg/s</option>
+                            <option value="">Pa(a)</option>
+                            <option value="">kg/kmol</option>
+                          </select>
+                        </td>
+                        <td style="padding: 0px;height:23px;"><input type="text" name="densityair" class="densityair"></td>
+                        <td style="padding: 0px;height:23px;">kg/m3</td>
+                        <td style="padding: 0px;height:23px;">-</td>
+                    </tr>
+
+                    <tr>
+                        <td style="padding: 0px;padding-left: 5px;height:23px;text-align: left;">Structural loss factor
+                            reference frequency</td>
+                        <td style="padding: 0px;height:23px;">Hz</td>
+                        <td style="padding: 0px;height:23px;"><input type="text"></td>
+                        <td style="padding: 0px;height:23px;width:50px">
+                            <select name="" id="">
+                            <option value="" selected>kg/s</option>
+                            <option value="">Pa(a)</option>
+                            <option value="">kg/kmol</option>
+                          </select>
+                        </td>
+                        <td style="padding: 0px;height:23px;"><input type="text" name="strucloss" class="strucloss"></td>
+                        <td style="padding: 0px;height:23px;">Hz</td>
+                        <td style="padding: 0px;height:23px;">-</td>
+                    </tr>
+
+                    <tr>
+                        <td style="padding: 0px;padding-left: 5px;height:23px;text-align: left;">Standard atmoshperic
+                            pressure</td>
+                        <td style="padding: 0px;height:23px;">Ps</td>
+                        <td style="padding: 0px;height:23px;"><input type="text"></td>
+                        <td style="padding: 0px;height:23px;width:50px">
+                            <select name="" id="">
+                            <option value="" selected>kg/s</option>
+                            <option value="">Pa(a)</option>
+                            <option value="">kg/kmol</option>
+                          </select>
+                        </td>
+                        <td style="padding: 0px;height:23px;"><input type="text" name="stdatpres" class="stdatpres"></td>
+                        <td style="padding: 0px;height:23px;">Pa</td>
+                        <td style="padding: 0px;height:23px;">-</td>
+                    </tr>
+
+
+                </tbody>
+            </table>
+
+            <table class="table table-bordered" style="margin-bottom: 0px;">
+                <tr>
+                    <td style="padding: 0px;height:23px;width:50px;background-color: #F2F2F2;text-align: left;"><p style="margin-bottom: 0px;font-size:12px;color:black">Valve Data</p> </td>                   
+                </tr>
+            </table>
+
+            <table class="table table-bordered" style="margin-bottom: 0px;">
+
+                <tbody>
+                    <tr>
+                        <td style="padding: 0px;padding-left: 5px;height:23px;width:280px;text-align: left;">Valve Size
+                        </td>
+                        <td style="padding: 0px;height:23px;width:50px"></td>
+                        <td style="padding: 0px;height:23px;width:70px"> <input type="text"></td>
+                        <td style="padding: 0px;height:23px;width:50px">
+                            <select name="" id="">
+                            <option value="" selected>kg/s</option>
+                            <option value="">Pa(a)</option>
+                            <option value="">kg/kmol</option>
+                          </select>
+                        </td>
+                        <td style="padding: 0px;height:23px;width:70px"> <input type="text" name="valvesize" class="valvesize" value=4></td>
+                        <td style="padding: 0px;height:23px;width:50px"></td>
+                        <td style="padding: 0px;height:23px;width:50px">-</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 0px;padding-left: 5px;height:23px;text-align: left;">Valve outlet diameter
+                            (ID)</td>
+                            <td style="padding: 0px;height:23px;width:50px">d </td>
+                            <td style="padding: 0px;height:23px;width:70px"> <input type="text"></td>
+                            <td style="padding: 0px;height:23px;width:50px">
+                                <select name="" id="">
+                                <option value="" selected>kg/s</option>
+                                <option value="">Pa(a)</option>
+                                <option value="">kg/kmol</option>
+                              </select>
+                            </td>
+                            <td style="padding: 0px;height:23px;width:70px"> <input type="text" name="outdia" class="outdia" value=0.2031></td>
+                            <td style="padding: 0px;height:23px;width:50px">m</td>
+                            <td style="padding: 0px;height:23px;width:50px">-</td>
+                    </tr>
+
+                    <tr>
+                        <td style="padding: 0px;padding-left: 5px;height:23px;text-align: left;">Rated Cv</td>
+                        <td style="padding: 0px;height:23px;">Cv</td>
+                        <td style="padding: 0px;height:23px;"><input type="text"></td>
+                        <td style="padding: 0px;height:23px;width:50px">
+                            <select name="" id="">
+                            <option value="" selected>kg/s</option>
+                            <option value="">Pa(a)</option>
+                            <option value="">kg/kmol</option>
+                          </select>
+                        </td>
+                        <td style="padding: 0px;height:23px;"> <input type="text" name="ratedcv" class="ratedcv" value=195></td>
+                        <td style="padding: 0px;height:23px;">-</td>
+                        <td style="padding: 0px;height:23px;">-</td>
+                    </tr>
+
+                    <tr>
+                        <td style="padding: 0px;padding-left: 5px;height:23px;text-align: left;">Liquid pressure
+                            recovery factor</td>
+                            <td style="padding: 0px;height:23px;">FL</td>
+                            <td style="padding: 0px;height:23px;"><input type="text"></td>
+                            <td style="padding: 0px;height:23px;width:50px">
+                                <select name="" id="">
+                                <option value="" selected>kg/s</option>
+                                <option value="">Pa(a)</option>
+                                <option value="">kg/kmol</option>
+                              </select>
+                            </td>
+                            <td style="padding: 0px;height:23px;"><input type="text" name="fl" class="fl" value=0.55></td>
+                            <td style="padding: 0px;height:23px;">-</td>
+                            <td style="padding: 0px;height:23px;">-</td>
+                    </tr>
+
+                    <tr>
+                        <td style="padding: 0px;padding-left: 5px;height:23px;text-align: left;">Number of holes or cage
+                            opennings</td>
+                            <td style="padding: 0px;height:23px;">No</td>
+                            <td style="padding: 0px;height:23px;"><input type="text" ></td>
+                            <td style="padding: 0px;height:23px;width:50px">
+                                <select name="" id="">
+                                <option value="" selected>kg/s</option>
+                                <option value="">Pa(a)</option>
+                                <option value="">kg/kmol</option>
+                              </select>
+                            </td>
+                            <td style="padding: 0px;height:23px;"> <input type="text" name="holes" class="holes" value=6></td>
+                            <td style="padding: 0px;height:23px;">-</td>
+                            <td style="padding: 0px;height:23px;">-</td>
+                    </tr>
+
+                    <tr>
+                        <td style="padding: 0px;padding-left: 5px;height:23px;text-align: left;">Wetted Perimeter of
+                            single flow passage</td>
+                            <td style="padding: 0px;height:23px;">Iw</td>
+                            <td style="padding: 0px;height:23px;"><input type="text"></td>
+                            <td style="padding: 0px;height:23px;width:50px">
+                                <select name="" id="">
+                                <option value="" selected>kg/s</option>
+                                <option value="">Pa(a)</option>
+                                <option value="">kg/kmol</option>
+                              </select>
+                            </td>
+                            <td style="padding: 0px;height:23px;"> <input type="text" name="singleflowP" class="singleflowP" value=0.181></td>
+                            <td style="padding: 0px;height:23px;">m</td>
+                            <td style="padding: 0px;height:23px;">-</td>
+                    </tr>
+
+                    <tr>
+                        <td style="padding: 0px;padding-left: 5px;height:23px;text-align: left;">Area of single flow
+                            passage</td>
+                            <td style="padding: 0px;height:23px;">A</td>
+                            <td style="padding: 0px;height:23px;"><input type="text"></td>
+                            <td style="padding: 0px;height:23px;width:50px">
+                                <select name="" id="">
+                                <option value="" selected>kg/s</option>
+                                <option value="">Pa(a)</option>
+                                <option value="">kg/kmol</option>
+                              </select>
+                            </td>
+                            <td style="padding: 0px;height:23px;"> <input type="text" name="singleflowA" class="singleflowA" value=0.00137></td>
+                            <td style="padding: 0px;height:23px;">m2</td>
+                            <td style="padding: 0px;height:23px;">-</td>
+                    </tr>
+
+                    <tr>
+                        <td style="padding: 0px;padding-left: 5px;height:23px;text-align: left;">Pressure drop ratio
+                            factor</td>
+                        <td style="padding: 0px;height:23px;">xT</td>
+                        <td style="padding: 0px;height:23px;"><input type="text"></td>
+                        <td style="padding: 0px;height:23px;width:50px">
+                            <select name="" id="">
+                            <option value="" selected>kg/s</option>
+                            <option value="">Pa(a)</option>
+                            <option value="">kg/kmol</option>
+                          </select>
+                        </td>
+                        <td style="padding: 0px;height:23px;"> <input type="text" name="presdropratio" class="presdropratio" value=0.75></td>
+                        <td style="padding: 0px;height:23px;">-</td>
+                        <td style="padding: 0px;height:23px;">-</td>
+                    </tr>
+
+                    <tr>
+                        <td style="padding: 0px;padding-left: 5px;height:23px;text-align: left;">Head Loss coefficient
+                        </td>
+                        <td style="padding: 0px;height:23px;">eta</td>
+                        <td style="padding: 0px;height:23px;"><input type="text"></td>
+                        <td style="padding: 0px;height:23px;width:50px">
+                            <select name="" id="">
+                            <option value="" selected>kg/s</option>
+                            <option value="">Pa(a)</option>
+                            <option value="">kg/kmol</option>
+                          </select>
+                        </td>
+                        <td style="padding: 0px;height:23px;"> <input type="text" name="headloss" class="headloss"></td>
+                        <td style="padding: 0px;height:23px;">-</td>
+                        <td style="padding: 0px;height:23px;">-</td>
+                    </tr>
+
+                    <tr>
+                        <td style="padding: 0px;padding-left: 5px;height:23px;text-align: left;">Sum of inlet velocity
+                            head coefficient</td>
+                        <td style="padding: 0px;height:23px;">eta i</td>
+                        <td style="padding: 0px;height:23px;"><input type="text"></td>
+                        <td style="padding: 0px;height:23px;width:50px">
+                            <select name="" id="">
+                            <option value="" selected>kg/s</option>
+                            <option value="">Pa(a)</option>
+                            <option value="">kg/kmol</option>
+                          </select>
+                        </td>
+                        <td style="padding: 0px;height:23px;"> <input type="text" name="sumofinlet" class="sumofinlet"></td>
+                        <td style="padding: 0px;height:23px;">-</td>
+                        <td style="padding: 0px;height:23px;">-</td>
+                    </tr>
+
+                </tbody>
+            </table>
+
+            <table class="table table-bordered" style="margin-bottom: 0px;">
+                <tr>
+                    <td style="padding: 0px;height:23px;width:50px;background-color: #F2F2F2;text-align: left;"><p style="margin-bottom: 0px;font-size:12px;color:black">Valve Data, Calculated</p> </td>                   
+                </tr>
+            </table>
+            
+            <table class="table table-bordered" style="margin-bottom: 0px;">
+
+                <tbody>
+                    <tr>
+                        <td style="padding: 0px;padding-left: 5px;height:23px;width:280px;text-align: left;">Piping
+                            geometry factor</td>
+                        <td style="padding: 0px;height:23px;width:50px">Fp</td>
+                        <td style="padding: 0px;height:23px;width:70px"> <input type="text"></td>
+                        <td style="padding: 0px;height:23px;width:50px">
+                            <select name="" id="">
+                            <option value="" selected>kg/s</option>
+                            <option value="">Pa(a)</option>
+                            <option value="">kg/kmol</option>
+                          </select>
+                        </td>
+                        <td style="padding: 0px;height:23px;width:70px"> <input type="text" name="pipegeo" class="pipegeo" value=0.98></td>
+                        <td style="padding: 0px;height:23px;width:50px">-</td>
+                        <td style="padding: 0px;height:23px;width:50px">-</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 0px;padding-left: 5px;height:23px;text-align: left;">Combined FLP</td>
+                        <td style="padding: 0px;height:23px;">FLP</td>
+                        <td style="padding: 0px;height:23px;"><input type="text"></td>
+                        <td style="padding: 0px;height:23px;width:50px">
+                            <select name="" id="">
+                            <option value="" selected>kg/s</option>
+                            <option value="">Pa(a)</option>
+                            <option value="">kg/kmol</option>
+                          </select>
+                        </td>
+                        <td style="padding: 0px;height:23px;"><input type="text" class="combflp" name="combflp" value=0.792></td>
+                        <td style="padding: 0px;height:23px;">-</td>
+                        <td style="padding: 0px;height:23px;">-</td>
+                    </tr>
+
+                    <tr>
+                        <td style="padding: 0px;padding-left: 5px;height:23px;text-align: left;">Valve style modifier
+                        </td>
+                        <td style="padding: 0px;height:23px;">Fd</td>
+                        <td style="padding: 0px;height:23px;"><input type="text"></td>
+                        <td style="padding: 0px;height:23px;width:50px">
+                            <select name="" id="">
+                            <option value="" selected>kg/s</option>
+                            <option value="">Pa(a)</option>
+                            <option value="">kg/kmol</option>
+                          </select>
+                        </td>
+                        <td style="padding: 0px;height:23px;"><input type="text" name="valvestylemod" class="valvestylemod"></td>
+                        <td style="padding: 0px;height:23px;">K</td>
+                        <td style="padding: 0px;height:23px;">-</td>
+                    </tr>
+
+                    <tr>
+                        <td style="padding: 0px;padding-left: 5px;height:23px;text-align: left;">Hydraulic diameter of a
+                            single flow Passage</td>
+                        <td style="padding: 0px;height:23px;">dH</td>
+                        <td style="padding: 0px;height:23px;"><input type="text"></td>
+                        <td style="padding: 0px;height:23px;width:50px">
+                            <select name="" id="">
+                            <option value="" selected>kg/s</option>
+                            <option value="">Pa(a)</option>
+                            <option value="">kg/kmol</option>
+                          </select>
+                        </td>
+                        <td style="padding: 0px;height:23px;"><input type="text" name="hydraulicdia" class="hydraulicdia"></td>
+                        <td style="padding: 0px;height:23px;">-</td>
+                        <td style="padding: 0px;height:23px;">-</td>
+                    </tr>
+
+                    <tr>
+                        <td style="padding: 0px;padding-left: 5px;height:23px;text-align: left;">Equivalent Circular orifice diameter</td>
+                        <td style="padding: 0px;height:23px;">do</td>
+                        <td style="padding: 0px;height:23px;"><input type="text"></td>
+                        <td style="padding: 0px;height:23px;width:50px">
+                            <select name="" id="">
+                            <option value="" selected>kg/s</option>
+                            <option value="">Pa(a)</option>
+                            <option value="">kg/kmol</option>
+                          </select>
+                        </td>
+                        <td style="padding: 0px;height:23px;"><input type="text" name="equivcirculardia" class="equivcirculardia"></td>
+                        <td style="padding: 0px;height:23px;">-</td>
+                        <td style="padding: 0px;height:23px;">-</td>
+                    </tr>
+
+
+                </tbody>
+            </table>
+
+           
+        </div>
+        <input type="Submit" value="Calculate" style="width:80px;background-color: #1f4e79;color:white;margin:5px;font-size:12px;"/>
+        </form>
+
+        <div class="clo-6 " style="overflow-x:auto;height:83vh; margin-left: 8px;border: groove; border-radius: 0px;">
+            <!-- <h6>Intermediate Results</h6> -->
+
+            <table class="table table-bordered" style="margin-bottom: 0px;">
+                <tr style="color: black;position: fixed;">
+                    <td style="background-color: rgb(207, 207, 207);padding: 0px;height:30px;width:320px;text-align: left;"><p style="margin-bottom: 0px;margin-top: 4px;font-size:12px;color:black">Description</p></td>
+                    <td style="background-color: rgb(207, 207, 207);padding: 0px;height:30px;width:50px;text-align: left;"><p style="margin-bottom: 0px;margin-top: 4px;font-size:12px;color:black">Symbol</p></td>
+                    <td style="background-color: rgb(207, 207, 207);padding: 0px;height:30px;width:70px;text-align: left;"> <p style="margin-bottom: 0px;margin-top: 4px;font-size:12px;color:black">Ouputs</p></td>
+                    <td style="background-color: rgb(207, 207, 207);padding: 0px;height:30px;width:50px;text-align: left;"><p style="margin-bottom: 0px;margin-top: 4px;font-size:12px;color:black">Units</p></td>
+                    <td style="background-color: rgb(207, 207, 207);padding: 0px;height:30px;width:50px;text-align: left;"><p style="margin-bottom: 0px;margin-top: 4px;font-size:12px;color:black">Eqn.#</p></td>
+                </tr>
+            </table>
+
+            <table class="table table-bordered" style="margin-bottom: 0px;margin-top: 30px;">
+                <tr>
+                    
+                    <td style="padding: 0px;height:23px;width:50px;background-color: #F2F2F2;text-align: left;"><p style="margin-bottom: 0px;font-size:12px;color:black">Regime definition</p> </td>
+                   
+                </tr>
+            </table>
+
+            <table class="table table-bordered" style="margin-bottom: 0px;margin-top: 0px;">
+                <tbody>
+                    <tr>
+                        <td style="padding: 0px;padding-left: 5px;height:23px;width:320px;text-align: left;">Calculated
+                            Cv</td>
+                        <td style="padding: 0px;height:23px;width:50px"></td>
+                        <td style="padding: 0px;height:23px;width:70px"> <input type="text" value="{{res['req_cv']}}"></td>
+                        <td style="padding: 0px;height:23px;width:50px"></td>
+                        <td style="padding: 0px;height:23px;width:50px"></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 0px;padding-left: 5px;height:23px;text-align: left;">Differential Pressure ratio</td>
+                        <td style="padding: 0px;height:23px;">x</td>
+                        <td style="padding: 0px;height:23px;"><input type="text" value="{{res['X']}}"></td>
+                        <td style="padding: 0px;height:23px;">Pa</td>
+                        <td style="padding: 0px;height:23px;">1</td>
+                    </tr>
+
+                    <tr>
+                        <td style="padding: 0px;padding-left: 5px;height:23px;text-align: left;">Absolute VC pressure at
+                            subsonic conditions </td>
+                        <td style="padding: 0px;height:23px;">Pvc</td>
+                        <td style="padding: 0px;height:23px;"><input type="text" value="{{res['Pvc']}}"></td>
+                        <td style="padding: 0px;height:23px;">K</td>
+                        <td style="padding: 0px;height:23px;">2</td>
+                    </tr>
+
+                    <tr>
+                        <td style="padding: 0px;padding-left: 5px;height:23px;text-align: left;">VC diff. pressure ratio
+                            @ critical flow cond.</td>
+                        <td style="padding: 0px;height:23px;">xvcc</td>
+                        <td style="padding: 0px;height:23px;"><input type="text" value="{{res['Xvcc']}}"></td>
+                        <td style="padding: 0px;height:23px;"></td>
+                        <td style="padding: 0px;height:23px;">3</td>
+                    </tr>
+
+                    <tr>
+                        <td style="padding: 0px;padding-left: 5px;height:23px;text-align: left;">Diff press. ratio at
+                            critical flow conditions</td>
+                        <td style="padding: 0px;height:23px;">xc</td>
+                        <td style="padding: 0px;height:23px;"><input type="text" value="{{res['Xc']}}"></td>
+                        <td style="padding: 0px;height:23px;">K</td>
+                        <td style="padding: 0px;height:23px;">4</td>
+                    </tr>
+
+                    <tr>
+                        <td style="padding: 0px;padding-left: 5px;height:23px;text-align: left;">Recovery correction
+                            factor </td>
+                        <td style="padding: 0px;height:23px;">α</td>
+                        <td style="padding: 0px;height:23px;"><input type="text" value="{{res['alpha']}}"></td>
+                        <td style="padding: 0px;height:23px;"></td>
+                        <td style="padding: 0px;height:23px;">5</td>
+                    </tr>
+
+                    <tr>
+                        <td style="padding: 0px;padding-left: 5px;height:23px;text-align: left;">Differential pressure
+                            ratio at break point</td>
+                        <td style="padding: 0px;height:23px;">xB</td>
+                        <td style="padding: 0px;height:23px;"><input type="text" value="{{res['Xb']}}"></td>
+                        <td style="padding: 0px;height:23px;">K</td>
+                        <td style="padding: 0px;height:23px;">6</td>
+                    </tr>
+
+                    <tr>
+                        <td style="padding: 0px;padding-left: 5px;height:23px;text-align: left;">DP ratio where const
+                            acoustical efficiency begins</td>
+                        <td style="padding: 0px;height:23px;">xCE</td>
+                        <td style="padding: 0px;height:23px;"><input type="text" value="{{res['Xce']}}"></td>
+                        <td style="padding: 0px;height:23px;">K</td>
+                        <td style="padding: 0px;height:23px;">7</td>
+                    </tr>
+
+                    <tr>
+                        <td style="padding: 0px;padding-left: 5px;height:23px;text-align: left;">Jet Diameter</td>
+                        <td style="padding: 0px;height:23px;">Dj</td>
+                        <td style="padding: 0px;height:23px;"><input type="text" value="{{res['jetV']}}"></td>
+                        <td style="padding: 0px;height:23px;"></td>
+                        <td style="padding: 0px;height:23px;">9</td>
+                    </tr>
+
+                    <tr>
+                        <td style="padding: 0px;padding-left: 5px;height:23px;text-align: left;">Regime definition</td>
+                        <td style="padding: 0px;height:23px;"></td>
+                        <td style="padding: 0px;height:23px;"><input type="text" value="{{res['regime']}}"></td>
+                        <td style="padding: 0px;height:23px;"></td>
+                        <td style="padding: 0px;height:23px;"></td>
+                    </tr>
+
+                </tbody>
+            </table>
+
+
+            <table class="table table-bordered" style="margin-bottom: 0px;">
+                <tr>
+                    <td style="padding: 0px;height:23px;width:50px;background-color: #F2F2F2;text-align: left;"><p style="margin-bottom: 0px;font-size:12px;color:black">Calculation for Regime </p> </td>                   
+                </tr>
+            </table>
+
+            <table class="table table-bordered" style="margin-bottom: 0px;">
+
+                <tbody>
+                    <tr>
+                        <td style="padding: 0px;padding-left: 5px;height:23px;width:320px;text-align: left;">Vena
+                            Contracta absolute Temperature*</td>
+                        <td style="padding: 0px;height:23px;width:50px">Tvc</td>
+                        <td style="padding: 0px;height:23px;width:70px"> <input type="text" value="{{res['Tvc']}}"></td>
+                        <td style="padding: 0px;height:23px;width:50px">K</td>
+                        <td style="padding: 0px;height:23px;width:50px">Tbl-3</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 0px;padding-left: 5px;height:23px;text-align: left;">Stream Power of mass
+                            flow</td>
+                        <td style="padding: 0px;height:23px;">Wm</td>
+                        <td style="padding: 0px;height:23px;"><input type="text" value="{{res['Wm']}}"></td>
+                        <td style="padding: 0px;height:23px;">W</td>
+                        <td style="padding: 0px;height:23px;">Tbl-3</td>
+                    </tr>
+
+                    <tr>
+                        <td style="padding: 0px;padding-left: 5px;height:23px;text-align: left;">Speed of sound in the
+                            vena contracta</td>
+                        <td style="padding: 0px;height:23px;">cvc</td>
+                        <td style="padding: 0px;height:23px;"><input type="text" value="{{res['Cvc']}}"></td>
+                        <td style="padding: 0px;height:23px;">m/s</td>
+                        <td style="padding: 0px;height:23px;">Tbl-3</td>
+                    </tr>
+
+                    <tr>
+                        <td style="padding: 0px;padding-left: 5px;height:23px;text-align: left;">Mach number at vena
+                            contracta</td>
+                        <td style="padding: 0px;height:23px;">Mvc</td>
+                        <td style="padding: 0px;height:23px;"><input type="text" value="{{res['mvc']}}"></td>
+                        <td style="padding: 0px;height:23px;"></td>
+                        <td style="padding: 0px;height:23px;">Tbl-3</td>
+                    </tr>
+
+                    <tr>
+                        <td style="padding: 0px;padding-left: 5px;height:23px;text-align: left;">Acoustical efficiency
+                            factor</td>
+                        <td style="padding: 0px;height:23px;">η</td>
+                        <td style="padding: 0px;height:23px;"><input type="text" value="{{res['eta']}}"></td>
+                        <td style="padding: 0px;height:23px;"></td>
+                        <td style="padding: 0px;height:23px;">Tbl-3</td>
+                    </tr>
+
+                    <tr>
+                        <td style="padding: 0px;padding-left: 5px;height:23px;text-align: left;">Sound Power</td>
+                        <td style="padding: 0px;height:23px;">Wa</td>
+                        <td style="padding: 0px;height:23px;"><input type="text" value="{{res['wa']}}"></td>
+                        <td style="padding: 0px;height:23px;">W</td>
+                        <td style="padding: 0px;height:23px;">11</td>
+                    </tr>
+
+                    <tr>
+                        <td style="padding: 0px;padding-left: 5px;height:23px;text-align: left;">Peak frequency</td>
+                        <td style="padding: 0px;height:23px;">fb</td>
+                        <td style="padding: 0px;height:23px;"><input type="text" value="{{res['peakF']}}"></td>
+                        <td style="padding: 0px;height:23px;">Hz</td>
+                        <td style="padding: 0px;height:23px;">Tbl-3</td>
+                    </tr>
+
+
+
+                </tbody>
+            </table>
+
+            <table class="table table-bordered" style="margin-bottom: 0px;">
+                <tr>
+                    <td style="padding: 0px;height:23px;width:50px;background-color: #F2F2F2;text-align: left;"><p style="margin-bottom: 0px;font-size:12px;color:black">Final Result </p> </td>                   
+                </tr>
+            </table>
+
+            <table class="table table-bordered" style="margin-bottom: 0px;">
+
+                <tbody>
+                    <tr>
+                        <td style="padding: 0px;padding-left: 5px;height:23px;width:320px;text-align: left;">Outlet
+                            density</td>
+                        <td style="padding: 0px;height:23px;width:50px">ρ2 </td>
+                        <td style="padding: 0px;height:23px;width:70px"> <input type="text" value="{{res['p2']}}"></td>
+                        <td style="padding: 0px;height:23px;width:50px">kg/m3</td>
+                        <td style="padding: 0px;height:23px;width:50px">13</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 0px;padding-left: 5px;height:23px;text-align: left;">Speed of sound at
+                            downstream condition</td>
+                        <td style="padding: 0px;height:23px;">c2</td>
+                        <td style="padding: 0px;height:23px;"><input type="text" value="{{res['c2']}}"></td>
+                        <td style="padding: 0px;height:23px;">m/s</td>
+                        <td style="padding: 0px;height:23px;">14</td>
+                    </tr>
+
+                    <tr>
+                        <td style="padding: 0px;padding-left: 5px;height:23px;text-align: left;">Mach number valve
+                            outlet</td>
+                        <td style="padding: 0px;height:23px;">Mo</td>
+                        <td style="padding: 0px;height:23px;"><input type="text" value="{{res['mo']}}"></td>
+                        <td style="padding: 0px;height:23px;"></td>
+                        <td style="padding: 0px;height:23px;">15</td>
+                    </tr>
+
+                    <tr>
+                        <td style="padding: 0px;padding-left: 5px;height:23px;text-align: left;">Mach number in
+                            downstream pipe</td>
+                        <td style="padding: 0px;height:23px;">M2</td>
+                        <td style="padding: 0px;height:23px;"><input type="text" value="{{res['m2']}}"></td>
+                        <td style="padding: 0px;height:23px;">dB</td>
+                        <td style="padding: 0px;height:23px;">17</td>
+                    </tr>
+
+                    <tr>
+                        <td style="padding: 0px;padding-left: 5px;height:23px;text-align: left;">correction for Mach
+                            numberr</td>
+                        <td style="padding: 0px;height:23px;">Lg</td>
+                        <td style="padding: 0px;height:23px;"><input type="text" value="{{res['lg']}}"></td>
+                        <td style="padding: 0px;height:23px;">K</td>
+                        <td style="padding: 0px;height:23px;">16</td>
+                    </tr>
+
+                    <tr>
+                        <td style="padding: 0px;padding-left: 5px;height:23px;text-align: left;">Overall internal sound
+                            pressure level</td>
+                        <td style="padding: 0px;height:23px;">Lpi</td>
+                        <td style="padding: 0px;height:23px;"><input type="text" value="{{res['lpi']}}"></td>
+                        <td style="padding: 0px;height:23px;">dB</td>
+                        <td style="padding: 0px;height:23px;">18</td>
+                    </tr>
+
+                    <tr>
+                        <td style="padding: 0px;padding-left: 5px;height:23px;text-align: left;">Mach</td>
+                        <td style="padding: 0px;height:23px;"></td>
+                        <td style="padding: 0px;height:23px;"><input type="text"></td>
+                        <td style="padding: 0px;height:23px;"></td>
+                        <td style="padding: 0px;height:23px;">-</td>
+                    </tr>
+
+                    <tr>
+                        <td style="padding: 0px;padding-left: 5px;height:23px;text-align: left;">Ring frequency</td>
+                        <td style="padding: 0px;height:23px;">fr</td>
+                        <td style="padding: 0px;height:23px;"><input type="text" value="{{res['rF']}}"></td>
+                        <td style="padding: 0px;height:23px;">Hz</td>
+                        <td style="padding: 0px;height:23px;">21</td>
+                    </tr>
+
+                    <tr>
+                        <td style="padding: 0px;padding-left: 5px;height:23px;text-align: left;">Internal coincidence
+                            pipe frequency</td>
+                        <td style="padding: 0px;height:23px;">fo</td>
+                        <td style="padding: 0px;height:23px;"><input type="text" value="{{res['oF']}}"></td>
+                        <td style="padding: 0px;height:23px;">Hz</td>
+                        <td style="padding: 0px;height:23px;">22</td>
+                    </tr>
+
+                    <tr>
+                        <td style="padding: 0px;padding-left: 5px;height:23px;text-align: left;">External coincidence
+                            pipe frequency</td>
+                        <td style="padding: 0px;height:23px;">fg</td>
+                        <td style="padding: 0px;height:23px;"><input type="text" value="{{res['gF']}}"></td>
+                        <td style="padding: 0px;height:23px;">Hz</td>
+                        <td style="padding: 0px;height:23px;">23</td>
+                    </tr>
+
+                    <tr>
+                        <td style="padding: 0px;padding-left: 5px;height:23px;text-align: left;">A-weighted
+                            sound-pressure level 1m from the pipe wall</td>
+                        <td style="padding: 0px;height:23px;">LpAe,1m</td>
+                        <td style="padding: 0px;height:23px;"><input type="text"  value="{{res['aweight']}}"></td>
+                        <td style="padding: 0px;height:23px;">dBA</td>
+                        <td style="padding: 0px;height:23px;">25</td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+    
+    </div>
+
+
+</body>
+<script>
+    $(document).ready(function () {
+     
+        var A = $('.singleflowA').val();
+        var Iw = $('.singleflowP').val();
+        var No = $('.holes').val();
+        var fl = $('.fl').val();
+        var ratedcv= $('.ratedcv').val();
+        var valvesize = $('.valvesize').val();
+        var inpipe = $('.inpipesize').val();
+        var outpipe = $('.outpipesize').val();
+        console.log('INPUTS',ratedcv,valvesize,inpipe,outpipe,fl )
+
+        // //getflp
+        // if(ratedcv && valvesize && inpipe && fl){
+        //     $.ajax({
+        //     type: "GET",
+        //     url: "/getflp",
+        //     data: {
+        //         'cv':ratedcv,
+        //         'vsize':valvesize,
+        //         'ipipe':inpipe,
+        //         'fl':fl
+        //     },
+        //     success: function(data) {
+                
+        //         console.log(data);
+        //         $('.combflp').val(data);
+         
+                
+        //     },
+        //     error: function(xhr, status, error) {
+        //         console.error("Error:", error);
+        //     }
+        // });
+        // }
+
+
+
+        // //getfp
+        // if(ratedcv && valvesize && inpipe && outpipe){
+        //     $.ajax({
+        //     type: "GET",
+        //     url: "/getfp",
+        //     data: {
+        //         'cv':ratedcv,
+        //         'vsize':valvesize,
+        //         'ipipe':inpipe,
+        //         'opipe':outpipe
+        //     },
+        //     success: function(data) {   
+                
+        //         console.log(data);
+        //         $('.pipegeo').val(data);
+       
+                
+        //     },
+        //     error: function(xhr, status, error) {
+        //         console.error("Error:", error);
+        //     }
+        // });
+        // }
+
+
+      
+        function calcFD(dh, dO){
+           
+            if(dh && dO){
+              
+                $.ajax({
+                type: "GET",
+                url: "/getfd",
+                data: {
+                    'dh': dh,
+                    'do': dO
+                },
+                success: function(data) {
+                
+                    console.log(data);
+                    $('.valvestylemod').val(data)
+                    
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error:", error);
+                }
+                });
+
+            }
+        }
+        if(A && Iw){
+       
+            $.ajax({
+            type: "GET",
+            url: "/getDH",
+            data: {
+                'A': A,
+                'Iw': Iw
+            },
+            success: function(data) {
+                
+                console.log(data);
+                $('.hydraulicdia').val(data);
+                var dO= $('.equivcirculardia').val();
+                calcFD(data, dO)
+                
+            },
+            error: function(xhr, status, error) {
+                console.error("Error:", error);
+            }
+        });
+        }
+
+        if(No && A){
+            $.ajax({
+            type: "GET",
+            url: "/getdo",
+            data: {
+                'A': A,
+                'No': No
+            },
+            success: function(data) {
+              
+                console.log(data);
+                $('.equivcirculardia').val(data)
+                var dh = $('.hydraulicdia').val();
+                calcFD(dh, data)
+                
+            },
+            error: function(xhr, status, error) {
+                console.error("Error:", error);
+            }
+        });
+        }
+
+
+
+       
+
+      
+    })
+</script>
+
+</html>

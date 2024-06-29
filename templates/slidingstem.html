@@ -116,12 +116,12 @@
                                     <input type="number" value="{{act.availableAirSupplyMin}}" class="form-control-sm-sm actuator_input1" required name="availableAirSupplyMin">
                                 </div>
                                 <div class="col-3" style="padding:0px 10px 0px 0px">
-                                    <select class="form-control-sm-sm actuator_select1" name="availableAirSupplyMaxUnit">
+                                    <select class="form-control-sm-sm actuator_select1" name="availableAirSupplyMinUnit">
                                         {% for presunit in metadata['units_dict']['pressure'] %}
-                                                {% if presunit.name == act.availableAirSupplyMaxUnit %}
+                                                {% if presunit.id == act.availableAirSupplyMinUnit %}
                                                 <option value="{{presunit.id}}" selected>{{presunit.name}}</option>
                                                 {% else %}
-                                                <option value="{{presunit.name}}" >{{presunit.name}}</option>
+                                                <option value="{{presunit.id}}" >{{presunit.name}}</option>
                                                 {% endif %}
                                         {% endfor %}
                                     </select>
@@ -138,12 +138,12 @@
                                     <input type="number" step="0.1" value="{{act.availableAirSupplyMax}}" class="form-control-sm-sm actuator_input1" required name="availableAirSupplyMax">
                                 </div>
                                 <div class="col-3" style="padding:0px 10px 0px 0px">
-                                    <select class="actuator_select1 form-control-sm-sm" name="setPressureUnit">
+                                    <select class="actuator_select1 form-control-sm-sm" name="availableAirSupplyMaxUnit">
                                         {% for presunit in metadata['units_dict']['pressure'] %}
-                                                {% if presunit.name == act.setPressureUnit %}
+                                                {% if presunit.id == act.availableAirSupplyMaxUnit %}
                                                 <option value="{{presunit.id}}" selected>{{presunit.name}}</option>
                                                 {% else %}
-                                                <option value="{{presunit.name}}" >{{presunit.name}}</option>
+                                                <option value="{{presunit.id}}" >{{presunit.name}}</option>
                                                 {% endif %}
                                         {% endfor %}
                                     </select>
@@ -156,17 +156,29 @@
                                     <label for="shutoffDelP">Shut Off Pressure</label>
                                 </div>
                                 <div class="col-3">
-                                    <input type="text" readonly value="{{valve.shutOffDelP}}"  class="form-control-sm-sm actuator_input1" name="shutoffDelP">
+                                    <input type="text" value="{{act.shutoffDelP}}"   class="form-control-sm-sm actuator_input1" name="shutoffDelP">
                                 </div>
                                 <div class="col-3" style="padding:0px 10px 0px 0px">
-                                    <input type="text" value="{{valve.shutOffDelPUnit}}" readonly class="form-control-sm-sm actuator_input" name="shutoffDelPUnit">
+                                    <select class="actuator_select1 form-control-sm-sm" name="shutoffDelPUnit">
+                                        {% for presunit in metadata['units_dict']['delPressure'] %}
+                                                {% if presunit.id == act.shutoffDelPUnit %}
+                                                <option value="{{presunit.id}}" selected>{{presunit.name}}</option>
+                                                {% else %}
+                                                <option value="{{presunit.id}}" >{{presunit.name}}</option>
+                                                {% endif %}
+                                        {% endfor %}        
+                                    </select>
+                                    <!-- <input type="text" value="{{valve.shutOffDelPUnit}}"  class="form-control-sm-sm actuator_input" name="shutoffDelPUnit"> -->
                                 </div>
                             </div>
                         </div>
                         <div class="mt-3">
                             {% if v_style == 'globe' %}
                             <input type="submit" class="btn btn-info actuator_button1" name="sliding" value="Sliding Stem Actuator Sizing">
+                            {% elif v_style == 'butterfly' %}
+                            <input type="submit" class="btn  btn-info actuator_button2 mt-2"  name="rotary" value="Rotary Actuator Sizing">
                             {% else %}
+                            <input type="submit" class="btn btn-info actuator_button1" name="sliding" value="Sliding Stem Actuator Sizing">
                             <input type="submit" class="btn  btn-info actuator_button2 mt-2"  name="rotary" value="Rotary Actuator Sizing">
                             {% endif %}
                            
@@ -176,13 +188,13 @@
 
                     <div class="col-9">
                         <div class="row">
-                            <div class="col-4">
+                            <div class="col-3">
                                 <div class="row">
-                                    <div class="col-4">
+                                    <div class="col-4 p-0">
                                         <label for="trim">Trim</label>
                                      
                                     </div>
-                                    <div class="col-6">
+                                    <div class="col-6 p-0">
                                         <select class="Spring Action actuator_select trimType" name="trimType">
                                             
                                             {% for act_type in metadata['trimtype'] %}
@@ -205,12 +217,12 @@
                                 </div>
                             </div>
 
-                            <div class="col-4">
+                            <div class="col-3">
                                 <div class="row">
-                                    <div class="col-4">
+                                    <div class="col-4 p-0">
                                         <label for="balancing">Balancing </label>
                                     </div>
-                                    <div class="col-6">
+                                    <div class="col-6 p-0">
                                         <select class="form-control-sm-sm valvedata_select balance" name="balancing">
                                             {% for balance in metadata['balancing'] %}
                                                 <option value="{{ balance.id }}"
@@ -231,18 +243,17 @@
                                 </div>
                             </div>
 
-                            <div class="col-4">
+                            <div class="col-3">
                                 <div class="row">
-                                    <div class="col-4 pr-0">
-                                        <label for="flow direction">Flow Direction</label>
+                                    <div class="col-4 pr-0 p-0">
+                                        <label for="flow direction">Flow Dir</label>
                                     </div>
-                                    <div class="col-6">
+                                    <div class="col-6 p-0">
                                         <select id="" class="form-control-sm-sm valvedata_select flowDirection" name="flowDirection">
                                         
                                             {% for flowdirection in metadata['flowdirection'] %}
                                             {% if flowdirection.name == 'Over' or  flowdirection.name == 'Under' %}
                                                 <option value="{{flowdirection.id}}" 
-                                               
                                                     {% if act_case.flowDirection_.name == flowdirection.name %}
                                                         selected
                                                     {% elif flowdirection.name == fl_d_element.name %}  
@@ -258,9 +269,34 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="col-3">
+                                <div class="row">
+                                    <div class="col-4 p-0">
+                                        <label for="balancing">Flow Char</label>
+                                    </div>
+                                    <div class="col-6 p-0">
+                                        <select id="" class="form-control-sm-sm" name="flowCharacter">
+                                            {% for flowcharacter in metadata['flowcharacter'] %}
+                                                <option value="{{flowcharacter.id}}"      
+                                            {% if act_case.flowCharacter_.name == flowcharacter.name %}
+                                                selected
+                                            {% elif fl_ch_element.name == flowcharacter.name %}
+                                                {% if not act_case.flowCharacterId %}
+                                                    selected
+                                                {% endif %}
+                                            {% endif %} >{{flowcharacter.name}}</option>
+                                            {% endfor %}
+                                        </select>
+                                        
+                                        <!-- <input type="text" value="{{balancing.name}}" readonly class="form-control-sm-sm slidingtop_input" name="balancing"> -->
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
 
-                        <div class="row">
+                        <div class="row pt-2">
                             <div class="col-5">
                                 <div class="row justify-content-between" >
                                     <div class="col-10" >
@@ -332,8 +368,8 @@
                                             <select name="valveSizeUnit" class="sliding_select actuatorUnits" data-desc="valveSize">
                                                 {% for length in metadata['units_dict']['length'] %}
                                                     <option value="{{length.id}}" {% if act_case %} {% if act_case.valveSizeUnit %} {% if act_case.valveSizeUnit == length.name %} selected {% endif %} {% endif %} {% endif %}>{{length.name}}</option>
-                                                {% endfor %}
-                                            </select>
+                                                {% endfor %} 
+                                            </select>   
                                         </div>
                                         <div class="row sizingtable">
                                             <select name="seatDiaUnit" class="form-control-sm-sm sliding_select actuatorUnits" data-desc="seatDia"
@@ -404,13 +440,13 @@
                                             </select>
                                         </div>
                                         <div class="row sizingtable">
-                                            <!-- <select name="delPShutoffUnit" class="form-control-sm-sm sliding_select" name=""
+                                            <select name="shutoffDelPUnit" class="form-control-sm-sm sliding_select" 
                                                 >
                                                 {% for length in metadata['units_dict']['delPressure'] %}
                                                     <option value="{{length.id}}" {% if act_case %} {% if act_case.delPShutoffUnit %} {% if act_case.delPShutoffUnit == length.name %} selected  {% endif %} {% endif %} {% endif %}>{{length.name}}</option>
-                                                {% endfor %}
-                                            </select> -->
-                                            <input type="text" class="form-control-sm-sm sliding_input" readonly value="{{valve.shutOffDelPUnit}}">
+                                                {% endfor %}    
+                                            </select>
+                                            <!-- <input type="text" class="form-control-sm-sm sliding_input" readonly value="{{act.shutoffDelPUnit}}"> -->
                                         </div>
                                         <div class="row sizingtable">
                                             <select name="unbalForceOpenUnit" class="form-control-sm-sm sliding_select actuatorUnits" name="" data-desc="unbalForce"
@@ -435,11 +471,12 @@
                                         <div class="row sizingtableleft">
                                             <p class="sizingp">Values</p>
                                         </div>
-                                        <div class="row sizingtable"><input type="text" required name="valveSize" {% if act_case.valveSize %} value="{{act_case.valveSize}}"  {% else %} value="{{cases[0].valveSize}}" {% endif %}class="form-control-sm-sm sliding_input valveSize actuatorvalue_valveSize"></div>
-                                        <div class="row sizingtable"><input type="text" required name="seatDia" {% if act_case.seatDia %} value="{{act_case.seatDia}}"  {% else %} value="{{cv_element.seatBore}}" {% endif %} class="form-control-sm-sm sliding_input seatDia actuatorvalue_seatDia"></div>
-                                        <div class="row sizingtable"><input type="text" required name="ua" {% if act_case.unbalanceArea %} value="{{act_case.unbalanceArea}}"  {% else %} value="{{ua_element.Ua }}" {% endif %} class="form-control-sm-sm sliding_input ua actuatorvalue_Ua"></div>                                         
+                                        <div class="row sizingtable"><input type="text"  name="valveSize" {% if act_case.valveSize %} value="{{act_case.valveSize}}"  {% elif cases and cases[0] %} value="{{cases[0].valveSize}}" {% endif %}class="form-control-sm-sm sliding_input valveSize actuatorvalue_valveSize"></div>
+                                        <div class="row sizingtable"><input type="text" name="seatDia" {% if act_case.seatDia %} value="{{act_case.seatDia}}"  {% elif cv_element %} value="{{cv_element.seatBore}}" {% endif %} class="form-control-sm-sm sliding_input seatDia actuatorvalue_seatDia"></div>
+                                        <div class="row sizingtable"><input type="text"  name="ua" {% if act_case.unbalanceArea %} value="{{act_case.unbalanceArea}}"  {% elif ua_element %} value="{{ua_element.Ua }}" {% endif %} class="form-control-sm-sm sliding_input ua actuatorvalue_Ua"></div>                                         
                                         <div class="row sizingtable">
                                         <select name="stemDia"  class="form-control-sm-sm sliding_input stemDia actuatorvalue_stemDia">
+                                            {% if stemDiaDrop %}
                                             {% for size in stemDiaDrop %}   
                                             <option value="{{size.id}}" 
                                             {% if act_case.stemDia == size.id %}
@@ -448,15 +485,16 @@
                                             
                                             >{{size.stemDia}}</option>
                                             {% endfor %}
+                                            {% endif %}
                                         </select>
                                         </div> 
-                                        <div class="row sizingtable"><input type="text" required name="plugDia"  {% if act_case.plugDia %} value="{{act_case.plugDia}}"{% else %} value="{{ua_element.plugDia }}" {% endif %}  class="form-control-sm-sm sliding_input plugDia actuatorvalue_plugDia"></div>
-                                        <div class="row sizingtable"><input type="text" required name="valveTravel" {% if act_case.valveTravel %} value="{{act_case.valveTravel}}"{% else %} value="{{cv_element.travel}}" {% endif %}  class="form-control-sm-sm sliding_input actuatorvalue_valveTravel"></div>
+                                        <div class="row sizingtable"><input type="text" name="plugDia"  {% if act_case.plugDia %} value="{{act_case.plugDia}}"{% elif ua_element %} value="{{ua_element.plugDia }}" {% endif %}  class="form-control-sm-sm sliding_input plugDia actuatorvalue_plugDia"></div>
+                                        <div class="row sizingtable"><input type="text"  name="valveTravel" {% if act_case.valveTravel %} value="{{act_case.valveTravel}}"{% elif cv_element %} value="{{cv_element.travel}}" {% endif %}  class="form-control-sm-sm sliding_input actuatorvalue_valveTravel"></div>
                                         <div class="row sizingtable"><input type="text"  name="packingF" {% if act_case.packingFriction %} value="{{act_case.packingFriction}}" {% endif %} class="form-control-sm-sm sliding_input packingF actuatorvalue_packFricton"></div>
                                         <div class="row sizingtable"><input type="text" name="seatF" {% if act_case.seatloadFactor %} value="{{act_case.seatloadFactor}}" {% endif %} class="form-control-sm-sm sliding_input seatF "></div>
-                                        <div class="row sizingtable"><input type="text" required name="iPressure" {% if act_case.iPressure %} value="{{act_case.iPressure}}"{% else %} value="{{cases[0].inletPressure}}" {% endif %} class="form-control-sm-sm sliding_input ipres actuatorvalue_ipres"></div>
-                                        <div class="row sizingtable"><input type="text" required name="oPressure" {% if act_case.oPressure %} value="{{act_case.oPressure}}"{% else %} value="{{cases[0].outletPressure}}" {% endif %} class="form-control-sm-sm sliding_input opres actuatorvalue_opres"></div>
-                                        <div class="row sizingtable"><input type="text" required name="shutOffDelP" {% if act_case.shutOffDelP %} value="{{act_case.shutOffDelP}}" {% else %} value="{{valve.shutOffDelP}}" {% endif %}  class="form-control-sm-sm sliding_input "></div>
+                                        <div class="row sizingtable"><input type="text" name="iPressure" {% if act_case.iPressure %} value="{{act_case.iPressure}}"{% elif cases and cases[0] %} value="{{cases[0].inletPressure}}" {% endif %} class="form-control-sm-sm sliding_input ipres actuatorvalue_ipres"></div>
+                                        <div class="row sizingtable"><input type="text"  name="oPressure" {% if act_case.oPressure %} value="{{act_case.oPressure}}"{% elif cases and cases[0] %} value="{{cases[0].outletPressure}}" {% endif %} class="form-control-sm-sm sliding_input opres actuatorvalue_opres"></div>
+                                        <div class="row sizingtable"><input type="text" name="shutOffDelP" {% if act_case.shutOffDelP %} value="{{act_case.shutOffDelP}}" {% elif cases and cases[0] %} value="{{act.shutoffDelP}}" {% endif %}  class="form-control-sm-sm sliding_input "></div>
                                         <div class="row sizingtable"><input type="text" name="unbalForce" {% if act_case.unbalanceForce %} value="{{act_case.unbalanceForce}}" {% endif %} class="form-control-sm-sm sliding_input unbal_f actuatorvalue_unbalForce"></div>
                                       
                                         <div class="row sizingtable"><input type="text" name="" class="form-control-sm-sm sliding_input delp actuatorvalue_delpflow"></div>
@@ -799,9 +837,23 @@
 
 
 <script>
+    // var cases = '{{ cases }}';
+    // console.log('casesjson',cases);
+    
 
-    var iPres = "{{cases[0].inletPressure}}"
-    var oPres = "{{cases[0].outletPressure}}"
+    // if (cases) {
+    //     var iPres = cases[0].inletPressure;
+    //     var oPres = cases[0].outletPressure;
+    // } else {
+    //     var iPres = 0;
+    //     var oPres = 0;
+    // }
+
+
+
+
+    var iPres = $('.ipres').val();
+    var oPres = $('.opres').val();
     var seatDia = $('.seatDia').val();
     var itemId = "{{item.id}}";
     var balance = $('.balance').val();
@@ -811,16 +863,132 @@
     var itemId = "{{item.id}}";
 
     $(document).ready(function() {
+
+        $('.valveSize').on('change', function() {
+            var valveSize = $(this).val();
+            console.log('val',valveSize)
+            console.log(valveSize)
+            
+            $.ajax({
+                url: '/getStemSize', 
+                method: 'GET',
+                data: { valveSize: valveSize },
+                success: function(response) {
+                    var previouslySelectedValue = $('.stemDia').val();
+                    // Clear previous options
+                    $('.stemDia').empty();
+                    // Append new options
+                    $.each(response, function(index, option) {
+                        $('.stemDia').append($('<option>', {
+                            value: option.id,
+                            text: option.value
+                        }));
+                    });
+                    if ($('.stemDia option[value="' + previouslySelectedValue + '"]').length > 0) {
+                        $('.stemDia').val(previouslySelectedValue);
+                    } else {
+                        // Optionally, handle the case where the previously selected value is not available in the new options
+                        // For example, you could select the first option by default
+                        $('.stemDia').val($('.stemDia option:first').val());
+                    }
+
+                var stemDia = $('.stemDia').val();
+                var itemId = "{{item.id}}";
+            
+                $.ajax({
+                    type: "GET",    
+                    url: "/getpackingfriction",
+                    data: {
+                        stemDia: stemDia,
+                        itemId: itemId
+                    },
+                    success: function(data) {
+                        $('.packingF').val(data.value);
+
+                    },
+
+                    error: function(xhr, status, error) {
+                        console.log('getpackingfriction fails');
+                    }
+                    });
+                
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                    // Handle error if needed
+                }
+            });
+
+        });
         
+
+        //onload stemdia 
+        var valveSize = $('.valveSize').val();
+
+            
+            $.ajax({
+                url: '/getStemSize', 
+                method: 'GET',
+                data: { valveSize: valveSize },
+                success: function(response) {
+                    var previouslySelectedValue = "{{act_case.stemDia}}"
+                    // alert(previouslySelectedValue)
+                    // Clear previous options
+                    $('.stemDia').empty();
+                    // Append new options
+                    $.each(response, function(index, option) {
+                        var newOption = $('<option>', {
+                            value: option.id,
+                            text: option.value
+                        });
+                        if (option.id == previouslySelectedValue) {
+                        newOption.attr('selected', 'selected');
+                        }
+                        $('.stemDia').append(newOption);
+                    });
+
+          
+
+               
+                    var stemDia = $('.stemDia').val();
+                var itemId = "{{item.id}}";
+            
+                $.ajax({
+                    type: "GET",    
+                    url: "/getpackingfriction",
+                    data: {
+                        stemDia: stemDia,
+                        itemId: itemId
+                    },
+                    success: function(data) {
+                        $('.packingF').val(data.value);
+
+                    },
+
+                    error: function(xhr, status, error) {
+                        console.log('getpackingfriction fails');
+                    }
+                    });
+
+
+                
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                    // Handle error if needed
+                }
+            });
         //onload plugdia and ua
         var itemId = "{{item.id}}";
         var seatDia = $('.seatDia').val();
+        var trimtype = $('.trimType').val();
         $.ajax({
             type: "GET",
             url: "/getUaElement",
             data: {
                 seatDia: seatDia,
-                itemId: itemId
+                itemId: itemId,
+                trimtype: trimtype
             },  
             success: function(data) {
                 console.log(data);
@@ -830,7 +998,7 @@
             },
 
             error: function(xhr, status, error) {
-                alert(data.message);
+                console.log('UA ELEMENT FAILS');
             }
         });  
 
@@ -851,18 +1019,20 @@
             },
 
             error: function(xhr, status, error) {
-                alert(data.message);
+                console.log('getpackingfriction fails');
             }
         });
 
 
         //onload getseatload
+        var trimtype = $('.trimType').val;
         $.ajax({
             type: "GET",
             url: "/getseatload",
             data: {
                 itemId: itemId,
-                seatDia: seatDia
+                seatDia: seatDia,
+                trimType: trimtype,
             },
             success: function(data) {
                 $('.seatF').val(data.value);
@@ -870,7 +1040,7 @@
             },
 
             error: function(xhr, status, error) {
-                alert(data.message);
+                console.log('getseatload fails');
             }
         });
 
@@ -891,7 +1061,7 @@
             },
 
             error: function(xhr, status, error) {
-                alert(data.message);
+                console.log('getunbalforce fails');
             }
         });
 
@@ -899,7 +1069,9 @@
 
     });
 
-    $(document).ready(function(){
+    $(document).ready(function(){   
+
+
 
    
         $('.trimType, .balance, .flowDirection').on('change',function(){
@@ -932,6 +1104,7 @@
           
             var iPres = $('.ipres').val();
             var stemDia = $('.stemDia').val();
+            console.log(iPres)
             $.ajax({
             type: "GET",
             url: "/getunbalforce",
@@ -945,28 +1118,31 @@
             },
 
             error: function(xhr, status, error) {
-                alert(data.message);
+                console.log('getunbalforce fails');
             }
         });
         })
 
         $('.seatDia').on('change',function() {
             var seatDia = $('.seatDia').val() 
+            var trimType = $('.trimType').val()
             var itemId = "{{item.id}}";
             $.ajax({
             type: "GET",
             url: "/getseatload",
             data: {
                 itemId: itemId,
-                seatDia: seatDia
+                seatDia: seatDia,
+                trimType: trimType
             },
             success: function(data) {
+                console.log(data.value,'seatload')
                 $('.seatF').val(data.value);
 
             },
 
             error: function(xhr, status, error) {
-                alert(data.message);
+                console.log('getpackingfriction fails');
             }
         });
         })
@@ -1092,30 +1268,7 @@
             $('.delp').val(ipres-opres);
         })
 
-        $('.valveSize').on('change', function() {
-            var valveSize = $(this).val();
-            
-            $.ajax({
-                url: '/getStemSize', 
-                method: 'GET',
-                data: { valveSize: valveSize },
-                success: function(response) {
-                    // Clear previous options
-                    $('.stemDia').empty();
-                    // Append new options
-                    $.each(response, function(index, option) {
-                        $('.stemDia').append($('<option>', {
-                            value: option.id,
-                            text: option.value
-                        }));
-                    });
-                },
-                error: function(xhr, status, error) {
-                    console.error('Error:', error);
-                    // Handle error if needed
-                }
-            });
-        });
+
         $('.stemDia').on('change', function() {
                 var stemDia = $('.stemDia').val();
                 var itemId = "{{item.id}}";
@@ -1133,7 +1286,7 @@
                     },
 
                     error: function(xhr, status, error) {
-                        alert(data.message);
+                        console.log('getpackingfriction fails');
                     }
                     });
                 
@@ -1144,12 +1297,14 @@
         $('.seatDia').on('change', function() {
             var itemId = "{{item.id}}";
             var seatDia = $('.seatDia').val();
+            var trimtype = $('.trimType').val();
             $.ajax({
                 type: "GET",
                 url: "/getUaElement",
                 data: {
                     seatDia: seatDia,
-                    itemId: itemId
+                    itemId: itemId,
+                    trimtype: trimtype
                 },
                 success: function(data) {
                     console.log(data);
@@ -1159,7 +1314,7 @@
                 },
 
                 error: function(xhr, status, error) {
-                    alert(data.message);
+                    console.log('getuaelement fails');
                 }
             });  
 

@@ -104,15 +104,15 @@
     
                                                     </div>
                                                     <div class="col-3">
-                                                        <input type="number" value="{{act.availableAirSupplyMin}}" class="form-control-sm-sm actuator_input1"  name="availableAirSupplyMin">
+                                                        <input type="number" value="{{act.availableAirSupplyMin}}" class="form-control-sm-sm actuator_input1"  name="availableAirSupplyMin" required>
                                                     </div>
                                                     <div class="col-3" style="padding:0px 10px 0px 0px">
-                                                        <select class="form-control-sm-sm actuator_select1" name="airUnit">
+                                                        <select class="form-control-sm-sm actuator_select1" name="availableAirSupplyMinUnit">
                                                             {% for presunit in metadata['units_dict']['pressure'] %}
-                                                                    {% if presunit.name == item.project.pressureUnit %}
+                                                                    {% if presunit.id == act.availableAirSupplyMinUnit %}
                                                                     <option value="{{presunit.id}}" selected>{{presunit.name}}</option>
                                                                     {% else %}
-                                                                    <option value="{{presunit.name}}" >{{presunit.name}}</option>
+                                                                    <option value="{{presunit.id}}" >{{presunit.name}}</option>
                                                                     {% endif %}
                                                             {% endfor %}
                                                         </select>
@@ -129,12 +129,12 @@
                                                         <input type="number" step="0.1" value="{{act.availableAirSupplyMax}}" class="form-control-sm-sm actuator_input1" required name="availableAirSupplyMax">
                                                     </div>
                                                     <div class="col-3" style="padding:0px 10px 0px 0px">
-                                                        <select class="actuator_select1 form-control-sm-sm" name="set pressure">
+                                                        <select class="actuator_select1 form-control-sm-sm" name="availableAirSupplyMaxUnit">
                                                             {% for presunit in metadata['units_dict']['pressure'] %}
-                                                                    {% if presunit.name == item.project.pressureUnit %}
+                                                                    {% if presunit.id == act.availableAirSupplyMaxUnit %}
                                                                     <option value="{{presunit.id}}" selected>{{presunit.name}}</option>
                                                                     {% else %}
-                                                                    <option value="{{presunit.name}}" >{{presunit.name}}</option>
+                                                                    <option value="{{presunit.id}}" >{{presunit.name}}</option>
                                                                     {% endif %}
                                                             {% endfor %}
                                                         </select>
@@ -147,10 +147,18 @@
                                                         <label for="shutoffDelP">Shut Off Pressure</label>
                                                     </div>
                                                     <div class="col-3">
-                                                        <input type="text" value="{{valve.shutOffDelP}}"  class="form-control-sm-sm actuator_input1" name="shutoffDelP">
+                                                        <input type="text"  {% if act.shutoffDelP %} value="{{act.shutoffDelP}}" {% endif %} class="form-control-sm-sm actuator_input1" name="shutoffDelP" required>
                                                     </div>
                                                     <div class="col-3" style="padding:0px 10px 0px 0px">
-                                                        <input type="text" value="{{valve.shutOffDelPUnit}}" readonly class="form-control-sm-sm actuator_input" name="shutoffDelP">
+                                                        <select class="actuator_select1 form-control-sm-sm" name="shutoffDelPUnit">
+                                                            {% for presunit in metadata['units_dict']['delPressure'] %}
+                                                                    {% if presunit.id == act.shutoffDelPUnit %}
+                                                                    <option value="{{presunit.id}}" selected>{{presunit.name}}</option>
+                                                                    {% else %}
+                                                                    <option value="{{presunit.id}}" >{{presunit.name}}</option>
+                                                                    {% endif %}
+                                                            {% endfor %}
+                                                        </select>
                                                     </div>
                                                 </div>
                                             </div>
@@ -158,7 +166,10 @@
                                             
                                                 {% if v_style == 'globe' %}
                                                 <input type="submit" class="btn btn-info actuator_button1" name="sliding" value="Sliding Stem Actuator Sizing">
+                                                {% elif v_style == 'butterfly' %}
+                                                <input type="submit" class="btn  btn-info actuator_button2 mt-2"  name="rotary" value="Rotary Actuator Sizing">
                                                 {% else %}
+                                                <input type="submit" class="btn btn-info actuator_button1" name="sliding" value="Sliding Stem Actuator Sizing">
                                                 <input type="submit" class="btn  btn-info actuator_button2 mt-2"  name="rotary" value="Rotary Actuator Sizing">
                                                 {% endif %}
                                                 <!-- <input type="submit" class="btn btn-info actuator_button3 mt-2"  name="stroketime" value="Stroketime"> -->

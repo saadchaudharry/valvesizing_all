@@ -612,7 +612,7 @@ def peakFreq_fp(gamma, inletPressure, outletPressure, Flp, Fp, Pi, stp, No, A, I
 def LPI(gamma, inletPressure, outletPressure, Flp, Fp, Pi, massflowrate, aEta, R, temp, M, oPipeDia, internalPipeDia):
     wa = WA(gamma, inletPressure, outletPressure, Flp, Fp, Pi, massflowrate, aEta)
     p2 = outletDensity(inletPressure, outletPressure, Pi)
-    c2 = C2(gamma, R, temp, M)
+    c2 = C2(gamma, R, temp, M)  
     lg = LG(gamma, inletPressure, outletPressure, Pi, R, temp, M, massflowrate, oPipeDia)
     # print(f"Wa: {wa}, p2: {p2}, c2: {c2}, dj: , lg: {lg}")
 
@@ -638,6 +638,7 @@ def L_pi_fi(fi, gamma, inletPressure, outletPressure, Flp, Fp, Pi, massflowrate,
     lpi = LPI(gamma, inletPressure, outletPressure, Flp, Fp, Pi, massflowrate, aEta, R, temp, M, oPipeDia,
               internalPipeDia)
     a = lpi - 8 - 10 * math.log10(a_)
+    print(f"NOISE LPIFI {a}")
     return a
 
 
