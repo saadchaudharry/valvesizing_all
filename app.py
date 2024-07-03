@@ -8979,7 +8979,7 @@ def generate_csv_item(item_id, proj_id):
                                     'actmodelno':act_modelno,
                                 }
                             
-                            act_dict.append(act_dict_)
+                            act_dict.append(act_dict_) 
                             cases__.append(rows___)
                             units__.append(unit_list)
                             others__.append(other_val_list)
