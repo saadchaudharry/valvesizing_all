@@ -24,7 +24,7 @@ def createcvOpening_gas(itemCase_list,fluid_types,items,header_details):
     print(f'INSIDE GASOPENING')
 
     data = [10,20,30,40,50,60,70,80,90,100]
-    workbook = xlsxwriter.Workbook(f'cvsizingcalculation.xlsx')   
+    workbook = xlsxwriter.Workbook(f'E:\Sizing_Reports\cvsizingcalculation.xlsx')   
     print(f'itemCasessssssssss',itemCase_list)
     count = 1;f_cnt = 0
     print(f'FLUID {fluid_types}')
@@ -1209,7 +1209,7 @@ def createcvOpening_gas(itemCase_list,fluid_types,items,header_details):
 
 def createSpecSheet(case_data, units, other, act_):
     print(f'INSIDE FUNNCSSS {case_data}')
-    workbook = xlsxwriter.Workbook('controlvalve_specsheet.xlsx')
+    workbook = xlsxwriter.Workbook('E:\Sizing_Reports\controlvalve_specsheet.xlsx')
     print(f'LENCASEDATA {len(case_data)}')
     for i in range(len(case_data)):
         print(f'INSIDE I {i}')
@@ -2100,7 +2100,7 @@ def createActSpecSheet(header_,valvedatas_,actdatas_,units_,accessories_,forces_
     a__ = datetime.now()
     a_ = a__.strftime("%a, %d %b %Y %H-%M-%S")
 
-    workbook = xlsxwriter.Workbook(f'act_specsheet.xlsx')
+    workbook = xlsxwriter.Workbook(f'E:\Sizing_Reports\controlact_specsheet.xlsx')
     for i in range(len(header_)):
         worksheet = workbook.add_worksheet()
 

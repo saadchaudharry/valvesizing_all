@@ -8987,7 +8987,7 @@ def generate_csv_item(item_id, proj_id):
 
                     print(f'SHHSHSHSITEM {cases__},{units__},{others__},{act_dict}')
                     createSpecSheet(cases__, units__, others__, act_dict)
-                    path = "controlvalve_specsheet.xlsx"
+                    path = "E:\Sizing_Reports\controlvalve_specsheet.xlsx"
                     project_number = item.project.id
                     current_datetime = datetime.datetime.today().date().timetuple()
 
@@ -9045,7 +9045,7 @@ def generate_csv_item(item_id, proj_id):
                     createcvOpening_gas(itemCase,fluid_types,items,header_details)
 
 
-                    path = "cvsizingcalculation.xlsx"
+                    path = "E:\Sizing_Reports\cvsizingcalculation.xlsx"
                     a__ = datetime.datetime.now()
                     a_ = a__.strftime("%a, %d %b %Y %H-%M-%S")
                     spec_sheet_name = f'CVPlot_{a_}.xlsx'
@@ -9356,7 +9356,7 @@ def generate_csv_item(item_id, proj_id):
                     
                     createActSpecSheet(header_,valvedatas_,actdatas_,unitslist_,accessories_,forces_)
 
-                    path = "act_specsheet.xlsx"
+                    path = "E:\Sizing_Reports\controlact_specsheet.xlsx"
                     a__ = datetime.datetime.now()
                     a_ = a__.strftime("%a, %d %b %Y %H-%M-%S")
                     spec_sheet_name = f'ActuatorSizing_{a_}.xlsx'
@@ -9396,7 +9396,7 @@ def generate_csv_item(item_id, proj_id):
 
                 if len(files_excel) == 1:
                     print(f'PPPPPPPPPPPPPPPPPPP {files_excel[0]}')
-                    report_sheet = {'controlvalve_specsheet.xlsx':'ControlValveSizingSheetItem.xlsx', 'cvsizingcalculation.xlsx':'CVPlotItem.xlsx','act_specsheet.xlsx':'ActuatorSizingItem.xlsx'}
+                    report_sheet = {'E:\\Sizing_Reports\\controlvalve_specsheet.xlsx':'ControlValveSizingSheetItem.xlsx', 'E:\\Sizing_Reports\\cvsizingcalculation.xlsx':'CVPlotItem.xlsx','E:\\Sizing_Reports\\controlact_specsheet.xlsx':'ActuatorSizingItem.xlsx'}
                     return send_file(files_excel[0], as_attachment=True, download_name=report_sheet[files_excel[0]])
                 elif len(files_excel) > 1:
                     return send_file(zip_file_path, as_attachment=True)
@@ -9408,21 +9408,21 @@ def generate_csv_item(item_id, proj_id):
                             
                 print(f'NOOFFILES {files_excel}')
                 if len(files_excel) == 1:
-                    WB_PATH = os.path.join('D:\Fcc_ValveSizing', files_excel[0])
-                    PATH_TO_PDF = os.path.join('D:\Fcc_ValveSizing', files_excel[0].replace('.xlsx','.pdf'))
+                    WB_PATH = os.path.join('E:\Sizing_Reports', files_excel[0])
+                    PATH_TO_PDF = os.path.join('E:\Sizing_Reports', files_excel[0].replace('.xlsx','.pdf'))
                     convert_excel2pdf(WB_PATH, PATH_TO_PDF)
-                    report_sheet = {'controlvalve_specsheet.xlsx':'ControlValveSizing.pdf', 'cvsizingcalculation.xlsx':'CVPlot.pdf','act_specsheet.xlsx':'ActuatorSizingSheet.pdf'}
+                    report_sheet = {'E:\\Sizing_Reports\\controlvalve_specsheet.xlsx':'ControlValveSizing.pdf', 'E:\\Sizing_Reports\\cvsizingcalculation.xlsx':'CVPlot.pdf','E:\\Sizing_Reports\\controlact_specsheet.xlsx':'ActuatorSizingSheet.pdf'}
                     return send_file(PATH_TO_PDF, as_attachment=True, download_name=report_sheet[files_excel[0]])
                 elif len(files_excel) > 1:
                     zip_arr = []
                     for file_name in files_excel:
-                        WB_PATH = os.path.join('D:\Fcc_ValveSizing', file_name)
-                        PATH_TO_PDF = os.path.join('D:\Fcc_ValveSizing', file_name.replace('.xlsx','.pdf'))
+                        WB_PATH = os.path.join('E:\Sizing_Reports', file_name)
+                        PATH_TO_PDF = os.path.join('E:\Sizing_Reports', file_name.replace('.xlsx','.pdf'))
                       
                         convert_excel2pdf(WB_PATH, PATH_TO_PDF)
                         zip_arr.append(PATH_TO_PDF)
                     print(f'ziparr{zip_arr}')
-                    zip_file_path = os.path.join('D:\Fcc_ValveSizing', 'reports.zip')
+                    zip_file_path = os.path.join('E:\Sizing_Reports', 'reports.zip')
                     
                     with zipfile.ZipFile(zip_file_path, 'w') as zipf:
                         for i in zip_arr:
@@ -9807,7 +9807,7 @@ def generate_csv_project(item_id, proj_id):
 
                     
                     createSpecSheet(cases__, units__, others__, act_dict)
-                    path = "controlvalve_specsheet.xlsx"
+                    path = "E:\Sizing_Reports\controlvalve_specsheet.xlsx"
                     project_number = item.project.id
                     current_datetime = datetime.datetime.today().date().timetuple()
 
@@ -9862,7 +9862,7 @@ def generate_csv_project(item_id, proj_id):
                     createcvOpening_gas(itemCase,fluid_types,items,header_details)
 
 
-                    path = "cvsizingcalculation.xlsx"
+                    path = "E:\Sizing_Reports\cvsizingcalculation.xlsx"
                     a__ = datetime.datetime.now()
                     a_ = a__.strftime("%a, %d %b %Y %H-%M-%S")
                     spec_sheet_name = f'CVPlot_{a_}.xlsx'
@@ -10168,7 +10168,7 @@ def generate_csv_project(item_id, proj_id):
                     
                     createActSpecSheet(header_,valvedatas_,actdatas_,unitslist_,accessories_,forces_)
                     # path = os.path.join('E:\Sizing_Reports', 'act_specsheet.xlsx')
-                    path = "act_specsheet.xlsx"
+                    path = "E:\Sizing_Reports\controlact_specsheet.xlsx"
                     a__ = datetime.datetime.now()
                     a_ = a__.strftime("%a, %d %b %Y %H-%M-%S")
                     spec_sheet_name = f'ActuatorSizing_{a_}.xlsx'
@@ -10205,7 +10205,7 @@ def generate_csv_project(item_id, proj_id):
                 print('Inside Excel')
                 if len(files_excel) == 1:   
                     print(f'PPPPPPPPPPPPPPPPPPP {files_excel[0]}')
-                    report_sheet = {'controlvalve_specsheet.xlsx':'ControlValveSizingSheet.xlsx', 'cvsizingcalculation.xlsx':'CVPlot.xlsx','act_specsheet.xlsx':'ActuatorSizingSheet.xlsx'}
+                    report_sheet = {'E:\\Sizing_Reports\\controlvalve_specsheet.xlsx':'ControlValveSizingSheet.xlsx', 'E:\\Sizing_Reports\\cvsizingcalculation.xlsx':'CVPlot.xlsx','E:\\Sizing_Reports\\controlact_specsheet.xlsx':'ActuatorSizingSheet.xlsx'}
                     return send_file(files_excel[0], as_attachment=True, download_name=report_sheet[files_excel[0]])
                 elif len(files_excel) > 1:
                     return send_file(zip_file_path, as_attachment=True, download_name=zip_file_name)
@@ -10219,21 +10219,21 @@ def generate_csv_project(item_id, proj_id):
             elif file_type == 'pdf': 
                 print(f'NOOFFILES {files_excel}')
                 if len(files_excel) == 1:
-                    WB_PATH = os.path.join('D:\Fcc_ValveSizing', files_excel[0])
-                    PATH_TO_PDF = os.path.join('D:\Fcc_ValveSizing', files_excel[0].replace('.xlsx','.pdf'))
+                    WB_PATH = os.path.join('E:\Sizing_Reports', files_excel[0])
+                    PATH_TO_PDF = os.path.join('E:\Sizing_Reports', files_excel[0].replace('.xlsx','.pdf'))
                     convert_excel2pdf(WB_PATH, PATH_TO_PDF)
-                    report_sheet = {'controlvalve_specsheet.xlsx':'ControlValveSizing.pdf', 'cvsizingcalculation.xlsx':'CVPlot.pdf','act_specsheet.xlsx':'ActuatorSizingSheet.pdf'}
+                    report_sheet = {'E:\\Sizing_Reports\\controlvalve_specsheet.xlsx':'ControlValveSizing.pdf', 'E:\\Sizing_Reports\\cvsizingcalculation.xlsx':'CVPlot.pdf','E:\\Sizing_Reports\\controlact_specsheet.xlsx':'ActuatorSizingSheet.pdf'}
                     return send_file(PATH_TO_PDF, as_attachment=True, download_name=report_sheet[files_excel[0]])
                 elif len(files_excel) > 1:
                     zip_arr = []
                     for file_name in files_excel:
-                        WB_PATH = os.path.join('D:\Fcc_ValveSizing', file_name)
-                        PATH_TO_PDF = os.path.join('D:\Fcc_ValveSizing', file_name.replace('.xlsx','.pdf'))
+                        WB_PATH = os.path.join('E:\Sizing_Reports', file_name)
+                        PATH_TO_PDF = os.path.join('E:\Sizing_Reports', file_name.replace('.xlsx','.pdf'))
                       
                         convert_excel2pdf(WB_PATH, PATH_TO_PDF)
                         zip_arr.append(PATH_TO_PDF)
                     print(f'ziparr{zip_arr}')
-                    zip_file_path = os.path.join('D:\Fcc_ValveSizing', 'reports.zip')
+                    zip_file_path = os.path.join('E:\Sizing_Reports', 'reports.zip')
                     
                     with zipfile.ZipFile(zip_file_path, 'w') as zipf:
                         for i in zip_arr:
