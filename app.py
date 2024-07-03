@@ -63,7 +63,8 @@ from fpdf import FPDF
 from pywintypes import com_error
 import pythoncom
 import win32com.client as win32,win32com
-
+from spire.xls import *
+from spire.xls.common import *
 # -----------^^^^^^^^^^^^^^----------------- IMPORT STATEMENTS -----------------^^^^^^^^^^^^^------------ #
 
 # env = Environment(loader=FileSystemLoader('templates\\render_data.html'))
@@ -9540,11 +9541,20 @@ def getActModelNo(series, size, faction, manualOverride, limitStop):
 
 def convert_excel2pdf(excel_path, pdf_path):
     try:
-        excel = win32com.client.Dispatch("Excel.Application",pythoncom.CoInitialize())
-        workbook = excel.Workbooks.Open(excel_path)
-        workbook.ExportAsFixedFormat(0, pdf_path)
-        workbook.Close(False)
-        excel.Quit()
+        # excel = win32com.client.Dispatch("Excel.Application",pythoncom.CoInitialize())
+        # workbook = excel.Workbooks.Open(excel_path)
+        # workbook.ExportAsFixedFormat(0, pdf_path)
+        # workbook.Close(False)
+        # excel.Quit()
+        workbook = Workbook()
+        #Load an Excel file
+        workbook.LoadFromFile(excel_path)
+
+        #Iterate through the worksheets in the file
+        for sheet in workbook.Worksheets:
+            FileName =  pdf_path
+            sheet.SaveToPdf(FileName)
+        workbook.Dispose()
     except com_error as e:
         print('failed.')
     else:
