@@ -1,7 +1,7 @@
 {% block content %}
 {% include "header.html" %}
 <br>
-<form action="{{url_for('generate_csv_item', proj_id=item.project.id, item_id=item.id)}}" method="post">
+<form action="{{url_for('generate_csv_item', proj_id=item.project.id, item_id=item.id)}}" id="projectForm" method="post">
 
     <div class="row mt-2">
         <div class="col-12">
@@ -84,7 +84,7 @@
                         </div>
                     </div>
                 </div>
-
+                <input id="file_type" type="hidden" value="" name="file_type" />
                 <div class="col-4 ">
                     <div class="item_select_table mt-2 shadow p-3">
                         <div class="row mt-2">
@@ -114,6 +114,61 @@
         </div>
     </div>
 </form>
+<script>
+    var proj_id = "{{item.project.id}}"
+    var item_id = "{{item.id}}"
+   
+    $('#projectForm').submit(function(event){
+        event.preventDefault()
+        Swal.fire({
+        title: "Select the report type you want to download",
+        showDenyButton: true,
+        confirmButtonText: "Excel",
+        denyButtonText: "Pdf",
+        confirmButtonText: '<i class="fas fa-file-excel"></i> Excel',
+        denyButtonText: '<i class="fas fa-file-pdf"></i> PDF',
+        customClass: {
+            confirmButton: 'custom-confirm-button',
+            denyButton: 'custom-deny-button',
+    
+        }
+        }).then((result) => {
+        
+        if (result.isConfirmed) {
+        
+        $('#file_type').val('excel');   
+        $('#projectForm').off('submit').submit();
+        console.log('setfile',$('#file_type').val())
+    
+        //   window.location.href = `/generate-csv-project/proj-${proj_id}/item-${item_id}?file_type=excel`;
+       
+        }else{
+            $('#file_type').val('pdf');
+            $('#projectForm').off('submit').submit();
+          
+        } 
+        });
+    })
+    $(document).ready(function() {
+        
+        $('.reportname').change(function() {
+        if ($('.reportname').is(':checked'))  {
+            $('.checkbox_item').first().prop('checked', true);
+        }
+        else{
+            $('.checkbox_item').first().prop('checked', false);
+        }
+       
+        })
+        
+        $('#selectAll').on('click', function() {
+           
+            $('.checkbox_item').prop('checked', $(this).prop('checked'));
+        });
+    
+
+    });
+</script>
 
 <!-- <div class="container-fluid "> -->
 
@@ -121,4 +176,4 @@
 
 
 {% include "footer.html" %}
-{% endblock %}
+{% endblock %} 

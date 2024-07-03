@@ -62,7 +62,7 @@ from PyPDF2 import PdfWriter
 from fpdf import FPDF
 from pywintypes import com_error
 import pythoncom
-import win32com.client as win32
+import win32com.client as win32,win32com
 
 # -----------^^^^^^^^^^^^^^----------------- IMPORT STATEMENTS -----------------^^^^^^^^^^^^^------------ #
 
@@ -7522,6 +7522,8 @@ def slidingStem(proj_id, item_id):
             print(f'shutff {v_shutoff_plus}')
 
             act_case_data.update(act_case_data_json_result, act_case_data.id)
+            act_element.actSelectionType = 'sliding'
+
 
             # act_case_data.packingF = packing_friction
             # act_case_data.seatLoad = seat_load_force
@@ -8054,7 +8056,7 @@ def rotaryActuator(proj_id, item_id):
             a['setP'] = [act_element.availableAirSupplyMax]
             
 
-
+            act_element.actSelectionType = 'rotary'
             act_case_data.update(a, act_case_data.id)
 
             print(f'ROTARY {data},{a}')
@@ -8758,12 +8760,17 @@ def generate_csv_item(item_id, proj_id):
     project_element = getDBElementWithId(projectMaster,proj_id)
     customer__ = db.session.query(addressProject).filter_by(isCompany=True, project=project_element).first()
     enduser__ = db.session.query(addressProject).filter_by(isCompany=False, project=project_element).first()
+    month_abbr = {
+    'January': 'Jan', 'February': 'Feb', 'March': 'Mar', 'April': 'Apr',
+    'May': 'May', 'June': 'Jun', 'July': 'Jul', 'August': 'Aug',
+    'September': 'Sep', 'October': 'Oct', 'November': 'Nov', 'December': 'Dec'
+    }
     # try:
     if True:
         if request.method == "POST":
             items = request.form.getlist('item')
             print(f'GENERATE_CSV_ITEM {items}')
-
+            file_type = request.form.get('file_type')
             print(f'ITEMSCSV {items}')  
             items_list = [item_id]
             report_list = request.form.getlist('reportname')
@@ -8845,7 +8852,15 @@ def generate_csv_item(item_id, proj_id):
                                 percent__, i_pipe_vel, o_pipe_vel, t_vel = 'degree', 'mach', 'mach', 'mach'
                                 balancing__ = ''
                                 cage__ = ''
-                            unit_list = [item.flowrate_unit,item.inpres_unit, item.outpres_unit, item.intemp_unit, 'Xt', 'Cv', '%', 'dBA', i_pipe_vel, 'Mach',item.inpipe_unit,item.outpipe_unit,item.vaporpres_unit]
+                            if v_details.state.name == 'Gas':
+                                presdropratiofactor = 'Xt'  
+                                viscosity = 'γ'
+                                vaporpres = 'Z'
+                            else:
+                                presdropratiofactor = 'Fl'
+                                viscosity = 'cP'
+                                vaporpres = item.vaporpres_unit
+                            unit_list = [item.flowrate_unit,item.inpres_unit, item.outpres_unit, item.intemp_unit, presdropratiofactor, 'Cv', '%', 'dBA', i_pipe_vel, 'Mach',item.inpipe_unit,item.outpipe_unit,vaporpres,viscosity]
                             
                         
 
@@ -8875,9 +8890,9 @@ def generate_csv_item(item_id, proj_id):
                                             v_details.disc__.name,
                                             v_details.seatLeakageClass__.name, v_details.endConnection__.name, v_details.endFinish__.name, v_model_lower, valve_modelno, v_details.bonnet__.name,
                                             bonnet_, v_details.studNut__.name, cases[0].ratedCv, v_details.balanceSeal__.name, acc_list, v_details.application, spec_fluid_name, 
-                                            f"{v_details.maxPressure} {v_details.maxPressureUnit}", f"/ {v_details.maxTemp} {v_details.maxTempUnit}", f"{v_details.minTemp} {v_details.minTempUnit}", balancing__, cage__, v_details.packing__.name,
+                                            f"{v_details.maxPressure} {v_details.maxPressureUnit}", f"/ {v_details.maxTemp} °{v_details.maxTempUnit}", f"{v_details.minTemp} °{v_details.minTempUnit}", balancing__, cage__, v_details.packing__.name,
                                             f"{seat_bore} inch", travel_, v_details.flowDirection__.name, v_details.flowCharacter__.name, v_details.shaft__.name, item_notes_list,
-                                            f"{item.itemNumber} ({v_details.quantity})"]
+                                            f"{item.itemNumber} # ({v_details.quantity})"]
                             
                             customer__ = db.session.query(addressProject).filter_by(isCompany=True, project=item.project).first()
                             
@@ -8897,10 +8912,11 @@ def generate_csv_item(item_id, proj_id):
                                             item.project.workOderNo,
                                             f"{customer__.address.company.name} ({customer__.address.address})",
                                             f"{enduser__.address.company.name} ({enduser__.address.address})",
-                                            f"{project_element.enquiryRef} dt. {project_element.enquiryReceivedDate.strftime("%d-%B-%Y")}", 
+
+                                            f"{project_element.enquiryRef} dt. {project_element.enquiryReceivedDate.strftime("%d-") + month_abbr[project_element.enquiryReceivedDate.strftime("%B")] + project_element.enquiryReceivedDate.strftime("-%Y")}", 
                                             project_element.custPoNo,
-                                            f"/ {itemCases_1[0].iSch}",
-                                            f"/ {itemCases_1[0].oSch}"
+                                            "/ STD" if itemCases_1[0].iSch == 'std' else f'/ {itemCases_1[0].iSch}',
+                                            "/ STD" if itemCases_1[0].oSch == 'std' else f'/ {itemCases_1[0].oSch}'
                                             ]
                                 
                                 # case_list_dict = {
@@ -9003,7 +9019,7 @@ def generate_csv_item(item_id, proj_id):
                         header = [f"{customer__.address.company.name} ({customer__.address.address})",
                                 project_element.projectRef,
                                 f"{enduser__.address.company.name} ({enduser__.address.address})",
-                                f"{project_element.enquiryRef} dt. {project_element.enquiryReceivedDate.strftime("%d-%B-%Y")}", 
+                                f"{project_element.enquiryRef} dt. {project_element.enquiryReceivedDate.strftime("%d-") + month_abbr[project_element.enquiryReceivedDate.strftime("%B")] + project_element.enquiryReceivedDate.strftime("-%Y")}",  
                                 project_element.custPoNo,
                                 project_element.projectId,
                                 project_element.workOderNo,
@@ -9011,13 +9027,13 @@ def generate_csv_item(item_id, proj_id):
                                 valve.tagNumber, 
                                 f"{items[valve_element.index(valve)].itemNumber} ({valve.quantity})", 
                                 valve.application, 
-                                f"{valve.state.name} / {itemCase[valve_element.index(valve)][0].fluid.fluidName}",
-                                f"{itemCase[valve_element.index(valve)][0].criticalPressure} {items[valve_element.index(valve)].criticalpres_unit}",
+                                f"{valve.state.name} / {itemCase[valve_element.index(valve)][0].fluid.fluidName}" if itemCase[valve_element.index(valve)] else 'N/A',
+                                f"{itemCase[valve_element.index(valve)][0].criticalPressure} {items[valve_element.index(valve)].criticalpres_unit}" if itemCase[valve_element.index(valve)] else 'N/A',
                                 f"{valve.shutOffDelP} {valve.shutOffDelPUnit}",
                                 
-                                valve.style.name,
-                                valve.trimType__.name,
-                                valve.flowCharacter__.name
+                                valve.style.name if valve.style else 'N/A',
+                                valve.trimType__.name if valve.trimType__ else 'N/A',
+                                valve.flowCharacter__.name if valve.flowCharacter__ else 'N/A'
                                 ]
                         header_details.append(header)
 
@@ -9050,31 +9066,34 @@ def generate_csv_item(item_id, proj_id):
 
                     for item in items:
                         valve = db.session.query(valveDetailsMaster).filter_by(item=item).first()
+                       
                         cases = db.session.query(caseMaster).filter_by(item=item).all()
                         act_mas = db.session.query(actuatorMaster).filter_by(item=item).first()
                         access = db.session.query(accessoriesData).filter_by(item=item).first()
-                        if valve.style:
-                            if valve.style.name in ['Globe Straight','Globe Angle']:
-                                v_type = 'globe'
-                                act_case = db.session.query(actuatorCaseData).filter_by(actuator_=act_mas).first()
-                                stroke_case = db.session.query(strokeCase).filter_by(actuatorCase_=act_case).first()
-                                if act_mas.springAction == 'AFO':
-                                    actThrustClose = act_case.natMin 
-                                    actThrustOpen = act_case.sfMin 
-                                    open_time = stroke_case.totalExhaustTime
-                                    open_time_unit = stroke_case.totalExhaustUnit
-                                    close_time = stroke_case.totalfillTime 
-                                    close_time_unit = stroke_case.totalFillUnit
-                                elif act_mas.springAction == 'AFC':
-                                    actThrustClose = act_case.sfMin
-                                    actThrustOpen = act_case.natMin
-                                    open_time = stroke_case.totalfillTime
-                                    open_time_unit = stroke_case.totalFillUnit
-                                    close_time = stroke_case.totalExhaustTime
-                                    close_time_unit = stroke_case.totalExhaustUnit
-                            else:
-                                v_type = 'butterfly'
-                                act_case = db.session.query(rotaryCaseData).filter_by(actuator_=act_mas).first()
+                        globevalve = ['Globe Straight','Globe Angle']
+                        butterflyvalve = ['Butterfly Lugged Wafer', 'Butterfly Double Flanged']
+                        actThrustClose,actThrustOpen,open_time,open_time_unit,close_time,close_time_unit='N/A','N/A','N/A','N/A','N/A','N/A'
+                        if act_mas.actSelectionType == 'sliding' or (valve.style and valve.style.name in globevalve):
+                            v_type = 'globe'
+                            act_case = db.session.query(actuatorCaseData).filter_by(actuator_=act_mas).first()
+                            stroke_case = db.session.query(strokeCase).filter_by(actuatorCase_=act_case).first()
+                            if act_mas.springAction == 'AFO':
+                                actThrustClose = act_case.natMin 
+                                actThrustOpen = act_case.sfMin 
+                                open_time = stroke_case.totalExhaustTime
+                                open_time_unit = stroke_case.totalExhaustUnit
+                                close_time = stroke_case.totalfillTime 
+                                close_time_unit = stroke_case.totalFillUnit
+                            elif act_mas.springAction == 'AFC':
+                                actThrustClose = act_case.sfMin
+                                actThrustOpen = act_case.natMin
+                                open_time = stroke_case.totalfillTime
+                                open_time_unit = stroke_case.totalFillUnit
+                                close_time = stroke_case.totalExhaustTime
+                                close_time_unit = stroke_case.totalExhaustUnit
+                        elif act_mas.actSelectionType == 'rotary' or (valve.style.name and valve.style.name in butterflyvalve):
+                            v_type = 'butterfly'
+                            act_case = db.session.query(rotaryCaseData).filter_by(actuator_=act_mas).first()
                         
                         
 
@@ -9101,24 +9120,24 @@ def generate_csv_item(item_id, proj_id):
                         header = [f"{customer__.address.company.name} ({customer__.address.address})",
                                 project_element.projectRef,
                                 f"{enduser__.address.company.name} ({enduser__.address.address})",
-                                f"{project_element.enquiryRef} dt. {project_element.enquiryReceivedDate.strftime("%d-%B-%Y")}", 
+                                f"{project_element.enquiryRef} dt. {project_element.enquiryReceivedDate.strftime("%d-") + month_abbr[project_element.enquiryReceivedDate.strftime("%B")] + project_element.enquiryReceivedDate.strftime("-%Y")}", 
                                 project_element.custPoNo,
                                 project_element.projectId,
                                 project_element.workOderNo,
                                 valve.serialNumber, 
                                 valve.tagNumber, 
-                                f"{item.itemNumber} ({valve.quantity})", 
+                                f"{item.itemNumber} # ({valve.quantity})", 
                                 valve.application, 
-                                f"{valve.state.name} / {cases[0].fluid.fluidName}",
+                                f"{valve.state.name} / {cases[0].fluid.fluidName}" if cases else 'N/A',
                             
                                 ]
                         if v_type == 'globe':
                             valvedata = [
-                                    valve.style.name,    
-                                    valve.trimType__.name,
-                                    valve.rating.name,
-                                    valve.balancing__.name,
-                                    valve.flowDirection__.name,
+                                    valve.style.name if valve.style else 'N/A',    
+                                    valve.trimType__.name if valve.trimType__ else 'N/A',
+                                    valve.rating.name if valve.rating else 'N/A',
+                                    valve.balancing__.name if valve.balancing__ else 'N/A',
+                                    valve.flowDirection__.name if valve.flowDirection__ else 'N/A',
                                     act_case.valveSize,
                                     act_case.seatDia,
                                     act_case.unbalanceArea,
@@ -9132,7 +9151,7 @@ def generate_csv_item(item_id, proj_id):
                                     act_case.shutOffDelP,
                                     act_case.unbalForce,
                                     act_case.negGrad,
-                                    act_case.iPressure - act_case.oPressure,
+                                    act_case.iPressure - act_case.oPressure if act_case.iPressure else 'N/A',
                                     ''
                             ]
                             actdata = [ 
@@ -9161,14 +9180,14 @@ def generate_csv_item(item_id, proj_id):
                                 '',
                                 '',
                                 '',
-                                actThrustClose,
-                                actThrustOpen,
+                                actThrustClose if actThrustClose else 'N/A',
+                                actThrustOpen if actThrustOpen else 'N/A',
                                 '',
                                 '',
                                 '',
                                 '',
-                                open_time,
-                                close_time
+                                open_time if open_time else 'N/A',
+                                close_time if close_time else 'N/A'
                             ]
                             units = [
                                 '',
@@ -9212,14 +9231,15 @@ def generate_csv_item(item_id, proj_id):
                                 '',
                                 '', 
                                 '',
-                                close_time_unit,
-                                open_time_unit
+                                close_time_unit if close_time_unit else 'N/A',
+                                open_time_unit if open_time_unit else 'N/A'
                             ]
                         else:
+                            print(f'ITEMCASEROTARY {itemCase}')
                             valvedata = [
-                                valve.style.name, 
-                                valve.trimType__.name,
-                                valve.flowDirection__.name,
+                                valve.style.name if valve.style else 'N/A', 
+                                valve.trimType__.name if valve.trimType__ else 'N/A',
+                                valve.flowDirection__.name if valve.flowDirection__ else 'N/A',
                                 act_case.max_rot,
                                 act_case.v_size,
                                 act_case.disc_dia,
@@ -9227,11 +9247,11 @@ def generate_csv_item(item_id, proj_id):
                                 act_case.delP,
                                 act_case.csc,
                                 act_case.csv,
-                                itemCase[0][0].inletPressure,
-                                itemCase[0][0].outletPressure,
+                                itemCase[0][0].inletPressure if itemCase[0] else 'N/A',
+                                itemCase[0][0].outletPressure if itemCase[0] else 'N/A' ,
                                 act_case.bush_coeff,
                                 act_case.pack_coeff,
-                                itemCase[0][0].inletPressure - itemCase[0][0].outletPressure,
+                                itemCase[0][0].inletPressure - itemCase[0][0].outletPressure if itemCase[0] else 'N/A',
                                 act_case.a_factor,
                                 act_case.b_factor,
                                 act_case.st,
@@ -9372,14 +9392,55 @@ def generate_csv_item(item_id, proj_id):
 
             
             # Provide the zip file for download
-            if len(files_excel) == 1:
-                print(f'PPPPPPPPPPPPPPPPPPP {files_excel[0]}')
-                report_sheet = {'controlvalve_specsheet.xlsx':'ControlValveSizingSheetItem.xlsx', 'cvsizingcalculation.xlsx':'CVPlotItem.xlsx','act_specsheet.xlsx':'ActuatorSizingItem.xlsx'}
-                return send_file(files_excel[0], as_attachment=True, download_name=report_sheet[files_excel[0]])
-            elif len(files_excel) > 1:
-                return send_file(zip_file_path, as_attachment=True)
+            if file_type == 'excel':
+
+                if len(files_excel) == 1:
+                    print(f'PPPPPPPPPPPPPPPPPPP {files_excel[0]}')
+                    report_sheet = {'controlvalve_specsheet.xlsx':'ControlValveSizingSheetItem.xlsx', 'cvsizingcalculation.xlsx':'CVPlotItem.xlsx','act_specsheet.xlsx':'ActuatorSizingItem.xlsx'}
+                    return send_file(files_excel[0], as_attachment=True, download_name=report_sheet[files_excel[0]])
+                elif len(files_excel) > 1:
+                    return send_file(zip_file_path, as_attachment=True)
+                else:
+                    flash('Select category to download')
+
+
+            elif file_type == 'pdf':
+                            
+                print(f'NOOFFILES {files_excel}')
+                if len(files_excel) == 1:
+                    WB_PATH = os.path.join('D:\Fcc_ValveSizing', files_excel[0])
+                    PATH_TO_PDF = os.path.join('D:\Fcc_ValveSizing', files_excel[0].replace('.xlsx','.pdf'))
+                    convert_excel2pdf(WB_PATH, PATH_TO_PDF)
+                    report_sheet = {'controlvalve_specsheet.xlsx':'ControlValveSizing.pdf', 'cvsizingcalculation.xlsx':'CVPlot.pdf','act_specsheet.xlsx':'ActuatorSizingSheet.pdf'}
+                    return send_file(PATH_TO_PDF, as_attachment=True, download_name=report_sheet[files_excel[0]])
+                elif len(files_excel) > 1:
+                    zip_arr = []
+                    for file_name in files_excel:
+                        WB_PATH = os.path.join('D:\Fcc_ValveSizing', file_name)
+                        PATH_TO_PDF = os.path.join('D:\Fcc_ValveSizing', file_name.replace('.xlsx','.pdf'))
+                      
+                        convert_excel2pdf(WB_PATH, PATH_TO_PDF)
+                        zip_arr.append(PATH_TO_PDF)
+                    print(f'ziparr{zip_arr}')
+                    zip_file_path = os.path.join('D:\Fcc_ValveSizing', 'reports.zip')
+                    
+                    with zipfile.ZipFile(zip_file_path, 'w') as zipf:
+                        for i in zip_arr:
+                            zipf.write(i, os.path.basename(i))
+                                
+                    return send_file(zip_file_path, as_attachment=True, download_name='reports.zip')
+
+
+                else:
+                    flash('Select category to download','error')
+                    return redirect(url_for('generate_csv_project', item_id=item_id, proj_id=proj_id))
+            
+            
             else:
-                flash('Select category to download')
+                flash('Select category to download','error')
+                return redirect(url_for('generate_csv_project', item_id=item_id, proj_id=proj_id))
+    
+    
     # except Exception as e:
     #     flash(f'An error occurred : {str(e)}','error')
 
@@ -9476,7 +9537,18 @@ def getActModelNo(series, size, faction, manualOverride, limitStop):
     print(f'ACTMODELKEYDATA {actmodelkey}')
     
     return actmodelkey
-    
+
+def convert_excel2pdf(excel_path, pdf_path):
+    try:
+        excel = win32com.client.Dispatch("Excel.Application",pythoncom.CoInitialize())
+        workbook = excel.Workbooks.Open(excel_path)
+        workbook.ExportAsFixedFormat(0, pdf_path)
+        workbook.Close(False)
+        excel.Quit()
+    except com_error as e:
+        print('failed.')
+    else:
+        print('Succeeded.') 
 
 @app.route('/generate-csv-project/proj-<proj_id>/item-<item_id>', methods=['GET', 'POST'])
 def generate_csv_project(item_id, proj_id):
@@ -9488,7 +9560,12 @@ def generate_csv_project(item_id, proj_id):
     print(f'items_list {items_list}')
     valve_list = [db.session.query(valveDetailsMaster).filter_by(item=item_).first() for item_ in items_list]
     print(f'valve_list {valve_list}')
-    try:
+    month_abbr = {
+    'January': 'Jan', 'February': 'Feb', 'March': 'Mar', 'April': 'Apr',
+    'May': 'May', 'June': 'Jun', 'July': 'Jul', 'August': 'Aug',
+    'September': 'Sep', 'October': 'Oct', 'November': 'Nov', 'December': 'Dec'
+    }
+    if True:
 
         if request.method == "POST":
             items = request.form.getlist('item')
@@ -9536,30 +9613,24 @@ def generate_csv_project(item_id, proj_id):
                         act_valve_data_string = []
                         act_other = []
                         act_model = None
-                        v_series_m = v_details.valveSeries 
-                        rating_m = v_details.rating.name
-                        trimtype_m = v_details.trimType__.name
-                        bal_m = v_details.balancing__.name
-                        maxTemp_m = v_details.maxTemp 
-                        minTemp_m = v_details.minTemp
-                    
+                        if v_details.valveSeries:
+
+                            v_series_m = v_details.valveSeries 
+                            rating_m = v_details.rating.name 
+                            trimtype_m = v_details.trimType__.name
+                            bal_m = v_details.balancing__.name
+                            maxTemp_m = v_details.maxTemp 
+                            minTemp_m = v_details.minTemp
 
 
-                        
-                        print(f'VALVEMODELS {trimtype_m}')
-                        valve_modelno = getValveModelNo(v_series_m,rating_m,trimtype_m,bal_m,maxTemp_m,minTemp_m)
-                        
-                        
+                            valve_modelno = getValveModelNo(v_series_m,rating_m,trimtype_m,bal_m,maxTemp_m,minTemp_m)
+                           
+                        else:
+                            valve_modelno = 'N/A'
+                
 
-                        
-                    
-                    
-        
-
-                        print(f'VALVE LISTS {v_series_m},{rating_m},{trimtype_m},{bal_m},{maxTemp_m},{minTemp_m}')
-                    
             
-                        v_model_lower = getValveType(v_details.style.name)
+                        v_model_lower = getValveType(v_details.style.name) if v_details.style else 'N/A'
                         
                         
 
@@ -9592,7 +9663,15 @@ def generate_csv_project(item_id, proj_id):
                                 percent__, i_pipe_vel, o_pipe_vel, t_vel = 'degree', 'Mach', 'Mach', 'Mach'
                                 balancing__ = ''
                                 cage__ = ''
-                            unit_list = [item.flowrate_unit,item.inpres_unit, item.outpres_unit, item.intemp_unit, 'Xt', 'Cv', '%', 'dBA', i_pipe_vel, 'Mach',item.inpipe_unit,item.outpipe_unit,item.vaporpres_unit]
+                            if v_details.state.name == 'Gas':
+                                presdropratiofactor = 'Xt'  
+                                viscosity = 'γ'
+                                vaporpres = 'Z'
+                            else:
+                                presdropratiofactor = 'Fl'
+                                viscosity = 'cP'
+                                vaporpres = item.vaporpres_unit
+                            unit_list = [item.flowrate_unit,item.inpres_unit, item.outpres_unit, item.intemp_unit, presdropratiofactor, 'Cv', '%', 'dBA', i_pipe_vel, 'Mach',item.inpipe_unit,item.outpipe_unit,vaporpres,viscosity]
                             
                         
 
@@ -9625,7 +9704,7 @@ def generate_csv_project(item_id, proj_id):
                                             bonnet_, v_details.studNut__.name, cases[0].ratedCv, v_details.balanceSeal__.name, acc_list, v_details.application, spec_fluid_name, 
                                             f"{v_details.maxPressure} {v_details.maxPressureUnit}", f"/ {v_details.maxTemp} {v_details.maxTempUnit}", f"{v_details.minTemp} {v_details.minTempUnit}", balancing__, cage__, v_details.packing__.name,
                                             f"{seat_bore} inch", travel_, v_details.flowDirection__.name, v_details.flowCharacter__.name, v_details.shaft__.name, item_notes_list,
-                                            f"{item.itemNumber} ({v_details.quantity})"]    
+                                            f"{item.itemNumber} # ({v_details.quantity})"]    
                             print(f'otherssss {len(other_val_list)}')
                             
                             customer__ = db.session.query(addressProject).filter_by(isCompany=True, project=item.project).first()
@@ -9645,10 +9724,10 @@ def generate_csv_project(item_id, proj_id):
                                             item.project.workOderNo,
                                             f"{customer__.address.company.name} ({customer__.address.address})",
                                             f"{enduser__.address.company.name} ({enduser__.address.address})",
-                                            f"{project_element.enquiryRef} dt. {project_element.enquiryReceivedDate.strftime("%d-%B-%Y")}", 
+                                            f"{project_element.enquiryRef} dt. {project_element.enquiryReceivedDate.strftime("%d-") + month_abbr[project_element.enquiryReceivedDate.strftime("%B")] + project_element.enquiryReceivedDate.strftime("-%Y")}", 
                                             project_element.custPoNo,
-                                            f"/ {itemCases_1[0].iSch}",
-                                            f"/ {itemCases_1[0].oSch}"
+                                            "/ STD" if itemCases_1[0].iSch == 'std' else f'/ {itemCases_1[0].iSch}',
+                                            "/ STD" if itemCases_1[0].oSch == 'std' else f'/ {itemCases_1[0].oSch}'
                                             ]
                                 
                                 # case_list_dict = {
@@ -9664,6 +9743,7 @@ def generate_csv_project(item_id, proj_id):
 
                             act_mas = db.session.query(actuatorMaster).filter_by(item=item).first()
                             access_ = db.session.query(accessoriesData).filter_by(item=item).first()
+                            act_modelno = 'N/A';open_time = 'N/A'; close_time = 'N/A'
                             try:
                                 if v_details.valveSeries in ['10','11']:    
                                     act_case = db.session.query(actuatorCaseData).filter_by(actuator_=act_mas).first()
@@ -9756,7 +9836,7 @@ def generate_csv_project(item_id, proj_id):
                         header = [f"{customer__.address.company.name} ({customer__.address.address})",
                                 project_element.projectRef,
                                 f"{enduser__.address.company.name} ({enduser__.address.address})",
-                                f"{project_element.enquiryRef} dt. {project_element.enquiryReceivedDate.strftime("%d-%B-%Y")}", 
+                                f"{project_element.enquiryRef} dt. {project_element.enquiryReceivedDate.strftime("%d-") + month_abbr[project_element.enquiryReceivedDate.strftime("%B")] + project_element.enquiryReceivedDate.strftime("-%Y")}", 
                                 project_element.custPoNo,
                                 project_element.projectId,
                                 project_element.workOderNo,
@@ -9764,13 +9844,13 @@ def generate_csv_project(item_id, proj_id):
                                 valve.tagNumber, 
                                 f"{items[valve_element.index(valve)].itemNumber} ({valve.quantity})", 
                                 valve.application, 
-                                f"{valve.state.name} / {itemCase[valve_element.index(valve)][0].fluid.fluidName}",
-                                f"{itemCase[valve_element.index(valve)][0].criticalPressure} {items[valve_element.index(valve)].criticalpres_unit}",
+                                f"{valve.state.name} / {itemCase[valve_element.index(valve)][0].fluid.fluidName}" if itemCase[valve_element.index(valve)] else 'N/A',
+                                f"{itemCase[valve_element.index(valve)][0].criticalPressure} {items[valve_element.index(valve)].criticalpres_unit}" if itemCase[valve_element.index(valve)] else 'N/A' ,
                                 f"{valve.shutOffDelP} {valve.shutOffDelPUnit}",
                                 
-                                valve.style.name,
-                                valve.trimType__.name,
-                                valve.flowCharacter__.name
+                                valve.style.name if valve.style else 'N/A',
+                                valve.trimType__.name if valve.trimType__ else 'N/A',
+                                valve.flowCharacter__.name if valve.flowCharacter__ else 'N/A'
                                 ]
                         header_details.append(header)
 
@@ -9805,14 +9885,16 @@ def generate_csv_project(item_id, proj_id):
                         cases = db.session.query(caseMaster).filter_by(item=item).all()
                         act_mas = db.session.query(actuatorMaster).filter_by(item=item).first()
                         access = db.session.query(accessoriesData).filter_by(item=item).first()
-                        if valve.style.name in ['Globe Straight','Globe Angle']:
+                        globevalve = ['Globe Straight','Globe Angle']
+                        butterflyvalve = ['Butterfly Lugged Wafer','Butterfly']
+                        if act_mas.actSelectionType == 'sliding' or  (valve.style and valve.style.name in globevalve):
                             v_type = 'globe'
                             act_case = db.session.query(actuatorCaseData).filter_by(actuator_=act_mas).first()
                             stroke_case = db.session.query(strokeCase).filter_by(actuatorCase_=act_case).first()
-                        else:
+                        elif act_mas.actSelectionType == 'rotary' or  (valve.style and valve.style.name in butterflyvalve):
                             v_type = 'butterfly'
                             act_case = db.session.query(rotaryCaseData).filter_by(actuator_=act_mas).first()
-                        
+                        actThrustClose,actThrustOpen,open_time_unit,open_time,close_time,close_time_unit = 'N/A','N/A','N/A','N/A','N/A','N/A'
                         
                         if act_mas.springAction == 'AFO':
                             actThrustClose = act_case.natMin 
@@ -9851,24 +9933,24 @@ def generate_csv_project(item_id, proj_id):
                         header = [f"{customer__.address.company.name} ({customer__.address.address})",
                                 project_element.projectRef,
                                 f"{enduser__.address.company.name} ({enduser__.address.address})",
-                                f"{project_element.enquiryRef} dt. {project_element.enquiryReceivedDate.strftime("%d-%B-%Y")}", 
+                                f"{project_element.enquiryRef} dt. {project_element.enquiryReceivedDate.strftime("%d-") + month_abbr[project_element.enquiryReceivedDate.strftime("%B")] + project_element.enquiryReceivedDate.strftime("-%Y")}", 
                                 project_element.custPoNo,
                                 project_element.projectId,
                                 project_element.workOderNo,
                                 valve.serialNumber, 
                                 valve.tagNumber, 
-                                f"{item.itemNumber} ({valve.quantity})", 
+                                f"{item.itemNumber} # ({valve.quantity})", 
                                 valve.application, 
-                                f"{valve.state.name} / {cases[0].fluid.fluidName}",
+                                f"{valve.state.name} / {cases[0].fluid.fluidName}" if cases else 'N/A',
                             
                                 ]
                         if v_type == 'globe':
                             valvedata = [
-                                    valve.style.name,    
-                                    valve.trimType__.name,
-                                    valve.rating.name,
-                                    valve.balancing__.name,
-                                    valve.flowDirection__.name,
+                                    valve.style.name if valve.style else 'N/A',    
+                                    valve.trimType__.name if valve.trimType__ else 'N/A',
+                                    valve.rating.name if valve.rating else 'N/A',
+                                    valve.balancing__.name if valve.balancing__ else 'N/A',
+                                    valve.flowDirection__.name if valve.flowDirection__ else 'N/A',
                                     act_case.valveSize if act_case.valveSize else 'N/A',
                                     act_case.seatDia if act_case.seatDia else 'N/A',
                                     act_case.unbalanceArea if act_case.unbalanceArea else 'N/A',
@@ -9967,9 +10049,9 @@ def generate_csv_project(item_id, proj_id):
                             ]
                         else:
                             valvedata = [
-                                valve.style.name, 
-                                valve.trimType__.name,
-                                valve.flowDirection__.name,
+                                valve.style.name if valve.style else 'N/A', 
+                                valve.trimType__.name if valve.trimType__ else 'N/A',
+                                valve.flowDirection__.name if valve.flowDirection__ else 'N/A',
                                 act_case.max_rot if act_case.max_rot else 'N/A',
                                 act_case.v_size if act_case.v_size else 'N/A' ,
                                 act_case.disc_dia if act_case.disc_dia else 'N/A',
@@ -9977,11 +10059,11 @@ def generate_csv_project(item_id, proj_id):
                                 act_case.delP if act_case.delP else 'N/A',
                                 act_case.csc if act_case.csc else 'N/A',
                                 act_case.csv if act_case.csv else 'N/A',
-                                itemCase[0][0].inletPressure,
-                                itemCase[0][0].outletPressure,
+                                itemCase[0][0].inletPressure if itemCase[0] else 'N/A',
+                                itemCase[0][0].outletPressure if itemCase[0] else 'N/A',
                                 act_case.bush_coeff if act_case.bush_coeff else 'N/A',
                                 act_case.pack_coeff if act_case.pack_coeff else 'N/A',
-                                itemCase[0][0].inletPressure - itemCase[0][0].outletPressure,
+                                itemCase[0][0].inletPressure - itemCase[0][0].outletPressure if itemCase[0] else 'N/A',
                                 act_case.a_factor if act_case.a_factor else 'N/A',
                                 act_case.b_factor if act_case.b_factor else 'N/A',
                                 act_case.st if act_case.st else 'N/A',
@@ -10085,7 +10167,7 @@ def generate_csv_project(item_id, proj_id):
 
                     
                     createActSpecSheet(header_,valvedatas_,actdatas_,unitslist_,accessories_,forces_)
-
+                    # path = os.path.join('E:\Sizing_Reports', 'act_specsheet.xlsx')
                     path = "act_specsheet.xlsx"
                     a__ = datetime.datetime.now()
                     a_ = a__.strftime("%a, %d %b %Y %H-%M-%S")
@@ -10103,7 +10185,7 @@ def generate_csv_project(item_id, proj_id):
             # current_datetime = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
             zip_file_name = f"report_files.zip"
             # Create a zip file containing all Excel files
-            zip_file_path = os.path.join('E:/Sizing_Reports', zip_file_name)
+            zip_file_path = os.path.join('E:\Sizing_Reports', zip_file_name)
 
             try:
                 with zipfile.ZipFile(zip_file_path, 'w') as zipf:
@@ -10133,28 +10215,36 @@ def generate_csv_project(item_id, proj_id):
             
 
 
-            elif file_type == 'pdf': 
-                WB_PATH = os.path.join('D:\Fcc_ValveSizing', files_excel[0])
-                PATH_TO_PDF = os.path.join('D:\Fcc_ValveSizing', 'act_specsheet.pdf')  
-                try:
-                    print(f'INSIDE TRY')
-                    excel = win32.Dispatch('Excel.Application')
-                    print(f'OPENWORKBOOK')
-                    # Open the workbook
-                    workbook = excel.Workbooks.Open(WB_PATH)
-                    print(f'EXPORTFIXED')
-                    # Convert the workbook to PDF
-                    workbook.ExportAsFixedFormat(0, PATH_TO_PDF)
-                    print('CLOSE WORKBOOK')
-                    # Close the workbook
-                    workbook.Close(False)
 
-                    # Quit Excel
-                    excel.Quit()
-                except com_error as e:
-                    print('failed.')
+            elif file_type == 'pdf': 
+                print(f'NOOFFILES {files_excel}')
+                if len(files_excel) == 1:
+                    WB_PATH = os.path.join('D:\Fcc_ValveSizing', files_excel[0])
+                    PATH_TO_PDF = os.path.join('D:\Fcc_ValveSizing', files_excel[0].replace('.xlsx','.pdf'))
+                    convert_excel2pdf(WB_PATH, PATH_TO_PDF)
+                    report_sheet = {'controlvalve_specsheet.xlsx':'ControlValveSizing.pdf', 'cvsizingcalculation.xlsx':'CVPlot.pdf','act_specsheet.xlsx':'ActuatorSizingSheet.pdf'}
+                    return send_file(PATH_TO_PDF, as_attachment=True, download_name=report_sheet[files_excel[0]])
+                elif len(files_excel) > 1:
+                    zip_arr = []
+                    for file_name in files_excel:
+                        WB_PATH = os.path.join('D:\Fcc_ValveSizing', file_name)
+                        PATH_TO_PDF = os.path.join('D:\Fcc_ValveSizing', file_name.replace('.xlsx','.pdf'))
+                      
+                        convert_excel2pdf(WB_PATH, PATH_TO_PDF)
+                        zip_arr.append(PATH_TO_PDF)
+                    print(f'ziparr{zip_arr}')
+                    zip_file_path = os.path.join('D:\Fcc_ValveSizing', 'reports.zip')
+                    
+                    with zipfile.ZipFile(zip_file_path, 'w') as zipf:
+                        for i in zip_arr:
+                            zipf.write(i, os.path.basename(i))
+                                
+                    return send_file(zip_file_path, as_attachment=True, download_name='reports.zip')
+
+
                 else:
-                    print('Succeeded.')
+                    flash('Select category to download','error')
+                    return redirect(url_for('generate_csv_project', item_id=item_id, proj_id=proj_id))
 
 
 
@@ -10171,8 +10261,8 @@ def generate_csv_project(item_id, proj_id):
             #     return redirect(url_for('generate_csv', item_id=items_list, proj_id=proj_id, page='generate_csv_project'))
             # elif 'cvplot' in request.form:
             #     return redirect(url_for('generate_openingcv',item_ids=items_list, proj_id=proj_id))
-    except Exception as e:
-        flash(f'An error occurred : {str(e)}','error')
+    # except Exception as e:
+    #     flash(f'An error occurred : {str(e)}','error')
     return render_template('project_print.html', items=valve_list, item=getDBElementWithId(itemMaster, int(item_id)), page='generate_csv_project', user=current_user)
 
 
