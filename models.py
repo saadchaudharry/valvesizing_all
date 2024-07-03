@@ -1459,6 +1459,7 @@ class actuatorMaster(db.Model):
     setPressureUnit = Column(String(20))
     shutoffDelP = Column(Float)
     shutoffDelPUnit = Column(String(20))
+    actSelectionType = Column(String(20))
 
 
     # rel as parent
